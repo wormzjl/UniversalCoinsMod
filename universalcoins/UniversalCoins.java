@@ -23,6 +23,13 @@ import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
+/**
+ * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
+ * 
+ * @author ted_996
+ * @porting to 1.7.2 notabadminer
+ */
+
 @Mod(modid = UniversalCoins.modid, name = "Universal Coins", version = "1.5.0")
 
 public class UniversalCoins {

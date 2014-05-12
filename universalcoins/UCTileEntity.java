@@ -38,7 +38,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
 	public boolean sStackButtonActive = false;
-	public boolean lStackButtonActive = false;
+	public boolean isStackButtonActive = false;
 	public boolean heapButtonActive = false;
 	public boolean bypassActive = false;
 
@@ -250,7 +250,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	private void activateRetrieveButtons() {
 		coinButtonActive = false;
 		sStackButtonActive = false;
-		lStackButtonActive = false;
+		isStackButtonActive = false;
 		heapButtonActive = false;
 		if (coinSum > 0){
 			coinButtonActive = inventory[coinOutputSlot] == null || (inventory[coinOutputSlot].getItem() == UniversalCoins.itemCoin &&
@@ -262,7 +262,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 							inventory[coinOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 81) {
-			lStackButtonActive = inventory[coinOutputSlot] == null ||
+			isStackButtonActive = inventory[coinOutputSlot] == null ||
 					(inventory[coinOutputSlot].getItem() == UniversalCoins.itemLargeCoinStack &&
 							inventory[coinOutputSlot].stackSize != 64);
 		}
@@ -481,10 +481,6 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		}
 	
 	public void sendPacket(int button) {
-		FMLLog.info("Universal Coins: x = " + xCoord);
-		FMLLog.info("Universal Coins: y = " + yCoord);
-		FMLLog.info("Universal Coins: z = " + zCoord);
-		FMLLog.info("Universal Coins: Button = " + button);
 		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord, zCoord, button, bypassActive);
 		UniversalCoins.packetPipeline.sendToServer(packet);
 	}

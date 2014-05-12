@@ -151,7 +151,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		buyMaxButton.enabled = buyButton.enabled;
 		retrCoinButton.enabled = tileEntity.coinButtonActive;
 		retrSStackButton.enabled = tileEntity.sStackButtonActive;
-		retrLStackButton.enabled = tileEntity.lStackButtonActive;
+		retrLStackButton.enabled = tileEntity.isStackButtonActive;
 		retrHeapButton.enabled = tileEntity.heapButtonActive;
 
 
