@@ -1,9 +1,10 @@
-package ted996_universalcoins;
+package universalcoins;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -46,13 +47,13 @@ class UCRecipeHelper {
 		GameRegistry.addShapedRecipe(oneSeller, new Object[]{
 			"LGE",
 			"PPP",
-			'L', Item.leather, 'G', Item.ingotGold, 'E', Item.enderPearl, 'P', Item.paper
+			'L', Items.leather, 'G', Items.gold_ingot, 'E', Items.ender_pearl, 'P', Items.paper
 		});
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.blockTradeStation), new Object[]{
 			"IGI",
 			"ICI",
 			"III",
-			'I', Item.ingotIron, 'G', Item.ingotGold, 'C', UniversalCoins.itemSeller
+			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.itemSeller
 		});
 	}
 

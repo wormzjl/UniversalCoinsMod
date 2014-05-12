@@ -1,18 +1,23 @@
-package ted996_universalcoins;
+package universalcoins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
+import universalcoins.net.PacketPipeline;
+import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.Constants;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 
 public class UCTileEntity extends TileEntity implements IInventory {
@@ -28,24 +33,19 @@ public class UCTileEntity extends TileEntity implements IInventory {
 			UniversalCoins.itemSmallCoinStack,
 			UniversalCoins.itemLargeCoinStack, UniversalCoins.itemCoinHeap };
 	public int coinSum = 0;
-	public int itemPrice;
-	private boolean needsPackageSending = true;
-	
+	public int itemPrice;	
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
 	public boolean sStackButtonActive = false;
 	public boolean lStackButtonActive = false;
 	public boolean heapButtonActive = false;
-
 	public boolean bypassActive = false;
 
 
 	public UCTileEntity() {
 		super();
 		inventory = new ItemStack[invSize];
-		//Minecraft.getMinecraft().getLogAgent()
-		//		.logInfo("In the tile entity constructor.");
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 				if (coinType != -1) {
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
-					setNeedsPackageSendingFlag();
+					//setNeedsPackageSendingFlag();
 					//Minecraft
 					//		.getMinecraft()
 					//		.getLogAgent()
@@ -117,13 +117,16 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		return -1;
 	}
 	
-	@Override
-	public String getInvName() {
+	public String getInventoryName() {
 		return "Universal Trade Station";
 	}
 	
+	public boolean isInventoryNameLocalized() {
+		return false;
+	}
+	
 	@Override
-	public boolean isInvNameLocalized() {
+	public boolean hasCustomInventoryName() {
 		return false;
 	}
 	
@@ -134,19 +137,9 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) == this
+		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
 				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
 						zCoord + 0.5) < 64;
-	}
-	
-	@Override
-	public void openChest() {
-		
-	}
-	
-	@Override
-	public void closeChest() {
-		
 	}
 	
 	@Override
@@ -173,9 +166,9 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		
-		NBTTagList tagList = tagCompound.getTagList("Inventory");
+		NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
+			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < inventory.length) {
 				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
@@ -198,8 +191,6 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		catch (Throwable ex){
 			bypassActive = false;
 		}
-		//Minecraft.getMinecraft().getLogAgent()
-		//		.logInfo("UniversalCoins: In the NBT reader. Coin Sum: " + coinSum);
 	}
 	
 	@Override
@@ -219,31 +210,15 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("CoinsLeft", coinSum);
 		tagCompound.setBoolean("Bypass", bypassActive);
-		//Minecraft.getMinecraft().getLogAgent()
-		//		.logInfo("In the NBT writer. Coin Sum: " + coinSum);
+		//FMLLog.warning("UniversalCoins: In the NBT writer. Coin Sum: " + coinSum);
 	}
 	
-	//@SuppressWarnings("RedundantIfStatement")
-	@Override
-	public void onInventoryChanged() {
-		//Minecraft.getMinecraft().getLogAgent()
-		//		.logInfo("Before the onInvChanged. Coin Sum: " + coinSum);
-		if (needsPackageSending){
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ) {
-				dispatchPackage();
-			}
-			else if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-				requestCoinSumPackage();
-			}
-			needsPackageSending = false;
-		}
-		super.onInventoryChanged();
+	public void markDirty() {
+		super.markDirty();
 		activateBuySellButtons();
 		activateRetrieveButtons();
-		//Minecraft.getMinecraft().getLogAgent()
-		//		.logInfo("After the onInvChanged. Coin Sum: " + coinSum);
-		
 	}
+	
 
 	private void activateBuySellButtons() {
 		if (inventory[tradedItemSlot] == null) {
@@ -303,55 +278,15 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		activateBuySellButtons();
 	}
 
-	public void dispatchPackage() { //packet server-to-player
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream(21);
-		DataOutputStream outputStream = new DataOutputStream(stream);
-		try {
-			outputStream.writeInt(coinSum);
-			outputStream.writeInt(xCoord);
-			outputStream.writeInt(yCoord);
-			outputStream.writeInt(zCoord);
-			outputStream.writeInt(this.worldObj.getWorldInfo().getVanillaDimension());
-			outputStream.writeBoolean(bypassActive);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		packet.channel = "UCTS_TileEntity";
-		packet.data = stream.toByteArray();
-		packet.length = stream.size();
-		PacketDispatcher.sendPacketToAllPlayers(packet);
-	}
-
-	void requestCoinSumPackage(){
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream(16);
-		DataOutputStream outputStream = new DataOutputStream(stream);
-		try {
-			outputStream.writeInt(xCoord);
-			outputStream.writeInt(yCoord);
-			outputStream.writeInt(zCoord);
-			outputStream.writeInt(this.worldObj.getWorldInfo().getVanillaDimension());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		packet.channel = "UCTS_TE_Request";
-		packet.data = stream.toByteArray();
-		packet.length = stream.size();
-		PacketDispatcher.sendPacketToServer(packet);
-	}
-
 	public void onSellPressed(){
 		onSellPressed(1);
 	}
 	
 	public void onSellPressed(int amount) {
-		/*if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-			Minecraft.getMinecraft().getLogAgent().logInfo("Sell Pressed on client side.");
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
 		}
 		else{
-			Minecraft.getMinecraft().getLogAgent().logInfo("Sell Pressed on server side.");
-		}*/
+		}
 		if (inventory[tradedItemSlot] == null){
 			sellButtonActive = false;
 			return;
@@ -446,12 +381,6 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	}
 	
 	public void onBuyPressed(int amount) {
-		/*if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-			Minecraft.getMinecraft().getLogAgent().logInfo("Buy Pressed on client side.");
-		}
-		else{
-			Minecraft.getMinecraft().getLogAgent().logInfo("Buy Pressed on server side.");
-		}*/
 		if (inventory[tradedItemSlot] == null){
 			buyButtonActive = false;
 			return;
@@ -475,7 +404,6 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		else {
 			buyButtonActive = false;
 		}
-		setNeedsPackageSendingFlag();
 	}
 
 	public void onBuyMaxPressed() {
@@ -517,10 +445,6 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		onBuyPressed(amount);
 	}
 
-	void setNeedsPackageSendingFlag(){
-		needsPackageSending = true;
-	}
-
 	public void onRetrieveButtonsPressed(int buttonClickedID) {
 		int absoluteButton = buttonClickedID - UCTradeStationGUI.idCoinButton;
 		int multiplier = 1;
@@ -541,5 +465,44 @@ public class UCTileEntity extends TileEntity implements IInventory {
 			inventory[coinOutputSlot].stackSize++;
 		}
 
+	}
+	
+	// Client Server Sync
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+			readFromNBT(packet.func_148857_g());
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		this.writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		}
+	
+	public void sendPacket(int button) {
+		FMLLog.info("Universal Coins: x = " + xCoord);
+		FMLLog.info("Universal Coins: y = " + yCoord);
+		FMLLog.info("Universal Coins: z = " + zCoord);
+		FMLLog.info("Universal Coins: Button = " + button);
+		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord, zCoord, button, bypassActive);
+		UniversalCoins.packetPipeline.sendToServer(packet);
+	}
+	
+	@Override
+	public void openInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onInventoryChanged() {
+		//FMLLog.warning("UniversalCoins: Inventory change requested");
+		
 	}
 }

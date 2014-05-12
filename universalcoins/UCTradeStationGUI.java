@@ -1,20 +1,24 @@
-package ted996_universalcoins;
+package universalcoins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
+
 import org.lwjgl.opengl.GL11;
 
-class UCTradeStationGUI extends GuiContainer {
+import universalcoins.net.PacketTradingStation;
+
+public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
 	private GuiButton buyButton, sellButton;
@@ -70,22 +74,22 @@ class UCTradeStationGUI extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRenderer.drawString("Universal Coins Trade Station", 6, 5, 4210752);
+		fontRendererObj.drawString("Universal Coins Trade Station", 6, 5, 4210752);
 		// draws "Inventory" or your regional equivalent
-		fontRenderer.drawString(
+		fontRendererObj.drawString(
 				StatCollector.translateToLocal("container.inventory"), 6,
 				ySize - 96 + 2, 4210752);
-		fontRenderer.drawString(String.valueOf(tileEntity.coinSum), 57, 85,
+		fontRendererObj.drawString(String.valueOf(tileEntity.coinSum), 57, 85,
 				4210752);
 		String priceInLocal = "Price:";
-		int stringWidth = fontRenderer.getStringWidth(priceInLocal);
-		fontRenderer.drawString(priceInLocal, 118 - stringWidth, 65, 4210752);
+		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
+		fontRendererObj.drawString(priceInLocal, 118 - stringWidth, 65, 4210752);
 		if (tileEntity.itemPrice != 0){
-			fontRenderer.drawString(String.valueOf(tileEntity.itemPrice), 124, 65,
+			fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 124, 65,
 					4210752);
 		}
 		else{
-			fontRenderer.drawString("No item.", 124, 65,
+			fontRendererObj.drawString("No item.", 124, 65,
 					4210752);
 		}
 
@@ -99,8 +103,8 @@ class UCTradeStationGUI extends GuiContainer {
 		//int x_offset = -125, y_offset = -20;
 		int x_offset = -guiLeft;
 		int y_offset = -guiTop;
-		this.mc.renderEngine
-				.func_110577_a(new ResourceLocation(UniversalCoins.modid, "textures/gui/tradeStation.png"));
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		x = (width - xSize) / 2 + 70 + x_offset;
 		y = (height - ySize) / 2 + 100 + y_offset;
@@ -151,8 +155,8 @@ class UCTradeStationGUI extends GuiContainer {
 		retrHeapButton.enabled = tileEntity.heapButtonActive;
 
 
-		this.mc.renderEngine
-				.func_110577_a(new ResourceLocation(UniversalCoins.modid, "textures/gui/tradeStation.png"));
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
+		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -182,28 +186,9 @@ class UCTradeStationGUI extends GuiContainer {
 			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id);
 		}
 		if (FMLCommonHandler.instance().getSide() == Side.SERVER) {
-			//Minecraft.getMinecraft().getLogAgent()
-			//		.logInfo("The server is also getting buttons.");
+			FMLLog.info("The server is also getting buttons.");
 			return;
 		}
-		Packet250CustomPayload packet = new Packet250CustomPayload();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream(21);
-		DataOutputStream outputStream = new DataOutputStream(stream);
-		try {
-			outputStream.writeInt(par1GuiButton.id);
-			outputStream.writeInt(tileEntity.xCoord);
-			outputStream.writeInt(tileEntity.yCoord);
-			outputStream.writeInt(tileEntity.zCoord);
-			outputStream.writeInt(tileEntity.worldObj.getWorldInfo()
-					.getVanillaDimension());
-			outputStream.writeBoolean(bypass);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		packet.channel = "UCTS_Buttons";
-		packet.data = stream.toByteArray();
-		packet.length = stream.size();
-		PacketDispatcher.sendPacketToServer(packet);
+		tileEntity.sendPacket(par1GuiButton.id);
 	}
-	
 }

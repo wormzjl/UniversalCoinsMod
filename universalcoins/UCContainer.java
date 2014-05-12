@@ -1,11 +1,12 @@
-package ted996_universalcoins;
+package universalcoins;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+
 
 class UCContainer extends Container {
 	private UCTileEntity tileEntity;
@@ -90,5 +91,4 @@ class UCContainer extends Container {
 
 		return stack;
 	}
-	
 }
