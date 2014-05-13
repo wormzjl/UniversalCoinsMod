@@ -80,6 +80,5 @@ public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
 			NBTTagCompound data = new NBTTagCompound();
             ucTileEntity.writeToNBT(data);
             }
-        world.markBlockForUpdate(x, y, z);
 	}
 }

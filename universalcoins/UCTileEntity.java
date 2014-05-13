@@ -63,10 +63,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
-		/*
-		 * Minecraft.getMinecraft().getLogAgent()
-		 * .logInfo("Stack Size Decreased in slot " + i);
-		 */
+		//FMLLog.info("Stack Size Decreased in slot " + i);
 		ItemStack newStack;
 		if (inventory[i] == null) {
 			return null;
@@ -97,12 +94,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 				if (coinType != -1) {
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
-					//setNeedsPackageSendingFlag();
-					//Minecraft
-					//		.getMinecraft()
-					//		.getLogAgent()
-					//		.logInfo(
-					//				"SetInvSlotContents.. Coin Sum: " + coinSum);
+					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
 				}
 			}
 		}
@@ -191,6 +183,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		catch (Throwable ex){
 			bypassActive = false;
 		}
+		//FMLLog.info("UniversalCoins: In the NBT reader. Coin Sum: " + coinSum);
 	}
 	
 	@Override
@@ -210,7 +203,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("CoinsLeft", coinSum);
 		tagCompound.setBoolean("Bypass", bypassActive);
-		//FMLLog.warning("UniversalCoins: In the NBT writer. Coin Sum: " + coinSum);
+		//FMLLog.info("UniversalCoins: In the NBT writer. Coin Sum: " + coinSum);
 	}
 	
 	public void markDirty() {
@@ -300,6 +293,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 			return;
 		}
 		ItemStack revenueStack = UCItemPricer.getRevenueStack(itemPrice * amount);
+		//FMLLog.info("Universal Coins: Revenue stack: " + revenueStack);
 		if (!bypassActive){
 			if (inventory[revenueSlot] == null) {
 				inventory[revenueSlot] = revenueStack;
