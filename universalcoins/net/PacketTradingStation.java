@@ -22,7 +22,6 @@ public PacketTradingStation() {
     }
 
 public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
-    //this.dimension = dimension;
     this.x = x;
     this.y = y;
     this.z = z;
@@ -32,19 +31,15 @@ public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
 
 	@Override
 	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
-		FMLLog.info("Universal Coins: encoding tradingstation packet");
-        //buffer.writeInt(dimension);
         buffer.writeInt(x);
         buffer.writeInt(y);
         buffer.writeInt(z);
         buffer.writeInt(button);
         buffer.writeBoolean(bypass);
-        FMLLog.info("Buffer: " + buffer);
 	}
 
 	@Override
 	public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
-		//dimension = buffer.readInt();
 		x = buffer.readInt();
         y = buffer.readInt();
         z = buffer.readInt();
