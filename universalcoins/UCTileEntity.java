@@ -167,16 +167,11 @@ public class UCTileEntity extends TileEntity implements IInventory {
 			}
 		}
 		try{
-			coinSum = tagCompound.getShort("CoinsLeft");
-		}
-		catch(Throwable ex){
-			try{
 				coinSum = tagCompound.getInteger("CoinsLeft");
 			}
 			catch(Throwable ex2){
 				coinSum = 0;
-			}
-		}
+			}		
 		try{
 			bypassActive = tagCompound.getBoolean("Bypass");
 		}
@@ -342,8 +337,9 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		ItemStack revenueStack;
 		if (!bypassActive){
 			if (inventory[revenueSlot] == null) {
+				Integer totalRevenue = inventory[tradedItemSlot].stackSize * itemPrice;
 				revenueStack = UCItemPricer.getRevenueStack(inventory[tradedItemSlot].stackSize * itemPrice);
-				if (revenueStack.stackSize <= 64){
+				if (totalRevenue <= 64 * 729){
 					amount = inventory[tradedItemSlot].stackSize;
 				}
 				else{
