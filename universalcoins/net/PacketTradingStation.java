@@ -15,17 +15,18 @@ import net.minecraft.world.World;
 public class PacketTradingStation extends AbstractPacket {
 	
 	private int x, y, z, button;
-    private boolean bypass;
+    private boolean shiftPressed, bypass;
 	
 public PacketTradingStation() {
     	
     }
 
-public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
+public PacketTradingStation(int x, int y, int z, int button, boolean shiftPressed, boolean bypass) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.button = button;
+    this.shiftPressed = shiftPressed;
     this.bypass = bypass;
     }
 
@@ -35,6 +36,7 @@ public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
         buffer.writeInt(y);
         buffer.writeInt(z);
         buffer.writeInt(button);
+        buffer.writeBoolean(shiftPressed);
         buffer.writeBoolean(bypass);
 	}
 
@@ -44,6 +46,7 @@ public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
         y = buffer.readInt();
         z = buffer.readInt();
         button = buffer.readInt();
+        shiftPressed = buffer.readBoolean();
         bypass = buffer.readBoolean();
 	}
 
@@ -62,19 +65,23 @@ public PacketTradingStation(int x, int y, int z, int button, boolean bypass) {
 				((UCTileEntity) ucTileEntity).setBypass(bypass);
 			}
 			if (button == UCTradeStationGUI.idBuyButton) {
-				((UCTileEntity) ucTileEntity).onBuyPressed();
+				if ( shiftPressed ) {
+					((UCTileEntity) ucTileEntity).onBuyMaxPressed();
+				}
+				else {
+					((UCTileEntity) ucTileEntity).onBuyPressed();
+				}
 			}
 			else if (button == UCTradeStationGUI.idSellButton) {
+				if ( shiftPressed ) {
+					((UCTileEntity) ucTileEntity).onSellMaxPressed();
+				}
+				else {
 				((UCTileEntity) ucTileEntity).onSellPressed();
-			}
-			else if (button == UCTradeStationGUI.idSellMaxButton){
-				((UCTileEntity) ucTileEntity).onSellMaxPressed();
-			}
-			else if (button == UCTradeStationGUI.idBuyMaxButton){
-				((UCTileEntity) ucTileEntity).onBuyMaxPressed();
+				}
 			}
 			else if (button <= UCTradeStationGUI.idHeapButton){
-				((UCTileEntity) ucTileEntity).onRetrieveButtonsPressed(button);
+				((UCTileEntity) ucTileEntity).onRetrieveButtonsPressed(button, shiftPressed);
 			}
 			
 			NBTTagCompound data = new NBTTagCompound();

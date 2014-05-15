@@ -14,6 +14,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.net.PacketTradingStation;
@@ -22,8 +23,7 @@ public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
 	private GuiButton buyButton, sellButton;
-	private GuiButton retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton,
-			sellMaxButton, buyMaxButton;
+	private GuiButton retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
@@ -31,10 +31,9 @@ public class UCTradeStationGUI extends GuiContainer {
 	private static final int idLStackButton = 4;
 	public static final int idHeapButton = 5;
 	public static final int idBypassButton = 6;
-	public static final int idSellMaxButton = 7;
-	public static final int idBuyMaxButton = 8;
 
 	boolean bypass = false;
+	boolean shiftPressed = false;
 	
 	public UCTradeStationGUI(InventoryPlayer inventoryPlayer,
 			UCTileEntity parTileEntity) {
@@ -52,8 +51,6 @@ public class UCTradeStationGUI extends GuiContainer {
 		buyButton = new GuiButton(idBuyButton, 60 + (width - xSize) / 2, 20 + (height - ySize) / 2, 25, 11, "Buy");
 		sellButton = new GuiButton(idSellButton, 60 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
 		bypassButton = new GuiButton(idBypassButton, 133 + (width - xSize) / 2, 41 + (height - ySize) / 2, 38, 11, "Auto");
-		buyMaxButton = new GuiButton(idBuyMaxButton, 31 + (width - xSize) / 2, 52 + (height - ySize) / 2, 47, 11, "Buy Max");
-		sellMaxButton = new GuiButton(idSellMaxButton, 31 + (width - xSize) / 2, 67 + (height - ySize) / 2, 47, 11, "Sell Max");
 		retrCoinButton = new GuiButton(idCoinButton, 69 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrSStackButton = new GuiButton(idSStackButton, 88 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrLStackButton = new GuiButton(idLStackButton, 107 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
@@ -66,8 +63,6 @@ public class UCTradeStationGUI extends GuiContainer {
 		buttonList.add(retrLStackButton);
 		buttonList.add(retrHeapButton);
 		buttonList.add(bypassButton);
-		buttonList.add(buyMaxButton);
-		buttonList.add(sellMaxButton);
 	}
 	
 	@Override
@@ -147,8 +142,6 @@ public class UCTradeStationGUI extends GuiContainer {
 
 		buyButton.enabled = tileEntity.buyButtonActive;
 		sellButton.enabled = tileEntity.sellButtonActive;
-		sellMaxButton.enabled = sellButton.enabled;
-		buyMaxButton.enabled = buyButton.enabled;
 		retrCoinButton.enabled = tileEntity.coinButtonActive;
 		retrSStackButton.enabled = tileEntity.sStackButtonActive;
 		retrLStackButton.enabled = tileEntity.isStackButtonActive;
@@ -166,29 +159,35 @@ public class UCTradeStationGUI extends GuiContainer {
 	}
 	
 	protected void actionPerformed(GuiButton par1GuiButton) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			shiftPressed = true;
+		}
+		else {
+			shiftPressed = false;
+		}
 		if (par1GuiButton.id == idBypassButton){
 			bypass = !bypass;
 			tileEntity.setBypass(bypass);
 		}
 		if (par1GuiButton.id == idBuyButton){
-			tileEntity.onBuyPressed();
+			if ( shiftPressed ) {
+				tileEntity.onBuyMaxPressed();
+			}
+			else {
+				tileEntity.onBuyPressed();
+			}
 		}
 		else if (par1GuiButton.id == idSellButton){
-			tileEntity.onSellPressed();
-		}
-		else if (par1GuiButton.id == idSellMaxButton){
-			tileEntity.onSellMaxPressed();
-		}
-		else if (par1GuiButton.id == idBuyMaxButton){
-			tileEntity.onBuyMaxPressed();
+			if ( shiftPressed ) {
+				tileEntity.onSellMaxPressed();
+			}
+			else {
+				tileEntity.onSellPressed();
+			}
 		}
 		else if (par1GuiButton.id <= idHeapButton) {
-			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id);
+			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id, shiftPressed);
 		}
-		if (FMLCommonHandler.instance().getSide() == Side.SERVER) {
-			FMLLog.info("The server is also getting buttons.");
-			return;
-		}
-		tileEntity.sendPacket(par1GuiButton.id);
+		tileEntity.sendPacket(par1GuiButton.id, shiftPressed);
 	}
 }

@@ -3,6 +3,8 @@ package universalcoins;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
+import org.lwjgl.input.Keyboard;
+
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,6 +42,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	public boolean sStackButtonActive = false;
 	public boolean isStackButtonActive = false;
 	public boolean heapButtonActive = false;
+	public boolean shiftPressed = false;
 	public boolean bypassActive = false;
 
 
@@ -435,7 +438,7 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		onBuyPressed(amount);
 	}
 
-	public void onRetrieveButtonsPressed(int buttonClickedID) {
+	public void onRetrieveButtonsPressed(int buttonClickedID, boolean shiftPressed) {
 		int absoluteButton = buttonClickedID - UCTradeStationGUI.idCoinButton;
 		int multiplier = 1;
 		for (int i = 0; i < absoluteButton; i++){
@@ -447,12 +450,28 @@ public class UCTileEntity extends TileEntity implements IInventory {
 				(inventory[coinOutputSlot] != null && inventory[coinOutputSlot].stackSize == 64)){
 			return;
 		}
-		coinSum -= multiplier;
-		if (inventory[coinOutputSlot] == null){
-			inventory[coinOutputSlot] = new ItemStack(itemOnButton);
+		if (shiftPressed) {
+			if (inventory[coinOutputSlot] == null) {
+				int amount = coinSum / multiplier;
+				if (amount >= 64) {
+					coinSum -= multiplier * 64;
+					inventory[coinOutputSlot] = new ItemStack(itemOnButton);
+					inventory[coinOutputSlot].stackSize = 64;
+				}
+				else {
+					coinSum -= multiplier * amount;
+					inventory[coinOutputSlot] = new ItemStack(itemOnButton);
+					inventory[coinOutputSlot].stackSize = amount;
+				}
+			}
 		}
-		else{
-			inventory[coinOutputSlot].stackSize++;
+		else {coinSum -= multiplier;
+			if (inventory[coinOutputSlot] == null){
+				inventory[coinOutputSlot] = new ItemStack(itemOnButton);
+			}
+			else{
+				inventory[coinOutputSlot].stackSize++;
+			}
 		}
 
 	}
@@ -470,8 +489,8 @@ public class UCTileEntity extends TileEntity implements IInventory {
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
 		}
 	
-	public void sendPacket(int button) {
-		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord, zCoord, button, bypassActive);
+	public void sendPacket(int button, boolean shiftPressed) {
+		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord, zCoord, button, shiftPressed, bypassActive);
 		UniversalCoins.packetPipeline.sendToServer(packet);
 	}
 	
