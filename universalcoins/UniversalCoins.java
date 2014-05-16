@@ -45,6 +45,8 @@ public class UniversalCoins {
 	
 	public static Block blockTradeStation;
 	
+	public static Boolean autoModeEnabled;
+	
 	// The packet pipeline
     public static final PacketPipeline packetPipeline = new PacketPipeline();
 
@@ -54,6 +56,10 @@ public class UniversalCoins {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy / Sell", true).getBoolean(false);	
+		config.save();
 	    packetPipeline.initalise();		
 	}
 	

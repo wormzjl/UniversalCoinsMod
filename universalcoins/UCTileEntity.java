@@ -2,11 +2,7 @@ package universalcoins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-
 import org.lwjgl.input.Keyboard;
-
-import buildcraft.api.transport.IPipeConnection.ConnectOverride;
-import buildcraft.api.transport.IPipeTile.PipeType;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,9 +45,12 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public boolean heapButtonActive = false;
 	public boolean shiftPressed = false;
 	public boolean bypassActive = false;
+	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
 	private static final int[] slots_top = new int[] {0, 1, 2, 3, 4};
 	private static final int[] slots_bottom = new int[] {0, 1, 2, 3, 4};
 	private static final int[] slots_sides = new int[] {0, 1, 2, 3, 4};
+	
+	public String autoModeStatus = "Off";
 
 
 	public UCTileEntity() {
@@ -216,6 +215,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		super.markDirty();
 		activateBuySellButtons();
 		activateRetrieveButtons();
+		runAutoMode();
 	}
 	
 
@@ -445,6 +445,36 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		}
 		onBuyPressed(amount);
 	}
+	
+	public void onAutoModeButtonPressed () {
+		if (autoModeStatus == "Off") {
+			FMLLog.info("UC: Mode changed to Buy");
+			autoModeStatus = "Buy";
+		}
+		else if (autoModeStatus == "Buy") {
+			FMLLog.info("UC: Mode changed to Sell");
+			autoModeStatus = "Sell";
+		}
+		else if (autoModeStatus == "Sell") {
+			FMLLog.info("UC: Mode changed to Off");
+			autoModeStatus = "Off";
+		}
+	}
+	
+	public void runAutoMode() {
+		if (autoModeStatus == "Off") {
+			return;
+		}
+		else if (autoModeStatus == "Buy") {
+			onBuyMaxPressed();
+			sendPacket(0, true);
+		}
+		else if (autoModeStatus == "Sell") {
+			onSellMaxPressed();
+			//send a packet to the server so we can stay in sync
+			sendPacket(1, true);
+		}
+	}
 
 	public void onRetrieveButtonsPressed(int buttonClickedID, boolean shiftPressed) {
 		int absoluteButton = buttonClickedID - UCTradeStationGUI.idCoinButton;
@@ -515,17 +545,8 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onInventoryChanged() {
-		//FMLLog.warning("UniversalCoins: Inventory change requested");
+		//FMLLog.info("UniversalCoins: Inventory change requested");
 		
-	}
-	
-	public ConnectOverride overridePipeConnection(PipeType type,
-			ForgeDirection with) {
-		if (type == PipeType.ITEM) {
-			return ConnectOverride.DEFAULT;
-		} else {
-			return ConnectOverride.DISCONNECT;
-		}
 	}
 
 	@Override

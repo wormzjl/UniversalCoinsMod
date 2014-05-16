@@ -22,7 +22,7 @@ import universalcoins.net.PacketTradingStation;
 public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
-	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton, autoButton;
+	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton, autoModeButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
@@ -30,11 +30,10 @@ public class UCTradeStationGUI extends GuiContainer {
 	private static final int idLStackButton = 4;
 	public static final int idHeapButton = 5;
 	public static final int idBypassButton = 6;
-	public static final int idAutoButton = 7;
+	public static final int idAutoModeButton = 7;
 
 	boolean bypass = false;
 	boolean shiftPressed = false;
-	String autoMode = "Off";
 	
 	public UCTradeStationGUI(InventoryPlayer inventoryPlayer,
 			UCTileEntity parTileEntity) {
@@ -56,6 +55,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		retrSStackButton = new GuiButton(idSStackButton, 88 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrLStackButton = new GuiButton(idLStackButton, 107 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrHeapButton = new GuiButton(idHeapButton, 126 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
+		autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 62 + (height - ySize) / 2, 28, 13, "Mode");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
@@ -64,6 +64,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		buttonList.add(retrLStackButton);
 		buttonList.add(retrHeapButton);
 		buttonList.add(bypassButton);
+		buttonList.add(autoModeButton);
 	}
 	
 	@Override
@@ -88,10 +89,10 @@ public class UCTradeStationGUI extends GuiContainer {
 			fontRendererObj.drawString("No item.", 124, 65,
 					4210752);
 		}
+		fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 52, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal(tileEntity.autoModeStatus), 40, 65, 4210752);
 
 		drawOverlay();
-		// fontRenderer.drawString(String.valueOf(tileEntity.itemPrice), 60,
-		// 100, 4210752);
 	}
 
 	private void drawOverlay() {
@@ -147,6 +148,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		retrSStackButton.enabled = tileEntity.sStackButtonActive;
 		retrLStackButton.enabled = tileEntity.isStackButtonActive;
 		retrHeapButton.enabled = tileEntity.heapButtonActive;
+		autoModeButton.enabled = tileEntity.autoModeButtonActive;
 
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
@@ -185,6 +187,9 @@ public class UCTradeStationGUI extends GuiContainer {
 			else {
 				tileEntity.onSellPressed();
 			}
+		}
+		else if (par1GuiButton.id == idAutoModeButton) {
+			tileEntity.onAutoModeButtonPressed();
 		}
 		else if (par1GuiButton.id <= idHeapButton) {
 			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id, shiftPressed);
