@@ -5,10 +5,13 @@ import java.io.DataOutputStream;
 
 import org.lwjgl.input.Keyboard;
 
+import buildcraft.api.transport.IPipeConnection.ConnectOverride;
+import buildcraft.api.transport.IPipeTile.PipeType;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,12 +20,14 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 
-public class UCTileEntity extends TileEntity implements IInventory {
+public class UCTileEntity extends TileEntity implements IInventory, ISidedInventory {
 	private ItemStack[] inventory;
 	private final int invSize = 5;
 	public static final int revenueSlot = 2;
@@ -44,6 +49,9 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	public boolean heapButtonActive = false;
 	public boolean shiftPressed = false;
 	public boolean bypassActive = false;
+	private static final int[] slots_top = new int[] {0, 1, 2, 3, 4};
+	private static final int[] slots_bottom = new int[] {0, 1, 2, 3, 4};
+	private static final int[] slots_sides = new int[] {0, 1, 2, 3, 4};
 
 
 	public UCTileEntity() {
@@ -509,5 +517,39 @@ public class UCTileEntity extends TileEntity implements IInventory {
 	public void onInventoryChanged() {
 		//FMLLog.warning("UniversalCoins: Inventory change requested");
 		
+	}
+	
+	public ConnectOverride overridePipeConnection(PipeType type,
+			ForgeDirection with) {
+		if (type == PipeType.ITEM) {
+			return ConnectOverride.DEFAULT;
+		} else {
+			return ConnectOverride.DISCONNECT;
+		}
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return var1 == 0 ? slots_bottom  : (var1 == 1 ? slots_top : slots_sides);
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		if (var1 == 3) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		if (var1 == 1 || var1 == 2 || var1 == 4) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

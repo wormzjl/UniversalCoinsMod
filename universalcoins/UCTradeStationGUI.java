@@ -22,8 +22,7 @@ import universalcoins.net.PacketTradingStation;
 public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
-	private GuiButton buyButton, sellButton;
-	private GuiButton retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton;
+	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton, autoButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
@@ -31,9 +30,11 @@ public class UCTradeStationGUI extends GuiContainer {
 	private static final int idLStackButton = 4;
 	public static final int idHeapButton = 5;
 	public static final int idBypassButton = 6;
+	public static final int idAutoButton = 7;
 
 	boolean bypass = false;
 	boolean shiftPressed = false;
+	String autoMode = "Off";
 	
 	public UCTradeStationGUI(InventoryPlayer inventoryPlayer,
 			UCTileEntity parTileEntity) {
