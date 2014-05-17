@@ -83,7 +83,10 @@ public class UCItemPricer {
 			String token = tokenizer.nextToken();
 			String[] tempData = token.split("=");
 			//FMLLog.info("Universal Coins: Updating UCPricelist: " + tempData[0] + "=" + Integer.valueOf(tempData[1]));
-			ucPriceMap.put(tempData[0], Integer.valueOf(tempData[1]));
+			//We'll update the prices of all the items and not add all the default prices to the config folder
+			if (ucPriceMap.get(tempData[0]) != null) {
+				ucPriceMap.put(tempData[0], Integer.valueOf(tempData[1]));
+			}
 		}
 	}
 

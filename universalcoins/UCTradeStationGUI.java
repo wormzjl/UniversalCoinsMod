@@ -35,6 +35,8 @@ public class UCTradeStationGUI extends GuiContainer {
 	boolean bypass = false;
 	boolean shiftPressed = false;
 	
+	public String[] autoLabels = {"Off","Buy","Sell"};
+	
 	public UCTradeStationGUI(InventoryPlayer inventoryPlayer,
 			UCTileEntity parTileEntity) {
 		super(new UCContainer(inventoryPlayer, parTileEntity));
@@ -90,7 +92,7 @@ public class UCTradeStationGUI extends GuiContainer {
 					4210752);
 		}
 		fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 52, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal(tileEntity.autoModeStatus), 40, 65, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 65, 4210752);
 
 		drawOverlay();
 	}

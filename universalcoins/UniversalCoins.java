@@ -30,7 +30,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  * @porting to 1.7.2 notabadminer
  */
 
-@Mod(modid = UniversalCoins.modid, name = "Universal Coins", version = "1.5.0")
+@Mod(modid = UniversalCoins.modid, name = "Universal Coins", version = "1.5.2")
 
 public class UniversalCoins {
 	@Instance("universalcoins")
@@ -58,7 +58,7 @@ public class UniversalCoins {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy / Sell", true).getBoolean(false);	
+		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy/Sell", true).getBoolean(false);	
 		config.save();
 	    packetPipeline.initalise();		
 	}

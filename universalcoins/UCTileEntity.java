@@ -50,7 +50,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	private static final int[] slots_bottom = new int[] {0, 1, 2, 3, 4};
 	private static final int[] slots_sides = new int[] {0, 1, 2, 3, 4};
 	
-	public String autoModeStatus = "Off";
+	public int autoMode = 0;
 
 
 	public UCTileEntity() {
@@ -181,14 +181,19 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			}
 			catch(Throwable ex2){
 				coinSum = 0;
-			}		
+			}
+		try{
+			autoMode = tagCompound.getInteger("AutoMode");
+		}
+		catch(Throwable ex2){
+			autoMode = 0;
+		}
 		try{
 			bypassActive = tagCompound.getBoolean("Bypass");
 		}
 		catch (Throwable ex){
 			bypassActive = false;
 		}
-		//FMLLog.info("UniversalCoins: In the NBT reader. Coin Sum: " + coinSum);
 	}
 	
 	@Override
@@ -208,7 +213,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("CoinsLeft", coinSum);
 		tagCompound.setBoolean("Bypass", bypassActive);
-		//FMLLog.info("UniversalCoins: In the NBT writer. Coin Sum: " + coinSum);
+		tagCompound.setInteger("AutoMode", autoMode);
 	}
 	
 	public void markDirty() {
@@ -282,10 +287,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public void onSellPressed(int amount) {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-		}
-		else{
-		}
 		if (inventory[tradedItemSlot] == null){
 			sellButtonActive = false;
 			return;
@@ -447,32 +448,28 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public void onAutoModeButtonPressed () {
-		if (autoModeStatus == "Off") {
-			FMLLog.info("UC: Mode changed to Buy");
-			autoModeStatus = "Buy";
+		if (autoMode == 0) {
+			autoMode = 1;
 		}
-		else if (autoModeStatus == "Buy") {
-			FMLLog.info("UC: Mode changed to Sell");
-			autoModeStatus = "Sell";
+		else if (autoMode == 1) {
+			autoMode = 2;
 		}
-		else if (autoModeStatus == "Sell") {
-			FMLLog.info("UC: Mode changed to Off");
-			autoModeStatus = "Off";
+		else if (autoMode == 2) {
+			autoMode = 0;
 		}
 	}
 	
 	public void runAutoMode() {
-		if (autoModeStatus == "Off") {
-			return;
-		}
-		else if (autoModeStatus == "Buy") {
-			onBuyMaxPressed();
-			sendPacket(0, true);
-		}
-		else if (autoModeStatus == "Sell") {
-			onSellMaxPressed();
-			//send a packet to the server so we can stay in sync
-			sendPacket(1, true);
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+			if (autoMode == 0) {
+				return;
+			} else if (autoMode == 1) {
+				onBuyMaxPressed();
+				sendPacket(0, true);
+			} else if (autoMode == 2) {
+				onSellMaxPressed();
+				sendPacket(1, true);
+			}
 		}
 	}
 
@@ -511,7 +508,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[coinOutputSlot].stackSize++;
 			}
 		}
-
 	}
 	
 	// Client Server Sync

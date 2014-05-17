@@ -80,6 +80,9 @@ public PacketTradingStation(int x, int y, int z, int button, boolean shiftPresse
 				((UCTileEntity) ucTileEntity).onSellPressed();
 				}
 			}
+			else if (button == UCTradeStationGUI.idAutoModeButton) {
+				((UCTileEntity) ucTileEntity).onAutoModeButtonPressed();
+			}
 			else if (button <= UCTradeStationGUI.idHeapButton){
 				((UCTileEntity) ucTileEntity).onRetrieveButtonsPressed(button, shiftPressed);
 			}
