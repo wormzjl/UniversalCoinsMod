@@ -136,6 +136,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
     public void registerPackets ()
     {
         registerPacket(PacketTradingStation.class);
+        registerPacket(PacketCoinSum.class);
     }
 
     // Method to call from FMLPostInitializationEvent

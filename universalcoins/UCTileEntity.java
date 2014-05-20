@@ -2,7 +2,10 @@ package universalcoins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+
 import org.lwjgl.input.Keyboard;
+
+import universalcoins.net.PacketCoinSum;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -216,14 +219,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("AutoMode", autoMode);
 	}
 	
-	public void markDirty() {
-		super.markDirty();
+	public void updateEntity() {
+		super.updateEntity();
 		activateBuySellButtons();
 		activateRetrieveButtons();
 		runAutoMode();
 	}
 	
-
 	private void activateBuySellButtons() {
 		if (inventory[tradedItemSlot] == null) {
 			itemPrice = 0;
@@ -460,17 +462,15 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public void runAutoMode() {
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
 			if (autoMode == 0) {
 				return;
 			} else if (autoMode == 1) {
 				onBuyMaxPressed();
-				sendPacket(0, true);
 			} else if (autoMode == 2) {
 				onSellMaxPressed();
-				sendPacket(1, true);
+				requestPacket(coinSum);
+				//FMLLog.info("Coins: " + coinSum);
 			}
-		}
 	}
 
 	public void onRetrieveButtonsPressed(int buttonClickedID, boolean shiftPressed) {
@@ -526,6 +526,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public void sendPacket(int button, boolean shiftPressed) {
 		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord, zCoord, button, shiftPressed, bypassActive);
 		UniversalCoins.packetPipeline.sendToServer(packet);
+	}
+	
+	public void requestPacket(int coinsum) {
+		PacketCoinSum packet = new PacketCoinSum(xCoord, yCoord, zCoord, coinsum);
+		UniversalCoins.packetPipeline.sendToAll(packet);
 	}
 	
 	@Override
