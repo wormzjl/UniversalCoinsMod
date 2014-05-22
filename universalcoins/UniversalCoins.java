@@ -58,7 +58,7 @@ public class UniversalCoins {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy/Sell", true).getBoolean(false);	
+		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy/Sell", true).getBoolean(false);
 		config.save();
 	    packetPipeline.initalise();		
 	}

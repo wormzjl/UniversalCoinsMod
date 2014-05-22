@@ -54,6 +54,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	private static final int[] slots_sides = new int[] {0, 1, 2, 3, 4};
 	
 	public int autoMode = 0;
+	public boolean needCoinSumUpdate = false;
 
 
 	public UCTileEntity() {
@@ -217,6 +218,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("CoinsLeft", coinSum);
 		tagCompound.setBoolean("Bypass", bypassActive);
 		tagCompound.setInteger("AutoMode", autoMode);
+		//FMLLog.info("UC: Writing NBT - Coinsum: " + coinSum);
 	}
 	
 	public void updateEntity() {
@@ -330,6 +332,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[tradedItemSlot] = null;
 			}
 			coinSum += itemPrice * amount;
+			needCoinSumUpdate = true;
 		}
 		
 	}
@@ -398,12 +401,14 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			coinSum -= itemPrice * amount;
 			inventory[boughtItemsSlot] = ItemStack.copyItemStack(inventory[tradedItemSlot]);
 			inventory[boughtItemsSlot].stackSize = amount;
+			needCoinSumUpdate = true;
 		}
 		else if (inventory[boughtItemsSlot].getItem() == inventory[tradedItemSlot].getItem() &&
 				inventory[boughtItemsSlot].getItemDamage() == inventory[tradedItemSlot].getItemDamage() &&
 				inventory[boughtItemsSlot].stackSize + amount <= inventory[tradedItemSlot].getMaxStackSize()) {
 			coinSum -= itemPrice * amount;
 			inventory[boughtItemsSlot].stackSize += amount;
+			needCoinSumUpdate = true;
 		}
 		else {
 			buyButtonActive = false;
@@ -465,11 +470,18 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			if (autoMode == 0) {
 				return;
 			} else if (autoMode == 1) {
-				onBuyMaxPressed();
+				onBuyPressed();
+				if (needCoinSumUpdate && !this.worldObj.isRemote) {
+					requestPacket(coinSum);
+				}
+				needCoinSumUpdate = false;
 			} else if (autoMode == 2) {
 				onSellMaxPressed();
-				requestPacket(coinSum);
-				//FMLLog.info("Coins: " + coinSum);
+				if (needCoinSumUpdate && !this.worldObj.isRemote) {
+					requestPacket(coinSum);
+				}
+				needCoinSumUpdate = false;
+				//FMLLog.info("UC: coins = " + coinSum);
 			}
 	}
 
@@ -532,7 +544,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		PacketCoinSum packet = new PacketCoinSum(xCoord, yCoord, zCoord, coinsum);
 		UniversalCoins.packetPipeline.sendToAll(packet);
 	}
-	
+
 	@Override
 	public void openInventory() {
 		// TODO Auto-generated method stub
