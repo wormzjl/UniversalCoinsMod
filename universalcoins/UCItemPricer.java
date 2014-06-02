@@ -55,7 +55,7 @@ public class UCItemPricer {
 	}
 	
 	public static void loadDefaults() throws IOException {
-		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/universalcoins.cfg"};
+		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/universalcoins.cfg","defaultConfigs/BuildCraft.cfg"};
 		InputStream priceResource;
 		//load those files into hashmap(ucPriceMap)
 		for (int i = 0; i < configList.length; i++) {
