@@ -1,15 +1,9 @@
 package universalcoins;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Set;
-
 import universalcoins.net.PacketPipeline;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -20,8 +14,6 @@ import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -31,7 +23,8 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
  * 
  * @author ted_996, notabadminer
- */
+ * 
+ **/
 
 @Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version)
 
@@ -53,18 +46,17 @@ public class UniversalCoins {
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
 	
-	// The packet pipeline
     public static final PacketPipeline packetPipeline = new PacketPipeline();
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto Buy/Sell", true).getBoolean(false);
+		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(false);
 		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(false);
 		config.save();
 	    packetPipeline.initalise();
-	    FMLCommonHandler.instance().bus().register(new  UCEvent());
+	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	}
 	
 	@EventHandler

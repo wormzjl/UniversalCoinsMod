@@ -1,10 +1,5 @@
 package universalcoins;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
-import org.lwjgl.input.Keyboard;
-
 import universalcoins.net.PacketUpdateTE;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
@@ -19,15 +14,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
 
-public class UCTileEntity extends TileEntity implements IInventory,
-		ISidedInventory {
+
+public class UCTileEntity extends TileEntity implements IInventory, ISidedInventory {
+	
 	private ItemStack[] inventory;
 	private final int invSize = 5;
 	public static final int revenueSlot = 2;
@@ -164,7 +155,6 @@ public class UCTileEntity extends TileEntity implements IInventory,
 				return false;
 			}
 		}
-
 	}
 
 	@Override
@@ -330,7 +320,6 @@ public class UCTileEntity extends TileEntity implements IInventory,
 			coinSum += itemPrice * amount;
 			needCoinSumUpdate = true;
 		}
-
 	}
 
 	public void onSellMaxPressed() {
@@ -552,7 +541,7 @@ public class UCTileEntity extends TileEntity implements IInventory,
 	@Override
 	public void openInventory() {
 		// mark block dirty to update on open
-		this.markDirty();
+		//this.markDirty();
 	}
 
 	@Override

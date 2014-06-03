@@ -31,8 +31,7 @@ class BlockTradeStation extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
 		setCreativeTab(CreativeTabs.tabMisc);
-		setHarvestLevel("pickaxe", 1);
-		
+		setHarvestLevel("pickaxe", 1);	
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -88,8 +87,6 @@ class BlockTradeStation extends BlockContainer {
 				sumLeft -= 729 * 64;
 			}
 		}
-
-
 	}
 
 	private void dropStack(World world, int x, int y, int z, ItemStack item, Random rand) {

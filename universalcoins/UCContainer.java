@@ -87,8 +87,7 @@ class UCContainer extends Container {
 			}
 			slotObject.onPickupFromSlot(player, stackInSlot);
 		}
-
-
+		
 		return stack;
 	}
 }

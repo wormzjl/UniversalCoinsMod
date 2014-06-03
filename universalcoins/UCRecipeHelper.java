@@ -39,8 +39,7 @@ class UCRecipeHelper {
 		});
 		GameRegistry.addShapelessRecipe(oneHeap, new Object[]{
 				oneLStack, oneLStack, oneLStack, oneLStack, oneLStack, oneLStack,oneLStack, oneLStack, oneLStack
-		});
-		
+		});		
 	}
 
 	public static void addTradeStationRecipe() {
@@ -56,7 +55,4 @@ class UCRecipeHelper {
 			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.itemSeller
 		});
 	}
-
-	
-
 }

@@ -26,6 +26,5 @@ class UCGuiHandler implements IGuiHandler {
                 return new UCTradeStationGUI(player.inventory, (UCTileEntity) tileEntity);
         }
         return null;
-	}
-	
+	}	
 }

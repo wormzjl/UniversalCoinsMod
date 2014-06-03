@@ -7,8 +7,7 @@ import net.minecraft.item.ItemStack;
 
 
 class UCSlotCoinInput extends Slot {
-
-
+	
 	public UCSlotCoinInput(IInventory par1IInventory, int par2, int par3, int par4) {
 		super(par1IInventory, par2, par3, par4);
 	}
