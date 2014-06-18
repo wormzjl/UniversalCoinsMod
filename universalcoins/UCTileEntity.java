@@ -1,5 +1,6 @@
 package universalcoins;
 
+import cpw.mods.fml.common.FMLLog;
 import universalcoins.net.PacketUpdateTE;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
@@ -100,7 +101,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
 					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-					sendTEPacket(coinSum);
+					sendTEPacket();
 				}
 			}
 		}
@@ -288,8 +289,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			sellButtonActive = false;
 			return;
 		}
-		ItemStack revenueStack = UCItemPricer.getRevenueStack(itemPrice
-				* amount);
+		ItemStack revenueStack = UCItemPricer.getRevenueStack(itemPrice * amount);
 		// FMLLog.info("Universal Coins: Revenue stack: " + revenueStack);
 		if (!bypassActive) {
 			if (inventory[revenueSlot] == null) {
@@ -339,16 +339,20 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		ItemStack revenueStack;
 		if (!bypassActive) {
 			if (inventory[revenueSlot] == null) {
-				Integer totalRevenue = inventory[tradedItemSlot].stackSize
-						* itemPrice;
-				revenueStack = UCItemPricer
-						.getRevenueStack(inventory[tradedItemSlot].stackSize
-								* itemPrice);
-				if (totalRevenue <= 64 * 729) {
-					amount = inventory[tradedItemSlot].stackSize;
-				} else {
+				revenueStack = UCItemPricer.getRevenueStack(inventory[tradedItemSlot].stackSize * itemPrice);
+				Integer totalRevenue = inventory[tradedItemSlot].stackSize * itemPrice;
+				FMLLog.info("UC: Total Revenue: " + totalRevenue);
+				
+				if (totalRevenue > 64 * 729) {
 					amount = (64 * 729) / itemPrice;
+				} else if (totalRevenue > 64 * 81) {
+					amount = (64 * 81) / itemPrice;
+				} else if (totalRevenue > 64 * 9) {
+					amount = (64 * 9) / itemPrice;
+				} else {
+					amount = inventory[tradedItemSlot].stackSize;
 				}
+				FMLLog.info("UC: Amount to sell: " + amount);	
 			} else if (inventory[revenueSlot].stackSize < 64) {
 				int lastOK = 0;
 				for (int i = 1; i <= inventory[tradedItemSlot].stackSize; i++) {
@@ -461,13 +465,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} else if (autoMode == 1) {
 			onBuyMaxPressed();
 			if (needCoinSumUpdate && !this.worldObj.isRemote) {
-				sendTEPacket(coinSum);
+				sendTEPacket();
 			}
 			needCoinSumUpdate = false;
 		} else if (autoMode == 2) {
 			onSellMaxPressed();
 			if (needCoinSumUpdate && !this.worldObj.isRemote) {
-				sendTEPacket(coinSum);
+				sendTEPacket();
 			}
 			needCoinSumUpdate = false;
 			// FMLLog.info("UC: coins = " + coinSum);
@@ -532,22 +536,17 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		UniversalCoins.packetPipeline.sendToServer(packet);
 	}
 
-	public void sendTEPacket(int coinsum) {
-		PacketUpdateTE packet = new PacketUpdateTE(xCoord, yCoord, zCoord,
-				coinsum, autoMode);
+	public void sendTEPacket() {
+		PacketUpdateTE packet = new PacketUpdateTE(xCoord, yCoord, zCoord, itemPrice, coinSum, autoMode);
 		UniversalCoins.packetPipeline.sendToAll(packet);
 	}
 
 	@Override
 	public void openInventory() {
-		// mark block dirty to update on open
-		//this.markDirty();
 	}
 
 	@Override
 	public void closeInventory() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void onInventoryChanged() {

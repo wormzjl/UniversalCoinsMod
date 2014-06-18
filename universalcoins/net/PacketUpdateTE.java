@@ -10,16 +10,17 @@ import net.minecraft.world.World;
 
 public class PacketUpdateTE extends AbstractPacket{
 	
-	private int x, y, z, coinsum, automode;
+	private int x, y, z, itemprice, coinsum, automode;
 	
 public PacketUpdateTE() {
     	
     }
 
-public PacketUpdateTE(int x, int y, int z, int coinsum, int automode) {
+public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int automode) {
 	this.x = x;
     this.y = y;
     this.z = z;
+    this.itemprice = itemprice;
     this.coinsum = coinsum;
     this.automode = automode;
 }
@@ -29,6 +30,7 @@ public PacketUpdateTE(int x, int y, int z, int coinsum, int automode) {
 		buffer.writeInt(x);
         buffer.writeInt(y);
         buffer.writeInt(z);
+        buffer.writeInt(itemprice);
         buffer.writeInt(coinsum);
         buffer.writeInt(automode);
 	}
@@ -38,6 +40,7 @@ public PacketUpdateTE(int x, int y, int z, int coinsum, int automode) {
 		x = buffer.readInt();
         y = buffer.readInt();
         z = buffer.readInt();
+        itemprice = buffer.readInt();
         coinsum = buffer.readInt();
         automode = buffer.readInt();
 	}
@@ -48,6 +51,7 @@ public PacketUpdateTE(int x, int y, int z, int coinsum, int automode) {
 		//FMLLog.info("UC: Client received PacketCoinSum");
 		TileEntity ucTileEntity = world.getTileEntity(x, y, z);
         if (ucTileEntity instanceof UCTileEntity) {
+        	((UCTileEntity) ucTileEntity).itemPrice = itemprice;
         	((UCTileEntity) ucTileEntity).coinSum = coinsum;
         	((UCTileEntity) ucTileEntity).autoMode = automode;
         }
@@ -59,6 +63,7 @@ public PacketUpdateTE(int x, int y, int z, int coinsum, int automode) {
 		
 		TileEntity ucTileEntity = world.getTileEntity(x, y, z);
         if (ucTileEntity instanceof UCTileEntity) {
+        	itemprice = ((UCTileEntity) ucTileEntity).itemPrice;
         	coinsum = ((UCTileEntity) ucTileEntity).coinSum;
         	automode = ((UCTileEntity) ucTileEntity).autoMode;
         }
