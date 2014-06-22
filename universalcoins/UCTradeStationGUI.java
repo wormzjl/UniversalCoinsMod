@@ -34,6 +34,7 @@ public class UCTradeStationGUI extends GuiContainer {
 
 	boolean bypass = false;
 	boolean shiftPressed = false;
+	boolean autoMode = UniversalCoins.autoModeEnabled;
 	
 	public String[] autoLabels = {"Off","Buy","Sell"};
 	
@@ -57,7 +58,6 @@ public class UCTradeStationGUI extends GuiContainer {
 		retrSStackButton = new GuiButton(idSStackButton, 88 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrLStackButton = new GuiButton(idLStackButton, 107 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
 		retrHeapButton = new GuiButton(idHeapButton, 126 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
-		autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 62 + (height - ySize) / 2, 28, 13, "Mode");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
@@ -66,7 +66,12 @@ public class UCTradeStationGUI extends GuiContainer {
 		buttonList.add(retrLStackButton);
 		buttonList.add(retrHeapButton);
 		buttonList.add(bypassButton);
-		buttonList.add(autoModeButton);
+		
+		//display only if auto buy/sell enabled?
+		if (autoMode) {
+			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 62 + (height - ySize) / 2, 28, 13, "Mode");
+			buttonList.add(autoModeButton);
+		}
 	}
 	
 	@Override
@@ -91,8 +96,11 @@ public class UCTradeStationGUI extends GuiContainer {
 			fontRendererObj.drawString("No item.", 124, 65,
 					4210752);
 		}
-		fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 52, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 65, 4210752);
+		//display only if auto buy/sell enabled
+		if (autoMode) {
+			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 52, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 65, 4210752);
+		}
 
 		drawOverlay();
 	}
@@ -150,8 +158,6 @@ public class UCTradeStationGUI extends GuiContainer {
 		retrSStackButton.enabled = tileEntity.sStackButtonActive;
 		retrLStackButton.enabled = tileEntity.isStackButtonActive;
 		retrHeapButton.enabled = tileEntity.heapButtonActive;
-		autoModeButton.enabled = tileEntity.autoModeButtonActive;
-
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -160,6 +166,11 @@ public class UCTradeStationGUI extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
 		//drawOverlay();
+		
+		//draw auto mode box if auto buy/sell enabled
+		if (autoMode) {
+			this.drawTexturedModalRect(x + 37, y + 61, 176, 76, 40, 15);
+		}
 		
 	}
 	
