@@ -22,17 +22,16 @@ import universalcoins.net.PacketTradingStation;
 public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
-	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, bypassButton, autoModeButton;
+	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, coinModeButton, autoModeButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
 	private static final int idSStackButton = 3;
 	private static final int idLStackButton = 4;
 	public static final int idHeapButton = 5;
-	public static final int idBypassButton = 6;
+	public static final int idCoinModeButton = 6;
 	public static final int idAutoModeButton = 7;
 
-	boolean bypass = false;
 	boolean shiftPressed = false;
 	boolean autoMode = UniversalCoins.autoModeEnabled;
 	
@@ -44,20 +43,18 @@ public class UCTradeStationGUI extends GuiContainer {
 		tileEntity = parTileEntity;
 		xSize = 176;
 		ySize = 200;
-
-		bypass = parTileEntity.bypassActive;
 	}
 	
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiButton(idBuyButton, 60 + (width - xSize) / 2, 20 + (height - ySize) / 2, 25, 11, "Buy");
-		sellButton = new GuiButton(idSellButton, 60 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
-		bypassButton = new GuiButton(idBypassButton, 133 + (width - xSize) / 2, 41 + (height - ySize) / 2, 38, 11, "Auto");
-		retrCoinButton = new GuiButton(idCoinButton, 69 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 88 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 107 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
-		retrHeapButton = new GuiButton(idHeapButton, 126 + (width - xSize) / 2, 99 + (height - ySize) / 2, 18, 18, "");
+		buyButton = new GuiButton(idBuyButton, 36 + (width - xSize) / 2, 22 + (height - ySize) / 2, 25, 11, "Buy");
+		sellButton = new GuiButton(idSellButton, 36 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
+		retrCoinButton = new GuiButton(idCoinButton, 95 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrSStackButton = new GuiButton(idSStackButton, 114 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrLStackButton = new GuiButton(idLStackButton, 133 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrHeapButton = new GuiButton(idHeapButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		coinModeButton = new GuiButton(idCoinModeButton, 118 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 13, "Coin");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
@@ -65,11 +62,11 @@ public class UCTradeStationGUI extends GuiContainer {
 		buttonList.add(retrSStackButton);
 		buttonList.add(retrLStackButton);
 		buttonList.add(retrHeapButton);
-		buttonList.add(bypassButton);
+		buttonList.add(coinModeButton);
 		
 		//display only if auto buy/sell enabled?
 		if (autoMode) {
-			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 62 + (height - ySize) / 2, 28, 13, "Mode");
+			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
 			buttonList.add(autoModeButton);
 		}
 	}
@@ -83,23 +80,22 @@ public class UCTradeStationGUI extends GuiContainer {
 		fontRendererObj.drawString(
 				StatCollector.translateToLocal("container.inventory"), 6,
 				ySize - 96 + 2, 4210752);
-		fontRendererObj.drawString(String.valueOf(tileEntity.coinSum), 57, 85,
-				4210752);
+		fontRendererObj.drawString(String.valueOf(tileEntity.coinSum), 98, 57, 4210752);
 		String priceInLocal = "Price:";
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
-		fontRendererObj.drawString(priceInLocal, 118 - stringWidth, 65, 4210752);
+		fontRendererObj.drawString(priceInLocal, 38 - stringWidth, 57, 4210752);
 		if (tileEntity.itemPrice != 0){
-			fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 124, 65,
+			fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 41, 57,
 					4210752);
 		}
 		else{
-			fontRendererObj.drawString("No item.", 124, 65,
+			fontRendererObj.drawString("No item", 41, 57,
 					4210752);
 		}
 		//display only if auto buy/sell enabled
 		if (autoMode) {
-			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 52, 4210752);
-			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 65, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 74, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 87, 4210752);
 		}
 
 		drawOverlay();
@@ -113,44 +109,32 @@ public class UCTradeStationGUI extends GuiContainer {
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 70 + x_offset;
-		y = (height - ySize) / 2 + 100 + y_offset;
+		x = (width - xSize) / 2 + 96 + x_offset;
+		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 89 + x_offset;
-		y = (height - ySize) / 2 + 100 + y_offset;
+		x = (width - xSize) / 2 + 115 + x_offset;
+		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 108 + x_offset;
-		y = (height - ySize) / 2 + 100 + y_offset;
+		x = (width - xSize) / 2 + 134 + x_offset;
+		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 127 + x_offset;
-		y = (height - ySize) / 2 + 100 + y_offset;
+		x = (width - xSize) / 2 + 153 + x_offset;
+		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
-		if (!bypass){
-			v += 16;
-		}
-		else{
-			v += 22;
-		}
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 95 + x_offset;
-		y = (height - ySize) / 2 + 43 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 5, 6);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float par1, int par2,
-			int par3) {
-		bypass = tileEntity.bypassActive;
+	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 
 		buyButton.enabled = tileEntity.buyButtonActive;
 		sellButton.enabled = tileEntity.sellButtonActive;
@@ -169,7 +153,13 @@ public class UCTradeStationGUI extends GuiContainer {
 		
 		//draw auto mode box if auto buy/sell enabled
 		if (autoMode) {
-			this.drawTexturedModalRect(x + 37, y + 61, 176, 76, 40, 15);
+			this.drawTexturedModalRect(x + 37, y + 83, 176, 63, 40, 15);
+		}
+		
+		//draw highlight over currently selected coin type (coinMode)
+		int xHighlight[] = {0, 96, 115, 134, 153};
+		if (tileEntity.coinMode > 0) {
+			this.drawTexturedModalRect(x + xHighlight[tileEntity.coinMode], y + 94, 178, 82, 16, 2);
 		}
 		
 	}
@@ -180,10 +170,6 @@ public class UCTradeStationGUI extends GuiContainer {
 		}
 		else {
 			shiftPressed = false;
-		}
-		if (par1GuiButton.id == idBypassButton){
-			bypass = !bypass;
-			tileEntity.setBypass(bypass);
 		}
 		if (par1GuiButton.id == idBuyButton){
 			if ( shiftPressed ) {
@@ -203,6 +189,9 @@ public class UCTradeStationGUI extends GuiContainer {
 		}
 		else if (par1GuiButton.id == idAutoModeButton) {
 			tileEntity.onAutoModeButtonPressed();
+		}
+		else if (par1GuiButton.id == idCoinModeButton) {
+			tileEntity.onCoinModeButtonPressed();
 		}
 		else if (par1GuiButton.id <= idHeapButton) {
 			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id, shiftPressed);

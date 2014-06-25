@@ -10,19 +10,20 @@ import net.minecraft.world.World;
 
 public class PacketUpdateTE extends AbstractPacket{
 	
-	private int x, y, z, itemprice, coinsum, automode;
+	private int x, y, z, itemprice, coinsum, automode, coinmode;
 	
 public PacketUpdateTE() {
     	
     }
 
-public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int automode) {
+public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int automode, int coinmode) {
 	this.x = x;
     this.y = y;
     this.z = z;
     this.itemprice = itemprice;
     this.coinsum = coinsum;
     this.automode = automode;
+    this.coinmode = coinmode;
 }
 
 	@Override
@@ -33,6 +34,7 @@ public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int autom
         buffer.writeInt(itemprice);
         buffer.writeInt(coinsum);
         buffer.writeInt(automode);
+        buffer.writeInt(coinmode);
 	}
 
 	@Override
@@ -43,6 +45,7 @@ public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int autom
         itemprice = buffer.readInt();
         coinsum = buffer.readInt();
         automode = buffer.readInt();
+        coinmode = buffer.readInt();
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int autom
         	((UCTileEntity) ucTileEntity).itemPrice = itemprice;
         	((UCTileEntity) ucTileEntity).coinSum = coinsum;
         	((UCTileEntity) ucTileEntity).autoMode = automode;
+        	((UCTileEntity) ucTileEntity).coinMode = coinmode;
         }
 	}
 
@@ -66,6 +70,7 @@ public PacketUpdateTE(int x, int y, int z, int itemprice, int coinsum, int autom
         	itemprice = ((UCTileEntity) ucTileEntity).itemPrice;
         	coinsum = ((UCTileEntity) ucTileEntity).coinSum;
         	automode = ((UCTileEntity) ucTileEntity).autoMode;
+        	coinmode = ((UCTileEntity) ucTileEntity).coinMode;
         }
 	}
 

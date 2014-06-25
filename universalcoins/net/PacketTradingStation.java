@@ -15,19 +15,18 @@ import net.minecraft.world.World;
 public class PacketTradingStation extends AbstractPacket {
 	
 	private int x, y, z, button;
-    private boolean shiftPressed, bypass;
+    private boolean shiftPressed;
 	
 public PacketTradingStation() {
     	
     }
 
-public PacketTradingStation(int x, int y, int z, int button, boolean shiftPressed, boolean bypass) {
+public PacketTradingStation(int x, int y, int z, int button, boolean shiftPressed) {
     this.x = x;
     this.y = y;
     this.z = z;
     this.button = button;
     this.shiftPressed = shiftPressed;
-    this.bypass = bypass;
     }
 
 	@Override
@@ -37,7 +36,6 @@ public PacketTradingStation(int x, int y, int z, int button, boolean shiftPresse
         buffer.writeInt(z);
         buffer.writeInt(button);
         buffer.writeBoolean(shiftPressed);
-        buffer.writeBoolean(bypass);
 	}
 
 	@Override
@@ -47,7 +45,6 @@ public PacketTradingStation(int x, int y, int z, int button, boolean shiftPresse
         z = buffer.readInt();
         button = buffer.readInt();
         shiftPressed = buffer.readBoolean();
-        bypass = buffer.readBoolean();
 	}
 
 	@Override
@@ -61,9 +58,6 @@ public PacketTradingStation(int x, int y, int z, int button, boolean shiftPresse
 		
 		TileEntity ucTileEntity = world.getTileEntity(x, y, z);
         if (ucTileEntity instanceof UCTileEntity) {
-        	if (button == UCTradeStationGUI.idBypassButton){
-				((UCTileEntity) ucTileEntity).setBypass(bypass);
-			}
 			if (button == UCTradeStationGUI.idBuyButton) {
 				if ( shiftPressed ) {
 					((UCTileEntity) ucTileEntity).onBuyMaxPressed();
@@ -82,6 +76,9 @@ public PacketTradingStation(int x, int y, int z, int button, boolean shiftPresse
 			}
 			else if (button == UCTradeStationGUI.idAutoModeButton) {
 				((UCTileEntity) ucTileEntity).onAutoModeButtonPressed();
+			}
+			else if (button == UCTradeStationGUI.idCoinModeButton) {
+				((UCTileEntity) ucTileEntity).onCoinModeButtonPressed();
 			}
 			else if (button <= UCTradeStationGUI.idHeapButton){
 				((UCTileEntity) ucTileEntity).onRetrieveButtonsPressed(button, shiftPressed);

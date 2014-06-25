@@ -3,6 +3,7 @@ package universalcoins;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -16,12 +17,9 @@ class UCContainer extends Container {
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to
 		// and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, UCTileEntity.coinInputSlot, 16, 81));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, UCTileEntity.coinOutputSlot, 143, 81));
-		
-		addSlotToContainer(new Slot(tileEntity, UCTileEntity.tradedItemSlot, 36, 27));
-		addSlotToContainer(new UCSlotResult(tileEntity, UCTileEntity.boughtItemsSlot, 114, 14));
-		addSlotToContainer(new UCSlotResult(tileEntity, UCTileEntity.revenueSlot, 114, 40));
+		//addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemCoinSlot, 16, 27));
+		addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemInputSlot, 16, 27));
+		addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemOutputSlot, 144, 27));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -55,8 +53,8 @@ class UCContainer extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 5) {
-				if (!this.mergeItemStack(stackInSlot, 5, 41, true)) {
+			if (slot < 3) {
+				if (!this.mergeItemStack(stackInSlot, 2, 38, true)) {
 					return null;
 				}
 			}
