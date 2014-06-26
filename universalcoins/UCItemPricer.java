@@ -11,12 +11,16 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.FMLLog;
@@ -24,9 +28,8 @@ import cpw.mods.fml.common.registry.GameData;
 
 public class UCItemPricer {
 
-	private static String itemsList = GameData.getItemRegistry().getKeys().toString();
-	private static String blocksList = GameData.getBlockRegistry().getKeys().toString();
 	private static Map<String, Integer> ucPriceMap = new HashMap<String, Integer>(0);
+	private static Map<String, String> ucModnameMap = new HashMap<String, String>(0);
 	private static String configPath = "config/universalcoins/";
 	
 	public static void initializeConfigs(){
@@ -53,7 +56,7 @@ public class UCItemPricer {
 	}
 	
 	public static void loadDefaults() throws IOException {
-		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/universalcoins.cfg","defaultConfigs/BuildCraft.cfg"};
+		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/BuildCraft.cfg","defaultConfigs/universalcoins.cfg"};
 		InputStream priceResource;
 		//load those files into hashmap(ucPriceMap)
 		for (int i = 0; i < configList.length; i++) {
@@ -89,20 +92,30 @@ public class UCItemPricer {
 	}
 
 	public static void buildInitialPricelistHashMap() {
-		// Fill UCPriceMap with initial set of blocks and items from current mods
-		//call only if config folder is empty
-		StringTokenizer tokenizer = new StringTokenizer(itemsList, ", ", false);
-		while (tokenizer.hasMoreElements()) {
-			String token = tokenizer.nextToken();
-			token = token.replaceAll("\\]","").replaceAll("\\[","");
-			ucPriceMap.put(token, new Integer(-1));
-		}
-		StringTokenizer tokenizer1 = new StringTokenizer(blocksList, ", ",
-				false);
-		while (tokenizer1.hasMoreElements()) {
-			String token = tokenizer1.nextToken();
-			token = token.replaceAll("\\]","").replaceAll("\\[","");
-			ucPriceMap.put(token, new Integer(-1));
+		ArrayList<ItemStack> itemsDiscovered = new ArrayList<ItemStack>();
+
+		for (String item : (Iterable<String>) Item.itemRegistry.getKeys()) {
+			// pass the itemkey to a temp variable after splitting on
+			// non-alphanumeric values
+			String[] tempModName = item.split("\\W", 3);
+			// pass the first value as modname
+			String modName = tempModName[0];
+			if (item != null) {
+				Item test = (Item) Item.itemRegistry.getObject(item);
+				// check for meta values so we catch all items
+				test.getSubItems(test, (CreativeTabs) null, itemsDiscovered);
+			}
+			// iterate through the items and update the hashmaps
+			for (ItemStack itemstack : itemsDiscovered) {
+				// get the ingame names - makes the config file pretty
+				String itemName = itemstack.getDisplayName();
+				// update ucModnameMap with items found
+				ucModnameMap.put(itemName, modName);
+				// update ucPriceMap with initial values
+				ucPriceMap.put(itemName, -1);
+			}
+			//clear this variable so we can use it next round
+			itemsDiscovered.clear();
 		}
 	}
 	
@@ -132,8 +145,7 @@ public static void loadPricelists() throws IOException {
 		while (i.hasNext()) {
 			Map.Entry me = (Map.Entry) i.next();
 			String keyname = (String) me.getKey();
-			String[] tempmodname = keyname.split("\\W", 2);
-			String modname = tempmodname[0] + ".cfg";
+			String modname = ucModnameMap.get(keyname) + ".cfg";
 			Path pathToFile = Paths.get(configPath + modname);
 			try {
 				Files.createDirectories(pathToFile.getParent());
@@ -166,16 +178,11 @@ public static void loadPricelists() throws IOException {
 			//FMLLog.warning("itemstack is null");
 			return -1;
 		}
-		return getItemPrice(itemStack.getItem());
-
-	}
-
-	private static int getItemPrice(Item item) {
+		//return getItemPrice(itemStack.getItem());
 		Integer ItemPrice = -1;
-		String itemName = GameData.getItemRegistry().getNameForObject(item);
+		String itemName = itemStack.getDisplayName();
 		if (ucPriceMap.get(itemName) != null) {
 			ItemPrice = ucPriceMap.get(itemName);
-			//FMLLog.info("ItemPrice: " + ItemPrice);
 		}
 		return ItemPrice;
 	}
