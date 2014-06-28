@@ -66,7 +66,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		
 		//display only if auto buy/sell enabled?
 		if (autoMode) {
-			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
+			autoModeButton = new GuiButton(idAutoModeButton, 10 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
 			buttonList.add(autoModeButton);
 		}
 	}
@@ -94,8 +94,8 @@ public class UCTradeStationGUI extends GuiContainer {
 		}
 		//display only if auto buy/sell enabled
 		if (autoMode) {
-			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 74, 4210752);
-			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 40, 87, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 10, 74, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 44, 87, 4210752);
 		}
 
 		drawOverlay();
@@ -153,7 +153,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		
 		//draw auto mode box if auto buy/sell enabled
 		if (autoMode) {
-			this.drawTexturedModalRect(x + 37, y + 83, 176, 63, 40, 15);
+			this.drawTexturedModalRect(x + 41, y + 83, 176, 63, 40, 15);
 		}
 		
 		//draw highlight over currently selected coin type (coinMode)

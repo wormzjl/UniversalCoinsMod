@@ -139,22 +139,21 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 						zCoord + 0.5) < 64;
 	}
 
+
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 		Item stackItem = itemstack.getItem();
-		if (i == itemCoinSlot) {
+		if (slot == itemCoinSlot) {
 			return stackItem == UniversalCoins.itemCoin
 					|| stackItem == UniversalCoins.itemSmallCoinStack
 					|| stackItem == UniversalCoins.itemLargeCoinStack
 					|| stackItem == UniversalCoins.itemCoinHeap;
 		} else { // noinspection RedundantIfStatement
-			if (i == itemInputSlot) {
-				return true;
-			} else {
-				return false;
-			}
+			return slot == itemInputSlot || slot == itemCoinSlot;
 		}
-
 	}
 
 	@Override
@@ -523,6 +522,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 
 	@Override
 	public void closeInventory() {
+		this.markDirty();
 	}
 
 	public void onInventoryChanged() {
@@ -536,13 +536,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	@Override
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
 		//first check if items inserted are coins. put them in the coin input slot if they are.
-		if (var1 == 1 && (var2.getItem() == (UniversalCoins.itemCoin)
+		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.itemCoin)
 						|| var2.getItem() == (UniversalCoins.itemSmallCoinStack)
 						|| var2.getItem() == (UniversalCoins.itemLargeCoinStack) || var2
 						.getItem() == (UniversalCoins.itemCoinHeap))) {
 			return true;
 			//put everything else in the item input slot
-		} else if (var1 == 0) {
+		} else if (var1 == itemInputSlot) {
 			return true;
 		} else {
 			return false;

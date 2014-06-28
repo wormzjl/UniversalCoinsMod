@@ -19,7 +19,7 @@ class UCContainer extends Container {
 		// and the x-y coordinates it resides on-screen
 		//addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemCoinSlot, 16, 27));
 		addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemInputSlot, 16, 27));
-		addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemOutputSlot, 144, 27));
+		addSlotToContainer(new UCSlotResult(tileEntity, UCTileEntity.itemOutputSlot, 144, 27));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
