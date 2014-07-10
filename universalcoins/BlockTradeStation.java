@@ -58,7 +58,6 @@ class BlockTradeStation extends BlockContainer {
 		if (tileEntity == null || player.isSneaking()) {
 				return false;
 		}
-		tileEntity.getDescriptionPacket(); //update the tile entity on gui open
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
     }

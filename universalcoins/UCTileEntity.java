@@ -47,6 +47,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public int coinMode = 0;
 	public boolean needTEUpdate = false;
 
+
 	public UCTileEntity() {
 		super();
 		inventory = new ItemStack[invSize];
@@ -99,7 +100,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
 					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-					sendTEPacket();
+					//sendTEPacket();
 				} 
 			}
 		}
@@ -212,6 +213,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		activateRetrieveButtons();
 		runAutoMode();
 		runCoinMode();
+		if (inventory[itemInputSlot] != null && inventory[itemInputSlot].isItemStackDamageable()) {
+			FMLLog.info("item damage: " + inventory[itemInputSlot].getItemDamage());
+			FMLLog.info("max damage: " + inventory[itemInputSlot].getMaxDamage());
+			if (inventory[itemInputSlot].isItemEnchanted()){
+				FMLLog.info("item is enchanted!");
+			}
+		}
 	}
 
 	private void activateBuySellButtons() {
@@ -228,6 +236,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			} else {
 				ItemStack revenueStack = UCItemPricer.getRevenueStack(itemPrice);
 				sellButtonActive = true;
+				//disable sell button if item is enchanted
+				//TODO add pricing for selling enchantments
+				if (inventory[itemInputSlot].isItemEnchanted()) sellButtonActive = false;
 				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
 						.getItem() == inventory[itemInputSlot].getItem()
 						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot]
@@ -277,6 +288,10 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			sellButtonActive = false;
 			return;
 		}
+		//handle damaged items
+		if (inventory[itemInputSlot].isItemDamaged()) {
+			itemPrice = itemPrice * inventory[itemInputSlot].getItemDamage() / inventory[itemInputSlot].getMaxDamage();
+		}
 		inventory[itemInputSlot].stackSize -= amount;
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
@@ -324,8 +339,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		if (inventory[itemOutputSlot] == null
 				&& inventory[itemInputSlot].getMaxStackSize() >= amount) {
 			coinSum -= itemPrice * amount;
-			inventory[itemOutputSlot] = ItemStack
-					.copyItemStack(inventory[itemInputSlot]);
+			if (inventory[itemInputSlot].isItemDamaged() || inventory[itemInputSlot].isItemEnchanted()) {
+				inventory[itemOutputSlot] = new ItemStack(inventory[itemInputSlot].getItem(), 1);
+			} else inventory[itemOutputSlot] = inventory[itemInputSlot].copy();
 			inventory[itemOutputSlot].stackSize = amount;
 			needTEUpdate = true;
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot]
@@ -408,13 +424,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} else if (autoMode == 1) {
 			onBuyMaxPressed();
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 			needTEUpdate = false;
 		} else if (autoMode == 2) {
 			onSellMaxPressed();
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 			needTEUpdate = false;
 			// FMLLog.info("UC: coins = " + coinSum);
@@ -427,22 +443,22 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} else if (coinMode == 1) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 		} else if (coinMode == 2) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 		} else if (coinMode == 3) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 		} else if (coinMode == 4) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
 			if (needTEUpdate) {
-				sendTEPacket();
+				//sendTEPacket();
 			}
 		}
 		needTEUpdate = false;

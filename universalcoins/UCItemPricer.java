@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.StringTokenizer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameData;
 
@@ -103,16 +105,35 @@ public class UCItemPricer {
 			if (item != null) {
 				Item test = (Item) Item.itemRegistry.getObject(item);
 				// check for meta values so we catch all items
-				test.getSubItems(test, (CreativeTabs) null, itemsDiscovered);
+				// Iterate through damage values and add them if unique
+				for (int i = 0; i < 16; i++) {
+					ItemStack value = new ItemStack(test, 1, i);
+					try {
+						// IIcon icon = test.getIconIndex(value);
+						String name = value.getUnlocalizedName();
+						if (name != null && !itemsDiscovered.contains(name)) {
+							itemsDiscovered.add(value);
+							continue;
+						}
+					} catch (Throwable ex) {
+						// fail quietly
+					}
+				}
 			}
 			// iterate through the items and update the hashmaps
 			for (ItemStack itemstack : itemsDiscovered) {
 				// get the ingame names - makes the config file pretty
-				String itemName = itemstack.getDisplayName();
-				// update ucModnameMap with items found
-				ucModnameMap.put(itemName, modName);
-				// update ucPriceMap with initial values
-				ucPriceMap.put(itemName, -1);
+				String itemName = null;
+				try { itemName = itemstack.getDisplayName();
+				} catch (Throwable ex) {
+					// fail quietly
+				}
+				if (itemName != null && !itemName.contains("tile")) {
+					// update ucModnameMap with items found
+					ucModnameMap.put(itemName, modName);
+					// update ucPriceMap with initial values
+					ucPriceMap.put(itemName, -1);
+				}
 			}
 			//clear this variable so we can use it next round
 			itemsDiscovered.clear();
@@ -122,7 +143,7 @@ public class UCItemPricer {
 public static void loadPricelists() throws IOException {
 	//search config file folder for files
 	File folder = new File(configPath);
-	File[] configList = folder.listFiles();	
+	File[] configList = folder.listFiles();
 	//load those files into hashmap(UCPriceMap)
 	for (int i = 0; i < configList.length; i++) {
 	      if (configList[i].isFile()) {
