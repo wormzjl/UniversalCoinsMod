@@ -1,7 +1,6 @@
 package universalcoins;
 
 import cpw.mods.fml.common.FMLLog;
-import universalcoins.net.PacketUpdateTE;
 import universalcoins.net.PacketPipeline;
 import universalcoins.net.PacketTradingStation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +44,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 
 	public int autoMode = 0;
 	public int coinMode = 0;
-	public boolean needTEUpdate = false;
 
 
 	public UCTileEntity() {
@@ -100,7 +98,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
 					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-					//sendTEPacket();
 				} 
 			}
 		}
@@ -213,13 +210,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		activateRetrieveButtons();
 		runAutoMode();
 		runCoinMode();
-		if (inventory[itemInputSlot] != null && inventory[itemInputSlot].isItemStackDamageable()) {
-			FMLLog.info("item damage: " + inventory[itemInputSlot].getItemDamage());
-			FMLLog.info("max damage: " + inventory[itemInputSlot].getMaxDamage());
-			if (inventory[itemInputSlot].isItemEnchanted()){
-				FMLLog.info("item is enchanted!");
-			}
-		}
 	}
 
 	private void activateBuySellButtons() {
@@ -228,16 +218,15 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			buyButtonActive = false;
 			sellButtonActive = false;
 		} else {
-			itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+			if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 			if (itemPrice == -1) {
 				itemPrice = 0;
 				buyButtonActive = false;
 				sellButtonActive = false;
 			} else {
-				ItemStack revenueStack = UCItemPricer.getRevenueStack(itemPrice);
 				sellButtonActive = true;
 				//disable sell button if item is enchanted
-				//TODO add pricing for selling enchantments
+				//TODO add pricing for selling enchanted items
 				if (inventory[itemInputSlot].isItemEnchanted()) sellButtonActive = false;
 				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
 						.getItem() == inventory[itemInputSlot].getItem()
@@ -276,6 +265,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onSellPressed(int amount) {
+		if (worldObj.isRemote) {
+			return;
+		}
 		if (inventory[itemInputSlot] == null) {
 			sellButtonActive = false;
 			return;
@@ -290,14 +282,14 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		}
 		//handle damaged items
 		if (inventory[itemInputSlot].isItemDamaged()) {
-			itemPrice = itemPrice * inventory[itemInputSlot].getItemDamage() / inventory[itemInputSlot].getMaxDamage();
+			itemPrice = itemPrice * (inventory[itemInputSlot].getMaxDamage() - 
+					inventory[itemInputSlot].getItemDamage()) / inventory[itemInputSlot].getMaxDamage();
 		}
 		inventory[itemInputSlot].stackSize -= amount;
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
 		}
 		coinSum += itemPrice * amount;
-		needTEUpdate = true;
 	}
 
 	public void onSellMaxPressed() {
@@ -314,7 +306,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			return;
 		}
 
-		ItemStack revenueStack;
 		amount = inventory[itemInputSlot].stackSize;
 
 		if (amount != 0) {
@@ -327,6 +318,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onBuyPressed(int amount) {
+		if (worldObj.isRemote) {
+			return;
+		}
 		if (inventory[itemInputSlot] == null) {
 			buyButtonActive = false;
 			return;
@@ -343,7 +337,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[itemOutputSlot] = new ItemStack(inventory[itemInputSlot].getItem(), 1);
 			} else inventory[itemOutputSlot] = inventory[itemInputSlot].copy();
 			inventory[itemOutputSlot].stackSize = amount;
-			needTEUpdate = true;
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot]
 				.getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot]
@@ -352,7 +345,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 						.getMaxStackSize()) {
 			coinSum -= itemPrice * amount;
 			inventory[itemOutputSlot].stackSize += amount;
-			needTEUpdate = true;
 		} else {
 			buyButtonActive = false;
 		}
@@ -423,16 +415,8 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			return;
 		} else if (autoMode == 1) {
 			onBuyMaxPressed();
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
-			needTEUpdate = false;
 		} else if (autoMode == 2) {
 			onSellMaxPressed();
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
-			needTEUpdate = false;
 			// FMLLog.info("UC: coins = " + coinSum);
 		}
 	}
@@ -442,26 +426,13 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			return;
 		} else if (coinMode == 1) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
 		} else if (coinMode == 2) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
 		} else if (coinMode == 3) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
 		} else if (coinMode == 4) {
 			onRetrieveButtonsPressed(coinMode + 1, true);
-			if (needTEUpdate) {
-				//sendTEPacket();
-			}
 		}
-		needTEUpdate = false;
 	}
 	
 	public void onRetrieveButtonsPressed(int buttonClickedID,
@@ -503,7 +474,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[itemOutputSlot].stackSize++;
 			}
 		}
-		needTEUpdate = true;
 	}
 
 	// Client Server Sync
@@ -527,18 +497,12 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		UniversalCoins.packetPipeline.sendToServer(packet);
 	}
 
-	public void sendTEPacket() {
-		PacketUpdateTE packet = new PacketUpdateTE(xCoord, yCoord, zCoord, itemPrice, coinSum, autoMode, coinMode);
-		UniversalCoins.packetPipeline.sendToAll(packet);
-	}
-
 	@Override
 	public void openInventory() {
 	}
 
 	@Override
 	public void closeInventory() {
-		this.markDirty();
 	}
 
 	public void onInventoryChanged() {
