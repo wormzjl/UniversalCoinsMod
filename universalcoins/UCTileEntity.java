@@ -29,7 +29,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			UniversalCoins.itemSmallCoinStack,
 			UniversalCoins.itemLargeCoinStack, UniversalCoins.itemCoinHeap };
 	public int coinSum = 0;
-	public int itemPrice;
+	private int lastCoinSum = 0;
+	public int itemPrice = 0;
+	private int lastItemPrice = 0;
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
@@ -50,160 +52,8 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		super();
 		inventory = new ItemStack[invSize];
 	}
-
+	
 	@Override
-	public int getSizeInventory() {
-		return invSize;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i) {
-		if (i >= invSize) {
-			return null;
-		}
-		return inventory[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j) {
-		// FMLLog.info("Stack Size Decreased in slot " + i);
-		ItemStack newStack;
-		if (inventory[i] == null) {
-			return null;
-		}
-		if (inventory[i].stackSize <= j) {
-			newStack = inventory[i];
-			inventory[i] = null;
-
-			return newStack;
-		}
-		newStack = ItemStack.copyItemStack(inventory[i]);
-		newStack.stackSize = j;
-		inventory[i].stackSize -= j;
-		return newStack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		return getStackInSlot(i);
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemStack) {
-		inventory[i] = itemStack;
-		if (itemStack != null) {
-			if (i == itemCoinSlot || i == itemInputSlot) {
-				int coinType = getCoinType(itemStack.getItem());
-				if (coinType != -1) {
-					coinSum += itemStack.stackSize * multiplier[coinType];
-					inventory[i] = null;
-					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-				} 
-			}
-		}
-	}
-
-	private int getCoinType(Item item) {
-		for (int i = 0; i < 4; i++) {
-			if (item == coins[i]) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	public String getInventoryName() {
-		return "Universal Trade Station";
-	}
-
-	public boolean isInventoryNameLocalized() {
-		return false;
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
-				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
-						zCoord + 0.5) < 64;
-	}
-
-
-    /**
-     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
-     */
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
-		Item stackItem = itemstack.getItem();
-		if (slot == itemCoinSlot) {
-			return stackItem == UniversalCoins.itemCoin
-					|| stackItem == UniversalCoins.itemSmallCoinStack
-					|| stackItem == UniversalCoins.itemLargeCoinStack
-					|| stackItem == UniversalCoins.itemCoinHeap;
-		} else { // noinspection RedundantIfStatement
-			return slot == itemInputSlot || slot == itemCoinSlot;
-		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tagCompound) {
-		super.readFromNBT(tagCompound);
-
-		NBTTagList tagList = tagCompound.getTagList("Inventory",
-				Constants.NBT.TAG_COMPOUND);
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < inventory.length) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
-			}
-		}
-		try {
-			coinSum = tagCompound.getInteger("CoinsLeft");
-		} catch (Throwable ex2) {
-			coinSum = 0;
-		}
-		try {
-			autoMode = tagCompound.getInteger("AutoMode");
-		} catch (Throwable ex2) {
-			autoMode = 0;
-		}
-		try {
-			coinMode = tagCompound.getInteger("CoinMode");
-		} catch (Throwable ex2) {
-			coinMode = 0;
-		}
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
-		super.writeToNBT(tagCompound);
-		NBTTagList itemList = new NBTTagList();
-		for (int i = 0; i < inventory.length; i++) {
-			ItemStack stack = inventory[i];
-			if (stack != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte) i);
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
-		}
-		tagCompound.removeTag("CoinsLeft");
-		tagCompound.setTag("Inventory", itemList);
-		tagCompound.setInteger("CoinsLeft", coinSum);
-		tagCompound.setInteger("AutoMode", autoMode);
-		tagCompound.setInteger("CoinMode", coinMode);
-	}
-
 	public void updateEntity() {
 		super.updateEntity();
 		activateBuySellButtons();
@@ -235,6 +85,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 						&& coinSum >= itemPrice;
 			}
 		}
+		if (itemPrice != lastItemPrice) {
+			//update tileentity only if changes are made
+			lastItemPrice = itemPrice;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	private void activateRetrieveButtons() {
@@ -265,9 +120,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onSellPressed(int amount) {
-		if (worldObj.isRemote) {
-			return;
-		}
 		if (inventory[itemInputSlot] == null) {
 			sellButtonActive = false;
 			return;
@@ -275,14 +127,14 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		if (amount > inventory[itemInputSlot].stackSize) {
 			return;
 		}
-		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1) {
 			sellButtonActive = false;
 			return;
 		}
 		//handle damaged items
 		if (inventory[itemInputSlot].isItemDamaged()) {
-			itemPrice = itemPrice * (inventory[itemInputSlot].getMaxDamage() - 
+			if (!worldObj.isRemote) itemPrice = itemPrice * (inventory[itemInputSlot].getMaxDamage() - 
 					inventory[itemInputSlot].getItemDamage()) / inventory[itemInputSlot].getMaxDamage();
 		}
 		inventory[itemInputSlot].stackSize -= amount;
@@ -290,6 +142,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			inventory[itemInputSlot] = null;
 		}
 		coinSum += itemPrice * amount;
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void onSellMaxPressed() {
@@ -300,7 +153,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				return;
 			}
 		}
-		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1) {
 			sellButtonActive = false;
 			return;
@@ -318,14 +171,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onBuyPressed(int amount) {
-		if (worldObj.isRemote) {
-			return;
-		}
 		if (inventory[itemInputSlot] == null) {
 			buyButtonActive = false;
 			return;
 		}
-		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1 || coinSum < itemPrice * amount) {
 			buyButtonActive = false;
 			return;
@@ -348,6 +198,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} else {
 			buyButtonActive = false;
 		}
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void onBuyMaxPressed() {
@@ -356,7 +207,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			buyButtonActive = false;
 			return;
 		}
-		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1 || coinSum < itemPrice) { // can't buy even one
 			buyButtonActive = false;
 			return;
@@ -474,14 +325,74 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[itemOutputSlot].stackSize++;
 			}
 		}
+		if (coinSum != lastCoinSum) {
+			//update tileentity only if changes are made
+			lastCoinSum = coinSum;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound) {
+		super.readFromNBT(tagCompound);
+
+		NBTTagList tagList = tagCompound.getTagList("Inventory",
+				Constants.NBT.TAG_COMPOUND);
+		for (int i = 0; i < tagList.tagCount(); i++) {
+			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+			byte slot = tag.getByte("Slot");
+			if (slot >= 0 && slot < inventory.length) {
+				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
+			}
+		}
+		try {
+			coinSum = tagCompound.getInteger("CoinsLeft");
+		} catch (Throwable ex2) {
+			coinSum = 0;
+		}
+		try {
+			autoMode = tagCompound.getInteger("AutoMode");
+		} catch (Throwable ex2) {
+			autoMode = 0;
+		}
+		try {
+			coinMode = tagCompound.getInteger("CoinMode");
+		} catch (Throwable ex2) {
+			coinMode = 0;
+		}
+		try {
+			itemPrice = tagCompound.getInteger("ItemPrice");
+		} catch (Throwable ex2) {
+			itemPrice = 0;
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tagCompound) {
+		super.writeToNBT(tagCompound);
+		NBTTagList itemList = new NBTTagList();
+		for (int i = 0; i < inventory.length; i++) {
+			ItemStack stack = inventory[i];
+			if (stack != null) {
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setByte("Slot", (byte) i);
+				stack.writeToNBT(tag);
+				itemList.appendTag(tag);
+			}
+		}
+		tagCompound.removeTag("CoinsLeft");
+		tagCompound.setTag("Inventory", itemList);
+		tagCompound.setInteger("CoinsLeft", coinSum);
+		tagCompound.setInteger("AutoMode", autoMode);
+		tagCompound.setInteger("CoinMode", coinMode);
+		tagCompound.setInteger("ItemPrice", itemPrice);
 	}
 
 	// Client Server Sync
 	@Override
-	public void onDataPacket(NetworkManager net,
-			S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
-		//FMLLog.info("UC: received S35 packet");
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+		this.readFromNBT(packet.func_148857_g());
+		FMLLog.info("UC: received S35 packet");
 	}
 
 	@Override
@@ -504,10 +415,110 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	@Override
 	public void closeInventory() {
 	}
-
-	public void onInventoryChanged() {
+	
+	@Override
+	public int getSizeInventory() {
+		return invSize;
+	}
+	
+	public String getInventoryName() {
+		return "Universal Trade Station";
 	}
 
+	public boolean isInventoryNameLocalized() {
+		return false;
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i) {
+		if (i >= invSize) {
+			return null;
+		}
+		return inventory[i];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j) {
+		// FMLLog.info("Stack Size Decreased in slot " + i);
+		ItemStack newStack;
+		if (inventory[i] == null) {
+			return null;
+		}
+		if (inventory[i].stackSize <= j) {
+			newStack = inventory[i];
+			inventory[i] = null;
+
+			return newStack;
+		}
+		newStack = ItemStack.copyItemStack(inventory[i]);
+		newStack.stackSize = j;
+		inventory[i].stackSize -= j;
+		return newStack;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i) {
+		return getStackInSlot(i);
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemStack) {
+		inventory[i] = itemStack;
+		if (itemStack != null) {
+			if (i == itemCoinSlot || i == itemInputSlot) {
+				int coinType = getCoinType(itemStack.getItem());
+				if (coinType != -1) {
+					coinSum += itemStack.stackSize * multiplier[coinType];
+					inventory[i] = null;
+					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
+				}
+			}
+		}
+	}
+
+	private int getCoinType(Item item) {
+		for (int i = 0; i < 4; i++) {
+			if (item == coins[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
+				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
+						zCoord + 0.5) < 64;
+	}
+
+
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+		Item stackItem = itemstack.getItem();
+		if (slot == itemCoinSlot) {
+			return stackItem == UniversalCoins.itemCoin
+					|| stackItem == UniversalCoins.itemSmallCoinStack
+					|| stackItem == UniversalCoins.itemLargeCoinStack
+					|| stackItem == UniversalCoins.itemCoinHeap;
+		} else { // noinspection RedundantIfStatement
+			return slot == itemInputSlot || slot == itemCoinSlot;
+		}
+	}
+	
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1) {
 		return var1 == 0 ? slots_bottom : (var1 == 1 ? slots_top : slots_sides);
