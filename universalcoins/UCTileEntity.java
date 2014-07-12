@@ -70,7 +70,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			sellButtonActive = false;
 		} else {
 			if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
-			if (itemPrice == -1) {
+			if (itemPrice == -1 || itemPrice == 0) { 
 				itemPrice = 0;
 				buyButtonActive = false;
 				sellButtonActive = false;
@@ -243,23 +243,15 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onAutoModeButtonPressed() {
-		if (autoMode == 0) {
-			autoMode = 1;
-		} else if (autoMode == 1) {
-			autoMode = 2;
-		} else autoMode = 0;
+		if (autoMode == 2) {
+			autoMode = 0;
+		} else autoMode++;
 	}
 	
 	public void onCoinModeButtonPressed() {
-		if (coinMode == 0) {
-			coinMode = 1;
-		} else if (coinMode == 1) {
-			coinMode = 2;
-		} else if (coinMode == 2) {
-			coinMode = 3;
-		} else if (coinMode == 3) {
-			coinMode = 4;
-		} else coinMode = 0;
+		if (coinMode == 4) {
+			coinMode = 0;
+		} else coinMode++;
 	}
 
 	public void runAutoMode() {
@@ -276,13 +268,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public void runCoinMode() {
 		if (coinMode == 0 || this.worldObj.isRemote) {
 			return;
-		} else if (coinMode == 1) {
-			onRetrieveButtonsPressed(coinMode + 1, true);
-		} else if (coinMode == 2) {
-			onRetrieveButtonsPressed(coinMode + 1, true);
-		} else if (coinMode == 3) {
-			onRetrieveButtonsPressed(coinMode + 1, true);
-		} else if (coinMode == 4) {
+		} else  {
 			onRetrieveButtonsPressed(coinMode + 1, true);
 		}
 	}
