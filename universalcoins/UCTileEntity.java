@@ -1,8 +1,9 @@
 package universalcoins;
 
+import universalcoins.net.GuiButtonMessage;
 import cpw.mods.fml.common.FMLLog;
-import universalcoins.net.PacketPipeline;
-import universalcoins.net.PacketTradingStation;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -366,6 +367,20 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			itemPrice = 0;
 		}
 	}
+	
+	// Client Server Sync
+			@Override
+			public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+				this.readFromNBT(packet.func_148857_g());
+				//FMLLog.info("client received S35 packet");
+			}
+
+			@Override
+			public Packet getDescriptionPacket() {
+				NBTTagCompound tag = new NBTTagCompound();
+				this.writeToNBT(tag);
+				return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+			}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
@@ -388,24 +403,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("ItemPrice", itemPrice);
 	}
 
-	// Client Server Sync
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		this.readFromNBT(packet.func_148857_g());
-		FMLLog.info("UC: received S35 packet");
-	}
-
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
-	}
-
 	public void sendPacket(int button, boolean shiftPressed) {
-		PacketTradingStation packet = new PacketTradingStation(xCoord, yCoord,
-				zCoord, button, shiftPressed);
-		UniversalCoins.packetPipeline.sendToServer(packet);
+		UniversalCoins.snw.sendToServer(new GuiButtonMessage(xCoord, yCoord,
+				zCoord, button, shiftPressed));
 	}
 
 	@Override
@@ -480,6 +480,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				if (coinType != -1) {
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
 				}
 			}

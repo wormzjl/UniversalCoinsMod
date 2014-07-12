@@ -1,6 +1,6 @@
 package universalcoins;
 
-import universalcoins.net.PacketPipeline;
+import universalcoins.net.GuiButtonMessage;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -15,9 +15,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
@@ -46,7 +48,7 @@ public class UniversalCoins {
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
 	
-    public static final PacketPipeline packetPipeline = new PacketPipeline();
+	public static SimpleNetworkWrapper snw; 
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -55,8 +57,10 @@ public class UniversalCoins {
 		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(false);
 		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(false);
 		config.save();
-	    packetPipeline.initalise();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
+	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
+	    snw.registerMessage(GuiButtonMessage.Handler.class, GuiButtonMessage.class, 0, Side.SERVER);
+	    //snw.registerMessage(TEUpdateMessage.Handler.class, TEUpdateMessage.class, 1, Side.CLIENT); 
 	}
 	
 	@EventHandler
@@ -88,7 +92,6 @@ public class UniversalCoins {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		packetPipeline.postInitialise();
 	    UCItemPricer.initializeConfigs();
 	    UCItemPricer.loadConfigs();	
 	}
