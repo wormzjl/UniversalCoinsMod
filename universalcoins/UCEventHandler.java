@@ -11,7 +11,7 @@ public class UCEventHandler {
 		if (UniversalCoins.updateCheck) {
 			if (UpdateCheck.isUpdateAvailable()) {
 				event.player.addChatComponentMessage(new ChatComponentText(
-				"Universal Coins " + UpdateCheck.latestVersion + " update available. See http://goo.gl/Fot7wW for details."));
+				"Universal Coins version " + UpdateCheck.latestVersion + " is the latest. See http://goo.gl/Fot7wW for details."));
 			}
 		}
 	}

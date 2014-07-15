@@ -17,8 +17,6 @@ import cpw.mods.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import universalcoins.net.GuiButtonMessage;
-
 public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;

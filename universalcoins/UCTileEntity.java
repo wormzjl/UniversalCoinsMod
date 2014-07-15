@@ -1,6 +1,7 @@
 package universalcoins;
 
-import universalcoins.net.GuiButtonMessage;
+import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCTileEntityMessage;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -46,6 +47,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	private static final int[] slots_sides = new int[] { 0, 1, 2, 3, 4 };
 
 	public int autoMode = 0;
+	private int lastAutoMode = 0;
 	public int coinMode = 0;
 
 
@@ -62,7 +64,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		runAutoMode();
 		runCoinMode();
 	}
-
+	
 	private void activateBuySellButtons() {
 		if (inventory[itemInputSlot] == null) {
 			itemPrice = 0;
@@ -255,6 +257,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void runAutoMode() {
+		if (lastAutoMode != autoMode) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		if (autoMode == 0 || this.worldObj.isRemote) {
 			return;
 		} else if (autoMode == 1) {
@@ -354,19 +357,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		}
 	}
 	
-	// Client Server Sync
-			@Override
-			public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-				this.readFromNBT(packet.func_148857_g());
-				//FMLLog.info("client received S35 packet");
-			}
-
-			@Override
-			public Packet getDescriptionPacket() {
-				NBTTagCompound tag = new NBTTagCompound();
-				this.writeToNBT(tag);
-				return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
-			}
+	@Override
+    public Packet getDescriptionPacket()
+    {
+        return UniversalCoins.snw.getPacketFrom(new UCTileEntityMessage(this));
+    }
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
@@ -390,7 +385,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void sendPacket(int button, boolean shiftPressed) {
-		UniversalCoins.snw.sendToServer(new GuiButtonMessage(xCoord, yCoord,
+		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord,
 				zCoord, button, shiftPressed));
 	}
 

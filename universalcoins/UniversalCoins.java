@@ -1,6 +1,7 @@
 package universalcoins;
 
-import universalcoins.net.GuiButtonMessage;
+import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCTileEntityMessage;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -35,7 +36,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.5.3";
+	public static final String version = "1.7.2-1.5.3";
 	
 	public static Item itemCoin;
 	public static Item itemSmallCoinStack;
@@ -47,6 +48,7 @@ public class UniversalCoins {
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
+	public static Boolean recipesEnabled;
 	
 	public static SimpleNetworkWrapper snw; 
 	
@@ -56,11 +58,12 @@ public class UniversalCoins {
 		config.load();
 		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(false);
 		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(false);
+		recipesEnabled = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true).getBoolean(false);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
-	    snw.registerMessage(GuiButtonMessage.Handler.class, GuiButtonMessage.class, 0, Side.SERVER);
-	    //snw.registerMessage(TEUpdateMessage.Handler.class, TEUpdateMessage.class, 1, Side.CLIENT); 
+	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
+	    snw.registerMessage(UCTileEntityMessage.class, UCTileEntityMessage.class, 1, Side.CLIENT); 
 	}
 	
 	@EventHandler
@@ -84,7 +87,9 @@ public class UniversalCoins {
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		
 		UCRecipeHelper.addCoinRecipes();
-		UCRecipeHelper.addTradeStationRecipe();
+		if (recipesEnabled) {
+			UCRecipeHelper.addTradeStationRecipe();
+		}
 		
 		GameRegistry.registerTileEntity(UCTileEntity.class, "UCTileEntity");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new UCGuiHandler());		
