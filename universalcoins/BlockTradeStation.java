@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -16,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
@@ -53,7 +55,7 @@ class BlockTradeStation extends BlockContainer {
 	
 	@Override
     public boolean onBlockActivated(World world, int x, int y, int z,
-    								EntityPlayer player, int par6, float par7, float par8, float par9) {
+    			EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity == null || player.isSneaking()) {
 				return false;
@@ -61,6 +63,13 @@ class BlockTradeStation extends BlockContainer {
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
     }
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+		if (stack.hasDisplayName()) {
+            ((UCTileEntity)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
+        }
+	}
 	
 	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
 		dropItems(world, x, y, z);
@@ -77,13 +86,13 @@ class BlockTradeStation extends BlockContainer {
 		}
 		int sumLeft = tileEntity.coinSum;
 		while (sumLeft > 0){
-			if (sumLeft <= 729 * 64){
+			if (sumLeft <= 6561 * 64){
 				dropStack(world, x, y, z, UCItemPricer.getRevenueStack(sumLeft), rand);
 				sumLeft = 0;
 			}
 			else{
-				dropStack(world, x, y, z, new ItemStack(UniversalCoins.itemCoinHeap, 64), rand);
-				sumLeft -= 729 * 64;
+				dropStack(world, x, y, z, new ItemStack(UniversalCoins.itemLargeCoinBag, 64), rand);
+				sumLeft -= 6561 * 64;
 			}
 		}
 	}

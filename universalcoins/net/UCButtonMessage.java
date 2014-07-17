@@ -47,32 +47,32 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 	public IMessage onMessage(UCButtonMessage message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
-		TileEntity ucTileEntity = world.getTileEntity(message.x, message.y,
+		TileEntity tileEntity = world.getTileEntity(message.x, message.y,
 				message.z);
-		if (ucTileEntity instanceof UCTileEntity) {
+		if (tileEntity instanceof UCTileEntity) {
 			if (message.buttonId == UCTradeStationGUI.idBuyButton) {
 				if (message.shiftPressed) {
-					((UCTileEntity) ucTileEntity).onBuyMaxPressed();
+					((UCTileEntity) tileEntity).onBuyMaxPressed();
 				} else {
-					((UCTileEntity) ucTileEntity).onBuyPressed();
+					((UCTileEntity) tileEntity).onBuyPressed();
 				}
 			} else if (message.buttonId == UCTradeStationGUI.idSellButton) {
 				if (message.shiftPressed) {
-					((UCTileEntity) ucTileEntity).onSellMaxPressed();
+					((UCTileEntity) tileEntity).onSellMaxPressed();
 				} else {
-					((UCTileEntity) ucTileEntity).onSellPressed();
+					((UCTileEntity) tileEntity).onSellPressed();
 				}
 			} else if (message.buttonId == UCTradeStationGUI.idAutoModeButton) {
-				((UCTileEntity) ucTileEntity).onAutoModeButtonPressed();
+				((UCTileEntity) tileEntity).onAutoModeButtonPressed();
 			} else if (message.buttonId == UCTradeStationGUI.idCoinModeButton) {
-				((UCTileEntity) ucTileEntity).onCoinModeButtonPressed();
-			} else if (message.buttonId <= UCTradeStationGUI.idHeapButton) {
-				((UCTileEntity) ucTileEntity).onRetrieveButtonsPressed(
+				((UCTileEntity) tileEntity).onCoinModeButtonPressed();
+			} else if (message.buttonId <= UCTradeStationGUI.idLBagButton) {
+				((UCTileEntity) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			}
 
 			NBTTagCompound data = new NBTTagCompound();
-			ucTileEntity.writeToNBT(data);
+			tileEntity.writeToNBT(data);
 		}
 		return null; // no response in this case
 	}

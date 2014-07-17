@@ -20,15 +20,16 @@ import org.lwjgl.opengl.GL11;
 public class UCTradeStationGUI extends GuiContainer {
 	
 	private UCTileEntity tileEntity;
-	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrHeapButton, coinModeButton, autoModeButton;
+	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton, coinModeButton, autoModeButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
 	private static final int idSStackButton = 3;
 	private static final int idLStackButton = 4;
-	public static final int idHeapButton = 5;
-	public static final int idCoinModeButton = 6;
-	public static final int idAutoModeButton = 7;
+	public static final int idSBagButton = 5;
+	public static final int idLBagButton = 6;
+	public static final int idCoinModeButton = 7;
+	public static final int idAutoModeButton = 8;
 
 	boolean shiftPressed = false;
 	boolean autoMode = UniversalCoins.autoModeEnabled;
@@ -48,23 +49,25 @@ public class UCTradeStationGUI extends GuiContainer {
 		super.initGui();
 		buyButton = new GuiButton(idBuyButton, 36 + (width - xSize) / 2, 22 + (height - ySize) / 2, 25, 11, "Buy");
 		sellButton = new GuiButton(idSellButton, 36 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
-		retrCoinButton = new GuiButton(idCoinButton, 95 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 114 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 133 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrHeapButton = new GuiButton(idHeapButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		coinModeButton = new GuiButton(idCoinModeButton, 118 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 13, "Coin");
+		retrCoinButton = new GuiButton(idCoinButton, 80 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrSStackButton = new GuiButton(idSStackButton, 98 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrLStackButton = new GuiButton(idLStackButton, 116 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrSBagButton = new GuiButton(idSBagButton, 134 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrLBagButton = new GuiButton(idLBagButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		coinModeButton = new GuiButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 13, "Coin");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
 		buttonList.add(retrCoinButton);
 		buttonList.add(retrSStackButton);
 		buttonList.add(retrLStackButton);
-		buttonList.add(retrHeapButton);
+		buttonList.add(retrSBagButton);
+		buttonList.add(retrLBagButton);
 		buttonList.add(coinModeButton);
 		
 		//display only if auto buy/sell enabled?
 		if (autoMode) {
-			autoModeButton = new GuiButton(idAutoModeButton, 10 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
+			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
 			buttonList.add(autoModeButton);
 		}
 	}
@@ -73,7 +76,7 @@ public class UCTradeStationGUI extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString("Universal Coins Trade Station", 6, 5, 4210752);
+		fontRendererObj.drawString(tileEntity.getInventoryName(), 6, 5, 4210752);
 		// draws "Inventory" or your regional equivalent
 		fontRendererObj.drawString(
 				StatCollector.translateToLocal("container.inventory"), 6,
@@ -92,8 +95,8 @@ public class UCTradeStationGUI extends GuiContainer {
 		}
 		//display only if auto buy/sell enabled
 		if (autoMode) {
-			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 10, 74, 4210752);
-			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 44, 87, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 74, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 38, 87, 4210752);
 		}
 
 		drawOverlay();
@@ -107,25 +110,32 @@ public class UCTradeStationGUI extends GuiContainer {
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 96 + x_offset;
+		x = (width - xSize) / 2 + 81 + x_offset;
 		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 115 + x_offset;
+		x = (width - xSize) / 2 + 99 + x_offset;
 		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 134 + x_offset;
+		x = (width - xSize) / 2 + 118 + x_offset;
 		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 153 + x_offset;
+		x = (width - xSize) / 2 + 135 + x_offset;
+		y = (height - ySize) / 2 + 75 + y_offset;
+		this.drawTexturedModalRect(x, y, u, v, 16, 16);
+		
+		v = 0;
+		u = 190;
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		x = (width - xSize) / 2 + 152 + x_offset;
 		y = (height - ySize) / 2 + 75 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
@@ -137,9 +147,10 @@ public class UCTradeStationGUI extends GuiContainer {
 		buyButton.enabled = tileEntity.buyButtonActive;
 		sellButton.enabled = tileEntity.sellButtonActive;
 		retrCoinButton.enabled = tileEntity.coinButtonActive;
-		retrSStackButton.enabled = tileEntity.sStackButtonActive;
-		retrLStackButton.enabled = tileEntity.isStackButtonActive;
-		retrHeapButton.enabled = tileEntity.heapButtonActive;
+		retrSStackButton.enabled = tileEntity.isSStackButtonActive;
+		retrLStackButton.enabled = tileEntity.isLStackButtonActive;
+		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
+		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -151,11 +162,11 @@ public class UCTradeStationGUI extends GuiContainer {
 		
 		//draw auto mode box if auto buy/sell enabled
 		if (autoMode) {
-			this.drawTexturedModalRect(x + 41, y + 83, 176, 63, 40, 15);
+			this.drawTexturedModalRect(x + 35, y + 83, 176, 64, 38, 15);
 		}
 		
 		//draw highlight over currently selected coin type (coinMode)
-		int xHighlight[] = {0, 96, 115, 134, 153};
+		int xHighlight[] = {0, 81, 99, 117, 135, 153};
 		if (tileEntity.coinMode > 0) {
 			this.drawTexturedModalRect(x + xHighlight[tileEntity.coinMode], y + 94, 178, 82, 16, 2);
 		}
@@ -191,7 +202,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		else if (par1GuiButton.id == idCoinModeButton) {
 			tileEntity.onCoinModeButtonPressed();
 		}
-		else if (par1GuiButton.id <= idHeapButton) {
+		else if (par1GuiButton.id <= idLBagButton) {
 			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id, shiftPressed);
 		}
 		tileEntity.sendPacket(par1GuiButton.id, shiftPressed);

@@ -15,7 +15,8 @@ class UCRecipeHelper {
 	private static ItemStack oneCoin = new ItemStack(UniversalCoins.itemCoin);
 	private static ItemStack oneSStack = new ItemStack(UniversalCoins.itemSmallCoinStack);
 	private static ItemStack oneLStack = new ItemStack(UniversalCoins.itemLargeCoinStack);
-	private static ItemStack oneHeap = new ItemStack(UniversalCoins.itemCoinHeap);
+	private static ItemStack oneSSack = new ItemStack(UniversalCoins.itemSmallCoinBag);
+	private static ItemStack oneLSack = new ItemStack(UniversalCoins.itemLargeCoinBag);
 	
 	
 	public static void addCoinRecipes(){
@@ -28,7 +29,10 @@ class UCRecipeHelper {
 			oneLStack
 		});
 		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemLargeCoinStack, 9), new Object[]{
-			oneHeap
+			oneSSack
+		});
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemSmallCoinBag, 9), new Object[]{
+			oneLSack
 		});
 		
 		GameRegistry.addShapelessRecipe(oneSStack, new Object[]{
@@ -37,9 +41,12 @@ class UCRecipeHelper {
 		GameRegistry.addShapelessRecipe(oneLStack, new Object[]{
 				oneSStack, oneSStack, oneSStack, oneSStack, oneSStack, oneSStack,oneSStack, oneSStack, oneSStack
 		});
-		GameRegistry.addShapelessRecipe(oneHeap, new Object[]{
+		GameRegistry.addShapelessRecipe(oneSSack, new Object[]{
 				oneLStack, oneLStack, oneLStack, oneLStack, oneLStack, oneLStack,oneLStack, oneLStack, oneLStack
-		});		
+		});
+		GameRegistry.addShapelessRecipe(oneLSack, new Object[]{
+				oneSSack, oneSSack, oneSSack, oneSSack, oneSSack, oneSSack, oneSSack, oneSSack, oneSSack
+		});
 	}
 
 	public static void addTradeStationRecipe() {

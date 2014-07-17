@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -119,21 +120,14 @@ public class UCItemPricer {
 						// fail quietly
 					}
 				}
+				
 			}
 			// iterate through the items and update the hashmaps
 			for (ItemStack itemstack : itemsDiscovered) {
-				// get the ingame names - makes the config file pretty
-				String itemName = null;
-				try { itemName = itemstack.getDisplayName();
-				} catch (Throwable ex) {
-					// fail quietly
-				}
-				if (itemName != null && !itemName.contains("tile")) {
-					// update ucModnameMap with items found
-					ucModnameMap.put(itemName, modName);
-					// update ucPriceMap with initial values
-					ucPriceMap.put(itemName, -1);
-				}
+				// update ucModnameMap with items found
+				ucModnameMap.put(itemstack.getUnlocalizedName(), modName);
+				// update ucPriceMap with initial values
+				ucPriceMap.put(itemstack.getUnlocalizedName(), -1);
 			}
 			//clear this variable so we can use it next round
 			itemsDiscovered.clear();
@@ -201,7 +195,7 @@ public static void loadPricelists() throws IOException {
 		}
 		//return getItemPrice(itemStack.getItem());
 		Integer ItemPrice = -1;
-		String itemName = itemStack.getDisplayName();
+		String itemName = itemStack.getUnlocalizedName();
 		if (ucPriceMap.get(itemName) != null) {
 			ItemPrice = ucPriceMap.get(itemName);
 		}
@@ -217,9 +211,12 @@ public static void loadPricelists() throws IOException {
 		} else if (itemPrice <= 81 * 64) {
 			return new ItemStack(UniversalCoins.itemLargeCoinStack,
 					itemPrice / 81);
-		} else {
-			return new ItemStack(UniversalCoins.itemCoinHeap, Math.min(
+		} else if (itemPrice <= 729 * 64) {
+			return new ItemStack(UniversalCoins.itemSmallCoinBag, Math.min(
 					itemPrice / 729, 64));
+		}else {
+			return new ItemStack(UniversalCoins.itemLargeCoinBag, Math.min(
+					itemPrice / 6561, 64));
 		}
 	}
 

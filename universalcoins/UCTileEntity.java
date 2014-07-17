@@ -26,10 +26,10 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public static final int itemInputSlot = 0;
 	public static final int itemCoinSlot = 1;
 	public static final int itemOutputSlot = 2;
-	private static final int[] multiplier = new int[] { 1, 9, 81, 729 };
+	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.itemCoin,
-			UniversalCoins.itemSmallCoinStack,
-			UniversalCoins.itemLargeCoinStack, UniversalCoins.itemCoinHeap };
+			UniversalCoins.itemSmallCoinStack, UniversalCoins.itemLargeCoinStack, 
+			UniversalCoins.itemSmallCoinBag, UniversalCoins.itemLargeCoinBag };
 	public int coinSum = 0;
 	private int lastCoinSum = 0;
 	public int itemPrice = 0;
@@ -37,9 +37,10 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
-	public boolean sStackButtonActive = false;
-	public boolean isStackButtonActive = false;
-	public boolean heapButtonActive = false;
+	public boolean isSStackButtonActive = false;
+	public boolean isLStackButtonActive = false;
+	public boolean isSBagButtonActive = false;
+	public boolean isLBagButtonActive = false;
 	public boolean shiftPressed = false;
 	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
 	private static final int[] slots_top = new int[] { 0, 1, 2, 3, 4 };
@@ -49,6 +50,8 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public int autoMode = 0;
 	private int lastAutoMode = 0;
 	public int coinMode = 0;
+	private int lastCoinMode = 0;
+    public String customName;
 
 
 	public UCTileEntity() {
@@ -97,24 +100,29 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 
 	private void activateRetrieveButtons() {
 		coinButtonActive = false;
-		sStackButtonActive = false;
-		isStackButtonActive = false;
-		heapButtonActive = false;
+		isSStackButtonActive = false;
+		isLStackButtonActive = false;
+		isSBagButtonActive = false;
+		isLBagButtonActive = false;
 		if (coinSum > 0) {
 			coinButtonActive = inventory[itemOutputSlot] == null
 					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemCoin && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 9) {
-			sStackButtonActive = inventory[itemOutputSlot] == null
+			isSStackButtonActive = inventory[itemOutputSlot] == null
 					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemSmallCoinStack && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 81) {
-			isStackButtonActive = inventory[itemOutputSlot] == null
+			isLStackButtonActive = inventory[itemOutputSlot] == null
 					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemLargeCoinStack && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 729) {
-			heapButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemCoinHeap && inventory[itemOutputSlot].stackSize != 64);
+			isSBagButtonActive = inventory[itemOutputSlot] == null
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemSmallCoinBag && inventory[itemOutputSlot].stackSize != 64);
+		}
+		if (coinSum >= 6561) {
+			isLBagButtonActive = inventory[itemOutputSlot] == null
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemLargeCoinBag && inventory[itemOutputSlot].stackSize != 64);
 		}
 	}
 
@@ -245,19 +253,28 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void onAutoModeButtonPressed() {
-		if (autoMode == 2) {
-			autoMode = 0;
-		} else autoMode++;
+		if (!worldObj.isRemote) {
+			if (autoMode == 2) {
+				autoMode = 0;
+			} else
+				autoMode++;
+		}
 	}
-	
+
 	public void onCoinModeButtonPressed() {
-		if (coinMode == 4) {
-			coinMode = 0;
-		} else coinMode++;
+		if (!worldObj.isRemote) {
+			if (coinMode == 5) {
+				coinMode = 0;
+			} else
+				coinMode++;
+		}
 	}
 
 	public void runAutoMode() {
-		if (lastAutoMode != autoMode) worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (lastAutoMode != autoMode) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			lastAutoMode = autoMode;
+		}
 		if (autoMode == 0 || this.worldObj.isRemote) {
 			return;
 		} else if (autoMode == 1) {
@@ -269,6 +286,10 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public void runCoinMode() {
+		if (lastCoinMode != coinMode) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			lastCoinMode = coinMode;
+		}
 		if (coinMode == 0 || this.worldObj.isRemote) {
 			return;
 		} else  {
@@ -355,11 +376,15 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} catch (Throwable ex2) {
 			itemPrice = 0;
 		}
+		try {
+			customName = tagCompound.getString("CustomName");
+		} catch (Throwable ex2) {
+			customName = null;
+		}
 	}
 	
 	@Override
-    public Packet getDescriptionPacket()
-    {
+    public Packet getDescriptionPacket() {
         return UniversalCoins.snw.getPacketFrom(new UCTileEntityMessage(this));
     }
 
@@ -382,6 +407,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("AutoMode", autoMode);
 		tagCompound.setInteger("CoinMode", coinMode);
 		tagCompound.setInteger("ItemPrice", itemPrice);
+		tagCompound.setString("CustomName", getInventoryName());
 	}
 
 	public void sendPacket(int button, boolean shiftPressed) {
@@ -403,7 +429,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public String getInventoryName() {
-		return "Universal Trade Station";
+		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.blockTradeStation.getLocalizedName();
+	}
+	
+	public void setInventoryName(String name) {
+		customName = name;
 	}
 
 	public boolean isInventoryNameLocalized() {
@@ -412,7 +442,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 
 	@Override
 	public boolean hasCustomInventoryName() {
-		return false;
+		return this.customName != null && this.customName.length() > 0;
 	}
 
 	@Override
@@ -469,7 +499,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	private int getCoinType(Item item) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 5; i++) {
 			if (item == coins[i]) {
 				return i;
 			}
@@ -495,7 +525,8 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			return stackItem == UniversalCoins.itemCoin
 					|| stackItem == UniversalCoins.itemSmallCoinStack
 					|| stackItem == UniversalCoins.itemLargeCoinStack
-					|| stackItem == UniversalCoins.itemCoinHeap;
+					|| stackItem == UniversalCoins.itemSmallCoinBag
+					|| stackItem == UniversalCoins.itemLargeCoinBag;
 		} else { // noinspection RedundantIfStatement
 			return slot == itemInputSlot || slot == itemCoinSlot;
 		}
@@ -511,8 +542,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		//first check if items inserted are coins. put them in the coin input slot if they are.
 		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.itemCoin)
 						|| var2.getItem() == (UniversalCoins.itemSmallCoinStack)
-						|| var2.getItem() == (UniversalCoins.itemLargeCoinStack) || var2
-						.getItem() == (UniversalCoins.itemCoinHeap))) {
+						|| var2.getItem() == (UniversalCoins.itemLargeCoinStack) 
+						|| var2.getItem() == (UniversalCoins.itemSmallCoinBag)
+						|| var2.getItem() == (UniversalCoins.itemLargeCoinBag))) {
 			return true;
 			//put everything else in the item input slot
 		} else if (var1 == itemInputSlot) {

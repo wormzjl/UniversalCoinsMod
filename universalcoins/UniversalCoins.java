@@ -41,7 +41,9 @@ public class UniversalCoins {
 	public static Item itemCoin;
 	public static Item itemSmallCoinStack;
 	public static Item itemLargeCoinStack;
-	public static Item itemCoinHeap;
+	public static Item itemCoinHeap; //TODO removal in 1.5.4
+	public static Item itemSmallCoinBag;
+	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
 	
 	public static Block blockTradeStation;
@@ -63,7 +65,7 @@ public class UniversalCoins {
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
-	    snw.registerMessage(UCTileEntityMessage.class, UCTileEntityMessage.class, 1, Side.CLIENT); 
+	    snw.registerMessage(UCTileEntityMessage.class, UCTileEntityMessage.class, 1, Side.CLIENT);
 	}
 	
 	@EventHandler
@@ -75,14 +77,18 @@ public class UniversalCoins {
 		itemCoin = new ItemCoin().setUnlocalizedName("itemCoin");
 		itemSmallCoinStack = new ItemSmallCoinStack().setUnlocalizedName("itemSmallCoinStack");
 		itemLargeCoinStack = new ItemLargeCoinStack().setUnlocalizedName("itemLargeCoinStack");
-		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap");
+		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap"); //TODO removal in 1.5.4
+		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
+		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinStack, itemLargeCoinStack.getUnlocalizedName());
-		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName());
+		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName()); //TODO removal in 1.5.4
+		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
+		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		
