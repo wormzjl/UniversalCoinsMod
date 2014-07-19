@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCTileEntityMessage implements IMessage, IMessageHandler<UCTileEntityMessage, IMessage> {
-public int x, y, z, coinSum, itemPrice, autoMode, coinMode;
+public int x, y, z, coinSum, itemPrice;
 public String customName;
 
     public UCTileEntityMessage()
@@ -25,8 +25,6 @@ public String customName;
         this.z = tileEntity.zCoord;
         this.coinSum = tileEntity.coinSum;
         this.itemPrice = tileEntity.itemPrice;
-        this.autoMode = tileEntity.autoMode;
-        this.coinMode = tileEntity.coinMode;
         this.customName = tileEntity.getInventoryName();
     }
 
@@ -38,8 +36,6 @@ public String customName;
         this.z = buf.readInt();
         this.coinSum = buf.readInt();
         this.itemPrice = buf.readInt();
-        this.autoMode = buf.readInt();
-        this.coinMode = buf.readInt();
         this.customName = ByteBufUtils.readUTF8String(buf);
     }
 
@@ -51,8 +47,6 @@ public String customName;
         buf.writeInt(z);
         buf.writeInt(coinSum);
         buf.writeInt(itemPrice);
-        buf.writeInt(autoMode);
-        buf.writeInt(coinMode);
         ByteBufUtils.writeUTF8String(buf, customName);
     }
 
@@ -65,8 +59,6 @@ public String customName;
 			//FMLLog.info("UC: received TE packet");
 			((UCTileEntity) tileEntity).coinSum = message.coinSum;
 			((UCTileEntity) tileEntity).itemPrice = message.itemPrice;
-			((UCTileEntity) tileEntity).autoMode = message.autoMode;
-			((UCTileEntity) tileEntity).coinMode = message.coinMode;
 			((UCTileEntity) tileEntity).setInventoryName(message.customName);
 		}
 		return null;

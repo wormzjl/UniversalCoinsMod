@@ -133,7 +133,7 @@ public class UCTradeStationGUI extends GuiContainer {
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 		
 		v = 0;
-		u = 190;
+		u = 191;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		x = (width - xSize) / 2 + 152 + x_offset;
 		y = (height - ySize) / 2 + 75 + y_offset;

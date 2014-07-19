@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 
 class UCContainer extends Container {
 	private UCTileEntity tileEntity;
+	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
+	private String lastName;
 		
 	public UCContainer(InventoryPlayer inventoryPlayer, UCTileEntity tEntity) {
 		tileEntity = tEntity;
@@ -91,4 +93,50 @@ class UCContainer extends Container {
 		
 		return stack;
 	}
+	
+	/**
+     * Looks for changes made in the container, sends them to every listener.
+     */
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+		
+		for (int i = 0; i < this.crafters.size(); ++i)
+        {
+            ICrafting icrafting = (ICrafting)this.crafters.get(i);
+
+            if (this.lastAutoMode != this.tileEntity.autoMode)
+            {
+                icrafting.sendProgressBarUpdate(this, 0, (int) this.tileEntity.autoMode);
+            }
+            if (this.lastCoinMode != this.tileEntity.coinMode)
+            {
+                icrafting.sendProgressBarUpdate(this, 1, (int) this.tileEntity.coinMode);
+            }
+            if (this.lastCoinSum != this.tileEntity.coinSum
+				|| this.lastItemPrice != this.tileEntity.itemPrice 
+				|| this.lastName != this.tileEntity.customName) {
+            	tileEntity.updateTE();
+            }
+
+		this.lastAutoMode = this.tileEntity.autoMode;
+		this.lastCoinMode = this.tileEntity.coinMode;
+		this.lastCoinSum = this.tileEntity.coinSum;
+		this.lastItemPrice = this.tileEntity.itemPrice;
+		this.lastName = this.tileEntity.customName;
+        }
+	}
+	
+	@SideOnly(Side.CLIENT)
+    public void updateProgressBar(int par1, int par2)
+    {
+        if (par1 == 0)
+        {
+            this.tileEntity.autoMode = par2;
+        }
+        if (par1 == 1)
+        {
+            this.tileEntity.coinMode = par2;
+        }
+    }
+
 }

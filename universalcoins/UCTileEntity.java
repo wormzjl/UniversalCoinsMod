@@ -91,11 +91,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 						&& coinSum >= itemPrice;
 			}
 		}
-		if (itemPrice != lastItemPrice) {
-			//update tileentity only if changes are made
-			lastItemPrice = itemPrice;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
 	}
 
 	private void activateRetrieveButtons() {
@@ -153,7 +148,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 			inventory[itemInputSlot] = null;
 		}
 		coinSum += itemPrice * amount;
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void onSellMaxPressed() {
@@ -209,7 +203,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		} else {
 			buyButtonActive = false;
 		}
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	public void onBuyMaxPressed() {
@@ -271,10 +264,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void runAutoMode() {
-		if (lastAutoMode != autoMode) {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			lastAutoMode = autoMode;
-		}
 		if (autoMode == 0 || this.worldObj.isRemote) {
 			return;
 		} else if (autoMode == 1) {
@@ -286,10 +275,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public void runCoinMode() {
-		if (lastCoinMode != coinMode) {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			lastCoinMode = coinMode;
-		}
 		if (coinMode == 0 || this.worldObj.isRemote) {
 			return;
 		} else  {
@@ -336,11 +321,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				inventory[itemOutputSlot].stackSize++;
 			}
 		}
-		if (coinSum != lastCoinSum) {
-			//update tileentity only if changes are made
-			lastCoinSum = coinSum;
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
 	}
 	
 	@Override
@@ -384,11 +364,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	@Override
-    public Packet getDescriptionPacket() {
-        return UniversalCoins.snw.getPacketFrom(new UCTileEntityMessage(this));
-    }
-
-	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		NBTTagList itemList = new NBTTagList();
@@ -409,6 +384,15 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("CustomName", getInventoryName());
 	}
+	
+	public void updateTE() {
+		 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+    public Packet getDescriptionPacket() {
+        return UniversalCoins.snw.getPacketFrom(new UCTileEntityMessage(this));
+    }
 
 	public void sendPacket(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord,
@@ -491,7 +475,6 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 				if (coinType != -1) {
 					coinSum += itemStack.stackSize * multiplier[coinType];
 					inventory[i] = null;
-					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
 				}
 			}

@@ -45,6 +45,7 @@ public class UniversalCoins {
 	public static Item itemSmallCoinBag;
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
+	//public static Item itemCard;
 	
 	public static Block blockTradeStation;
 	
@@ -80,6 +81,7 @@ public class UniversalCoins {
 		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap"); //TODO removal in 1.5.4
 		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
 		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
+		//itemCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		
@@ -89,6 +91,7 @@ public class UniversalCoins {
 		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName()); //TODO removal in 1.5.4
 		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
+		//GameRegistry.registerItem(itemCard, itemCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		

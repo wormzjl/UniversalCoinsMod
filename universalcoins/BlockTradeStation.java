@@ -58,12 +58,12 @@ class BlockTradeStation extends BlockContainer {
     			EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity == null || player.isSneaking()) {
-				return false;
+			return false;
 		}
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
     }
-	
+		
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		if (stack.hasDisplayName()) {

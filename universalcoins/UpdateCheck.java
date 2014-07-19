@@ -10,14 +10,14 @@ import cpw.mods.fml.common.FMLLog;
 
 public class UpdateCheck {
 
-	public static String latestVersion = null;
+	public static String onlineVersion = null;
 
 	public static boolean isUpdateAvailable() {
 		try {
 			BufferedReader versionFile = new BufferedReader(
 					new InputStreamReader(
 							new URL("https://dl.dropboxusercontent.com/s/h4hy30i1c8qsh2n/version.txt").openStream()));
-			latestVersion = versionFile.readLine();
+			onlineVersion = versionFile.readLine();
 			versionFile.close();
 		} catch (MalformedURLException e) {
 			FMLLog.warning("Universal Coins: Malformed update URL in update check");
@@ -25,7 +25,18 @@ public class UpdateCheck {
 			FMLLog.warning("Universal Coins: IO exception during update check");
 		}
 		
-		if (latestVersion != null && !latestVersion.endsWith(UniversalCoins.version)) {
+		String rawString = UniversalCoins.version;
+		String splitString[] = rawString.split("-");
+		int thisVersion = Integer.parseInt(splitString[1].replaceAll("[^\\d]", ""));
+		
+		if (onlineVersion.isEmpty()) {
+			return false;
+		}
+		
+		String splitString2[] = onlineVersion.split("-");
+		int latestVersion = Integer.parseInt(splitString2[1].replaceAll("[^\\d]", ""));
+		
+		if (latestVersion > thisVersion) {
 			return true;
 		}
 		return false;
