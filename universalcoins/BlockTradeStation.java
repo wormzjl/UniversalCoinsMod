@@ -63,8 +63,7 @@ class BlockTradeStation extends BlockContainer {
 		if (tileEntity == null || player.isSneaking()) {
 			if (player.getCurrentEquippedItem() != null
 					&& player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
-				IToolWrench wrench = (IToolWrench) player
-						.getCurrentEquippedItem().getItem();
+				IToolWrench wrench = (IToolWrench) player.getCurrentEquippedItem().getItem();
 				if (wrench.canWrench(player, x, y, z)) {
 					Random rand = new Random();
 					if (!world.isRemote) {
@@ -102,7 +101,6 @@ class BlockTradeStation extends BlockContainer {
 					itemList.appendTag(tag);
 				}
 			}
-			FMLLog.info("Writing itemList: " + itemList);
 			tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("CoinsLeft", te.coinSum);
 			tagCompound.setInteger("AutoMode", te.autoMode);

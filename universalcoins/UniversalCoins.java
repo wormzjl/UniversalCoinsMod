@@ -65,7 +65,7 @@ public class UniversalCoins {
 		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(true);
 		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(true);
 		recipesEnabled = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true).getBoolean(true);
-		wrenchEnabled = config.get(config.CATEGORY_GENERAL, "Wrench enabled", false).getBoolean(false);
+		wrenchEnabled = config.get(config.CATEGORY_GENERAL, "Wrench enabled", true).getBoolean(true);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 

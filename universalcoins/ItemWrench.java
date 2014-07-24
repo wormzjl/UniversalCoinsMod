@@ -7,11 +7,15 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
 public class ItemWrench extends Item implements IToolWrench {
-
+	
 	public ItemWrench() {
 		super();
+		
+		setFull3D();
+		setMaxStackSize(1);
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 	
@@ -29,4 +33,9 @@ public class ItemWrench extends Item implements IToolWrench {
 	public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
 		player.swingItem();
 	}
+	
+	@Override
+	  public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player) {
+	    return true;
+	  }
 }
