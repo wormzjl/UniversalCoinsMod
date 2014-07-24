@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -46,12 +47,14 @@ public class UniversalCoins {
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
 	//public static Item itemCard;
+	public static Item itemWrench;
 	
 	public static Block blockTradeStation;
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
+	public static Boolean wrenchEnabled;
 	
 	public static SimpleNetworkWrapper snw; 
 	
@@ -59,9 +62,10 @@ public class UniversalCoins {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(false);
-		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(false);
-		recipesEnabled = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true).getBoolean(false);
+		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(true);
+		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(true);
+		recipesEnabled = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true).getBoolean(true);
+		wrenchEnabled = config.get(config.CATEGORY_GENERAL, "Wrench enabled", false).getBoolean(false);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
@@ -83,6 +87,7 @@ public class UniversalCoins {
 		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
 		//itemCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
+		itemWrench = new ItemWrench().setUnlocalizedName("itemWrench");
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
@@ -93,11 +98,15 @@ public class UniversalCoins {
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
 		//GameRegistry.registerItem(itemCard, itemCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
+		if (wrenchEnabled) GameRegistry.registerItem(itemWrench, itemWrench.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		
 		UCRecipeHelper.addCoinRecipes();
 		if (recipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
+		}
+		if (wrenchEnabled) {
+			UCRecipeHelper.addWrenchRecipe();
 		}
 		
 		GameRegistry.registerTileEntity(UCTileEntity.class, "UCTileEntity");

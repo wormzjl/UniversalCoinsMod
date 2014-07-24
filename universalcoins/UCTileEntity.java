@@ -409,7 +409,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	
 	@Override
 	public int getSizeInventory() {
-		return invSize;
+		return inventory.length;
 	}
 	
 	public String getInventoryName() {

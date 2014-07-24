@@ -62,4 +62,13 @@ class UCRecipeHelper {
 			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.itemSeller
 		});
 	}
+	
+	public static void addWrenchRecipe() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.itemWrench), new Object[]{
+			"IXI",
+			"XIX",
+			"XIX",
+			'I', Items.iron_ingot
+		});
+	}
 }

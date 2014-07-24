@@ -2,6 +2,7 @@ package universalcoins;
 
 import java.util.Random;
 
+import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
@@ -16,6 +17,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.IIcon;
@@ -24,6 +26,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Constants;
 
 class BlockTradeStation extends BlockContainer {
 	
@@ -54,87 +57,97 @@ class BlockTradeStation extends BlockContainer {
 	}
 	
 	@Override
-    public boolean onBlockActivated(World world, int x, int y, int z,
-    			EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z,
+			EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity == null || player.isSneaking()) {
-			return false;
+			if (player.getCurrentEquippedItem() != null
+					&& player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
+				IToolWrench wrench = (IToolWrench) player
+						.getCurrentEquippedItem().getItem();
+				if (wrench.canWrench(player, x, y, z)) {
+					Random rand = new Random();
+					if (!world.isRemote) {
+						ItemStack stack = getItemStackWithData(world, x, y, z);
+						EntityItem entityItem = new EntityItem(world, x, y, z,
+								stack);
+						world.spawnEntityInWorld(entityItem);
+						removedByPlayer(world, player, x, y, z);
+						if (player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
+							((IToolWrench) player.getCurrentEquippedItem()
+									.getItem()).wrenchUsed(player, x, y, z);
+						}
+					}
+					return true;
+				}
+			}
 		}
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
-    }
+	}
+	
+	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
+		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1);
+		TileEntity tentity = world.getTileEntity(x, y, z);
+		if (tentity instanceof UCTileEntity) {
+			UCTileEntity te = (UCTileEntity) tentity;
+			NBTTagList itemList = new NBTTagList();
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			for (int i = 0; i < te.getSizeInventory(); i++) {
+				ItemStack invStack = te.getStackInSlot(i);
+				if (invStack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setByte("Slot", (byte) i);
+					invStack.writeToNBT(tag);
+					itemList.appendTag(tag);
+				}
+			}
+			FMLLog.info("Writing itemList: " + itemList);
+			tagCompound.setTag("Inventory", itemList);
+			tagCompound.setInteger("CoinsLeft", te.coinSum);
+			tagCompound.setInteger("AutoMode", te.autoMode);
+			tagCompound.setInteger("CoinMode", te.coinMode);
+			tagCompound.setInteger("ItemPrice", te.itemPrice);
+			tagCompound.setString("CustomName", te.getInventoryName());
+			stack.setTagCompound(tagCompound);
+			return stack;
+		} else
+			return stack;
+	}
 		
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		if (stack.hasDisplayName()) {
+		if (world.isRemote) return;
+		if (stack.hasTagCompound()) {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof UCTileEntity) {
+				UCTileEntity tentity = (UCTileEntity) te;
+				NBTTagCompound tagCompound = stack.getTagCompound();
+				if (tagCompound == null) {
+					return;
+				}
+				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+				for (int i = 0; i < tagList.tagCount(); i++) {
+					NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+					byte slot = tag.getByte("Slot");
+					if (slot >= 0 && slot < tentity.getSizeInventory()) {
+						tentity.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
+					}
+				}
+				tentity.coinSum = tagCompound.getInteger("CoinsLeft");
+				tentity.autoMode = tagCompound.getInteger("AutoMode");
+				tentity.coinMode = tagCompound.getInteger("CoinMode");
+				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
+				tentity.customName = tagCompound.getString("CustomName");
+			}
+			world.markBlockForUpdate(x, y, z);
+		} else if (stack.hasDisplayName()) {
             ((UCTileEntity)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
         }
 	}
 	
 	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
-		dropItems(world, x, y, z);
-		throwCoins(world, x, y, z);
         super.breakBlock(world, x, y, z, par5, par6);
-	}
-
-	private void throwCoins(World world, int x, int y, int z) {
-		Random rand = new Random();
-
-		UCTileEntity tileEntity = (UCTileEntity) world.getTileEntity(x, y, z);
-		if (tileEntity == null) {
-			return;
-		}
-		int sumLeft = tileEntity.coinSum;
-		while (sumLeft > 0){
-			if (sumLeft <= 6561 * 64){
-				dropStack(world, x, y, z, UCItemPricer.getRevenueStack(sumLeft), rand);
-				sumLeft = 0;
-			}
-			else{
-				dropStack(world, x, y, z, new ItemStack(UniversalCoins.itemLargeCoinBag, 64), rand);
-				sumLeft -= 6561 * 64;
-			}
-		}
-	}
-
-	private void dropStack(World world, int x, int y, int z, ItemStack item, Random rand) {
-		float rx = rand.nextFloat() * 0.8F + 0.1F;
-		float ry = rand.nextFloat() * 0.8F + 0.1F;
-		float rz = rand.nextFloat() * 0.8F + 0.1F;
-
-		EntityItem entityItem = new EntityItem(world,
-				x + rx, y + ry, z + rz,
-				new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
-
-		if (item.hasTagCompound()) {
-			entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
-		}
-
-
-		float factor = 0.05F;
-		entityItem.motionX = rand.nextGaussian() * factor;
-		entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
-		entityItem.motionZ = rand.nextGaussian() * factor;
-		world.spawnEntityInWorld(entityItem);
-		item.stackSize = 0;
-	}
-
-	private void dropItems(World world, int x, int y, int z){
-		Random rand = new Random();
-
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (!(tileEntity instanceof IInventory)) {
-			return;
-		}
-		IInventory inventory = (IInventory) tileEntity;
-
-		for (int i = 0; i < inventory.getSizeInventory(); i++) {
-			ItemStack item = inventory.getStackInSlot(i);
-
-			if (item != null && item.stackSize > 0) {
-				dropStack(world, x, y, z, item, rand);
-			}
-		}
 	}
 
 	@Override
