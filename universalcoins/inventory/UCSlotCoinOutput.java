@@ -1,4 +1,4 @@
-package universalcoins;
+package universalcoins.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

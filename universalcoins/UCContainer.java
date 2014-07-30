@@ -1,5 +1,6 @@
 package universalcoins;
 
+import universalcoins.inventory.UCSlotResult;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -1,15 +1,17 @@
-package universalcoins;
+package universalcoins.items;
 
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-class ItemSmallCoinBag extends Item{
+public class ItemLargeCoinStack extends Item {
 
-	public ItemSmallCoinBag() {
+	public ItemLargeCoinStack() {
 		super();
+		this.setUnlocalizedName("itemLargeCoinStack");
 		this.setCreativeTab(CreativeTabs.tabMisc);
 	}
 	

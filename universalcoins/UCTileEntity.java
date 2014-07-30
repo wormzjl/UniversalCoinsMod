@@ -2,6 +2,7 @@ package universalcoins;
 
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileEntityMessage;
+import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;

@@ -1,24 +1,22 @@
-package universalcoins;
+package universalcoins.items;
 
-import net.minecraft.client.Minecraft;
+import universalcoins.UniversalCoins;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-class ItemCoin extends Item {
-
-	public ItemCoin() {
+public class ItemUCCard extends Item {
+	
+	public ItemUCCard() {
 		super();
-		setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(CreativeTabs.tabMisc);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister){
 		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5));
 	}
-
-
 
 }

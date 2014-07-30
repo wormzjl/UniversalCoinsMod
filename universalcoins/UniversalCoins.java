@@ -1,10 +1,25 @@
 package universalcoins;
 
+import universalcoins.items.ItemCoin;
+import universalcoins.items.ItemCoinHeap;
+import universalcoins.items.ItemLargeCoinBag;
+import universalcoins.items.ItemLargeCoinStack;
+import universalcoins.items.ItemSeller;
+import universalcoins.items.ItemSmallCoinBag;
+import universalcoins.items.ItemSmallCoinStack;
+import universalcoins.items.ItemWrench;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileEntityMessage;
+import universalcoins.util.UCCommand;
+import universalcoins.util.UCEventHandler;
+import universalcoins.util.UCItemPricer;
+import universalcoins.util.UCRecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -16,6 +31,7 @@ import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameData;
@@ -37,7 +53,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.5.3";
+	public static final String version = "1.7.2-1.5.4";
 	
 	public static Item itemCoin;
 	public static Item itemSmallCoinStack;
@@ -118,4 +134,13 @@ public class UniversalCoins {
 	    UCItemPricer.initializeConfigs();
 	    UCItemPricer.loadConfigs();	
 	}
+	
+	@EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+		MinecraftServer server = MinecraftServer.getServer();
+		ICommandManager command = server.getCommandManager();
+		ServerCommandManager manager = (ServerCommandManager) command;
+		manager.registerCommand(new UCCommand());
+	}
+
 }

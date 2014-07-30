@@ -1,4 +1,4 @@
-package universalcoins;
+package universalcoins.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import universalcoins.UniversalCoins;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -58,7 +59,7 @@ public class UCItemPricer {
 		}
 	}
 	
-	public static void loadDefaults() throws IOException {
+	private static void loadDefaults() throws IOException {
 		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/BuildCraft.cfg","defaultConfigs/universalcoins.cfg"};
 		InputStream priceResource;
 		//load those files into hashmap(ucPriceMap)
@@ -134,7 +135,7 @@ public class UCItemPricer {
 		}
 	}
 	
-public static void loadPricelists() throws IOException {
+private static void loadPricelists() throws IOException {
 	//search config file folder for files
 	File folder = new File(configPath);
 	File[] configList = folder.listFiles();
@@ -144,9 +145,11 @@ public static void loadPricelists() throws IOException {
 	    	  //FMLLog.info("Universal Coins: Loading Pricelist " + configList[i]);
 	    	  BufferedReader br = new BufferedReader(new FileReader(configList[i]));
 	    	  String tempString = "";
+	    	  String[] modName = configList[i].getName().split("\\.");
 	    	  while ((tempString = br.readLine()) != null) {
 	    		  String[] tempData = tempString.split("=");
 	    		  ucPriceMap.put(tempData[0], Integer.valueOf(tempData[1]));
+	    		  ucModnameMap.put(tempData[0], modName[0]);
 	    	  }
 	    	  br.close();
 	      }  
@@ -174,7 +177,7 @@ public static void loadPricelists() throws IOException {
 					} 
 				catch (IOException e) {
 					FMLLog.warning("Universal Coins: Failed to create config file");
-			}
+					}
 			}
 			try {
 				PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(modconfigfile, true)));
@@ -200,6 +203,55 @@ public static void loadPricelists() throws IOException {
 			ItemPrice = ucPriceMap.get(itemName);
 		}
 		return ItemPrice;
+	}
+	
+	public static int getItemPrice(String string) {
+		if (string.isEmpty()) {
+			return -1;
+		}
+		Integer ItemPrice = -1;
+		if (ucPriceMap.get(string) != null) {
+			ItemPrice = ucPriceMap.get(string);
+		}
+		return ItemPrice;
+	}
+	
+	public static boolean setItemPrice(ItemStack itemStack, int price) {
+		if (itemStack == null) {
+			return false;
+		}
+		String itemName = itemStack.getUnlocalizedName();
+		if (ucPriceMap.containsKey(itemName)) {
+			ucPriceMap.put(itemName, price);
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean setItemPrice(String string, int price) {
+		if (string.isEmpty()) {
+			return false;
+		}
+		if (ucPriceMap.containsKey(string)) {
+			ucPriceMap.put(string, price);
+			return true;
+		}
+		return false;
+	}
+	
+	public static void updatePriceLists() {
+		//delete old configs
+		File folder = new File(configPath);
+		if(folder.exists()){
+	        File[] files = folder.listFiles();
+	        if(null!=files){
+	            for(int i=0; i<files.length; i++) {
+	                    files[i].delete();
+	            }
+	        }
+	    }
+		//write new configs
+		writePriceLists();
 	}
 
 	public static ItemStack getRevenueStack(int itemPrice) {

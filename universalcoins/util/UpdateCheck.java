@@ -1,4 +1,4 @@
-package universalcoins;
+package universalcoins.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.FMLLog;
 
 public class UpdateCheck {
