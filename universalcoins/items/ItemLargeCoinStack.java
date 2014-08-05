@@ -12,7 +12,7 @@ public class ItemLargeCoinStack extends Item {
 	public ItemLargeCoinStack() {
 		super();
 		this.setUnlocalizedName("itemLargeCoinStack");
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -11,7 +11,7 @@ public class ItemUCCard extends Item {
 	
 	public ItemUCCard() {
 		super();
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)

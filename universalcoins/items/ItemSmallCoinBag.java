@@ -11,7 +11,7 @@ public class ItemSmallCoinBag extends Item{
 
 	public ItemSmallCoinBag() {
 		super();
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)

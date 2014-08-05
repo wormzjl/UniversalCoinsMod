@@ -1,5 +1,6 @@
 package universalcoins;
 
+import universalcoins.gui.HintGuiRenderer;
 import universalcoins.items.ItemCoin;
 import universalcoins.items.ItemCoinHeap;
 import universalcoins.items.ItemLargeCoinBag;
@@ -9,17 +10,26 @@ import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemWrench;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileEntityMessage;
+import universalcoins.net.UCTileStationMessage;
+import universalcoins.net.UCTileVendorMessage;
+import universalcoins.net.UCVendorPriceMessage;
+import universalcoins.proxy.CommonProxy;
+import universalcoins.tile.TileTradeStation;
+import universalcoins.tile.TileVendor;
 import universalcoins.util.UCCommand;
 import universalcoins.util.UCEventHandler;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCRecipeHelper;
+import universalcoins.util.Vending;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -27,6 +37,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -55,24 +66,17 @@ public class UniversalCoins {
 	public static final String name = "Universal Coins";
 	public static final String version = "1.7.2-1.5.4";
 	
-	public static Item itemCoin;
-	public static Item itemSmallCoinStack;
-	public static Item itemLargeCoinStack;
-	public static Item itemCoinHeap; //TODO removal in 1.5.4
-	public static Item itemSmallCoinBag;
-	public static Item itemLargeCoinBag;
-	public static Item itemSeller;
-	//public static Item itemCard;
-	public static Item itemWrench;
-	
-	public static Block blockTradeStation;
-	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
 	public static Boolean wrenchEnabled;
 	
-	public static SimpleNetworkWrapper snw; 
+	public static SimpleNetworkWrapper snw;
+	
+	public static CreativeTabs tabUniversalCoins = new UCTab("tabUniversalCoins");
+	
+	@SidedProxy(clientSide="universalcoins.proxy.ClientProxy", serverSide="universalcoins.proxy.CommonProxy")
+	public static CommonProxy proxy;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -86,7 +90,9 @@ public class UniversalCoins {
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
-	    snw.registerMessage(UCTileEntityMessage.class, UCTileEntityMessage.class, 1, Side.CLIENT);
+	    snw.registerMessage(UCVendorPriceMessage.class, UCVendorPriceMessage.class, 1, Side.SERVER);
+	    snw.registerMessage(UCTileVendorMessage.class, UCTileVendorMessage.class, 2, Side.CLIENT);
+	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 3, Side.CLIENT);
 	}
 	
 	@EventHandler
@@ -95,27 +101,9 @@ public class UniversalCoins {
 	
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		itemCoin = new ItemCoin().setUnlocalizedName("itemCoin");
-		itemSmallCoinStack = new ItemSmallCoinStack().setUnlocalizedName("itemSmallCoinStack");
-		itemLargeCoinStack = new ItemLargeCoinStack().setUnlocalizedName("itemLargeCoinStack");
-		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap"); //TODO removal in 1.5.4
-		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
-		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
-		//itemCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
-		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
-		itemWrench = new ItemWrench().setUnlocalizedName("itemWrench");
-		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
-		
-		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
-		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
-		GameRegistry.registerItem(itemLargeCoinStack, itemLargeCoinStack.getUnlocalizedName());
-		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName()); //TODO removal in 1.5.4
-		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
-		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
-		//GameRegistry.registerItem(itemCard, itemCard.getUnlocalizedName());
-		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
-		if (wrenchEnabled) GameRegistry.registerItem(itemWrench, itemWrench.getUnlocalizedName());
-		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
+		proxy.registerBlocks();
+		proxy.registerItems();
+		proxy.registerRenderers();
 		
 		UCRecipeHelper.addCoinRecipes();
 		if (recipesEnabled) {
@@ -125,8 +113,9 @@ public class UniversalCoins {
 			UCRecipeHelper.addWrenchRecipe();
 		}
 		
-		GameRegistry.registerTileEntity(UCTileEntity.class, "UCTileEntity");
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new UCGuiHandler());		
+		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
+		GameRegistry.registerTileEntity(TileVendor.class, "TileVendor");
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	
 	@EventHandler

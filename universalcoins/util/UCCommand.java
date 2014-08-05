@@ -74,13 +74,14 @@ public class UCCommand extends CommandBase{
 					if (result = true) {
 						sender.addChatMessage(new ChatComponentText("UC: price set to " + price));
 						if (firstChange) {
-							sender.addChatMessage(new ChatComponentText("UC: changes are not permanent unless saved"));
+							sender.addChatMessage(new ChatComponentText("UC: changes will not be saved"));
 							sender.addChatMessage(new ChatComponentText("UC: run \"universalcoins save\" to save"));
 							sender.addChatMessage(new ChatComponentText("UC: run \"universalcoins reload\" to undo"));
 							firstChange = false;
 						}
 					} else
 						sender.addChatMessage(new ChatComponentText("UC: failed to set price"));
+						sender.addChatMessage(new ChatComponentText("UC: item may not be priceable"));
 				} else sender.addChatMessage(new ChatComponentText("UC: Please specify item and price"));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();

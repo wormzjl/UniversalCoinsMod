@@ -13,7 +13,7 @@ public class ItemSeller extends Item {
 	public ItemSeller() {
 		super();
 		this.setUnlocalizedName("itemSeller");
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 		this.setMaxStackSize(1);
 	}
 	

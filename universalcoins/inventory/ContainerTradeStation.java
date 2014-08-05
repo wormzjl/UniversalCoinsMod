@@ -1,6 +1,6 @@
-package universalcoins;
+package universalcoins.inventory;
 
-import universalcoins.inventory.UCSlotResult;
+import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,19 +13,19 @@ import net.minecraft.item.ItemStack;
 
 
 
-class UCContainer extends Container {
-	private UCTileEntity tileEntity;
+public class ContainerTradeStation extends Container {
+	private TileTradeStation tileEntity;
 	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
 		
-	public UCContainer(InventoryPlayer inventoryPlayer, UCTileEntity tEntity) {
+	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to
 		// and the x-y coordinates it resides on-screen
 		//addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemCoinSlot, 16, 27));
-		addSlotToContainer(new Slot(tileEntity, UCTileEntity.itemInputSlot, 16, 27));
-		addSlotToContainer(new UCSlotResult(tileEntity, UCTileEntity.itemOutputSlot, 144, 27));
+		addSlotToContainer(new Slot(tileEntity, TileTradeStation.itemInputSlot, 16, 27));
+		addSlotToContainer(new UCSlotResult(tileEntity, TileTradeStation.itemOutputSlot, 144, 27));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

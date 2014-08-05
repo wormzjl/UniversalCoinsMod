@@ -17,9 +17,12 @@ import cpw.mods.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class UCTradeStationGUI extends GuiContainer {
+import universalcoins.inventory.ContainerTradeStation;
+import universalcoins.tile.TileTradeStation;
+
+public class TradeStationGUI extends GuiContainer {
 	
-	private UCTileEntity tileEntity;
+	private TileTradeStation tileEntity;
 	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton, coinModeButton, autoModeButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
@@ -36,9 +39,9 @@ public class UCTradeStationGUI extends GuiContainer {
 	
 	public String[] autoLabels = {"Off","Buy","Sell"};
 	
-	public UCTradeStationGUI(InventoryPlayer inventoryPlayer,
-			UCTileEntity parTileEntity) {
-		super(new UCContainer(inventoryPlayer, parTileEntity));
+	public TradeStationGUI(InventoryPlayer inventoryPlayer,
+			TileTradeStation parTileEntity) {
+		super(new ContainerTradeStation(inventoryPlayer, parTileEntity));
 		tileEntity = parTileEntity;
 		xSize = 176;
 		ySize = 200;

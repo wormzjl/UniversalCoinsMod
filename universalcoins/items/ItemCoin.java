@@ -12,7 +12,7 @@ public class ItemCoin extends Item {
 
 	public ItemCoin() {
 		super();
-		setCreativeTab(CreativeTabs.tabMisc);
+		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)

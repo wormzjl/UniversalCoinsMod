@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 
-class UCSlotCoinInput extends Slot {
+public class UCSlotCoinInput extends Slot {
 	
 	public UCSlotCoinInput(IInventory par1IInventory, int par2, int par3, int par4) {
 		super(par1IInventory, par2, par3, par4);
@@ -19,8 +19,8 @@ class UCSlotCoinInput extends Slot {
 			return true;
 		}
 		Item itemInStack = par1ItemStack.getItem();
-		return (itemInStack == UniversalCoins.itemCoin || itemInStack == UniversalCoins.itemSmallCoinStack ||
-				itemInStack == UniversalCoins.itemLargeCoinStack || itemInStack == UniversalCoins.itemSmallCoinBag 
-				|| itemInStack == UniversalCoins.itemLargeCoinBag);
+		return (itemInStack == UniversalCoins.proxy.itemCoin || itemInStack == UniversalCoins.proxy.itemSmallCoinStack ||
+				itemInStack == UniversalCoins.proxy.itemLargeCoinStack || itemInStack == UniversalCoins.proxy.itemSmallCoinBag 
+				|| itemInStack == UniversalCoins.proxy.itemLargeCoinBag);
 	}
 }

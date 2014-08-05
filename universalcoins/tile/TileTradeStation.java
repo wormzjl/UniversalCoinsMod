@@ -1,7 +1,9 @@
-package universalcoins;
+package universalcoins.tile;
 
+import universalcoins.TradeStationGUI;
+import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileEntityMessage;
+import universalcoins.net.UCTileStationMessage;
 import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -20,7 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
 
-public class UCTileEntity extends TileEntity implements IInventory, ISidedInventory {
+public class TileTradeStation extends TileEntity implements IInventory, ISidedInventory {
 	
 	private ItemStack[] inventory;
 	private final int invSize = 3;
@@ -28,9 +30,9 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public static final int itemCoinSlot = 1;
 	public static final int itemOutputSlot = 2;
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
-	private static final Item[] coins = new Item[] { UniversalCoins.itemCoin,
-			UniversalCoins.itemSmallCoinStack, UniversalCoins.itemLargeCoinStack, 
-			UniversalCoins.itemSmallCoinBag, UniversalCoins.itemLargeCoinBag };
+	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
+			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
 	private int lastCoinSum = 0;
 	public int itemPrice = 0;
@@ -55,7 +57,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
     public String customName;
 
 
-	public UCTileEntity() {
+	public TileTradeStation() {
 		super();
 		inventory = new ItemStack[invSize];
 	}
@@ -102,23 +104,23 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 		isLBagButtonActive = false;
 		if (coinSum > 0) {
 			coinButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemCoin && inventory[itemOutputSlot].stackSize != 64);
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 9) {
 			isSStackButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemSmallCoinStack && inventory[itemOutputSlot].stackSize != 64);
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 81) {
 			isLStackButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemLargeCoinStack && inventory[itemOutputSlot].stackSize != 64);
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 729) {
 			isSBagButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemSmallCoinBag && inventory[itemOutputSlot].stackSize != 64);
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemOutputSlot].stackSize != 64);
 		}
 		if (coinSum >= 6561) {
 			isLBagButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.itemLargeCoinBag && inventory[itemOutputSlot].stackSize != 64);
+					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemOutputSlot].stackSize != 64);
 		}
 	}
 
@@ -285,7 +287,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	
 	public void onRetrieveButtonsPressed(int buttonClickedID,
 			boolean shiftPressed) {
-		int absoluteButton = buttonClickedID - UCTradeStationGUI.idCoinButton;
+		int absoluteButton = buttonClickedID - TradeStationGUI.idCoinButton;
 		int multiplier = 1;
 		for (int i = 0; i < absoluteButton; i++) {
 			multiplier *= 9;
@@ -392,7 +394,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 
 	@Override
     public Packet getDescriptionPacket() {
-        return UniversalCoins.snw.getPacketFrom(new UCTileEntityMessage(this));
+        return UniversalCoins.snw.getPacketFrom(new UCTileStationMessage(this));
     }
 
 	public void sendPacket(int button, boolean shiftPressed) {
@@ -414,7 +416,7 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	}
 	
 	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.blockTradeStation.getLocalizedName();
+		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockTradeStation.getLocalizedName();
 	}
 	
 	public void setInventoryName(String name) {
@@ -506,11 +508,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
 		Item stackItem = itemstack.getItem();
 		if (slot == itemCoinSlot) {
-			return stackItem == UniversalCoins.itemCoin
-					|| stackItem == UniversalCoins.itemSmallCoinStack
-					|| stackItem == UniversalCoins.itemLargeCoinStack
-					|| stackItem == UniversalCoins.itemSmallCoinBag
-					|| stackItem == UniversalCoins.itemLargeCoinBag;
+			return stackItem == UniversalCoins.proxy.itemCoin
+					|| stackItem == UniversalCoins.proxy.itemSmallCoinStack
+					|| stackItem == UniversalCoins.proxy.itemLargeCoinStack
+					|| stackItem == UniversalCoins.proxy.itemSmallCoinBag
+					|| stackItem == UniversalCoins.proxy.itemLargeCoinBag;
 		} else { // noinspection RedundantIfStatement
 			return slot == itemInputSlot || slot == itemCoinSlot;
 		}
@@ -524,11 +526,11 @@ public class UCTileEntity extends TileEntity implements IInventory, ISidedInvent
 	@Override
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
 		//first check if items inserted are coins. put them in the coin input slot if they are.
-		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.itemCoin)
-						|| var2.getItem() == (UniversalCoins.itemSmallCoinStack)
-						|| var2.getItem() == (UniversalCoins.itemLargeCoinStack) 
-						|| var2.getItem() == (UniversalCoins.itemSmallCoinBag)
-						|| var2.getItem() == (UniversalCoins.itemLargeCoinBag))) {
+		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.itemCoin)
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
+						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack) 
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag)
+						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
 			return true;
 			//put everything else in the item input slot
 		} else if (var1 == itemInputSlot) {

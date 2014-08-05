@@ -1,4 +1,5 @@
 tile.blockTradeStation.name=Universal Trade Station
+tile.blockVendor.name=Vending Block
 item.itemCoin.name=Coin
 item.itemSmallCoinStack.name=Coin Stack
 item.itemLargeCoinStack.name=Large Coin Stack
@@ -7,3 +8,4 @@ item.itemSmallCoinBag.name=Coin Bag
 item.itemLargeCoinBag.name=Large Coin Bag
 item.itemSeller.name=Selling Catalog
 item.itemWrench.name=Wrench
+itemGroup.tabUniversalCoins=Universal Coins

@@ -11,7 +11,7 @@ public class ItemLargeCoinBag extends Item{
 
 	public ItemLargeCoinBag() {
 		super();
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)

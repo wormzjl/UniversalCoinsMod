@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-class UCSlotCoinOutput extends Slot {
+public class UCSlotCoinOutput extends Slot {
 	public UCSlotCoinOutput(IInventory parInventory, int parSlotIndex, int parX, int parY) {
 		super(parInventory, parSlotIndex, parX, parY);
 	}

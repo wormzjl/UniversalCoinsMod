@@ -1,7 +1,9 @@
-package universalcoins;
+package universalcoins.blocks;
 
 import java.util.Random;
 
+import universalcoins.UniversalCoins;
+import universalcoins.tile.TileTradeStation;
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -28,14 +30,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 
-class BlockTradeStation extends BlockContainer {
+public class BlockTradeStation extends BlockContainer {
 	
 	private IIcon[] icons;
 
 	public BlockTradeStation() {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
-		setCreativeTab(CreativeTabs.tabMisc);
+		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		setHarvestLevel("pickaxe", 1);	
 	}
 
@@ -88,8 +90,8 @@ class BlockTradeStation extends BlockContainer {
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
 		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1);
 		TileEntity tentity = world.getTileEntity(x, y, z);
-		if (tentity instanceof UCTileEntity) {
-			UCTileEntity te = (UCTileEntity) tentity;
+		if (tentity instanceof TileTradeStation) {
+			TileTradeStation te = (TileTradeStation) tentity;
 			NBTTagList itemList = new NBTTagList();
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			for (int i = 0; i < te.getSizeInventory(); i++) {
@@ -118,8 +120,8 @@ class BlockTradeStation extends BlockContainer {
 		if (world.isRemote) return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if (te instanceof UCTileEntity) {
-				UCTileEntity tentity = (UCTileEntity) te;
+			if (te instanceof TileTradeStation) {
+				TileTradeStation tentity = (TileTradeStation) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
 				if (tagCompound == null) {
 					return;
@@ -140,7 +142,7 @@ class BlockTradeStation extends BlockContainer {
 			}
 			world.markBlockForUpdate(x, y, z);
 		} else if (stack.hasDisplayName()) {
-            ((UCTileEntity)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
+            ((TileTradeStation)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
         }
 	}
 	
@@ -150,6 +152,6 @@ class BlockTradeStation extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new UCTileEntity();
+		return new TileTradeStation();
 	}
 }

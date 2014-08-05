@@ -12,27 +12,27 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class UCRecipeHelper {
 	
-	private static ItemStack oneSeller = new ItemStack(UniversalCoins.itemSeller);
-	private static ItemStack oneCoin = new ItemStack(UniversalCoins.itemCoin);
-	private static ItemStack oneSStack = new ItemStack(UniversalCoins.itemSmallCoinStack);
-	private static ItemStack oneLStack = new ItemStack(UniversalCoins.itemLargeCoinStack);
-	private static ItemStack oneSSack = new ItemStack(UniversalCoins.itemSmallCoinBag);
-	private static ItemStack oneLSack = new ItemStack(UniversalCoins.itemLargeCoinBag);
+	private static ItemStack oneSeller = new ItemStack(UniversalCoins.proxy.itemSeller);
+	private static ItemStack oneCoin = new ItemStack(UniversalCoins.proxy.itemCoin);
+	private static ItemStack oneSStack = new ItemStack(UniversalCoins.proxy.itemSmallCoinStack);
+	private static ItemStack oneLStack = new ItemStack(UniversalCoins.proxy.itemLargeCoinStack);
+	private static ItemStack oneSSack = new ItemStack(UniversalCoins.proxy.itemSmallCoinBag);
+	private static ItemStack oneLSack = new ItemStack(UniversalCoins.proxy.itemLargeCoinBag);
 	
 	
 	public static void addCoinRecipes(){
 		
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemCoin, 9), new Object[]{
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemCoin, 9), new Object[]{
 			oneSStack
 		});
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemSmallCoinStack, 9), new Object[]{
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemSmallCoinStack, 9), new Object[]{
 			oneLStack
 		});
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemLargeCoinStack, 9), new Object[]{
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemLargeCoinStack, 9), new Object[]{
 			oneSSack
 		});
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.itemSmallCoinBag, 9), new Object[]{
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemSmallCoinBag, 9), new Object[]{
 			oneLSack
 		});
 		
@@ -56,16 +56,16 @@ public class UCRecipeHelper {
 			"PPP",
 			'L', Items.leather, 'G', Items.gold_ingot, 'E', Items.ender_pearl, 'P', Items.paper
 		});
-		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.blockTradeStation), new Object[]{
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockTradeStation), new Object[]{
 			"IGI",
 			"ICI",
 			"III",
-			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.itemSeller
+			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.proxy.itemSeller
 		});
 	}
 	
 	public static void addWrenchRecipe() {
-		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.itemWrench), new Object[]{
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.itemWrench), new Object[]{
 			"IXI",
 			"XIX",
 			"XIX",

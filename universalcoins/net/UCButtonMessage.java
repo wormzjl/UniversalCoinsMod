@@ -1,7 +1,10 @@
 package universalcoins.net;
 
-import universalcoins.UCTileEntity;
-import universalcoins.UCTradeStationGUI;
+import universalcoins.TradeStationGUI;
+import universalcoins.gui.VendorGUI;
+import universalcoins.gui.VendorSaleGUI;
+import universalcoins.tile.TileTradeStation;
+import universalcoins.tile.TileVendor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -49,30 +52,43 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y,
 				message.z);
-		if (tileEntity instanceof UCTileEntity) {
-			if (message.buttonId == UCTradeStationGUI.idBuyButton) {
+		if (tileEntity instanceof TileTradeStation) {
+			if (message.buttonId == TradeStationGUI.idBuyButton) {
 				if (message.shiftPressed) {
-					((UCTileEntity) tileEntity).onBuyMaxPressed();
+					((TileTradeStation) tileEntity).onBuyMaxPressed();
 				} else {
-					((UCTileEntity) tileEntity).onBuyPressed();
+					((TileTradeStation) tileEntity).onBuyPressed();
 				}
-			} else if (message.buttonId == UCTradeStationGUI.idSellButton) {
+			} else if (message.buttonId == TradeStationGUI.idSellButton) {
 				if (message.shiftPressed) {
-					((UCTileEntity) tileEntity).onSellMaxPressed();
+					((TileTradeStation) tileEntity).onSellMaxPressed();
 				} else {
-					((UCTileEntity) tileEntity).onSellPressed();
+					((TileTradeStation) tileEntity).onSellPressed();
 				}
-			} else if (message.buttonId == UCTradeStationGUI.idAutoModeButton) {
-				((UCTileEntity) tileEntity).onAutoModeButtonPressed();
-			} else if (message.buttonId == UCTradeStationGUI.idCoinModeButton) {
-				((UCTileEntity) tileEntity).onCoinModeButtonPressed();
-			} else if (message.buttonId <= UCTradeStationGUI.idLBagButton) {
-				((UCTileEntity) tileEntity).onRetrieveButtonsPressed(
+			} else if (message.buttonId == TradeStationGUI.idAutoModeButton) {
+				((TileTradeStation) tileEntity).onAutoModeButtonPressed();
+			} else if (message.buttonId == TradeStationGUI.idCoinModeButton) {
+				((TileTradeStation) tileEntity).onCoinModeButtonPressed();
+			} else if (message.buttonId <= TradeStationGUI.idLBagButton) {
+				((TileTradeStation) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			}
 
 			NBTTagCompound data = new NBTTagCompound();
 			tileEntity.writeToNBT(data);
+		}
+		if (tileEntity instanceof TileVendor) {
+			if (message.buttonId < VendorGUI.idCoinButton) {
+				//do nothing here
+			} else if (message.buttonId <= VendorGUI.idLBagButton) {
+				((TileVendor) tileEntity).onUserRetrieveButtonsPressed(
+						message.buttonId, message.shiftPressed);
+			} else if (message.buttonId == VendorSaleGUI.idBuyButton) {
+				((TileVendor) tileEntity).onBuyPressed();
+			} else if (message.buttonId <= VendorSaleGUI.idLBagButton) {
+				((TileVendor) tileEntity).onUserRetrieveButtonsPressed(
+						message.buttonId, message.shiftPressed);
+			}
 		}
 		return null; // no response in this case
 	}

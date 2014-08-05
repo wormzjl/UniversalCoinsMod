@@ -2,7 +2,7 @@ package universalcoins.net;
 
 import net.minecraft.tileentity.TileEntity;
 import io.netty.buffer.ByteBuf;
-import universalcoins.UCTileEntity;
+import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -10,15 +10,15 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class UCTileEntityMessage implements IMessage, IMessageHandler<UCTileEntityMessage, IMessage> {
+public class UCTileStationMessage implements IMessage, IMessageHandler<UCTileStationMessage, IMessage> {
 public int x, y, z, coinSum, itemPrice;
 public String customName;
 
-    public UCTileEntityMessage()
+    public UCTileStationMessage()
     {
     }
 
-    public UCTileEntityMessage(UCTileEntity tileEntity)
+    public UCTileStationMessage(TileTradeStation tileEntity)
     {
         this.x = tileEntity.xCoord;
         this.y = tileEntity.yCoord;
@@ -51,15 +51,15 @@ public String customName;
     }
 
 	@Override
-	public IMessage onMessage(UCTileEntityMessage message, MessageContext ctx) {
+	public IMessage onMessage(UCTileStationMessage message, MessageContext ctx) {
 		TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld
 				.getTileEntity(message.x, message.y, message.z);
 
-		if (tileEntity instanceof UCTileEntity) {
+		if (tileEntity instanceof TileTradeStation) {
 			//FMLLog.info("UC: received TE packet");
-			((UCTileEntity) tileEntity).coinSum = message.coinSum;
-			((UCTileEntity) tileEntity).itemPrice = message.itemPrice;
-			((UCTileEntity) tileEntity).setInventoryName(message.customName);
+			((TileTradeStation) tileEntity).coinSum = message.coinSum;
+			((TileTradeStation) tileEntity).itemPrice = message.itemPrice;
+			((TileTradeStation) tileEntity).setInventoryName(message.customName);
 		}
 		return null;
 	}

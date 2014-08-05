@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class ItemWrench extends Item implements IToolWrench {
+public class ItemVendingWrench extends Item implements IToolWrench {
 	
-	public ItemWrench() {
+	public ItemVendingWrench() {
 		super();
 		
 		setFull3D();

@@ -11,7 +11,7 @@ public class ItemCoinHeap extends Item{
 
 	public ItemCoinHeap() {
 		super();
-		this.setCreativeTab(CreativeTabs.tabMisc);
+		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)
