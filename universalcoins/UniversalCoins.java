@@ -12,7 +12,7 @@ import universalcoins.items.ItemWrench;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
 import universalcoins.net.UCTileVendorMessage;
-import universalcoins.net.UCVendorPriceMessage;
+import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
@@ -90,7 +90,7 @@ public class UniversalCoins {
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
-	    snw.registerMessage(UCVendorPriceMessage.class, UCVendorPriceMessage.class, 1, Side.SERVER);
+	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 	    snw.registerMessage(UCTileVendorMessage.class, UCTileVendorMessage.class, 2, Side.CLIENT);
 	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 3, Side.CLIENT);
 	}

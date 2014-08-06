@@ -2,12 +2,15 @@ package universalcoins;
 
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
+import universalcoins.gui.VendorWrenchGUI;
 import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.inventory.ContainerVendor;
 import universalcoins.inventory.ContainerVendorSale;
+import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
@@ -23,9 +26,12 @@ class GuiHandler implements IGuiHandler {
                 return new ContainerTradeStation(player.inventory, (TileTradeStation) tileEntity);
         }
         if(tileEntity instanceof TileVendor){
+        	if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+        		return new ContainerVendorWrench(player.inventory, (TileVendor) tileEntity);
+        	}
         	if(((TileVendor) tileEntity).blockOwner == null || 
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
-            return new ContainerVendor(player.inventory, (TileVendor) tileEntity);
+        		return new ContainerVendor(player.inventory, (TileVendor) tileEntity);
         	} else return new ContainerVendorSale(player.inventory, (TileVendor) tileEntity);
     }
         return null;
@@ -39,6 +45,9 @@ class GuiHandler implements IGuiHandler {
                 return new TradeStationGUI(player.inventory, (TileTradeStation) tileEntity);
         }
         if(tileEntity instanceof TileVendor){
+        	if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+        		return new VendorWrenchGUI(player.inventory, (TileVendor) tileEntity);
+        	}
         	if(((TileVendor) tileEntity).blockOwner == null || 
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
         		return new VendorGUI(player.inventory, (TileVendor) tileEntity);

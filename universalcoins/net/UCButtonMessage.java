@@ -81,12 +81,12 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			if (message.buttonId < VendorGUI.idCoinButton) {
 				//do nothing here
 			} else if (message.buttonId <= VendorGUI.idLBagButton) {
-				((TileVendor) tileEntity).onUserRetrieveButtonsPressed(
+				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			} else if (message.buttonId == VendorSaleGUI.idBuyButton) {
 				((TileVendor) tileEntity).onBuyPressed();
 			} else if (message.buttonId <= VendorSaleGUI.idLBagButton) {
-				((TileVendor) tileEntity).onUserRetrieveButtonsPressed(
+				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			}
 		}

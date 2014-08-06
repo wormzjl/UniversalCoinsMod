@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
+//author AUTOMATIC_MAIDEN
+
 public class BlockVendorRenderer implements ISimpleBlockRenderingHandler {
 	public static int id;
 

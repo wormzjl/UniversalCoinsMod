@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL12;
 
 import universalcoins.tile.TileVendor;
 
+//author AUTOMATIC_MAIDEN
+
 public class TileEntityVendorRenderer extends TileEntitySpecialRenderer {
 	RenderItem renderer = new RenderItem();
 

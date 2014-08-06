@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 
+//author AUTOMATIC_MAIDEN
+
 public class Vending {
 	
 	public static Block[] supports={

@@ -12,7 +12,7 @@ import universalcoins.items.ItemLargeCoinStack;
 import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
-import universalcoins.items.ItemVendingWrench;
+import universalcoins.items.ItemVendorWrench;
 import universalcoins.items.ItemWrench;
 import universalcoins.util.Vending;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -27,7 +27,7 @@ public class CommonProxy {
 	public static Item itemSeller;
 	//public static Item itemCard;
 	public static Item itemWrench;
-	public static Item itemVendingWrench;
+	public static Item itemVendorWrench;
 	
 	public static Block blockTradeStation;
 	public static Block blockVendor;	
@@ -51,7 +51,7 @@ public class CommonProxy {
 		//itemCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemWrench = new ItemWrench().setUnlocalizedName("itemWrench");
-		itemVendingWrench = new ItemVendingWrench().setUnlocalizedName("itemVendingWrench");
+		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
@@ -62,7 +62,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
 		//GameRegistry.registerItem(itemCard, itemCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
-		GameRegistry.registerItem(itemVendingWrench, itemVendingWrench.getUnlocalizedName());
+		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		if (UniversalCoins.wrenchEnabled) GameRegistry.registerItem(itemWrench, itemWrench.getUnlocalizedName());
 	}
 

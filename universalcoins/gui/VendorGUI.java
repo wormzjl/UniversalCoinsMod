@@ -1,5 +1,6 @@
 package universalcoins.gui;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.inventory.ContainerVendor;
@@ -25,6 +26,7 @@ public class VendorGUI extends GuiContainer{
 	public static final int idSBagButton = 5;
 	public static final int idLBagButton = 6;
 	private boolean textActive = false;
+	private boolean shiftPressed = false;
 
 	public VendorGUI(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		super(new ContainerVendor(inventoryPlayer, tEntity));
@@ -62,8 +64,9 @@ public class VendorGUI extends GuiContainer{
 
 	
 	protected void keyTyped(char c, int i) {
-		super.keyTyped(c, i);
-		itemPriceField.textboxKeyTyped(c, i);
+		if (itemPriceField.isFocused()) {
+			itemPriceField.textboxKeyTyped(c, i);
+		} else super.keyTyped(c, i);
 	}
 	
 	protected void mouseClicked(int par1, int par2, int par3) {
@@ -78,7 +81,6 @@ public class VendorGUI extends GuiContainer{
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-		
 	}
 	
 	@Override
@@ -88,7 +90,7 @@ public class VendorGUI extends GuiContainer{
 		fontRendererObj.drawString("Vending Block", 6, 5, 4210752);
 		String priceInLocal = "Price:";
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
-		fontRendererObj.drawString(priceInLocal, 78 - stringWidth, 24, 4210752);
+		fontRendererObj.drawString(priceInLocal, 78 - stringWidth, 22, 4210752);
 		//draw itemprice
 		if (!textActive) {
 		String iSum = String.valueOf(tileEntity.itemPrice);
@@ -98,7 +100,7 @@ public class VendorGUI extends GuiContainer{
 		//draw coinsum
 		String cSum = String.valueOf(tileEntity.coinSum);
 		stringWidth = fontRendererObj.getStringWidth(cSum);
-		fontRendererObj.drawString(cSum, 125 - stringWidth, 60, 4210752);
+		fontRendererObj.drawString(cSum, 125 - stringWidth, 62, 4210752);
 		drawButtonOverlay();
 		
 	}
@@ -142,6 +144,12 @@ public class VendorGUI extends GuiContainer{
 	}
 	
 	protected void actionPerformed(GuiButton button) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			shiftPressed = true;
+		}
+		else {
+			shiftPressed = false;
+		}
 		if (button.id == idUpdateButton) {
 			itemPriceField.setText(String.valueOf(tileEntity.itemPrice));
 			textActive = true;
@@ -157,7 +165,11 @@ public class VendorGUI extends GuiContainer{
 			}
 			textActive = false;
 			itemPriceField.setFocused(false);
-			tileEntity.sendPriceMessage();
+			tileEntity.sendServerUpdateMessage();
+		}
+		else if (button.id <= idLBagButton) {
+			tileEntity.onRetrieveButtonsPressed(button.id, shiftPressed);
+			tileEntity.sendButtonMessage(button.id, shiftPressed);
 		}
 	}
 }

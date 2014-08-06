@@ -103,6 +103,7 @@ public class BlockVendor extends BlockContainer {
 				}
 			}tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("CoinSum", te.coinSum);
+			tagCompound.setInteger("UserCoinSum", te.userCoinSum);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("BlockOwner", te.blockOwner);
 			stack.setTagCompound(tagCompound);
@@ -131,6 +132,7 @@ public class BlockVendor extends BlockContainer {
 					}
 				}
 				tentity.coinSum = tagCompound.getInteger("CoinSum");
+				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
 				tentity.blockOwner = tagCompound.getString("BlockOwner");
 			}

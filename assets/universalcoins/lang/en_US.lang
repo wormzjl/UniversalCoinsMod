@@ -8,4 +8,5 @@ item.itemSmallCoinBag.name=Coin Bag
 item.itemLargeCoinBag.name=Large Coin Bag
 item.itemSeller.name=Selling Catalog
 item.itemWrench.name=Wrench
+item.itemVendorWrench.name=Vendor Wrench
 itemGroup.tabUniversalCoins=Universal Coins

@@ -168,7 +168,7 @@ public class VendorSaleGUI extends GuiContainer{
 			}
 		}
 		else if (button.id <= idLBagButton) {
-			tileEntity.onUserRetrieveButtonsPressed(button.id, shiftPressed);
+			tileEntity.onRetrieveButtonsPressed(button.id, shiftPressed);
 		}
 		tileEntity.sendButtonMessage(button.id, shiftPressed);
 	}

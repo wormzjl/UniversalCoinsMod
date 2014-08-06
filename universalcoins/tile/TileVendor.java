@@ -8,7 +8,7 @@ import universalcoins.gui.VendorSaleGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
 import universalcoins.net.UCTileVendorMessage;
-import universalcoins.net.UCVendorPriceMessage;
+import universalcoins.net.UCVendorServerMessage;
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -72,11 +72,11 @@ public class TileVendor extends TileEntity implements IInventory {
 		activateRetrieveButtons();
 		activateUserRetrieveButtons();
 		activateBuyButton();
-		//FMLLog.info("user coinsum: " + userCoinSum);
 	}
 	
 	private void activateBuyButton() {
-		if (userCoinSum > itemPrice && (long) coinSum + (long) itemPrice < 2147483647) {
+		if (userCoinSum > itemPrice && (long) coinSum + (long) itemPrice < 2147483647 
+				&& (hasSellingInventory() || infiniteSell)) {
 			buyButtonActive = true;
 		} else buyButtonActive = false;
 
@@ -115,45 +115,56 @@ public class TileVendor extends TileEntity implements IInventory {
 		}
 	}
 	
-	public void onRetrieveButtonsPressed(int buttonClickedID,
-			boolean shiftPressed) {
-		int absoluteButton = buttonClickedID - VendorGUI.idCoinButton;
+	public void onRetrieveButtonsPressed(int buttonClickedID, boolean shiftPressed) {
+		if (buttonClickedID <= VendorGUI.idLBagButton ) {
+			//get owner coins
+			coinSum = retrieveCoins(coinSum,buttonClickedID, shiftPressed);
+		} else {
+			//get buyer coins
+			userCoinSum = retrieveCoins(userCoinSum,buttonClickedID, shiftPressed);
+		}
+	}
+	
+	public int retrieveCoins(int coinField, int buttonClickedID, boolean shiftPressed) {
+		int absoluteButton = (buttonClickedID <= VendorGUI.idLBagButton ? buttonClickedID
+				- VendorGUI.idCoinButton : buttonClickedID - VendorSaleGUI.idCoinButton);
 		int multiplier = 1;
 		for (int i = 0; i < absoluteButton; i++) {
 			multiplier *= 9;
 		}
 		Item itemOnButton = coins[absoluteButton];
-		if (coinSum < multiplier
+		if (coinField < multiplier
 				|| (inventory[itemCoinOutputSlot1] != null && inventory[itemCoinOutputSlot1]
 						.getItem() != itemOnButton)
 				|| (inventory[itemCoinOutputSlot1] != null && inventory[itemCoinOutputSlot1].stackSize == 64)) {
-			return;
+			return coinField;
 		}
 		if (shiftPressed) {
 			if (inventory[itemCoinOutputSlot1] == null) {
-				int amount = coinSum / multiplier;
+				int amount = coinField / multiplier;
 				if (amount >= 64) {
-					coinSum -= multiplier * 64;
+					coinField -= multiplier * 64;
 					inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
 					inventory[itemCoinOutputSlot1].stackSize = 64;
 				} else {
-					coinSum -= multiplier * amount;
+					coinField -= multiplier * amount;
 					inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
 					inventory[itemCoinOutputSlot1].stackSize = amount;
 				}
 			} else {
-				int amount = Math.min(coinSum / multiplier, inventory[itemCoinOutputSlot1].getMaxStackSize() - inventory[itemCoinOutputSlot1].stackSize);
+				int amount = Math.min(coinField / multiplier, inventory[itemCoinOutputSlot1].getMaxStackSize() - inventory[itemCoinOutputSlot1].stackSize);
 				inventory[itemCoinOutputSlot1].stackSize += amount;
-				coinSum -= multiplier * amount;
+				coinField -= multiplier * amount;
 			}
 		} else {
-			coinSum -= multiplier;
+			coinField -= multiplier;
 			if (inventory[itemCoinOutputSlot1] == null) {
 				inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
 			} else {
 				inventory[itemCoinOutputSlot1].stackSize++;
 			}
 		}
+		return coinField;
 	}
 	
 	private void activateUserRetrieveButtons() {
@@ -189,57 +200,82 @@ public class TileVendor extends TileEntity implements IInventory {
 		}
 	}
 	
-	public void onUserRetrieveButtonsPressed(int buttonClickedID,
-			boolean shiftPressed) {
-		int absoluteButton = buttonClickedID - VendorSaleGUI.idCoinButton;
-		int multiplier = 1;
-		for (int i = 0; i < absoluteButton; i++) {
-			multiplier *= 9;
-		}
-		Item itemOnButton = coins[absoluteButton];
-		if (userCoinSum < multiplier
-				|| (inventory[itemCoinOutputSlot1] != null && inventory[itemCoinOutputSlot1]
-						.getItem() != itemOnButton)
-				|| (inventory[itemCoinOutputSlot1] != null && inventory[itemCoinOutputSlot1].stackSize == 64)) {
-			return;
-		}
-		if (shiftPressed) {
-			if (inventory[itemCoinOutputSlot1] == null) {
-				int amount = userCoinSum / multiplier;
-				if (amount >= 64) {
-					userCoinSum -= multiplier * 64;
-					inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
-					inventory[itemCoinOutputSlot1].stackSize = 64;
-				} else {
-					userCoinSum -= multiplier * amount;
-					inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
-					inventory[itemCoinOutputSlot1].stackSize = amount;
+	public void onBuyPressed() {
+		boolean itemSold = false;
+		if (inventory[itemOutputSlot] == null) {
+			if (infiniteSell) {
+				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
+				itemSold = true;
+			} else {
+				// find matching item in inventory
+				for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
+					if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot].getItem()
+							&& inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
+						inventory[itemOutputSlot] = inventory[itemSellingSlot]
+								.copy();
+						inventory[i].stackSize -= inventory[itemSellingSlot].stackSize;
+						if (inventory[i].stackSize == 0) {
+							inventory[i] = null;
+						}
+						itemSold = true;
+						break;
+					}
 				}
-			} else {
-				int amount = Math.min(userCoinSum / multiplier, inventory[itemCoinOutputSlot1].getMaxStackSize() - inventory[itemCoinOutputSlot1].stackSize);
-				inventory[itemCoinOutputSlot1].stackSize += amount;
-				userCoinSum -= multiplier * amount;
 			}
-		} else {
-			userCoinSum -= multiplier;
-			if (inventory[itemCoinOutputSlot1] == null) {
-				inventory[itemCoinOutputSlot1] = new ItemStack(itemOnButton);
-			} else {
-				inventory[itemCoinOutputSlot1].stackSize++;
+			if (itemSold) {
+				userCoinSum -= itemPrice;
+				coinSum += itemPrice;
+				itemSold = false;
 			}
+		} else if (inventory[itemOutputSlot].getItem() == inventory[itemSellingSlot]
+				.getItem() && inventory[itemSellingSlot].stackSize
+				+ inventory[itemOutputSlot].stackSize < getSellItem().getMaxStackSize()) {
+			if (infiniteSell) {
+				inventory[itemOutputSlot].stackSize += inventory[itemSellingSlot].stackSize;
+				itemSold = true;
+			} else {
+				for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
+					if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot]
+							.getItem()
+							&& inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
+						inventory[itemOutputSlot].stackSize += inventory[itemSellingSlot].stackSize;
+						inventory[i].stackSize -= inventory[itemSellingSlot].stackSize;
+						if (inventory[i].stackSize == 0) {
+							inventory[i] = null;
+						}
+						itemSold = true;
+						break;
+					}
+				}
+			}
+		}
+		if (itemSold) {
+			userCoinSum -= itemPrice;
+			coinSum += itemPrice;
 		}
 	}
 	
-	public void onBuyPressed() {
-		if (inventory[itemOutputSlot] == null) {
-			inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
-			userCoinSum-=itemPrice;
-			coinSum+=itemPrice;
-		} else if (inventory[itemOutputSlot] == inventory[itemSellingSlot]) {
-			inventory[itemOutputSlot].stackSize++;
-			userCoinSum-=itemPrice;
-			coinSum+=itemPrice;
+	public boolean hasSellingInventory() {
+		for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
+			if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot]
+			    .getItem() && inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
+				return true;
+			}
 		}
+		return false;
+	}
+	
+	private int findAvailableOutputSlot(ItemStack item) {
+		//this function checks both output slots to find one the itemstack fits
+		if (inventory[itemCoinOutputSlot1] == null || item.getItem() == inventory[itemCoinOutputSlot1].getItem() 
+				&& inventory[itemCoinOutputSlot1].stackSize < item.getMaxStackSize()) {
+			return itemCoinOutputSlot1;
+		}
+		if (inventory[itemCoinOutputSlot2] == null || item.getItem() == inventory[itemCoinOutputSlot2].getItem() 
+				&& inventory[itemCoinOutputSlot2].stackSize < item.getMaxStackSize()) {
+			return itemCoinOutputSlot2;
+		}
+		return -1;
 	}
 	
 	public ItemStack getSellItem() {
@@ -369,8 +405,8 @@ public class TileVendor extends TileEntity implements IInventory {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
 	
-	public void sendPriceMessage() {
-		UniversalCoins.snw.sendToServer(new UCVendorPriceMessage(xCoord, yCoord, zCoord, itemPrice));
+	public void sendServerUpdateMessage() {
+		UniversalCoins.snw.sendToServer(new UCVendorServerMessage(xCoord, yCoord, zCoord, itemPrice, blockOwner, infiniteSell));
 	}
 	
 	@Override
