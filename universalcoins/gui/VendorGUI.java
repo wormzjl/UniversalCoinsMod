@@ -154,8 +154,7 @@ public class VendorGUI extends GuiContainer{
 			itemPriceField.setText(String.valueOf(tileEntity.itemPrice));
 			textActive = true;
 			itemPriceField.setFocused(true);
-		}
-		if (button.id == idSetButton) {
+		} else if (button.id == idSetButton) {
 			String price = itemPriceField.getText();
 			int iPrice = Integer.parseInt(price);
 			try {
@@ -166,8 +165,7 @@ public class VendorGUI extends GuiContainer{
 			textActive = false;
 			itemPriceField.setFocused(false);
 			tileEntity.sendServerUpdateMessage();
-		}
-		else if (button.id <= idLBagButton) {
+		} else if (button.id <= idLBagButton) {
 			tileEntity.onRetrieveButtonsPressed(button.id, shiftPressed);
 			tileEntity.sendButtonMessage(button.id, shiftPressed);
 		}

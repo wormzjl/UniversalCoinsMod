@@ -9,6 +9,7 @@ import universalcoins.UniversalCoins;
 import universalcoins.gui.BlockVendorRenderer;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -61,16 +62,16 @@ public class BlockVendor extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		TileVendor te = (TileVendor) tileEntity;
 		if (tileEntity == null || player.isSneaking()) {
 			if (player.getCurrentEquippedItem() != null
 					&& player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
 				IToolWrench wrench = (IToolWrench) player
 						.getCurrentEquippedItem().getItem();
-				if (wrench.canWrench(player, x, y, z)) {
+				if (wrench.canWrench(player, x, y, z) && player.getDisplayName().equals(te.blockOwner)) {
 					Random rand = new Random();
 					ItemStack stack = getItemStackWithData(world, x, y, z);
-					EntityItem entityItem = new EntityItem(world, x, y, z,
-							stack);
+					EntityItem entityItem = new EntityItem(world, x, y, z, stack);
 					if (!world.isRemote)
 						world.spawnEntityInWorld(entityItem);
 					removedByPlayer(world, player, x, y, z);
@@ -106,6 +107,7 @@ public class BlockVendor extends BlockContainer {
 			tagCompound.setInteger("UserCoinSum", te.userCoinSum);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("BlockOwner", te.blockOwner);
+			tagCompound.setBoolean("Infinite", te.infiniteSell);
 			stack.setTagCompound(tagCompound);
 			return stack;
 		} else
@@ -135,6 +137,7 @@ public class BlockVendor extends BlockContainer {
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
 				tentity.blockOwner = tagCompound.getString("BlockOwner");
+				tentity.infiniteSell = tagCompound.getBoolean("Infinite");
 			}
 			world.markBlockForUpdate(x, y, z);
 			

@@ -19,13 +19,10 @@ public class ContainerVendorSale extends Container {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemSellingSlot, 8, 24));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemOutputSlot, 124, 24));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 8, 66));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot1, 124, 66));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot2, 142, 66));
-
-
+		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemSellingSlot, 21, 24));
+		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemOutputSlot, 137, 24));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 21, 66));
+		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot1, 137, 66));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

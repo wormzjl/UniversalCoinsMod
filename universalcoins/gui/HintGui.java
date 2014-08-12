@@ -68,6 +68,10 @@ public class HintGui extends GuiScreen {
 					}
 				}
 				itemInfoStringList.add("Price: " + tileEntity.itemPrice);
+				//add out of stock notification if not infinite and no stock found
+				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory()) {
+					itemInfoStringList.add("Out Of Stock!");
+				}
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);
 				if (longestString + 4 > w) w = longestString + 4;

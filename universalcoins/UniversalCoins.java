@@ -31,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -70,6 +71,7 @@ public class UniversalCoins {
 	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
 	public static Boolean wrenchEnabled;
+	public static Boolean vendorRecipesEnabled;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -82,10 +84,21 @@ public class UniversalCoins {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		autoModeEnabled = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true).getBoolean(true);
-		updateCheck = config.get(config.CATEGORY_GENERAL, "Update Check", true).getBoolean(true);
-		recipesEnabled = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true).getBoolean(true);
-		wrenchEnabled = config.get(config.CATEGORY_GENERAL, "Wrench enabled", true).getBoolean(true);
+		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
+		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
+		autoModeEnabled = autoMode.getBoolean(true);
+		Property modUpdate = config.get(config.CATEGORY_GENERAL, "Update Check", true);
+		modUpdate.comment = "Set to false to remove chat notification of updates.";
+		updateCheck = modUpdate.getBoolean(true);
+		Property recipes = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true);
+		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
+		recipesEnabled = recipes.getBoolean(true);
+		Property wrench = config.get(config.CATEGORY_GENERAL, "Wrench enabled", true);
+		wrench.comment = "Set to false to disable wrench. Use this if your world already has too many wrenches.";
+		wrenchEnabled = wrench.getBoolean(true);
+		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
+		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
+		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 

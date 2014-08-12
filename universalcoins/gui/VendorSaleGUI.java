@@ -46,11 +46,11 @@ public class VendorSaleGUI extends GuiContainer{
 	public void initGui() {
 		super.initGui();
 		buyButton = new GuiButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 11, "Buy");
-		retrCoinButton = new GuiButton(idCoinButton, 29 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 47 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 65 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrSBagButton = new GuiButton(idSBagButton, 83 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrLBagButton = new GuiButton(idLBagButton, 101 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrCoinButton = new GuiButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrSStackButton = new GuiButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrLStackButton = new GuiButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrSBagButton = new GuiButton(idSBagButton, 96 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrLBagButton = new GuiButton(idLBagButton, 114 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(retrCoinButton);
@@ -68,32 +68,32 @@ public class VendorSaleGUI extends GuiContainer{
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 30 + x_offset;
+		x = (width - xSize) / 2 + 43 + x_offset;
 		y = (height - ySize) / 2 + 85 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 48 + x_offset;
+		x = (width - xSize) / 2 + 61 + x_offset;
 		y = (height - ySize) / 2 + 85 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 16;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 67 + x_offset;
+		x = (width - xSize) / 2 + 80 + x_offset;
 		y = (height - ySize) / 2 + 84 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 
 		v += 17;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 83 + x_offset;
+		x = (width - xSize) / 2 + 96 + x_offset;
 		y = (height - ySize) / 2 + 86 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 		
 		v = 0;
 		u = 191;
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 101 + x_offset;
+		x = (width - xSize) / 2 + 114 + x_offset;
 		y = (height - ySize) / 2 + 85 + y_offset;
 		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 	}
@@ -123,32 +123,9 @@ public class VendorSaleGUI extends GuiContainer{
 		// draws "Inventory" or your regional equivalent
 		fontRendererObj.drawString(StatCollector.translateToLocal(
 				"container.inventory"), 6, ySize - 96 + 2, 4210752);
-		fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 32, 29, 4210752);
-		fontRendererObj.drawString(String.valueOf(tileEntity.userCoinSum), 32, 71, 4210752);
+		fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 46, 29, 4210752);
+		fontRendererObj.drawString(String.valueOf(tileEntity.userCoinSum), 46, 71, 4210752);
 
-		
-		/*//get item sold info
-		ItemStack temp = tileEntity.getSoldItem();
-		if(temp == null){return;}
-		List<String> itemInfoStringList = new ArrayList<String>();
-		
-		itemInfoStringList.add(temp.getDisplayName());
-		if (temp.isItemEnchanted()) {
-			NBTTagList tagList = temp.getEnchantmentTagList();
-			for (int i = 0; i < tagList.tagCount(); i++) {
-				NBTTagCompound enchant = ((NBTTagList) tagList).getCompoundTagAt(i);
-				String temp2 = Enchantment.enchantmentsList[enchant.getInteger("id")].getTranslatedName(enchant.getInteger("lvl"));
-				itemInfoStringList.add(temp2);
-				//FMLLog.info("Enchantment: " + temp2);
-			}					
-		}
-		itemInfoStringList.add(" ");
-		itemInfoStringList.add("Price: " + tileEntity.itemPrice);
-		
-		//update gui with item info
-		for (int i = 0; i < itemInfoStringList.size(); i++) {
-			fontRendererObj.drawString(itemInfoStringList.get(i), 36, 20 + (10*i), 4210752);
-		}*/
 		drawOverlay();
 	}
 	
@@ -160,8 +137,8 @@ public class VendorSaleGUI extends GuiContainer{
 			shiftPressed = false;
 		}
 		if (button.id == idBuyButton){
-			if ( shiftPressed ) {
-				//tileEntity.onBuyMaxPressed();
+			if (shiftPressed) {
+				tileEntity.onBuyMaxPressed();
 			}
 			else {
 				tileEntity.onBuyPressed();

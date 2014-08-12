@@ -9,6 +9,7 @@ import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
 import universalcoins.net.UCTileVendorMessage;
 import universalcoins.net.UCVendorServerMessage;
+import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -25,7 +26,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileVendor extends TileEntity implements IInventory {
 	
-	private ItemStack[] inventory = new ItemStack[15];
+	private ItemStack[] inventory = new ItemStack[14];
 	//owner slots
 	public static final int itemStorageSlot1 = 0;
 	public static final int itemStorageSlot2 = 1;
@@ -40,9 +41,8 @@ public class TileVendor extends TileEntity implements IInventory {
 	//sale slots
 	public static final int itemOutputSlot = 10;
 	public static final int itemCoinOutputSlot1 = 11;
-	public static final int itemCoinOutputSlot2 = 12;
-	public static final int itemCoinInputSlot = 13;
-	public static final int itemUserCoinInputSlot = 14;
+	public static final int itemCoinInputSlot = 12;
+	public static final int itemUserCoinInputSlot = 13;
 	
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
@@ -75,7 +75,7 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	private void activateBuyButton() {
-		if (userCoinSum > itemPrice && (long) coinSum + (long) itemPrice < 2147483647 
+		if (userCoinSum >= itemPrice && (long) coinSum + (long) itemPrice < 2147483647 
 				&& (hasSellingInventory() || infiniteSell)) {
 			buyButtonActive = true;
 		} else buyButtonActive = false;
@@ -89,29 +89,23 @@ public class TileVendor extends TileEntity implements IInventory {
 		isSBagButtonActive = false;
 		isLBagButtonActive = false;
 		if (coinSum > 0) {
-			coinButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot1].stackSize != 64)
-			|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot2].stackSize != 64);
+			coinButtonActive = inventory[itemCoinOutputSlot1] == null
+			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (coinSum >= 9) {
-			isSStackButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64)
-			|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot2].stackSize != 64);
+			isSStackButtonActive = inventory[itemCoinOutputSlot1] == null
+			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (coinSum >= 81) {
-			isLStackButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot2].stackSize != 64);
-		}
+			isLStackButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64);		}
 		if (coinSum >= 729) {
-			isSBagButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot2].stackSize != 64);
+			isSBagButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (coinSum >= 6561) {
-			isLBagButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot2].stackSize != 64);
+			isLBagButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 	}
 	
@@ -174,108 +168,125 @@ public class TileVendor extends TileEntity implements IInventory {
 		uSBagButtonActive = false;
 		uLBagButtonActive = false;
 		if (userCoinSum > 0) {
-			uCoinButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot1].stackSize != 64)
-			|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot2].stackSize != 64);
+			uCoinButtonActive = inventory[itemCoinOutputSlot1] == null
+			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (userCoinSum >= 9) {
-			uSStackButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64)
-			|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot2].stackSize != 64);
+			uSStackButtonActive = inventory[itemCoinOutputSlot1] == null
+			|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (userCoinSum >= 81) {
-			uLStackButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot2].stackSize != 64);
+			uLStackButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (userCoinSum >= 729) {
-			uSBagButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot2].stackSize != 64);
+			uSBagButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 		if (userCoinSum >= 6561) {
-			uLBagButtonActive = inventory[itemCoinOutputSlot1] == null || inventory[itemCoinOutputSlot2] == null
-					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64)
-					|| (inventory[itemCoinOutputSlot2].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot2].stackSize != 64);
+			uLBagButtonActive = inventory[itemCoinOutputSlot1] == null
+					|| (inventory[itemCoinOutputSlot1].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemCoinOutputSlot1].stackSize != 64);
 		}
 	}
 	
 	public void onBuyPressed() {
-		boolean itemSold = false;
-		if (inventory[itemOutputSlot] == null) {
+		onBuyPressed(1);
+	}
+	
+	public void onBuyPressed(int amount) {
+		FMLLog.info("Buying: " + amount);
+		FMLLog.info("Total sale: " + amount * inventory[itemSellingSlot].stackSize);
+		if (inventory[itemSellingSlot] == null) {
+			buyButtonActive = false;
+			return;
+		}
+		if (userCoinSum < itemPrice * amount) {
+			buyButtonActive = false;
+			return;
+		}
+		int totalSale = inventory[itemSellingSlot].stackSize * amount;
+		if (inventory[itemSellingSlot].getMaxStackSize() >= totalSale) {
 			if (infiniteSell) {
 				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
-				itemSold = true;
+				inventory[itemOutputSlot].stackSize = totalSale;
+				userCoinSum -= itemPrice * amount;
+				coinSum += itemPrice * amount;
 			} else {
 				// find matching item in inventory
-				for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
-					if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot].getItem()
-							&& inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
-						inventory[itemOutputSlot] = inventory[itemSellingSlot]
-								.copy();
-						inventory[i].stackSize -= inventory[itemSellingSlot].stackSize;
-						if (inventory[i].stackSize == 0) {
-							inventory[i] = null;
+				// we need to match the item, damage, and tags to make sure the stacks are equal
+				for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+					if (inventory[i] != null
+							&& inventory[i].getItem() == inventory[itemSellingSlot]
+									.getItem()
+							&& inventory[i].getItemDamage() == inventory[itemSellingSlot]
+									.getItemDamage()
+							&& ItemStack.areItemStackTagsEqual(inventory[i],
+									inventory[itemSellingSlot])) {
+						// copy itemstack if null. We'll set the amount to 0 to
+						// start.
+						if (inventory[itemOutputSlot] == null) {
+							inventory[itemOutputSlot] = inventory[i].copy();
+							inventory[itemOutputSlot].stackSize = 0;
 						}
-						itemSold = true;
-						break;
+						int thisSale = Math.min(inventory[i].stackSize, totalSale);
+						inventory[itemOutputSlot].stackSize += thisSale;
+						inventory[i].stackSize -= thisSale;
+						totalSale -= thisSale;
+						userCoinSum -= itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
+						coinSum += itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
+					}
+					// cleanup empty stacks
+					if (inventory[i] == null || inventory[i].stackSize == 0) {
+						inventory[i] = null;
 					}
 				}
 			}
-			if (itemSold) {
-				userCoinSum -= itemPrice;
-				coinSum += itemPrice;
-				itemSold = false;
-			}
-		} else if (inventory[itemOutputSlot].getItem() == inventory[itemSellingSlot]
-				.getItem() && inventory[itemSellingSlot].stackSize
-				+ inventory[itemOutputSlot].stackSize < getSellItem().getMaxStackSize()) {
-			if (infiniteSell) {
-				inventory[itemOutputSlot].stackSize += inventory[itemSellingSlot].stackSize;
-				itemSold = true;
-			} else {
-				for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
-					if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot]
-							.getItem()
-							&& inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
-						inventory[itemOutputSlot].stackSize += inventory[itemSellingSlot].stackSize;
-						inventory[i].stackSize -= inventory[itemSellingSlot].stackSize;
-						if (inventory[i].stackSize == 0) {
-							inventory[i] = null;
-						}
-						itemSold = true;
-						break;
-					}
-				}
-			}
-		}
-		if (itemSold) {
-			userCoinSum -= itemPrice;
-			coinSum += itemPrice;
 		}
 	}
 	
+	public void onBuyMaxPressed() {
+		int amount = 0;
+		if (inventory[itemSellingSlot] == null) {
+			buyButtonActive = false;
+			return;
+		}
+		if (userCoinSum < itemPrice) { // can't buy even one
+			buyButtonActive = false;
+			return;
+		}
+		if (inventory[itemOutputSlot] == null) { // empty stack
+			if (inventory[itemSellingSlot].getMaxStackSize() * itemPrice / inventory[itemSellingSlot].stackSize <= userCoinSum) {
+				// buy as many as will fit in a stack
+				amount = inventory[itemSellingSlot].getMaxStackSize() / inventory[itemSellingSlot].stackSize;
+			} else {
+				// buy as many as i have coins for.
+				amount = userCoinSum / itemPrice;
+			}
+		} else if (inventory[itemOutputSlot].getItem() == inventory[itemSellingSlot].getItem()
+				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemSellingSlot].getItemDamage()
+				&& ItemStack.areItemStackTagsEqual(inventory[itemOutputSlot], inventory[itemSellingSlot])
+				&& inventory[itemOutputSlot].stackSize < inventory[itemSellingSlot].getMaxStackSize()) {
+			if ((inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
+					* itemPrice <= userCoinSum) {
+				// buy as much as i can fit in a stack since we have enough coins
+				amount = (inventory[itemSellingSlot].getMaxStackSize()
+						- inventory[itemOutputSlot].stackSize) / inventory[itemOutputSlot].stackSize;
+			} else {
+				amount = userCoinSum / itemPrice; // buy as many as i can with available coins.
+			}
+		} else {
+			buyButtonActive = false;
+		}
+		onBuyPressed(amount);
+	}
+	
 	public boolean hasSellingInventory() {
-		for (int i = itemStorageSlot1; i < itemStorageSlot9; i++) {
-			if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot]
-			    .getItem() && inventory[i].stackSize >= inventory[itemSellingSlot].stackSize) {
+		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+			if (inventory[i] != null && inventory[i].getItem() == inventory[itemSellingSlot].getItem()) {
 				return true;
 			}
 		}
 		return false;
-	}
-	
-	private int findAvailableOutputSlot(ItemStack item) {
-		//this function checks both output slots to find one the itemstack fits
-		if (inventory[itemCoinOutputSlot1] == null || item.getItem() == inventory[itemCoinOutputSlot1].getItem() 
-				&& inventory[itemCoinOutputSlot1].stackSize < item.getMaxStackSize()) {
-			return itemCoinOutputSlot1;
-		}
-		if (inventory[itemCoinOutputSlot2] == null || item.getItem() == inventory[itemCoinOutputSlot2].getItem() 
-				&& inventory[itemCoinOutputSlot2].stackSize < item.getMaxStackSize()) {
-			return itemCoinOutputSlot2;
-		}
-		return -1;
 	}
 	
 	public ItemStack getSellItem() {
@@ -442,6 +453,11 @@ public class TileVendor extends TileEntity implements IInventory {
 		} catch (Throwable ex2) {
 			blockOwner = null;
 		}
+		try {
+			infiniteSell = tagCompound.getBoolean("Infinite");
+		} catch (Throwable ex2) {
+			infiniteSell = false;
+		}
 	}
 	
 	@Override
@@ -462,6 +478,7 @@ public class TileVendor extends TileEntity implements IInventory {
 		tagCompound.setInteger("UserCoinSum", userCoinSum);		
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("BlockOwner", blockOwner);
+		tagCompound.setBoolean("Infinite", infiniteSell);
 	}
 	
 
