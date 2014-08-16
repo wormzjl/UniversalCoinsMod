@@ -72,6 +72,7 @@ public class UniversalCoins {
 	public static Boolean recipesEnabled;
 	public static Boolean wrenchEnabled;
 	public static Boolean vendorRecipesEnabled;
+	public static Boolean dropCoinsInInfinite;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -99,6 +100,9 @@ public class UniversalCoins {
 		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
+		Property dropInfinite = config.get(config.CATEGORY_GENERAL, "Do not collect coins in Infinite", false);
+		dropInfinite.comment = "Set to true to disable collecting coins when blocks are set to infinite mode.";
+		dropCoinsInInfinite = dropInfinite.getBoolean(false);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 

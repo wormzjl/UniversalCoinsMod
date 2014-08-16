@@ -37,6 +37,7 @@ public class UCCommand extends CommandBase{
 				sender.addChatMessage(new ChatComponentText("- set <itemName> <price> : Set price of item."));
 				sender.addChatMessage(new ChatComponentText("- reload : Reload pricelists."));
 				sender.addChatMessage(new ChatComponentText("- save : Save pricelists."));
+				sender.addChatMessage(new ChatComponentText("Hint: Use \"this\" in place of <itemName> to get or set item held."));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();
 			} else if (astring[0].matches("get")) {

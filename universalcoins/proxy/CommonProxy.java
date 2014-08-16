@@ -12,6 +12,7 @@ import universalcoins.items.ItemLargeCoinStack;
 import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
+import universalcoins.items.ItemUCCard;
 import universalcoins.items.ItemVendorWrench;
 import universalcoins.items.ItemWrench;
 import universalcoins.util.Vending;
@@ -67,7 +68,7 @@ public class CommonProxy {
 	}
 
 	public void registerRenderers() {
-		
+		//blank since we don't do anything on the server
 	}
 
 }

@@ -6,6 +6,7 @@ item.itemLargeCoinStack.name=Large Coin Stack
 item.itemCoinHeap.name=Coin Heap
 item.itemSmallCoinBag.name=Coin Bag
 item.itemLargeCoinBag.name=Large Coin Bag
+item.itemUCCard.name=UC Card
 item.itemSeller.name=Selling Catalog
 item.itemWrench.name=Wrench
 item.itemVendorWrench.name=Vendor Wrench

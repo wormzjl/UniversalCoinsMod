@@ -12,8 +12,8 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerVendorWrench extends Container {
 	private TileVendor tileEntity;
-	private int lastUserCoinSum;
-	private int lastItemPrice;
+	private String lastBlockOwner;
+	private Boolean lastInfinite;
 	
 	public ContainerVendorWrench(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
@@ -34,14 +34,14 @@ public class ContainerVendorWrench extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastUserCoinSum != this.tileEntity.userCoinSum 
-            		|| this.lastItemPrice != this.tileEntity.itemPrice) {
+            if (this.lastBlockOwner != this.tileEntity.blockOwner 
+            		|| this.lastInfinite != this.tileEntity.infiniteSell) {
                 //update
             	tileEntity.updateTE();
             }
 
-		this.lastUserCoinSum = this.tileEntity.userCoinSum;
-		this.lastItemPrice = this.tileEntity.itemPrice;
+		this.lastBlockOwner = this.tileEntity.blockOwner;
+		this.lastInfinite = this.tileEntity.infiniteSell;
         }
 	}
 	

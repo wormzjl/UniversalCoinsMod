@@ -52,8 +52,12 @@ public class HintGui extends GuiScreen {
 			ItemStack itemSelling = tileEntity.getSellItem();
 			List<String> itemInfoStringList = new ArrayList<String>();
 			if (itemSelling != null) {
-				itemInfoStringList.add(itemSelling.getDisplayName());
-				int longestString = itemSelling.getDisplayName().length();
+				if (itemSelling.stackSize > 1) {
+					itemInfoStringList.add(itemSelling.stackSize + " " + itemSelling.getDisplayName());
+				} else { 
+					itemInfoStringList.add(itemSelling.getDisplayName());
+				}
+				int longestString = itemInfoStringList.get(0).toString().length();
 				if (itemSelling.isItemEnchanted()) {
 					NBTTagList tagList = itemSelling.getEnchantmentTagList();
 					for (int i = 0; i < tagList.tagCount(); i++) {

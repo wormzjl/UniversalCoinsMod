@@ -1,5 +1,6 @@
 package universalcoins;
 
+import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
 import universalcoins.gui.VendorWrenchGUI;

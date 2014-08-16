@@ -36,7 +36,7 @@ public class VendorWrenchGUI extends GuiContainer {
 		infinite = tileEntity.infiniteSell;
 		infiniteButton = new GuiButton(idInfiniteButton, 9 + (width - xSize) / 2, 64 + (height - ySize) / 2, 148, 20, "Infinite: " + (infinite ? "On" : "Off"));
 		editButton = new GuiButton(idEditButton, 68 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 14, "Edit");
-		applyButton = new GuiButton(idApplyButton, 110 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 14, "Apply");
+		applyButton = new GuiButton(idApplyButton, 110 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 14, "Save");
 		buttonList.clear();
 		buttonList.add(editButton);
 		buttonList.add(applyButton);

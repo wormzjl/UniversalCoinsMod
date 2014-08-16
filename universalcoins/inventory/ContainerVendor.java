@@ -21,7 +21,7 @@ public class ContainerVendor extends Container {
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
 		addSlotToContainer(new Slot(tileEntity, TileVendor.itemSellingSlot, 8, 17));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot1, 133, 57));
+		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot, 133, 57));
 		
 		//add all the inventory storage slots
 		for (int i = 0; i < 9; i++) {

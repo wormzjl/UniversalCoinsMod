@@ -16,7 +16,7 @@ public class UCTileVendorMessage implements IMessage, IMessageHandler<UCTileVend
 public int x, y, z, coinSum, userCoinSum, itemPrice;
 public String blockOwner;
 public ItemStack sellItem;
-public boolean sellMode;
+public boolean sellMode, infiniteSell;
 
     public UCTileVendorMessage()
     {
@@ -33,6 +33,7 @@ public boolean sellMode;
         this.blockOwner = tileEntity.blockOwner;
         this.sellItem = tileEntity.getSellItem();
         this.sellMode = tileEntity.sellMode;
+        this.infiniteSell = tileEntity.infiniteSell;
     }
 
     @Override
@@ -47,6 +48,7 @@ public boolean sellMode;
         this.blockOwner = ByteBufUtils.readUTF8String(buf);
         this.sellItem = ByteBufUtils.readItemStack(buf);
         this.sellMode = buf.readBoolean();
+        this.infiniteSell = buf.readBoolean();
     }
 
     @Override
@@ -61,6 +63,7 @@ public boolean sellMode;
         ByteBufUtils.writeUTF8String(buf, blockOwner);
         ByteBufUtils.writeItemStack(buf, sellItem);
         buf.writeBoolean(sellMode);
+        buf.writeBoolean(infiniteSell);
     }
 
 	@Override
@@ -75,6 +78,7 @@ public boolean sellMode;
 			((TileVendor) tileEntity).blockOwner = message.blockOwner;
 			((TileVendor) tileEntity).setSellItem(message.sellItem);
 			((TileVendor) tileEntity).sellMode = message.sellMode;
+			((TileVendor) tileEntity).infiniteSell = message.infiniteSell;
 		}
 		return null;
 	}

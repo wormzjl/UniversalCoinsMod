@@ -22,7 +22,7 @@ public class ContainerVendorSale extends Container {
 		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemSellingSlot, 21, 24));
 		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemOutputSlot, 137, 24));
 		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 21, 66));
-		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot1, 137, 66));
+		addSlotToContainer(new UCSlotCoinOutput(tileEntity, TileVendor.itemCoinOutputSlot, 137, 66));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

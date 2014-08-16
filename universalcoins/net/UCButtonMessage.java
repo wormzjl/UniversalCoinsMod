@@ -1,6 +1,6 @@
 package universalcoins.net;
 
-import universalcoins.TradeStationGUI;
+import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
 import universalcoins.tile.TileTradeStation;

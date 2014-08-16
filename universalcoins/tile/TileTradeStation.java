@@ -1,7 +1,7 @@
 package universalcoins.tile;
 
-import universalcoins.TradeStationGUI;
 import universalcoins.UniversalCoins;
+import universalcoins.gui.TradeStationGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
 import universalcoins.util.UCItemPricer;
@@ -85,12 +85,10 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			} else {
 				sellButtonActive = true;
 				//disable sell button if item is enchanted
-				//TODO add pricing for selling enchanted items
 				if (inventory[itemInputSlot].isItemEnchanted()) sellButtonActive = false;
 				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
 						.getItem() == inventory[itemInputSlot].getItem()
-						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot]
-								.getItem().getItemStackLimit())
+						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize())
 						&& coinSum >= itemPrice;
 			}
 		}

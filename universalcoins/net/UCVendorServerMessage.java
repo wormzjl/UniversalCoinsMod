@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalcoins.TradeStationGUI;
+import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorSaleGUI;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
@@ -60,9 +60,6 @@ public class UCVendorServerMessage  implements IMessage, IMessageHandler<UCVendo
 			((TileVendor) tileEntity).blockOwner = message.blockOwner;
 			((TileVendor) tileEntity).infiniteSell = message.infinite;
 			}
-
-			NBTTagCompound data = new NBTTagCompound();
-			tileEntity.writeToNBT(data);
 			return null;
 	}
 }
