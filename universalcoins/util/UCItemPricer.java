@@ -220,6 +220,9 @@ private static void loadPricelists() throws IOException {
 		if (itemStack == null) {
 			return false;
 		}
+		if (itemStack.getHasSubtypes() || (itemStack.isItemDamaged() && !itemStack.isItemStackDamageable())){
+			return false;
+		}
 		String itemName = itemStack.getUnlocalizedName();
 		if (ucPriceMap.containsKey(itemName)) {
 			ucPriceMap.put(itemName, price);

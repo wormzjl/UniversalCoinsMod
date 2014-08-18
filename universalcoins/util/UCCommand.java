@@ -80,9 +80,10 @@ public class UCCommand extends CommandBase{
 							sender.addChatMessage(new ChatComponentText("UC: run \"universalcoins reload\" to undo"));
 							firstChange = false;
 						}
-					} else
+					} else {
 						sender.addChatMessage(new ChatComponentText("UC: failed to set price"));
 						sender.addChatMessage(new ChatComponentText("UC: item may not be priceable"));
+					}
 				} else sender.addChatMessage(new ChatComponentText("UC: Please specify item and price"));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();
