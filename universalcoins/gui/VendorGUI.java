@@ -3,6 +3,7 @@ package universalcoins.gui;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.FMLLog;
 import universalcoins.inventory.ContainerVendor;
 import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
@@ -156,15 +157,17 @@ public class VendorGUI extends GuiContainer{
 			itemPriceField.setFocused(true);
 		} else if (button.id == idSetButton) {
 			String price = itemPriceField.getText();
-			int iPrice = Integer.parseInt(price);
-			try {
-				tileEntity.itemPrice = iPrice;
-			} catch (Throwable ex2) {
-				//fail silently?
+			if (price != "") {
+				int iPrice = Integer.parseInt(price);
+				try {
+					tileEntity.itemPrice = iPrice;
+				} catch (Throwable ex2) {
+					// fail silently?
+				}
+				textActive = false;
+				itemPriceField.setFocused(false);
+				tileEntity.sendServerUpdateMessage();
 			}
-			textActive = false;
-			itemPriceField.setFocused(false);
-			tileEntity.sendServerUpdateMessage();
 		} else if (button.id <= idLBagButton) {
 			tileEntity.onRetrieveButtonsPressed(button.id, shiftPressed);
 			tileEntity.sendButtonMessage(button.id, shiftPressed);
