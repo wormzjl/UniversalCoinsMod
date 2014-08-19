@@ -256,6 +256,14 @@ private static void loadPricelists() throws IOException {
 		//write new configs
 		writePriceLists();
 	}
+	
+	public static void resetDefaults() {
+		try {
+			loadDefaults();
+		} catch (IOException e) {
+			// fail quietly
+		}
+	}
 
 	public static ItemStack getRevenueStack(int itemPrice) {
 		if (itemPrice <= 64) {

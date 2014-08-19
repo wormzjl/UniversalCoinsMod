@@ -36,8 +36,9 @@ public class UCCommand extends CommandBase{
 				sender.addChatMessage(new ChatComponentText("- get <itemName> : Get price of item."));
 				sender.addChatMessage(new ChatComponentText("- set <itemName> <price> : Set price of item."));
 				sender.addChatMessage(new ChatComponentText("- reload : Reload pricelists."));
+				sender.addChatMessage(new ChatComponentText("- reset : Reset default prices. Will not override items not priced by default"));
 				sender.addChatMessage(new ChatComponentText("- save : Save pricelists."));
-				sender.addChatMessage(new ChatComponentText("Hint: Use \"this\" in place of <itemName> to get or set item held."));
+				sender.addChatMessage(new ChatComponentText("Hint: Use \"this\" in place of <itemName> to get or set item held by player."));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();
 			} else if (astring[0].matches("get")) {
@@ -87,6 +88,8 @@ public class UCCommand extends CommandBase{
 				} else sender.addChatMessage(new ChatComponentText("UC: Please specify item and price"));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();
+			} else if (astring[0].matches("reset")) {
+					UCItemPricer.loadConfigs();
 			} else if (astring[0].matches("save")) {
 				UCItemPricer.updatePriceLists();
 				sender.addChatMessage(new ChatComponentText("UC: Changes saved"));
