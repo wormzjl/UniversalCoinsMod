@@ -150,11 +150,6 @@ public class BlockVendor extends BlockContainer {
 	}
 
 	@Override
-	public int getRenderBlockPass() {
-		return 1;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta){
 
