@@ -18,7 +18,8 @@ import net.minecraft.util.StatCollector;
 public class VendorGUI extends GuiContainer{
 	private TileVendor tileEntity;
 	private GuiTextField itemPriceField;
-	private GuiButton updateButton, setButton, retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
+	private GuiButton updateButton, setButton;
+	private GuiCoinButton retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
 	public static final int idUpdateButton = 0;
 	public static final int idSetButton = 1;
 	public static final int idCoinButton = 2;
@@ -40,13 +41,13 @@ public class VendorGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		updateButton = new GuiButton(idUpdateButton, 80 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 11, "Change");
-		setButton = new GuiButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 11, "Set");
-		retrCoinButton = new GuiButton(idCoinButton, 78 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 96 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 114 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrSBagButton = new GuiButton(idSBagButton, 132 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrLBagButton = new GuiButton(idLBagButton, 150 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		updateButton = new GuiButton(idUpdateButton, 80 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 11, "Edit");
+		setButton = new GuiButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 11, "Save");
+		retrCoinButton = new GuiCoinButton(idCoinButton, 78 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
+		retrSStackButton = new GuiCoinButton(idSStackButton, 96 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
+		retrLStackButton = new GuiCoinButton(idLStackButton, 114 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
+		retrSBagButton = new GuiCoinButton(idSBagButton, 132 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
+		retrLBagButton = new GuiCoinButton(idLBagButton, 150 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
 		buttonList.clear();
 		buttonList.add(updateButton);
 		buttonList.add(setButton);
@@ -101,47 +102,7 @@ public class VendorGUI extends GuiContainer{
 		//draw coinsum
 		String cSum = String.valueOf(tileEntity.coinSum);
 		stringWidth = fontRendererObj.getStringWidth(cSum);
-		fontRendererObj.drawString(cSum, 125 - stringWidth, 62, 4210752);
-		drawButtonOverlay();
-		
-	}
-	
-	private void drawButtonOverlay() {
-		int x, y, u = 176, v = 0;
-		//int x_offset = -125, y_offset = -20;
-		int x_offset = -guiLeft;
-		int y_offset = -guiTop;
-		final ResourceLocation texture = new ResourceLocation("universalcoins:textures/gui/vendor.png");
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 79 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 97 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 116 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 133 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-		
-		v = 0;
-		u = 191;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 150 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
+		fontRendererObj.drawString(cSum, 125 - stringWidth, 62, 4210752);		
 	}
 	
 	protected void actionPerformed(GuiButton button) {

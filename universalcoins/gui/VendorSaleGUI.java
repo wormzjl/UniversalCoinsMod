@@ -24,7 +24,8 @@ import net.minecraft.util.StatCollector;
 
 public class VendorSaleGUI extends GuiContainer{
 	private TileVendor tileEntity;
-	private GuiButton buyButton, retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
+	private GuiButton buyButton;
+	private GuiCoinButton retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
 	public static final int idBuyButton = 7;
 	public static final int idCoinButton = 8;
 	private static final int idSStackButton = 9;
@@ -46,11 +47,11 @@ public class VendorSaleGUI extends GuiContainer{
 	public void initGui() {
 		super.initGui();
 		buyButton = new GuiButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 11, "Buy");
-		retrCoinButton = new GuiButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrSBagButton = new GuiButton(idSBagButton, 96 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
-		retrLBagButton = new GuiButton(idLBagButton, 114 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "");
+		retrCoinButton = new GuiCoinButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 0);
+		retrSStackButton = new GuiCoinButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 1);
+		retrLStackButton = new GuiCoinButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 2);
+		retrSBagButton = new GuiCoinButton(idSBagButton, 96 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 3);
+		retrLBagButton = new GuiCoinButton(idLBagButton, 114 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 4);
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(retrCoinButton);
@@ -58,44 +59,6 @@ public class VendorSaleGUI extends GuiContainer{
 		buttonList.add(retrLStackButton);
 		buttonList.add(retrSBagButton);
 		buttonList.add(retrLBagButton);
-	}
-	
-	private void drawOverlay() {
-		int x, y, u = 176, v = 0;
-		//int x_offset = -125, y_offset = -20;
-		int x_offset = -guiLeft;
-		int y_offset = -guiTop;
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 43 + x_offset;
-		y = (height - ySize) / 2 + 85 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 61 + x_offset;
-		y = (height - ySize) / 2 + 85 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 80 + x_offset;
-		y = (height - ySize) / 2 + 84 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 17;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 96 + x_offset;
-		y = (height - ySize) / 2 + 86 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-		
-		v = 0;
-		u = 191;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 114 + x_offset;
-		y = (height - ySize) / 2 + 85 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
 	}
 
 	@Override
@@ -125,8 +88,6 @@ public class VendorSaleGUI extends GuiContainer{
 				"container.inventory"), 6, ySize - 96 + 2, 4210752);
 		fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 46, 29, 4210752);
 		fontRendererObj.drawString(String.valueOf(tileEntity.userCoinSum), 46, 71, 4210752);
-
-		drawOverlay();
 	}
 	
 	protected void actionPerformed(GuiButton button) {

@@ -24,7 +24,8 @@ import universalcoins.tile.TileTradeStation;
 public class TradeStationGUI extends GuiContainer {
 	
 	private TileTradeStation tileEntity;
-	private GuiButton buyButton, sellButton, retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton, coinModeButton, autoModeButton;
+	private GuiButton buyButton, sellButton, coinModeButton, autoModeButton;
+	private GuiCoinButton retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
 	public static final int idBuyButton = 0;
 	public static final int idSellButton = 1;
 	public static final int idCoinButton = 2;
@@ -53,11 +54,11 @@ public class TradeStationGUI extends GuiContainer {
 		super.initGui();
 		buyButton = new GuiButton(idBuyButton, 36 + (width - xSize) / 2, 22 + (height - ySize) / 2, 25, 11, "Buy");
 		sellButton = new GuiButton(idSellButton, 36 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
-		retrCoinButton = new GuiButton(idCoinButton, 80 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrSStackButton = new GuiButton(idSStackButton, 98 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrLStackButton = new GuiButton(idLStackButton, 116 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrSBagButton = new GuiButton(idSBagButton, 134 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
-		retrLBagButton = new GuiButton(idLBagButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "");
+		retrCoinButton = new GuiCoinButton(idCoinButton, 80 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
+		retrSStackButton = new GuiCoinButton(idSStackButton, 98 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
+		retrLStackButton = new GuiCoinButton(idLStackButton, 116 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
+		retrSBagButton = new GuiCoinButton(idSBagButton, 134 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
+		retrLBagButton = new GuiCoinButton(idLBagButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
 		coinModeButton = new GuiButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 13, "Coin");
 		buttonList.clear();
 		buttonList.add(buyButton);
@@ -102,47 +103,6 @@ public class TradeStationGUI extends GuiContainer {
 			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 74, 4210752);
 			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 38, 87, 4210752);
 		}
-
-		drawOverlay();
-	}
-
-	private void drawOverlay() {
-		int x, y, u = 176, v = 0;
-		//int x_offset = -125, y_offset = -20;
-		int x_offset = -guiLeft;
-		int y_offset = -guiTop;
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 81 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 99 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 118 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
-		v += 16;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 135 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-		
-		v = 0;
-		u = 191;
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		x = (width - xSize) / 2 + 152 + x_offset;
-		y = (height - ySize) / 2 + 75 + y_offset;
-		this.drawTexturedModalRect(x, y, u, v, 16, 16);
-
 	}
 
 	@Override
@@ -157,12 +117,11 @@ public class TradeStationGUI extends GuiContainer {
 		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/tradeStation.png");
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-
-		//drawOverlay();
 		
 		//draw auto mode box if auto buy/sell enabled
 		if (autoMode) {
@@ -173,8 +132,7 @@ public class TradeStationGUI extends GuiContainer {
 		int xHighlight[] = {0, 81, 99, 117, 135, 153};
 		if (tileEntity.coinMode > 0) {
 			this.drawTexturedModalRect(x + xHighlight[tileEntity.coinMode], y + 94, 178, 82, 16, 2);
-		}
-		
+		}		
 	}
 	
 	protected void actionPerformed(GuiButton par1GuiButton) {
