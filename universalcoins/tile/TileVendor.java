@@ -77,6 +77,12 @@ public class TileVendor extends TileEntity implements IInventory {
 	private void activateBuyButton() {
 		if (userCoinSum >= itemPrice && (long) coinSum + (long) itemPrice < 2147483647 
 				&& (hasSellingInventory() || infiniteSell)) {
+			if (inventory[itemOutputSlot] != null) {
+				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
+					buyButtonActive = false;
+					return;
+				}
+			}
 			buyButtonActive = true;
 		} else buyButtonActive = false;
 
