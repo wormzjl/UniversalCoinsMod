@@ -83,6 +83,12 @@ public class VendorGUI extends GuiContainer{
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		
+		retrCoinButton.enabled = tileEntity.coinButtonActive;
+		retrSStackButton.enabled = tileEntity.isSStackButtonActive;
+		retrLStackButton.enabled = tileEntity.isLStackButtonActive;
+		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
+		retrLBagButton.enabled = tileEntity.isLBagButtonActive;	
 	}
 	
 	@Override

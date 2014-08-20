@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.FMLLog;
 import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -31,7 +32,7 @@ public class HintGui extends GuiScreen {
 			FontRenderer fontRender = mc.fontRenderer;
 			int width = res.getScaledWidth();
 			int height = res.getScaledHeight();
-			int w = 120;
+			int w = 80;
 			int h = 26;
 			int centerYOff = -80;
 			int cx = width / 2;
@@ -66,8 +67,7 @@ public class HintGui extends GuiScreen {
 						String eInfo = Enchantment.enchantmentsList[enchant
 								.getInteger("id")].getTranslatedName(enchant
 								.getInteger("lvl"));
-						if (eInfo.length() > longestString) longestString =
-								eInfo.length();
+						if (eInfo.length() > longestString) longestString = eInfo.length();
 						itemInfoStringList.add(eInfo);
 					}
 				}
@@ -78,7 +78,10 @@ public class HintGui extends GuiScreen {
 				}
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);
-				if (longestString + 4 > w) w = longestString + 4;
+				if (longestString * 6 > w) { 
+					w = longestString * 6;
+					x = cx - w / 2;
+				}
 			} else {
 				return;
 			}

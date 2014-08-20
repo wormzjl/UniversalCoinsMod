@@ -5,6 +5,7 @@ import java.util.List;
 
 import universalcoins.UniversalCoins;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -62,6 +63,16 @@ public class UCRecipeHelper {
 			"III",
 			'I', Items.iron_ingot, 'G', Items.gold_ingot, 'C', UniversalCoins.proxy.itemSeller
 		});
+	}
+	
+	public static void addVendingBlockRecipes() {
+		for(int i=0; i < Vending.supports.length; i++){
+			GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockVendor,1,i), new Object[]{
+				"XXX",
+				"XGX",
+				"*R*", 'X', Blocks.glass, 'G', Items.gold_ingot, 'R', Items.redstone, '*', Vending.reagents[i]
+				});
+		}
 	}
 	
 	public static void addWrenchRecipe() {

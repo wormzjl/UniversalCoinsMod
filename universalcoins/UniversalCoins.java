@@ -11,7 +11,6 @@ import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemWrench;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
-import universalcoins.net.UCTileVendorMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileTradeStation;
@@ -72,7 +71,7 @@ public class UniversalCoins {
 	public static Boolean recipesEnabled;
 	public static Boolean wrenchEnabled;
 	public static Boolean vendorRecipesEnabled;
-	public static Boolean dropCoinsInInfinite;
+	public static Boolean collectCoinsInInfinite;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -100,16 +99,15 @@ public class UniversalCoins {
 		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
-		Property dropInfinite = config.get(config.CATEGORY_GENERAL, "Do not collect coins in Infinite", false);
-		dropInfinite.comment = "Set to true to disable collecting coins when blocks are set to infinite mode.";
-		dropCoinsInInfinite = dropInfinite.getBoolean(false);
+		Property collectInfinite = config.get(config.CATEGORY_GENERAL, "Collect infinite", true);
+		collectInfinite.comment = "Set to false to disable collecting coins when vending blocks are set to infinite mode.";
+		collectCoinsInInfinite = collectInfinite.getBoolean(true);
 		config.save();
 	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-	    snw.registerMessage(UCTileVendorMessage.class, UCTileVendorMessage.class, 2, Side.CLIENT);
-	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 3, Side.CLIENT);
+	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 2, Side.CLIENT);
 	}
 	
 	@EventHandler
@@ -125,6 +123,9 @@ public class UniversalCoins {
 		UCRecipeHelper.addCoinRecipes();
 		if (recipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
+		}
+		if (vendorRecipesEnabled){
+			UCRecipeHelper.addVendingBlockRecipes();
 		}
 		if (wrenchEnabled) {
 			UCRecipeHelper.addWrenchRecipe();

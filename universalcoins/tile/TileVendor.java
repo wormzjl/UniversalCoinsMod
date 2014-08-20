@@ -7,7 +7,6 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileStationMessage;
-import universalcoins.net.UCTileVendorMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
@@ -214,7 +213,7 @@ public class TileVendor extends TileEntity implements IInventory {
 				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
 				inventory[itemOutputSlot].stackSize = totalSale;
 				userCoinSum -= itemPrice * amount;
-				if (UniversalCoins.dropCoinsInInfinite && infiniteSell) {
+				if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
 					coinSum = 0;
 				} else {
 					coinSum += itemPrice * amount;
@@ -241,7 +240,7 @@ public class TileVendor extends TileEntity implements IInventory {
 						inventory[i].stackSize -= thisSale;
 						totalSale -= thisSale;
 						userCoinSum -= itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
-						if (UniversalCoins.dropCoinsInInfinite && infiniteSell) {
+						if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
 							coinSum = 0;
 						} else { 
 							coinSum += itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
@@ -418,12 +417,20 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	@Override
-    public Packet getDescriptionPacket() {
-        return UniversalCoins.snw.getPacketFrom(new UCTileVendorMessage(this));
+    public Packet getDescriptionPacket() 
+    {
+    	NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+    }
+    
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) 
+    { 
+        readFromNBT(pkt.func_148857_g());
     }
 	
 	public void updateTE() {
-	//	UniversalCoins.snw.getPacketFrom(new UCTileVendorMessage(this));
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
