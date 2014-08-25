@@ -10,6 +10,18 @@ public class UCSlotGhost extends Slot {
 	public UCSlotGhost(IInventory par1iInventory, int par2, int par3, int par4) {
 		super(par1iInventory, par2, par3, par4);
 	}
+
+	@Override
+	public boolean canTakeStack(EntityPlayer player) {
+		ItemStack stack = player.getItemInUse();
+		//copy itemstack held
+		if (stack != null) {
+			this.putStack(stack.copy());
+		} else {
+			this.putStack(null);
+		}
+        return false;
+    }
 	
 	@Override
 	public boolean isItemValid(ItemStack stack) {
@@ -18,12 +30,4 @@ public class UCSlotGhost extends Slot {
 		//return false so user keeps itemstack
         return false;
     }
-	
-	@Override
-	public ItemStack decrStackSize(int par1) {
-		//clear inventory
-		this.putStack(null);
-		//return null. No itemstack for you!
-		return null;
-    } 
 }

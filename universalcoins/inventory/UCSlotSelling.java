@@ -12,11 +12,12 @@ public class UCSlotSelling extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(ItemStack par1ItemStack) {
-		return false;
-	}
+	public boolean canTakeStack(EntityPlayer player) {
+        return false;
+    }
 	
-	public ItemStack decrStackSize(int par1) {
-		return null;
-	}	
+	@Override
+	public boolean isItemValid(ItemStack stack) {
+        return false;
+    }
 }

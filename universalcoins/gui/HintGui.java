@@ -40,9 +40,8 @@ public class HintGui extends GuiScreen {
 			int y = height / 2 - h / 2 + centerYOff;
 			World world = mc.theWorld;
 			MovingObjectPosition mop = mc.objectMouseOver;
-
-			TileEntity te = world.getTileEntity(mop.blockX, mop.blockY,
-					mop.blockZ);
+			if (mop == null) return; //null pointer error bugfix?
+			TileEntity te = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 			if (te == null) {
 				return;
 			}

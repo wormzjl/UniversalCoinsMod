@@ -27,7 +27,10 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -40,6 +43,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -53,7 +57,7 @@ import cpw.mods.fml.relauncher.Side;
 /**
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
  * 
- * @author ted_996, notabadminer
+ * @author ted_996, notabadminer, AUTOMATIC_MAIDEN
  * 
  **/
 
@@ -64,7 +68,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.5.4";
+	public static final String version = "1.7.2-1.5.5";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -72,6 +76,9 @@ public class UniversalCoins {
 	public static Boolean wrenchEnabled;
 	public static Boolean vendorRecipesEnabled;
 	public static Boolean collectCoinsInInfinite;
+	public static Boolean mobsDropCoins;
+	public static Boolean coinsInMineshaft;
+	public static Boolean coinsInDungeon;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -102,12 +109,29 @@ public class UniversalCoins {
 		Property collectInfinite = config.get(config.CATEGORY_GENERAL, "Collect infinite", true);
 		collectInfinite.comment = "Set to false to disable collecting coins when vending blocks are set to infinite mode.";
 		collectCoinsInInfinite = collectInfinite.getBoolean(true);
+		Property mobDrops = config.get(config.CATEGORY_GENERAL, "Mob Drops", true);
+		mobDrops.comment = "Set to false to disable mobs dropping coins on death.";
+		mobsDropCoins = mobDrops.getBoolean(true);
+		Property mineshaftCoins = config.get(config.CATEGORY_GENERAL, "Mineshaft CoinBag", true);
+		mineshaftCoins.comment = "Set to false to disable coinbag spawning in mineshaft chests.";
+		coinsInMineshaft = mineshaftCoins.getBoolean(true);
+		Property dungeonCoins = config.get(config.CATEGORY_GENERAL, "Dungeon CoinBag", true);
+		dungeonCoins.comment = "Set to false to disable coinbag spawning in dungeon chests.";
+		coinsInDungeon = dungeonCoins.getBoolean(true);
 		config.save();
-	    FMLCommonHandler.instance().bus().register(new  UCEventHandler());
+		
+		if (mobsDropCoins) {
+			MinecraftForge.EVENT_BUS.register(new UCEventHandler());
+		}
+		
+		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 2, Side.CLIENT);
+	    
+	    //update check using versionchecker
+	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://www.dropbox.com/s/mn4mloo1vw79vdb/version.json");
 	}
 	
 	@EventHandler
@@ -129,6 +153,12 @@ public class UniversalCoins {
 		}
 		if (wrenchEnabled) {
 			UCRecipeHelper.addWrenchRecipe();
+		}
+		if (coinsInMineshaft) {
+			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 1, 64, 20));
+		}
+		if (coinsInDungeon) {
+			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 1, 64, 20));
 		}
 		
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");

@@ -210,9 +210,14 @@ public class TileVendor extends TileEntity implements IInventory {
 		int totalSale = inventory[itemSellingSlot].stackSize * amount;
 		if (inventory[itemSellingSlot].getMaxStackSize() >= totalSale) {
 			if (infiniteSell) {
-				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
-				inventory[itemOutputSlot].stackSize = totalSale;
-				userCoinSum -= itemPrice * amount;
+				if (inventory[itemOutputSlot] == null) {
+					inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
+					inventory[itemOutputSlot].stackSize = totalSale;
+					userCoinSum -= itemPrice * amount;
+				} else {
+					inventory[itemOutputSlot].stackSize += totalSale;
+					userCoinSum -= itemPrice * amount;
+				}
 				if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
 					coinSum = 0;
 				} else {
@@ -425,8 +430,7 @@ public class TileVendor extends TileEntity implements IInventory {
     }
     
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) 
-    { 
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) { 
         readFromNBT(pkt.func_148857_g());
     }
 	
