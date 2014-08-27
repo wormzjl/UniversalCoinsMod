@@ -1,8 +1,10 @@
 package universalcoins.net;
 
+import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
+import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -91,6 +93,14 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 				}
 			} else if (message.buttonId <= VendorSaleGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
+						message.buttonId, message.shiftPressed);
+			}
+		}
+		if (tileEntity instanceof TileCardStation) {
+			if (message.buttonId == CardStationGUI.idCardButton) {
+				((TileCardStation) tileEntity).onCardButtonPressed();
+			} else if (message.buttonId <= CardStationGUI.idLBagButton) {
+				((TileCardStation) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			}
 		}

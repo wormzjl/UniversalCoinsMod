@@ -1,5 +1,6 @@
 tile.blockTradeStation.name=Universal Trade Station
 tile.blockVendor.name=Vending Block
+tile.blockCardStation.name=Universal Coins ATM
 item.itemCoin.name=Coin
 item.itemSmallCoinStack.name=Coin Stack
 item.itemLargeCoinStack.name=Large Coin Stack

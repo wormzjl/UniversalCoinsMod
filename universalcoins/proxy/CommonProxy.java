@@ -3,6 +3,7 @@ package universalcoins.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import universalcoins.UniversalCoins;
+import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.items.ItemCoin;
@@ -26,20 +27,23 @@ public class CommonProxy {
 	public static Item itemSmallCoinBag;
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
-	//public static Item itemCard;
+	public static Item itemUCCard;
 	public static Item itemWrench;
 	public static Item itemVendorWrench;
 	
 	public static Block blockTradeStation;
-	public static Block blockVendor;	
+	public static Block blockVendor;
+	public static Block blockCardStation;
 	
 	
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		blockVendor = new BlockVendor(Vending.supports).setBlockName("blockVendor");
+		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();
+		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
 	}
 	
 	public void registerItems() {
@@ -49,7 +53,7 @@ public class CommonProxy {
 		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap"); //TODO removal in 1.5.4
 		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
 		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
-		//itemCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
+		itemUCCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemWrench = new ItemWrench().setUnlocalizedName("itemWrench");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
@@ -61,7 +65,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName()); //TODO removal in 1.5.4
 		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
-		//GameRegistry.registerItem(itemCard, itemCard.getUnlocalizedName());
+		GameRegistry.registerItem(itemUCCard, itemUCCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		if (UniversalCoins.wrenchEnabled) GameRegistry.registerItem(itemWrench, itemWrench.getUnlocalizedName());

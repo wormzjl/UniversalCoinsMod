@@ -52,14 +52,14 @@ public class TradeStationGUI extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiButton(idBuyButton, 36 + (width - xSize) / 2, 22 + (height - ySize) / 2, 25, 11, "Buy");
-		sellButton = new GuiButton(idSellButton, 36 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 11, "Sell");
+		buyButton = new GuiSlimButton(idBuyButton, 36 + (width - xSize) / 2, 21 + (height - ySize) / 2, 25, 12, "Buy");
+		sellButton = new GuiSlimButton(idSellButton, 36 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 12, "Sell");
 		retrCoinButton = new GuiCoinButton(idCoinButton, 80 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
 		retrSStackButton = new GuiCoinButton(idSStackButton, 98 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
 		retrLStackButton = new GuiCoinButton(idLStackButton, 116 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
 		retrSBagButton = new GuiCoinButton(idSBagButton, 134 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
 		retrLBagButton = new GuiCoinButton(idLBagButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
-		coinModeButton = new GuiButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 13, "Coin");
+		coinModeButton = new GuiSlimButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 12, "Coin");
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
@@ -72,7 +72,7 @@ public class TradeStationGUI extends GuiContainer {
 		
 		//display only if auto buy/sell enabled?
 		if (autoMode) {
-			autoModeButton = new GuiButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 13, "Mode");
+			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 12, "Mode");
 			buttonList.add(autoModeButton);
 		}
 	}

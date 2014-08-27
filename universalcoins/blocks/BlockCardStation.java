@@ -3,7 +3,9 @@ package universalcoins.blocks;
 import java.util.Random;
 
 import universalcoins.UniversalCoins;
+import universalcoins.render.BlockVendorRenderer;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileTradeStation;
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -23,6 +25,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
@@ -32,30 +36,23 @@ import net.minecraftforge.common.util.Constants;
 
 public class BlockCardStation extends BlockContainer {
 	
-	private IIcon[] icons;
-
+	IIcon blockIcon;
+	
 	public BlockCardStation() {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
+		setBlockTextureName("universalcoins:blockTradeStation1"); //fixes missing texture on block break
 		setHarvestLevel("pickaxe", 1);	
 	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister register){
-		icons = new IIcon[2];
-		
-		for (int i = 0; i < icons.length; i++){
-			icons[i] = register.registerIcon(UniversalCoins.modid + ":" +
-													  		this.getUnlocalizedName().substring(5) + i);
-		}
-	}
 	
-	public IIcon getIcon(int par1, int par2){
-		if (par1 == 0 || par1 == 1){
-			return icons[1];
-		}
-		return icons[0];
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
+        return false;
+    }
+	
+	public boolean isOpaqueCube() {
+	   return false;
 	}
 	
 	@Override
@@ -84,6 +81,7 @@ public class BlockCardStation extends BlockContainer {
 			}
 		}
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+		((TileCardStation) tileEntity).player = player.getDisplayName();
 		return true;
 	}
 	
@@ -114,6 +112,10 @@ public class BlockCardStation extends BlockContainer {
 		
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+		//set block meta so we can use it later for rotation
+		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
+		
 		if (world.isRemote) return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
@@ -139,6 +141,8 @@ public class BlockCardStation extends BlockContainer {
             ((TileCardStation)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
         }
 	}
+	
+	
 	
 	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
         super.breakBlock(world, x, y, z, par5, par6);

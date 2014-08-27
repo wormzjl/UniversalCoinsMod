@@ -6,7 +6,7 @@ import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSaleGUI;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileStationMessage;
+import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
@@ -199,62 +199,66 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	public void onBuyPressed(int amount) {
-		if (inventory[itemSellingSlot] == null) {
-			buyButtonActive = false;
-			return;
-		}
-		if (userCoinSum < itemPrice * amount) {
+		if (inventory[itemSellingSlot] == null
+				|| userCoinSum < itemPrice * amount) {
 			buyButtonActive = false;
 			return;
 		}
 		int totalSale = inventory[itemSellingSlot].stackSize * amount;
-		if (inventory[itemSellingSlot].getMaxStackSize() >= totalSale) {
-			if (infiniteSell) {
-				if (inventory[itemOutputSlot] == null) {
-					inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
-					inventory[itemOutputSlot].stackSize = totalSale;
-					userCoinSum -= itemPrice * amount;
-				} else {
-					inventory[itemOutputSlot].stackSize += totalSale;
-					userCoinSum -= itemPrice * amount;
-				}
-				if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
-					coinSum = 0;
-				} else {
-					coinSum += itemPrice * amount;
-				}
+		if (inventory[itemOutputSlot] != null && inventory[itemOutputSlot].stackSize 
+				+ totalSale > inventory[itemSellingSlot].getMaxStackSize()) {
+			buyButtonActive = false;
+			return;
+		}
+		if (infiniteSell) {
+			if (inventory[itemOutputSlot] == null) {
+				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
+				inventory[itemOutputSlot].stackSize = totalSale;
+				userCoinSum -= itemPrice * amount;
 			} else {
-				// find matching item in inventory
-				// we need to match the item, damage, and tags to make sure the stacks are equal
-				for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
-					if (inventory[i] != null
-							&& inventory[i].getItem() == inventory[itemSellingSlot]
-									.getItem()
-							&& inventory[i].getItemDamage() == inventory[itemSellingSlot]
-									.getItemDamage()
-							&& ItemStack.areItemStackTagsEqual(inventory[i],
-									inventory[itemSellingSlot])) {
-						// copy itemstack if null. We'll set the amount to 0 to
-						// start.
-						if (inventory[itemOutputSlot] == null) {
-							inventory[itemOutputSlot] = inventory[i].copy();
-							inventory[itemOutputSlot].stackSize = 0;
-						}
-						int thisSale = Math.min(inventory[i].stackSize, totalSale);
-						inventory[itemOutputSlot].stackSize += thisSale;
-						inventory[i].stackSize -= thisSale;
-						totalSale -= thisSale;
-						userCoinSum -= itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
-						if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
-							coinSum = 0;
-						} else { 
-							coinSum += itemPrice * thisSale / inventory[itemSellingSlot].stackSize;
-						}
+				totalSale = Math.min(inventory[itemSellingSlot].stackSize
+						* amount, inventory[itemSellingSlot].getMaxStackSize()
+						- inventory[itemOutputSlot].stackSize);
+				inventory[itemOutputSlot].stackSize += totalSale;
+				userCoinSum -= itemPrice * amount;
+			}
+			if (!UniversalCoins.collectCoinsInInfinite) {
+				coinSum = 0;
+			} else {
+				coinSum += itemPrice * amount;
+			}
+		} else {
+			// find matching item in inventory
+			// we need to match the item, damage, and tags to make sure the
+			// stacks are equal
+			for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+				if (inventory[i] != null
+						&& inventory[i].getItem() == inventory[itemSellingSlot].getItem()
+						&& inventory[i].getItemDamage() == inventory[itemSellingSlot].getItemDamage()
+						&& ItemStack.areItemStackTagsEqual(inventory[i],
+								inventory[itemSellingSlot])) {
+					// copy itemstack if null. We'll set the amount to 0 to
+					// start.
+					if (inventory[itemOutputSlot] == null) {
+						inventory[itemOutputSlot] = inventory[i].copy();
+						inventory[itemOutputSlot].stackSize = 0;
 					}
-					// cleanup empty stacks
-					if (inventory[i] == null || inventory[i].stackSize == 0) {
-						inventory[i] = null;
+					int thisSale = Math.min(inventory[i].stackSize, totalSale);
+					inventory[itemOutputSlot].stackSize += thisSale;
+					inventory[i].stackSize -= thisSale;
+					totalSale -= thisSale;
+					userCoinSum -= itemPrice * thisSale
+							/ inventory[itemSellingSlot].stackSize;
+					if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
+						coinSum = 0;
+					} else {
+						coinSum += itemPrice * thisSale
+								/ inventory[itemSellingSlot].stackSize;
 					}
+				}
+				// cleanup empty stacks
+				if (inventory[i] == null || inventory[i].stackSize == 0) {
+					inventory[i] = null;
 				}
 			}
 		}

@@ -8,13 +8,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiCoinButton extends GuiButton {
+public class GuiSlimButton extends GuiButton {
 	protected ResourceLocation buttonTexture= new ResourceLocation("universalcoins", "textures/gui/buttons.png");
-	protected int index;
 
-	public GuiCoinButton(int id, int xPos, int yPos, int width, int height, String displayString, int index) {
+	public GuiSlimButton(int id, int xPos, int yPos, int width, int height, String displayString) {
 		super(id, xPos, yPos, width, height, displayString);
-		this.index = index;
 	}
 	
 	/**
@@ -33,7 +31,8 @@ public class GuiCoinButton extends GuiButton {
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, 0 + index * this.width, 0 + k * this.height, this.width, this.height);
+            this.drawTexturedModalRect(this.xPosition, this.yPosition, 0 * this.width, 54 + k * this.height, this.width / 2, this.height);
+            this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 90 - this.width / 2, 54 + k * this.height, this.width / 2, this.height);
             this.mouseDragged(p_146112_1_, p_146112_2_, p_146112_3_);
             int l = 14737632;
 

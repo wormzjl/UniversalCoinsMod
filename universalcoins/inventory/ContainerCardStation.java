@@ -1,9 +1,8 @@
 package universalcoins.inventory;
 
-import universalcoins.tile.TileTradeStation;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalcoins.tile.TileCardStation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,28 +10,26 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-
-
-public class ContainerTradeStation extends Container {
-	private TileTradeStation tileEntity;
-	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
-	private String lastName;
-		
-	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
+public class ContainerCardStation extends Container {
+	private TileCardStation tileEntity;
+	private int lastCoinSum;
+	
+	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
-		// it binds to
-		// and the x-y coordinates it resides on-screen
-		addSlotToContainer(new Slot(tileEntity, TileTradeStation.itemInputSlot, 16, 27));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileTradeStation.itemOutputSlot, 144, 27));
+		// it binds to and the x-y coordinates it resides on-screen
+		addSlotToContainer(new UCSlotCard(tileEntity, TileCardStation.itemCardSlot, 36, 34));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileCardStation.itemCardOutputSlot, 124, 34));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileCardStation.itemCoinSlot, 22, 75));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileCardStation.itemOutputSlot, 138, 75));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
 	}
-	
+
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return tileEntity.isUseableByPlayer(entityplayer);
+	public boolean canInteractWith(EntityPlayer player) {
+		return tileEntity.isUseableByPlayer(player);
 	}
 	
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
@@ -58,8 +55,8 @@ public class ContainerTradeStation extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 2) {
-				if (!this.mergeItemStack(stackInSlot, 2, 38, true)) {
+			if (slot < 3) {
+				if (!this.mergeItemStack(stackInSlot, 3, 38, true)) {
 					return null;
 				}
 			}
@@ -67,7 +64,7 @@ public class ContainerTradeStation extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 2; i++){
+				for (int i = 0; i < 9; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;
@@ -104,25 +101,12 @@ public class ContainerTradeStation extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastAutoMode != this.tileEntity.autoMode)
-            {
-                icrafting.sendProgressBarUpdate(this, 0, (int) this.tileEntity.autoMode);
-            }
-            if (this.lastCoinMode != this.tileEntity.coinMode)
-            {
-                icrafting.sendProgressBarUpdate(this, 1, (int) this.tileEntity.coinMode);
-            }
-            if (this.lastCoinSum != this.tileEntity.coinSum
-				|| this.lastItemPrice != this.tileEntity.itemPrice 
-				|| this.lastName != this.tileEntity.customName) {
+            if (this.lastCoinSum != this.tileEntity.coinSum) {
+                //update
             	tileEntity.updateTE();
             }
 
-		this.lastAutoMode = this.tileEntity.autoMode;
-		this.lastCoinMode = this.tileEntity.coinMode;
 		this.lastCoinSum = this.tileEntity.coinSum;
-		this.lastItemPrice = this.tileEntity.itemPrice;
-		this.lastName = this.tileEntity.customName;
         }
 	}
 	
@@ -131,11 +115,7 @@ public class ContainerTradeStation extends Container {
     {
         if (par1 == 0)
         {
-            this.tileEntity.autoMode = par2;
-        }
-        if (par1 == 1)
-        {
-            this.tileEntity.coinMode = par2;
+            //this.tileEntity.autoMode = par2;
         }
     }
 

@@ -10,9 +10,11 @@ import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemWrench;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileStationMessage;
+import universalcoins.net.UCTileCardStationMessage;
+import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
+import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import universalcoins.util.UCCommand;
@@ -73,8 +75,10 @@ public class UniversalCoins {
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
-	public static Boolean wrenchEnabled;
 	public static Boolean vendorRecipesEnabled;
+	public static Boolean atmRecipeEnabled;
+	public static Boolean cardSecurityEnabled;
+	public static Boolean wrenchEnabled;
 	public static Boolean collectCoinsInInfinite;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
@@ -100,12 +104,18 @@ public class UniversalCoins {
 		Property recipes = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
 		recipesEnabled = recipes.getBoolean(true);
-		Property wrench = config.get(config.CATEGORY_GENERAL, "Wrench enabled", true);
-		wrench.comment = "Set to false to disable wrench. Use this if your world already has too many wrenches.";
-		wrenchEnabled = wrench.getBoolean(true);
 		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
+		Property atmRecipe = config.get(config.CATEGORY_GENERAL, "ATM Recipe", true);
+		atmRecipe.comment = "Set to false to disable crafting recipes for ATM.";
+		atmRecipeEnabled = atmRecipe.getBoolean(true);
+		Property secureCard = config.get(config.CATEGORY_GENERAL, "Secure Card", true);
+		secureCard.comment = "Set to false to disable card security. The UC Cards will be usable by any player.";
+		cardSecurityEnabled = secureCard.getBoolean(true);
+		Property wrench = config.get(config.CATEGORY_GENERAL, "Wrench enabled", true);
+		wrench.comment = "Set to false to disable wrench. Use this if your world already has too many wrenches.";
+		wrenchEnabled = wrench.getBoolean(true);
 		Property collectInfinite = config.get(config.CATEGORY_GENERAL, "Collect infinite", true);
 		collectInfinite.comment = "Set to false to disable collecting coins when vending blocks are set to infinite mode.";
 		collectCoinsInInfinite = collectInfinite.getBoolean(true);
@@ -128,7 +138,8 @@ public class UniversalCoins {
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-	    snw.registerMessage(UCTileStationMessage.class, UCTileStationMessage.class, 2, Side.CLIENT);
+	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
+	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
 	    
 	    //update check using versionchecker
 	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://www.dropbox.com/s/mn4mloo1vw79vdb/version.json");
@@ -163,6 +174,7 @@ public class UniversalCoins {
 		
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
 		GameRegistry.registerTileEntity(TileVendor.class, "TileVendor");
+		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	

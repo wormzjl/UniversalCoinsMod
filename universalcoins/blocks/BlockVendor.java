@@ -6,7 +6,7 @@ import java.util.Random;
 
 import buildcraft.api.tools.IToolWrench;
 import universalcoins.UniversalCoins;
-import universalcoins.gui.BlockVendorRenderer;
+import universalcoins.render.BlockVendorRenderer;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import cpw.mods.fml.common.FMLLog;

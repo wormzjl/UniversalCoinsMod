@@ -46,7 +46,7 @@ public class VendorSaleGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 11, "Buy");
+		buyButton = new GuiSlimButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Buy");
 		retrCoinButton = new GuiCoinButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 0);
 		retrSStackButton = new GuiCoinButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 1);
 		retrLStackButton = new GuiCoinButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 2);

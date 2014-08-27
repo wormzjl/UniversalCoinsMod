@@ -3,6 +3,7 @@ package universalcoins.items;
 import java.util.List;
 
 import universalcoins.UniversalCoins;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -17,6 +18,7 @@ public class ItemUCCard extends Item {
 	
 	public ItemUCCard() {
 		super();
+		this.maxStackSize = 1;
 		this.setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
@@ -25,23 +27,24 @@ public class ItemUCCard extends Item {
 		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5));
 	}
 	
-	/*@Override
-	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
-	    itemStack.stackTagCompound = new NBTTagCompound();
-	    itemStack.stackTagCompound.setString("Owner", player.getDisplayName());
-	    itemStack.stackTagCompound.setLong("Balance", 0);
-	}*/
+	@Override
+	public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+		 if( stack.stackTagCompound == null ) {
+			 stack.stackTagCompound = new NBTTagCompound();
+			 stack.stackTagCompound.setString("Owner", player.getDisplayName());
+			 stack.stackTagCompound.setInteger("CoinSum", 0);
+		 }
+	}
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-	    if( stack.stackTagCompound == null ) {
-	    	stack.stackTagCompound = new NBTTagCompound();
-		    stack.stackTagCompound.setString("Owner", player.getDisplayName());
-		    stack.stackTagCompound.setLong("Balance", 0);
-	    } else {
-	    	list.add("Owner: " + stack.stackTagCompound.getString("Owner"));
-	    	list.add("Balance: " + stack.stackTagCompound.getLong("Balance"));
-	    }
+		if( stack.stackTagCompound == null ) {
+			 stack.stackTagCompound = new NBTTagCompound();
+			 stack.stackTagCompound.setString("Owner", player.getDisplayName());
+			 stack.stackTagCompound.setInteger("CoinSum", 0);
+		} else {
+			list.add("Owner: " + stack.stackTagCompound.getString("Owner"));
+			list.add("Balance: " + stack.stackTagCompound.getInteger("CoinSum"));
+		}
 	}
-
 }

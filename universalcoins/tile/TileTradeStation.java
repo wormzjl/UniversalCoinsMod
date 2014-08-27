@@ -3,7 +3,7 @@ package universalcoins.tile;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileStationMessage;
+import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -392,7 +392,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	@Override
     public Packet getDescriptionPacket() {
-        return UniversalCoins.snw.getPacketFrom(new UCTileStationMessage(this));
+        return UniversalCoins.snw.getPacketFrom(new UCTileTradeStationMessage(this));
     }
 
 	public void sendPacket(int button, boolean shiftPressed) {
