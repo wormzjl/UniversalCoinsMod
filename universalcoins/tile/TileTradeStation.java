@@ -24,11 +24,11 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileTradeStation extends TileEntity implements IInventory, ISidedInventory {
 	
-	private ItemStack[] inventory;
-	private final int invSize = 3;
+	private ItemStack[] inventory = new ItemStack[4];
 	public static final int itemInputSlot = 0;
-	public static final int itemCoinSlot = 1;
-	public static final int itemOutputSlot = 2;
+	public static final int itemOutputSlot = 1;
+	public static final int itemCardSlot = 2;
+	public static final int itemCoinSlot = 3;
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
@@ -46,6 +46,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public boolean isLBagButtonActive = false;
 	public boolean shiftPressed = false;
 	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
+	public boolean cardSlotHidden;
 	private static final int[] slots_top = new int[] { 0, 1, 2, 3, 4 };
 	private static final int[] slots_bottom = new int[] { 0, 1, 2, 3, 4 };
 	private static final int[] slots_sides = new int[] { 0, 1, 2, 3, 4 };
@@ -56,10 +57,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	private int lastCoinMode = 0;
     public String customName;
 
-
 	public TileTradeStation() {
 		super();
-		inventory = new ItemStack[invSize];
 	}
 	
 	@Override
@@ -230,7 +229,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot]
 						.getItemDamage()
 				&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot]
-						.getItem().getItemStackLimit()) {
+						.getMaxStackSize()) {
 
 			if ((inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
 					* itemPrice <= coinSum) {
@@ -244,6 +243,46 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			buyButtonActive = false;
 		}
 		onBuyPressed(amount);
+	}
+	
+	public void onDepositButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - coinSum, cardSum);
+				coinSum += value;
+				tag.setInteger("CoinSum", cardSum -= value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - coinSum, 1000);
+			int finalValue = Math.min(firstValue, cardSum);
+			coinSum += finalValue;
+			tag.setInteger("CoinSum", cardSum -= finalValue);
+		}
+	}
+	
+	public void onWithdrawButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - cardSum, coinSum);
+				coinSum -= value;
+				tag.setInteger("CoinSum", cardSum += value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
+			int finalValue = Math.min(firstValue, coinSum);
+			coinSum -= finalValue;
+			tag.setInteger("CoinSum", cardSum += finalValue);
+		}
 	}
 
 	public void onAutoModeButtonPressed() {
@@ -437,7 +476,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	@Override
 	public ItemStack getStackInSlot(int i) {
-		if (i >= invSize) {
+		if (i >= inventory.length) {
 			return null;
 		}
 		return inventory[i];
@@ -541,7 +580,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	@Override
 	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
 		//allow pulling items from output slot only
-		if (var1 == 2) {
+		if (var1 == itemOutputSlot) {
 			return true;
 		} else {
 			return false;

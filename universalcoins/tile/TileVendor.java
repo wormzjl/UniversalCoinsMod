@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileVendor extends TileEntity implements IInventory {
 	
-	private ItemStack[] inventory = new ItemStack[14];
+	private ItemStack[] inventory = new ItemStack[15];
 	//owner slots
 	public static final int itemStorageSlot1 = 0;
 	public static final int itemStorageSlot2 = 1;
@@ -42,6 +42,8 @@ public class TileVendor extends TileEntity implements IInventory {
 	public static final int itemCoinOutputSlot = 11;
 	public static final int itemCoinInputSlot = 12;
 	public static final int itemUserCoinInputSlot = 13;
+	//card slot
+	public static final int itemCardSlot = 14;
 	
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
@@ -74,7 +76,7 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	private void activateBuyButton() {
-		if (userCoinSum >= itemPrice && (long) coinSum + (long) itemPrice < 2147483647 
+		if (userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
 				&& (hasSellingInventory() || infiniteSell)) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
@@ -298,6 +300,86 @@ public class TileVendor extends TileEntity implements IInventory {
 			buyButtonActive = false;
 		}
 		onBuyPressed(amount);
+	}
+	
+	public void onDepositButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - coinSum, cardSum);
+				coinSum += value;
+				tag.setInteger("CoinSum", cardSum -= value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - coinSum, 1000);
+			int finalValue = Math.min(firstValue, cardSum);
+			coinSum += finalValue;
+			tag.setInteger("CoinSum", cardSum -= finalValue);
+		}
+	}
+	
+	public void onWithdrawButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - cardSum, coinSum);
+				coinSum -= value;
+				tag.setInteger("CoinSum", cardSum += value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
+			int finalValue = Math.min(firstValue, coinSum);
+			coinSum -= finalValue;
+			tag.setInteger("CoinSum", cardSum += finalValue);
+		}
+	}
+	
+	public void onPDepositButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - userCoinSum, cardSum);
+				userCoinSum += value;
+				tag.setInteger("CoinSum", cardSum -= value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - userCoinSum, 1000);
+			int finalValue = Math.min(firstValue, cardSum);
+			userCoinSum += finalValue;
+			tag.setInteger("CoinSum", cardSum -= finalValue);
+		}
+	}
+	
+	public void onPWithdrawButtonPressed(boolean max) {
+		if (this.inventory[itemCardSlot] != null) {
+			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+			if (tag == null)
+				return;
+			int cardSum = tag.getInteger("CoinSum");
+			String cardOwner = tag.getString("Owner");
+			if (max) {
+				int value = Math.min(Integer.MAX_VALUE - cardSum, userCoinSum);
+				userCoinSum -= value;
+				tag.setInteger("CoinSum", cardSum += value);
+				return;
+			}
+			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
+			int finalValue = Math.min(firstValue, userCoinSum);
+			userCoinSum -= finalValue;
+			tag.setInteger("CoinSum", cardSum += finalValue);
+		}
 	}
 	
 	public boolean hasSellingInventory() {

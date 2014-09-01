@@ -12,19 +12,20 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 
-
 public class ContainerTradeStation extends Container {
 	private TileTradeStation tileEntity;
 	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
+	private int xOffset = 32;
 		
 	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to
 		// and the x-y coordinates it resides on-screen
-		addSlotToContainer(new Slot(tileEntity, TileTradeStation.itemInputSlot, 16, 27));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileTradeStation.itemOutputSlot, 144, 27));
+		addSlotToContainer(new Slot(tileEntity, TileTradeStation.itemInputSlot, xOffset + 16, 27));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileTradeStation.itemOutputSlot, xOffset + 144, 27));
+		addSlotToContainer(new UCSlotCard(tileEntity, TileTradeStation.itemCardSlot, xOffset + 181, Integer.MAX_VALUE));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -39,12 +40,12 @@ public class ContainerTradeStation extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, 119 + i * 18));
+						xOffset + 8 + j * 18, 119 + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, xOffset + 8 + i * 18, 177));
 		}
 	}
 	
@@ -58,8 +59,8 @@ public class ContainerTradeStation extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 2) {
-				if (!this.mergeItemStack(stackInSlot, 2, 38, true)) {
+			if (slot < 3) {
+				if (!this.mergeItemStack(stackInSlot, 3, 39, true)) {
 					return null;
 				}
 			}
@@ -67,7 +68,7 @@ public class ContainerTradeStation extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 2; i++){
+				for (int i = 0; i < 3; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;
@@ -127,8 +128,7 @@ public class ContainerTradeStation extends Container {
 	}
 	
 	@SideOnly(Side.CLIENT)
-    public void updateProgressBar(int par1, int par2)
-    {
+    public void updateProgressBar(int par1, int par2) {
         if (par1 == 0)
         {
             this.tileEntity.autoMode = par2;
@@ -138,5 +138,4 @@ public class ContainerTradeStation extends Container {
             this.tileEntity.coinMode = par2;
         }
     }
-
 }

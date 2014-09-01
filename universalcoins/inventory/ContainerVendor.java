@@ -2,6 +2,7 @@ package universalcoins.inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,17 +16,19 @@ public class ContainerVendor extends Container {
 	private int lastCoinSum;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
+	private int xOffset = 32;
 	
 	public ContainerVendor(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemSellingSlot, 8, 17));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 133, 57));
+		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemSellingSlot, xOffset + 8, 17));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, xOffset + 133, 57));
+		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, xOffset + 181, Integer.MAX_VALUE));
 		
 		//add all the inventory storage slots
 		for (int i = 0; i < 9; i++) {
-				addSlotToContainer(new Slot(tileEntity, TileVendor.itemStorageSlot1 + i, 8 + i * 18, 96));
+				addSlotToContainer(new Slot(tileEntity, TileVendor.itemStorageSlot1 + i, xOffset + 8 + i * 18, 96));
 		}
 		
 		// commonly used vanilla code that adds the player's inventory
@@ -41,12 +44,12 @@ public class ContainerVendor extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, 119 + i * 18));
+						xOffset + 8 + j * 18, 119 + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, xOffset + 8 + i * 18, 177));
 		}
 	}
 	
@@ -60,8 +63,8 @@ public class ContainerVendor extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 11) {
-				if (!this.mergeItemStack(stackInSlot, 10, 45, true)) {
+			if (slot < 12) {
+				if (!this.mergeItemStack(stackInSlot, 12, 48, true)) {
 					return null;
 				}
 			}
@@ -69,7 +72,7 @@ public class ContainerVendor extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 9; i++){
+				for (int i = 0; i < 12; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;

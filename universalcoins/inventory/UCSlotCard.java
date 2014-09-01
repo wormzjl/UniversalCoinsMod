@@ -8,9 +8,8 @@ import net.minecraft.item.ItemStack;
 
 
 public class UCSlotCard extends Slot {
-	
-	public UCSlotCard(IInventory par1IInventory, int par2, int par3, int par4) {
-		super(par1IInventory, par2, par3, par4);
+	public UCSlotCard(IInventory parInventory, int parSlotIndex, int parX, int parY) {
+		super(parInventory, parSlotIndex, parX, parY);
 	}
 
 	@Override
@@ -20,5 +19,12 @@ public class UCSlotCard extends Slot {
 		}
 		Item itemInStack = par1ItemStack.getItem();
 		return (itemInStack == UniversalCoins.proxy.itemUCCard);
+	}
+	
+	public ItemStack decrStackSize(int par1) {
+		if (getStack() != null && getStack().stackSize != par1) {
+			return new ItemStack(getStack().getItem(), -1);
+		}
+		return inventory.decrStackSize(getSlotIndex(), par1);
 	}
 }

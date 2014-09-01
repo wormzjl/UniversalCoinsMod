@@ -18,7 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
 public class TileCardStation extends TileEntity implements IInventory{
-	private ItemStack[] inventory= new ItemStack[4];
+	private ItemStack[] inventory = new ItemStack[4];
 	public static final int itemCardSlot = 0;
 	public static final int itemCardOutputSlot = 1;	
 	public static final int itemCoinSlot = 2;
@@ -328,20 +328,4 @@ public class TileCardStation extends TileEntity implements IInventory{
 	public void sendButtonMessage(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
-	
-	/*public void accessCard() {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null) return;
-			int cardSum = tag.getInteger("CoinSum");
-			if (coinSum == -1) {
-				//set initial coinSum value from card
-				coinSum = cardSum;
-			} else if (coinSum != cardSum ){
-				//now we keep the two in sync
-				tag.setInteger("CoinSum", coinSum);
-			}
-			cardOwner = tag.getString("Owner");
-		} else coinSum = -1;
-	}*/
 }
