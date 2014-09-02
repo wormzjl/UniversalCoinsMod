@@ -75,6 +75,21 @@ public class UCRecipeHelper {
 		}
 	}
 	
+	public static void addCardStationRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockCardStation), new Object[]{
+			"III",
+			"ICI",
+			"III",
+			'I', Items.iron_ingot,'C', UniversalCoins.proxy.itemSmallCoinBag
+		});
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockBase), new Object[]{
+			"III",
+			"ICI",
+			"III",
+			'I', Items.iron_ingot,'C', UniversalCoins.proxy.itemCoin
+		});
+	}
+	
 	public static void addWrenchRecipe() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.itemWrench), new Object[]{
 			"IXI",

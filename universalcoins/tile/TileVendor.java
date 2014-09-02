@@ -439,22 +439,16 @@ public class TileVendor extends TileEntity implements IInventory {
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
 		if (stack != null) {
-			if (slot == itemCoinInputSlot) {
+			if (slot == itemCoinInputSlot || slot == itemUserCoinInputSlot) {
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
-					coinSum += stack.stackSize * multiplier[coinType];
-					inventory[slot] = null;
-					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-					updateTE();
-				}
-			}
-			if (slot == itemUserCoinInputSlot) {
-				int coinType = getCoinType(stack.getItem());
-				if (coinType != -1) {
-					userCoinSum += stack.stackSize * multiplier[coinType];
-					inventory[slot] = null;
-					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
-					updateTE();
+					int itemValue = multiplier[coinType];
+					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+					coinSum += depositAmount * itemValue;
+					inventory[slot].stackSize -= depositAmount;
+					if (inventory[slot].stackSize == 0) {
+						inventory[slot] = null;
+					}
 				}
 			}
 		}

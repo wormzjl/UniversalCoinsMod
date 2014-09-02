@@ -21,8 +21,6 @@ public class UCEventHandler {
 			Random random = new Random();
 			int chance = random.nextInt(3);
 			int dropped = random.nextInt(39) + 1;
-			FMLLog.info("chance: " + chance);
-			FMLLog.info("drop: " + dropped);
 
 			if ((event.entity instanceof EntityZombie || event.entity instanceof EntitySkeleton)
 					&& !event.entity.worldObj.isRemote && chance == 0) {
@@ -35,16 +33,6 @@ public class UCEventHandler {
 					&& !event.entity.worldObj.isRemote) {
 				event.entityLiving.entityDropItem(new ItemStack(
 						UniversalCoins.proxy.itemSmallCoinStack, dropped), 0.0F);
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-		if (UniversalCoins.updateCheck) {
-			if (UpdateCheck.isUpdateAvailable()) {
-				event.player.addChatComponentMessage(new ChatComponentText(
-				"Universal Coins: An update is available " + UpdateCheck.onlineVersion + " is the latest. See http://goo.gl/Fot7wW for details."));
 			}
 		}
 	}

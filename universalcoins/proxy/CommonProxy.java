@@ -3,6 +3,7 @@ package universalcoins.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import universalcoins.UniversalCoins;
+import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
@@ -34,16 +35,19 @@ public class CommonProxy {
 	public static Block blockTradeStation;
 	public static Block blockVendor;
 	public static Block blockCardStation;
+	public static Block blockBase;
 	
 	
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		blockVendor = new BlockVendor(Vending.supports).setBlockName("blockVendor");
 		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
+		blockBase = new BlockBase().setBlockName("blockBase");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();
 		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
+		GameRegistry.registerBlock(blockBase, "blockBase").getUnlocalizedName();
 	}
 	
 	public void registerItems() {

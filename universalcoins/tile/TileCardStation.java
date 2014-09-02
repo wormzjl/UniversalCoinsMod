@@ -131,10 +131,11 @@ public class TileCardStation extends TileEntity implements IInventory{
 			inventory[itemCardOutputSlot].stackTagCompound = new NBTTagCompound();
 			inventory[itemCardOutputSlot].stackTagCompound.setInteger("CoinSum", 0);
 		}
-		int cardBalance = inventory[itemCardOutputSlot].stackTagCompound.getInteger("CoinSum");
+		int cardSum = inventory[itemCardOutputSlot].stackTagCompound.getInteger("CoinSum");
 		inventory[itemCardOutputSlot].stackTagCompound.setString("Owner", player);
-		inventory[itemCardOutputSlot].stackTagCompound.setInteger("CoinSum", coinSum + cardBalance);
-		coinSum = 0;
+		int maxTransfer = Math.min(coinSum, Integer.MAX_VALUE - cardSum);
+		inventory[itemCardOutputSlot].stackTagCompound.setInteger("CoinSum", maxTransfer + cardSum);
+		coinSum -= maxTransfer;
 	}
 
     @Override
@@ -256,21 +257,26 @@ public class TileCardStation extends TileEntity implements IInventory{
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack itemStack) {
-		inventory[slot] = itemStack;
-		if (itemStack != null) {
-			int coinType = getCoinType(itemStack.getItem());
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventory[slot] = stack;
+		if (stack != null) {
+			int coinType = getCoinType(stack.getItem());
 			if (coinType != -1) {
-				coinSum += itemStack.stackSize * multiplier[coinType];
-				inventory[slot] = null;
-				// FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
+				int itemValue = multiplier[coinType];
+				int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+				coinSum += depositAmount * itemValue;
+				inventory[slot].stackSize -= depositAmount;
+				if (inventory[slot].stackSize == 0) {
+					inventory[slot] = null;
+				}
 			}
 			if (slot == itemCardSlot) {
 				NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
 				if (tag == null) return;
 				int cardSum = tag.getInteger("CoinSum");
-				coinSum += cardSum;
-				tag.setInteger("CoinSum", 0);
+				int maxTransfer = Math.min(cardSum, Integer.MAX_VALUE - coinSum);
+				coinSum += maxTransfer;
+				tag.setInteger("CoinSum", cardSum - maxTransfer);
 				tag.setString("Owner", player);
 				if (inventory[itemCardOutputSlot] == null) {
 					inventory[itemCardOutputSlot] = inventory[itemCardSlot];

@@ -83,6 +83,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				sellButtonActive = false;
 			} else {
 				sellButtonActive = true;
+				//disable sell button if coinSum is near max
+				//recast into long so value doesn't go negative
+				if ((long)coinSum + (long)itemPrice >= Integer.MAX_VALUE) {
+					sellButtonActive = false;
+				}
 				//disable sell button if item is enchanted
 				if (inventory[itemInputSlot].isItemEnchanted()) sellButtonActive = false;
 				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
@@ -164,7 +169,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			return;
 		}
 
-		amount = inventory[itemInputSlot].stackSize;
+		amount = Math.min(inventory[itemInputSlot].stackSize, (Integer.MAX_VALUE - coinSum) / itemPrice);
 
 		if (amount != 0) {
 			onSellPressed(amount);
@@ -507,15 +512,19 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemStack) {
-		inventory[i] = itemStack;
-		if (itemStack != null) {
-			if (i == itemCoinSlot || i == itemInputSlot) {
-				int coinType = getCoinType(itemStack.getItem());
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventory[slot] = stack;
+		if (stack != null) {
+			if (slot == itemCoinSlot || slot == itemInputSlot) {
+				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
-					coinSum += itemStack.stackSize * multiplier[coinType];
-					inventory[i] = null;
-					//FMLLog.info("SetInvSlotContents.. Coin Sum: " + coinSum);
+					int itemValue = multiplier[coinType];
+					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+					coinSum += depositAmount * itemValue;
+					inventory[slot].stackSize -= depositAmount;
+					if (inventory[slot].stackSize == 0) {
+						inventory[slot] = null;
+					}
 				}
 			}
 		}

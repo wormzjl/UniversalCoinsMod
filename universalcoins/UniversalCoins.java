@@ -98,9 +98,6 @@ public class UniversalCoins {
 		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
 		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
 		autoModeEnabled = autoMode.getBoolean(true);
-		Property modUpdate = config.get(config.CATEGORY_GENERAL, "Update Check", true);
-		modUpdate.comment = "Set to false to remove chat notification of updates.";
-		updateCheck = modUpdate.getBoolean(true);
 		Property recipes = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
 		recipesEnabled = recipes.getBoolean(true);
@@ -161,6 +158,9 @@ public class UniversalCoins {
 		}
 		if (vendorRecipesEnabled){
 			UCRecipeHelper.addVendingBlockRecipes();
+		}
+		if (atmRecipeEnabled){
+			UCRecipeHelper.addCardStationRecipes();
 		}
 		if (wrenchEnabled) {
 			UCRecipeHelper.addWrenchRecipe();
