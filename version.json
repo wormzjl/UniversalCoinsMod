@@ -1,8 +1,8 @@
 {
 	"versionList": [
 		{
-			"mcVersion":"1.7.*",
-			"modVersion":"1.5.5",
+			"mcVersion":"1.7.10",
+			"modVersion":"1.7.10-1.5.5",
 			"changeLog": [
                 "Added ATM",
 		"Added UC Card",
