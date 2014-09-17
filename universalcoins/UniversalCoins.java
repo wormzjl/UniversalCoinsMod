@@ -18,8 +18,9 @@ import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import universalcoins.util.UCCommand;
-import universalcoins.util.UCEventHandler;
+import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCItemPricer;
+import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import universalcoins.util.Vending;
 import net.minecraft.block.Block;
@@ -98,6 +99,9 @@ public class UniversalCoins {
 		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
 		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
 		autoModeEnabled = autoMode.getBoolean(true);
+		Property modUpdate = config.get(config.CATEGORY_GENERAL, "Update Check", true);
+		modUpdate.comment = "Set to false to remove chat notification of updates.";
+		updateCheck = modUpdate.getBoolean(true);
 		Property recipes = config.get(config.CATEGORY_GENERAL, "CraftingRecipes enabled", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
 		recipesEnabled = recipes.getBoolean(true);
@@ -128,7 +132,11 @@ public class UniversalCoins {
 		config.save();
 		
 		if (mobsDropCoins) {
-			MinecraftForge.EVENT_BUS.register(new UCEventHandler());
+			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
+		}
+		
+		if (updateCheck) {
+			FMLCommonHandler.instance().bus().register(new  UCPlayerLoginEventHandler());
 		}
 		
 		//network packet handling
@@ -139,7 +147,7 @@ public class UniversalCoins {
 	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
 	    
 	    //update check using versionchecker
-	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://www.dropbox.com/s/mn4mloo1vw79vdb/version.json");
+	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
 	}
 	
 	@EventHandler
