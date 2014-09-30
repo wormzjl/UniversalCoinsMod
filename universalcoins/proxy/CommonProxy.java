@@ -1,6 +1,7 @@
 package universalcoins.proxy;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import universalcoins.UniversalCoins;
 import universalcoins.blocks.BlockBase;
@@ -24,7 +25,6 @@ public class CommonProxy {
 	public static Item itemCoin;
 	public static Item itemSmallCoinStack;
 	public static Item itemLargeCoinStack;
-	public static Item itemCoinHeap; //TODO removal in 1.5.4
 	public static Item itemSmallCoinBag;
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
@@ -36,7 +36,7 @@ public class CommonProxy {
 	public static Block blockVendor;
 	public static Block blockCardStation;
 	public static Block blockBase;
-	
+		
 	
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
@@ -54,7 +54,6 @@ public class CommonProxy {
 		itemCoin = new ItemCoin().setUnlocalizedName("itemCoin");
 		itemSmallCoinStack = new ItemSmallCoinStack().setUnlocalizedName("itemSmallCoinStack");
 		itemLargeCoinStack = new ItemLargeCoinStack().setUnlocalizedName("itemLargeCoinStack");
-		itemCoinHeap = new ItemCoinHeap().setUnlocalizedName("itemCoinHeap"); //TODO removal in 1.5.4
 		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
 		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
 		itemUCCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
@@ -66,7 +65,6 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinStack, itemLargeCoinStack.getUnlocalizedName());
-		GameRegistry.registerItem(itemCoinHeap, itemCoinHeap.getUnlocalizedName()); //TODO removal in 1.5.4
 		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCCard, itemUCCard.getUnlocalizedName());

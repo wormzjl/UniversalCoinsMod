@@ -19,8 +19,13 @@ public class UCMobDropEventHandler {
 	public void onEntityDrop(LivingDropsEvent event) {
 		if (event.source.getDamageType().equals("player")) {
 			Random random = new Random();
-			int chance = random.nextInt(3);
-			int dropped = random.nextInt(39) + 1;
+			int chance;
+			if (UniversalCoins.mobDropChance <= 0) {
+				chance = 0;
+			} else {
+				chance = random.nextInt(UniversalCoins.mobDropChance);
+			}
+			int dropped = Math.min(random.nextInt(UniversalCoins.mobDropMax) + 1, 64);
 
 			if ((event.entity instanceof EntityZombie || event.entity instanceof EntitySkeleton)
 					&& !event.entity.worldObj.isRemote && chance == 0) {

@@ -76,8 +76,9 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	private void activateBuyButton() {
-		if (userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
-				&& (hasSellingInventory() || infiniteSell)) {
+		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
+				&& (hasSellingInventory() || infiniteSell)) || 
+				(inventory[itemCardSlot] != null && getCardSum() > itemPrice)) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
 					buyButtonActive = false;
@@ -86,7 +87,6 @@ public class TileVendor extends TileEntity implements IInventory {
 			}
 			buyButtonActive = true;
 		} else buyButtonActive = false;
-
 	}
 	
 	private void activateRetrieveButtons() {
@@ -201,8 +201,12 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	public void onBuyPressed(int amount) {
-		if (inventory[itemSellingSlot] == null
-				|| userCoinSum < itemPrice * amount) {
+		boolean useCard = false;
+		//use the card if we have it
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice * amount) {
+			useCard = true;
+		}
+		if (inventory[itemSellingSlot] == null || userCoinSum < itemPrice * amount && !useCard) {
 			buyButtonActive = false;
 			return;
 		}
@@ -216,13 +220,21 @@ public class TileVendor extends TileEntity implements IInventory {
 			if (inventory[itemOutputSlot] == null) {
 				inventory[itemOutputSlot] = inventory[itemSellingSlot].copy();
 				inventory[itemOutputSlot].stackSize = totalSale;
-				userCoinSum -= itemPrice * amount;
+				if (useCard) { 
+					reduceCardSum(itemPrice * amount);
+				}	else {
+					userCoinSum -= itemPrice * amount;
+				}
 			} else {
 				totalSale = Math.min(inventory[itemSellingSlot].stackSize
 						* amount, inventory[itemSellingSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize);
 				inventory[itemOutputSlot].stackSize += totalSale;
-				userCoinSum -= itemPrice * amount;
+				if (useCard) { 
+					reduceCardSum(itemPrice * amount);
+				} else {
+					userCoinSum -= itemPrice * amount;
+				}
 			}
 			if (!UniversalCoins.collectCoinsInInfinite) {
 				coinSum = 0;
@@ -249,8 +261,11 @@ public class TileVendor extends TileEntity implements IInventory {
 					inventory[itemOutputSlot].stackSize += thisSale;
 					inventory[i].stackSize -= thisSale;
 					totalSale -= thisSale;
-					userCoinSum -= itemPrice * thisSale
-							/ inventory[itemSellingSlot].stackSize;
+					if (useCard) { 
+						reduceCardSum(itemPrice * thisSale	/ inventory[itemSellingSlot].stackSize);
+					}	else {
+						userCoinSum -= itemPrice * thisSale	/ inventory[itemSellingSlot].stackSize;
+					}
 					if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
 						coinSum = 0;
 					} else {
@@ -267,22 +282,27 @@ public class TileVendor extends TileEntity implements IInventory {
 	}
 	
 	public void onBuyMaxPressed() {
+		boolean useCard = false;
 		int amount = 0;
 		if (inventory[itemSellingSlot] == null) {
 			buyButtonActive = false;
 			return;
 		}
-		if (userCoinSum < itemPrice) { // can't buy even one
+		// use the card if we have it
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice) {
+			useCard = true;
+		}
+		if (userCoinSum < itemPrice && !useCard) { // can't buy even one
 			buyButtonActive = false;
 			return;
 		}
 		if (inventory[itemOutputSlot] == null) { // empty stack
-			if (inventory[itemSellingSlot].getMaxStackSize() * itemPrice / inventory[itemSellingSlot].stackSize <= userCoinSum) {
+			if (inventory[itemSellingSlot].getMaxStackSize() * itemPrice / inventory[itemSellingSlot].stackSize <= (useCard ? getCardSum() : userCoinSum)) {
 				// buy as many as will fit in a stack
 				amount = inventory[itemSellingSlot].getMaxStackSize() / inventory[itemSellingSlot].stackSize;
 			} else {
 				// buy as many as i have coins for.
-				amount = userCoinSum / itemPrice;
+				amount = (useCard ? getCardSum() : userCoinSum) / itemPrice;
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemSellingSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemSellingSlot].getItemDamage()
@@ -294,92 +314,12 @@ public class TileVendor extends TileEntity implements IInventory {
 				amount = (inventory[itemSellingSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize) / inventory[itemOutputSlot].stackSize;
 			} else {
-				amount = userCoinSum / itemPrice; // buy as many as i can with available coins.
+				amount = (useCard ? getCardSum() : userCoinSum) / itemPrice; // buy as many as i can with available coins.
 			}
 		} else {
 			buyButtonActive = false;
 		}
 		onBuyPressed(amount);
-	}
-	
-	public void onDepositButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - coinSum, cardSum);
-				coinSum += value;
-				tag.setInteger("CoinSum", cardSum -= value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - coinSum, 1000);
-			int finalValue = Math.min(firstValue, cardSum);
-			coinSum += finalValue;
-			tag.setInteger("CoinSum", cardSum -= finalValue);
-		}
-	}
-	
-	public void onWithdrawButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - cardSum, coinSum);
-				coinSum -= value;
-				tag.setInteger("CoinSum", cardSum += value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
-			int finalValue = Math.min(firstValue, coinSum);
-			coinSum -= finalValue;
-			tag.setInteger("CoinSum", cardSum += finalValue);
-		}
-	}
-	
-	public void onPDepositButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - userCoinSum, cardSum);
-				userCoinSum += value;
-				tag.setInteger("CoinSum", cardSum -= value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - userCoinSum, 1000);
-			int finalValue = Math.min(firstValue, cardSum);
-			userCoinSum += finalValue;
-			tag.setInteger("CoinSum", cardSum -= finalValue);
-		}
-	}
-	
-	public void onPWithdrawButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - cardSum, userCoinSum);
-				userCoinSum -= value;
-				tag.setInteger("CoinSum", cardSum += value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
-			int finalValue = Math.min(firstValue, userCoinSum);
-			userCoinSum -= finalValue;
-			tag.setInteger("CoinSum", cardSum += finalValue);
-		}
 	}
 	
 	public boolean hasSellingInventory() {
@@ -499,6 +439,21 @@ public class TileVendor extends TileEntity implements IInventory {
 			inventory[itemSellingSlot] = stack.copy();
 			return false;
 		}else return true;
+	}
+	
+	private int getCardSum() {
+		if (inventory[itemCardSlot] == null) return 0;
+		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+		if (tag == null) return 0;
+		return tag.getInteger("CoinSum");
+	}
+	
+	private void reduceCardSum(int amount) {
+		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+		if (tag == null)
+			return;
+		int cardSum = tag.getInteger("CoinSum");
+		tag.setInteger("CoinSum", cardSum - amount);
 	}
 	
 	@Override

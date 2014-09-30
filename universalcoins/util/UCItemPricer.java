@@ -196,7 +196,6 @@ private static void loadPricelists() throws IOException {
 			//FMLLog.warning("itemstack is null");
 			return -1;
 		}
-		//return getItemPrice(itemStack.getItem());
 		Integer ItemPrice = -1;
 		String itemName = itemStack.getUnlocalizedName();
 		if (ucPriceMap.get(itemName) != null) {
@@ -220,11 +219,22 @@ private static void loadPricelists() throws IOException {
 		if (itemStack == null) {
 			return false;
 		}
-		if (itemStack.getHasSubtypes() || (itemStack.isItemDamaged() && !itemStack.isItemStackDamageable())){
+		if (itemStack.getHasSubtypes()){
+			//we need to check for unique names here
+			//find item id and then get base itemname
+			int itemID = Item.getIdFromItem(itemStack.getItem());
+			Item baseItem = Item.getItemById(itemID);
+			if (baseItem.getUnlocalizedName().matches(itemStack.getUnlocalizedName())) {
+				//if name matches, we cannot set price
+				return false;
+			}
+		}
+		if (itemStack.isItemDamaged() && !itemStack.isItemStackDamageable()) {
 			return false;
 		}
 		String itemName = itemStack.getUnlocalizedName();
 		if (ucPriceMap.containsKey(itemName)) {
+			//FMLLog.info("UC: Pricemap contains item. Updating price");
 			ucPriceMap.put(itemName, price);
 			return true;
 		}

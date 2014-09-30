@@ -27,7 +27,7 @@ public class HintGui extends GuiScreen {
 		if ((mc.inGameHasFocus || (mc.currentScreen != null && (mc.currentScreen instanceof GuiChat)))
 				&& !mc.gameSettings.showDebugInfo) {
 			ScaledResolution res = new ScaledResolution(
-					HintGui.mc, HintGui.mc.displayWidth,
+					HintGui.mc.gameSettings, HintGui.mc.displayWidth,
 					HintGui.mc.displayHeight);
 			FontRenderer fontRender = mc.fontRenderer;
 			int width = res.getScaledWidth();

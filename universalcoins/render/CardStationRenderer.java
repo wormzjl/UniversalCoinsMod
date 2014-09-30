@@ -2,6 +2,7 @@ package universalcoins.render;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -23,13 +24,6 @@ public class CardStationRenderer extends TileEntitySpecialRenderer {
 	  this.model = new ModelCardStation();
 	}
 
-	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-	int meta = world.getBlockMetadata(x, y, z);
-	GL11.glPushMatrix();
-	GL11.glRotatef(meta * (-90), 0.0F, 0.0F, 1.0F);
-	GL11.glPopMatrix();
-	}
-
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
 		
@@ -37,10 +31,18 @@ public class CardStationRenderer extends TileEntitySpecialRenderer {
 	Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 	
 	//adjust block rotation based on block meta
+	int meta = te.blockMetadata;
+	if (meta == -1) { //fix for inventory crash on get block meta
+		try { meta = te.getBlockMetadata();
+		} catch (Throwable ex2) {
+            //do nothing
+        }
+	}
+	
 	GL11.glPushMatrix();
 	GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 	GL11.glScalef(1.0F, -1F, -1F);
-	GL11.glRotatef(te.blockMetadata * (90), 0.0F, 1.0F, 0.0F);
+	GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
 	this.model.render((Entity)null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 	GL11.glPopMatrix(); 
 	}

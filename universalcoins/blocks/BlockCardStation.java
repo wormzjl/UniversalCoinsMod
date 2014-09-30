@@ -51,6 +51,7 @@ public class BlockCardStation extends BlockContainer {
         return false;
     }
 	
+	@Override
 	public boolean isOpaqueCube() {
 	   return false;
 	}
@@ -142,8 +143,7 @@ public class BlockCardStation extends BlockContainer {
         }
 	}
 	
-	
-	
+	@Override
 	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
         super.breakBlock(world, x, y, z, par5, par6);
 	}

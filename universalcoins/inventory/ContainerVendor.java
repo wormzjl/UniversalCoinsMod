@@ -16,19 +16,17 @@ public class ContainerVendor extends Container {
 	private int lastCoinSum;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
-	private int xOffset = 32;
 	
 	public ContainerVendor(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemSellingSlot, xOffset + 8, 17));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, xOffset + 133, 57));
-		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, xOffset + 181, Integer.MAX_VALUE));
+		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemSellingSlot, 8, 17));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 133, 57));
 		
 		//add all the inventory storage slots
 		for (int i = 0; i < 9; i++) {
-				addSlotToContainer(new Slot(tileEntity, TileVendor.itemStorageSlot1 + i, xOffset + 8 + i * 18, 96));
+				addSlotToContainer(new Slot(tileEntity, TileVendor.itemStorageSlot1 + i, 8 + i * 18, 96));
 		}
 		
 		// commonly used vanilla code that adds the player's inventory
@@ -44,12 +42,12 @@ public class ContainerVendor extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						xOffset + 8 + j * 18, 119 + i * 18));
+						8 + j * 18, 119 + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, xOffset + 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
 		}
 	}
 	

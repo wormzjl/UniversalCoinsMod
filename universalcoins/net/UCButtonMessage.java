@@ -74,10 +74,6 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			} else if (message.buttonId <= TradeStationGUI.idLBagButton) {
 				((TileTradeStation) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
-			} else if (message.buttonId == TradeStationGUI.idDepositButton) {
-				((TileTradeStation) tileEntity).onDepositButtonPressed(message.shiftPressed);
-			} else if (message.buttonId <= TradeStationGUI.idWithdrawButton) {
-				((TileTradeStation) tileEntity).onWithdrawButtonPressed(message.shiftPressed);
 			}
 
 			NBTTagCompound data = new NBTTagCompound();
@@ -89,11 +85,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			} else if (message.buttonId <= VendorGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
-			}  else if (message.buttonId == VendorGUI.idDepositButton) {
-				((TileVendor) tileEntity).onDepositButtonPressed(message.shiftPressed);
-			} else if (message.buttonId <= VendorGUI.idWithdrawButton) {
-				((TileVendor) tileEntity).onWithdrawButtonPressed(message.shiftPressed);
-			} else if (message.buttonId == VendorSaleGUI.idBuyButton) {
+			}else if (message.buttonId == VendorSaleGUI.idBuyButton) {
 				if (message.shiftPressed) {
 					((TileVendor) tileEntity).onBuyMaxPressed();
 				} else {
@@ -102,10 +94,6 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			} else if (message.buttonId <= VendorSaleGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
-			}else if (message.buttonId == VendorSaleGUI.idPDepositButton) {
-				((TileVendor) tileEntity).onPDepositButtonPressed(message.shiftPressed);
-			} else if (message.buttonId <= VendorSaleGUI.idPWithdrawButton) {
-				((TileVendor) tileEntity).onPWithdrawButtonPressed(message.shiftPressed);
 			}
 		}
 		if (tileEntity instanceof TileCardStation) {
@@ -116,6 +104,6 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 						message.buttonId, message.shiftPressed);
 			}
 		}
-		return null; // no response in this case
+		return null;
 	}
 }

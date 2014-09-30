@@ -30,7 +30,7 @@ public class UpdateCheck {
 		String splitString[] = rawString.split("-");
 		int thisVersion = Integer.parseInt(splitString[1].replaceAll("[^\\d]", ""));
 		
-		if (onlineVersion.isEmpty()) {
+		if (onlineVersion == null) {
 			return false;
 		}
 		

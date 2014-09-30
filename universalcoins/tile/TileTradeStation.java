@@ -89,11 +89,17 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					sellButtonActive = false;
 				}
 				//disable sell button if item is enchanted
-				if (inventory[itemInputSlot].isItemEnchanted()) sellButtonActive = false;
+				sellButtonActive = (!inventory[itemInputSlot].isItemEnchanted());
+				
 				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
 						.getItem() == inventory[itemInputSlot].getItem()
 						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize())
 						&& coinSum >= itemPrice;
+				//enable buy button if card is present and has enough coins
+				if (inventory[itemCardSlot] != null && !buyButtonActive) {
+					int cardSum = getCardSum();
+					buyButtonActive = (cardSum > itemPrice);
+				}
 			}
 		}
 	}
@@ -163,6 +169,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				return;
 			}
 		}
+		//disable selling if item is enchanted
+		if (inventory[itemInputSlot].isItemEnchanted()){
+			sellButtonActive = false;
+			return;
+		}
 		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1) {
 			sellButtonActive = false;
@@ -181,18 +192,28 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	public void onBuyPressed(int amount) {
+		boolean useCard = false;
 		if (inventory[itemInputSlot] == null) {
 			buyButtonActive = false;
 			return;
 		}
 		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
-		if (itemPrice == -1 || coinSum < itemPrice * amount) {
+		//use the card if we have it
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice * amount) {
+			useCard = true;
+		}
+		if (itemPrice == -1 || (coinSum < itemPrice * amount && !useCard)) {
+			//not enough coins, do we have a card?
 			buyButtonActive = false;
 			return;
 		}
 		if (inventory[itemOutputSlot] == null
 				&& inventory[itemInputSlot].getMaxStackSize() >= amount) {
-			coinSum -= itemPrice * amount;
+			if (useCard) { 
+				reduceCardSum(itemPrice * amount);
+			}	else {
+				coinSum -= itemPrice * amount;
+			}
 			if (inventory[itemInputSlot].isItemDamaged() || inventory[itemInputSlot].isItemEnchanted()) {
 				inventory[itemOutputSlot] = new ItemStack(inventory[itemInputSlot].getItem(), 1);
 			} else inventory[itemOutputSlot] = inventory[itemInputSlot].copy();
@@ -203,7 +224,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 						.getItemDamage()
 				&& inventory[itemOutputSlot].stackSize + amount <= inventory[itemInputSlot]
 						.getMaxStackSize()) {
-			coinSum -= itemPrice * amount;
+			if (useCard) { 
+				reduceCardSum(itemPrice * amount);
+			}	else {
+				coinSum -= itemPrice * amount;
+			}
 			inventory[itemOutputSlot].stackSize += amount;
 		} else {
 			buyButtonActive = false;
@@ -211,23 +236,22 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	public void onBuyMaxPressed() {
+		boolean useCard = false;
 		int amount = 0;
-		if (inventory[itemInputSlot] == null) {
-			buyButtonActive = false;
-			return;
-		}
 		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
-		if (itemPrice == -1 || coinSum < itemPrice) { // can't buy even one
+		// use the card if we have it
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice) {
+			useCard = true;
+		}
+		if (itemPrice == -1 || (coinSum < itemPrice && !useCard)) {
 			buyButtonActive = false;
 			return;
 		}
-
 		if (inventory[itemOutputSlot] == null) { // empty stack
-			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= coinSum) {
-				amount = inventory[itemInputSlot].getMaxStackSize(); // buy one
-																		// stack
+			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= (useCard ? getCardSum() : coinSum)) {
+				amount = inventory[itemInputSlot].getMaxStackSize(); // buy one stack
 			} else {
-				amount = coinSum / itemPrice; // buy as many as i can.
+				amount = (useCard ? getCardSum() : coinSum) / itemPrice; // buy as many as i can.
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot]
 				.getItem()
@@ -237,57 +261,17 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 						.getMaxStackSize()) {
 
 			if ((inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
-					* itemPrice <= coinSum) {
+					* itemPrice <= (useCard ? getCardSum() : coinSum)) {
 				amount = inventory[itemOutputSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize;
 				// buy as much as i can fit in a stack
 			} else {
-				amount = coinSum / itemPrice; // buy as many as i can.
+				amount = (useCard ? getCardSum() : coinSum) / itemPrice; // buy as many as i can.
 			}
 		} else {
 			buyButtonActive = false;
 		}
 		onBuyPressed(amount);
-	}
-	
-	public void onDepositButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - coinSum, cardSum);
-				coinSum += value;
-				tag.setInteger("CoinSum", cardSum -= value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - coinSum, 1000);
-			int finalValue = Math.min(firstValue, cardSum);
-			coinSum += finalValue;
-			tag.setInteger("CoinSum", cardSum -= finalValue);
-		}
-	}
-	
-	public void onWithdrawButtonPressed(boolean max) {
-		if (this.inventory[itemCardSlot] != null) {
-			NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-			if (tag == null)
-				return;
-			int cardSum = tag.getInteger("CoinSum");
-			String cardOwner = tag.getString("Owner");
-			if (max) {
-				int value = Math.min(Integer.MAX_VALUE - cardSum, coinSum);
-				coinSum -= value;
-				tag.setInteger("CoinSum", cardSum += value);
-				return;
-			}
-			int firstValue = Math.min(Integer.MAX_VALUE - cardSum, 1000);
-			int finalValue = Math.min(firstValue, coinSum);
-			coinSum -= finalValue;
-			tag.setInteger("CoinSum", cardSum += finalValue);
-		}
 	}
 
 	public void onAutoModeButtonPressed() {
@@ -428,6 +412,21 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		tagCompound.setInteger("CoinMode", coinMode);
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("CustomName", getInventoryName());
+	}
+	
+	private int getCardSum() {
+		if (inventory[itemCardSlot] == null) return 0;
+		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+		if (tag == null) return 0;
+		return tag.getInteger("CoinSum");
+	}
+	
+	private void reduceCardSum(int amount) {
+		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
+		if (tag == null)
+			return;
+		int cardSum = tag.getInteger("CoinSum");
+		tag.setInteger("CoinSum", cardSum - amount);
 	}
 	
 	public void updateTE() {
