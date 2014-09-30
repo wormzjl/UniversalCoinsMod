@@ -142,17 +142,19 @@ public class VendorGUI extends GuiContainer{
 			itemPriceField.setFocused(true);
 		} else if (button.id == idSetButton) {
 			String price = itemPriceField.getText();
-			if (price != "") {
-				int iPrice = Integer.parseInt(price);
-				try {
-					tileEntity.itemPrice = iPrice;
-				} catch (Throwable ex2) {
-					// fail silently?
-				}
-				textActive = false;
-				itemPriceField.setFocused(false);
-				tileEntity.sendServerUpdateMessage();
-			}
+
+            try {
+                tileEntity.itemPrice = Integer.parseInt(price);
+            } catch (NumberFormatException ex) {
+                // iPrice is a non-numeric string, do nothing
+            } catch (Throwable ex2) {
+                // fail silently?
+            }
+
+            textActive = false;
+            itemPriceField.setFocused(false);
+            tileEntity.sendServerUpdateMessage();
+
 		}
 		tileEntity.sendButtonMessage(button.id, shiftPressed);
 	}
