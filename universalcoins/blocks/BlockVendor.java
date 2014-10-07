@@ -4,8 +4,8 @@ package universalcoins.blocks;
 import java.util.List;
 import java.util.Random;
 
-import buildcraft.api.tools.IToolWrench;
 import universalcoins.UniversalCoins;
+import universalcoins.items.ItemVendorWrench;
 import universalcoins.render.BlockVendorRenderer;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
@@ -46,43 +46,20 @@ public class BlockVendor extends BlockContainer {
 		
 		setHardness(0.3F);
 		setResistance(6000000.0F);
-		setBlockUnbreakable();
 		
 		setStepSound(Block.soundTypeGlass);
 
 		setBlockBounds(0.0625f, 0.125f, 0.0625f, 0.9375f, 0.9375f, 0.9375f);
 	}
 
-	@Override
+	/*@Override
 	public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer) {
 		
-	}
+	}*/
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int par6, float par7, float par8, float par9) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		TileVendor te = (TileVendor) tileEntity;
-		if (tileEntity == null || player.isSneaking()) {
-			if (player.getCurrentEquippedItem() != null
-					&& player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
-				IToolWrench wrench = (IToolWrench) player
-						.getCurrentEquippedItem().getItem();
-				if (wrench.canWrench(player, x, y, z) && player.getDisplayName().equals(te.blockOwner)) {
-					Random rand = new Random();
-					ItemStack stack = getItemStackWithData(world, x, y, z);
-					EntityItem entityItem = new EntityItem(world, x, y, z, stack);
-					if (!world.isRemote)
-						world.spawnEntityInWorld(entityItem);
-					removedByPlayer(world, player, x, y, z);
-					if (player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
-						((IToolWrench) player.getCurrentEquippedItem()
-								.getItem()).wrenchUsed(player, x, y, z);
-					}
-				}
-			}
-			return true;
-		}
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
 	}
@@ -147,6 +124,22 @@ public class BlockVendor extends BlockContainer {
 		}
 		int meta = stack.getItemDamage();
 		world.setBlockMetadataWithNotify(x, y, z, meta, 2);		
+	}
+	
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		String ownerName = ((TileVendor)world.getTileEntity(x, y, z)).blockOwner;
+		if (player.capabilities.isCreativeMode) {
+			super.removedByPlayer(world, player, x, y, z);
+			return false;
+		}
+		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
+			ItemStack stack = getItemStackWithData(world, x, y, z);
+			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+			world.spawnEntityInWorld(entityItem);
+			super.removedByPlayer(world, player, x, y, z);
+		}
+		return false;
 	}
 
 	@Override

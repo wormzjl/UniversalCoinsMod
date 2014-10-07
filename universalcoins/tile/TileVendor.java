@@ -383,8 +383,14 @@ public class TileVendor extends TileEntity implements IInventory {
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
-					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-					coinSum += depositAmount * itemValue;
+					int depositAmount = 0;
+					if (slot == itemCoinInputSlot) {
+						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+						coinSum += depositAmount * itemValue;
+					} else {
+						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - userCoinSum) / itemValue);
+						userCoinSum += depositAmount * itemValue;
+					}
 					inventory[slot].stackSize -= depositAmount;
 					if (inventory[slot].stackSize == 0) {
 						inventory[slot] = null;

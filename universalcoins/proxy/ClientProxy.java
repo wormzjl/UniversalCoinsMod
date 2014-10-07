@@ -1,5 +1,6 @@
 package universalcoins.proxy;
 
+import net.minecraft.client.renderer.tileentity.RenderItemFrame;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -23,11 +24,9 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(new BlockVendorRenderer(RenderingRegistry.getNextAvailableRenderId()));
 		//register handler for GUI hints for vending blocks
 		MinecraftForge.EVENT_BUS.register(HintGuiRenderer.instance);
-		
-		int regID;
+				
 		TileEntitySpecialRenderer render = new CardStationRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCardStation.class, render);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockCardStation), new ItemCardStationRenderer(render, new TileCardStation()));
-		}
-
+	}
 }

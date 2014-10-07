@@ -274,23 +274,4 @@ private static void loadPricelists() throws IOException {
 			// fail quietly
 		}
 	}
-
-	public static ItemStack getRevenueStack(int itemPrice) {
-		if (itemPrice <= 64) {
-			return new ItemStack(UniversalCoins.proxy.itemCoin, itemPrice);
-		} else if (itemPrice <= 9 * 64) {
-			return new ItemStack(UniversalCoins.proxy.itemSmallCoinStack,
-					itemPrice / 9);
-		} else if (itemPrice <= 81 * 64) {
-			return new ItemStack(UniversalCoins.proxy.itemLargeCoinStack,
-					itemPrice / 81);
-		} else if (itemPrice <= 729 * 64) {
-			return new ItemStack(UniversalCoins.proxy.itemSmallCoinBag, Math.min(
-					itemPrice / 729, 64));
-		}else {
-			return new ItemStack(UniversalCoins.proxy.itemLargeCoinBag, Math.min(
-					itemPrice / 6561, 64));
-		}
-	}
-
 }

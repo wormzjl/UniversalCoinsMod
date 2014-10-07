@@ -4,7 +4,6 @@ import java.util.Random;
 
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileTradeStation;
-import buildcraft.api.tools.IToolWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
@@ -38,7 +37,7 @@ public class BlockTradeStation extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setHarvestLevel("pickaxe", 1);	
+		setResistance(6000000.0F);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -61,28 +60,6 @@ public class BlockTradeStation extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int par6, float par7, float par8, float par9) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity == null || player.isSneaking()) {
-			if (player.getCurrentEquippedItem() != null
-					&& player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
-				IToolWrench wrench = (IToolWrench) player.getCurrentEquippedItem().getItem();
-				if (wrench.canWrench(player, x, y, z)) {
-					Random rand = new Random();
-					if (!world.isRemote) {
-						ItemStack stack = getItemStackWithData(world, x, y, z);
-						EntityItem entityItem = new EntityItem(world, x, y, z,
-								stack);
-						world.spawnEntityInWorld(entityItem);
-						removedByPlayer(world, player, x, y, z);
-						if (player.getCurrentEquippedItem().getItem() instanceof IToolWrench) {
-							((IToolWrench) player.getCurrentEquippedItem()
-									.getItem()).wrenchUsed(player, x, y, z);
-						}
-					}
-					return true;
-				}
-			}
-		}
 		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 		return true;
 	}
@@ -146,8 +123,18 @@ public class BlockTradeStation extends BlockContainer {
         }
 	}
 	
-	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
-        super.breakBlock(world, x, y, z, par5, par6);
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (!world.isRemote) {
+			if (!player.capabilities.isCreativeMode) {
+				ItemStack stack = getItemStackWithData(world, x, y, z);
+				EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+				world.spawnEntityInWorld(entityItem);
+			}
+			super.removedByPlayer(world, player, x, y, z);
+		}
+		return false;
 	}
 
 	@Override

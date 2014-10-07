@@ -19,11 +19,9 @@ public class BlockBase extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setHarvestLevel("pickaxe", 1);
+		setResistance(6000000.0F);
 		setBlockTextureName("universalcoins:blockBase");
 	}
-
-	
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {

@@ -158,7 +158,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
 		}
-		coinSum += itemPrice * amount;
+		coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
 	}
 
 	public void onSellMaxPressed() {

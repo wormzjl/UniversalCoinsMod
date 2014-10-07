@@ -1,5 +1,6 @@
 package universalcoins.util;
 
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.FMLLog;
 import ibxm.Player;
 import net.minecraft.command.CommandBase;
@@ -14,6 +15,10 @@ import net.minecraft.util.IChatComponent;
 public class UCCommand extends CommandBase{
 	
 	private boolean firstChange = true;
+	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
+	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
+			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 
 		@Override
 		public String getCommandName() {
@@ -33,6 +38,7 @@ public class UCCommand extends CommandBase{
 			} else if (astring[0].matches("help")) {
 				sender.addChatMessage(new ChatComponentText("Format: " + this.getCommandName() + " <command> <arguments>"));
 				sender.addChatMessage(new ChatComponentText("Available commands:"));
+				//sender.addChatMessage(new ChatComponentText("- send <playerName> <amount> : Send another player coins."));
 				sender.addChatMessage(new ChatComponentText("- get <itemName> : Get price of item."));
 				sender.addChatMessage(new ChatComponentText("- set <itemName> <price> : Set price of item."));
 				sender.addChatMessage(new ChatComponentText("- reload : Reload pricelists."));
@@ -41,6 +47,16 @@ public class UCCommand extends CommandBase{
 				sender.addChatMessage(new ChatComponentText("Hint: Use \"this\" in place of <itemName> to get or set item held by player."));
 			} else if (astring[0].matches("reload")) {
 				UCItemPricer.loadConfigs();
+			/*} else if (astring[0].matches("send")) {
+				//TODO send coins from player to another
+				if (astring.length > 2) {
+					//get amount of coins in player inventory
+					EntityPlayer player = (EntityPlayer) sender;
+					for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+						ItemStack stack = player.inventory.getStackInSlot(i);
+						FMLLog.info("Inventory: " + stack);
+					}
+				} else sender.addChatMessage(new ChatComponentText("UC: Please player to send coins to and amount to send.")); */					
 			} else if (astring[0].matches("get")) {
 				//get item price
 				if (astring.length > 1) {
@@ -107,6 +123,15 @@ public class UCCommand extends CommandBase{
 			return stack;
 		}
 		return null;
+	}
+	
+	private int getCoinMultiplier(Item item) {
+		for (int i = 0; i < 5; i++) {
+			if (item == coins[i]) {
+				return multiplier[i];
+			}
+		}
+		return -1;
 	}
 
 }
