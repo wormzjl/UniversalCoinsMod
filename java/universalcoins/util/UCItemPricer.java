@@ -88,7 +88,7 @@ public class UCItemPricer {
 			String token = tokenizer.nextToken();
 			String[] tempData = token.split("=");
 			//FMLLog.info("Universal Coins: Updating UCPricelist: " + tempData[0] + "=" + Integer.valueOf(tempData[1]));
-			//We'll update the prices of all the items and not add all the default prices to the config folder
+			//We'll update the prices of all the items and not add all the default prices to the config folder if the mods are not present
 			if (ucPriceMap.get(tempData[0]) != null) {
 				ucPriceMap.put(tempData[0], Integer.valueOf(tempData[1]));
 			}
@@ -148,13 +148,12 @@ private static void loadPricelists() throws IOException {
 	    	  String[] modName = configList[i].getName().split("\\.");
 	    	  while ((tempString = br.readLine()) != null) {
 	    		  String[] tempData = tempString.split("=");
-	    		  //TODO fix crash if value exceeds max int value;
 	    		  int itemPrice = -1;
 	    		  try {
 	    			  itemPrice = Integer.valueOf(tempData[1]);
 	    		  } 
 	    		  catch (NumberFormatException e) {
-	    			  FMLLog.warning("Universal Coins: Invalid price in pricelist.");
+	    			  FMLLog.warning("Universal Coins: Invalid price for " + tempData[0] + " in pricelist.");
 	    		  }
 	    		  ucPriceMap.put(tempData[0], itemPrice);
 	    		  ucModnameMap.put(tempData[0], modName[0]);

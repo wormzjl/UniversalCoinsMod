@@ -90,7 +90,7 @@ public class UCCommand extends CommandBase{
 						}
 					} else { result = UCItemPricer.setItemPrice(astring[1], price); }
 					if (result == true) {
-						FMLLog.info("UC: Result is true");
+						//FMLLog.info("UC: Result is true");
 						sender.addChatMessage(new ChatComponentText("UC: price set to " + price));
 						if (firstChange) {
 							sender.addChatMessage(new ChatComponentText("UC: changes will not be saved"));
@@ -99,7 +99,7 @@ public class UCCommand extends CommandBase{
 							firstChange = false;
 						}
 					} else {
-						FMLLog.info("UC: Result is false");
+						//FMLLog.info("UC: Result is false");
 						sender.addChatMessage(new ChatComponentText("UC: failed to set price"));
 						sender.addChatMessage(new ChatComponentText("UC: item may not be priceable"));
 					}
@@ -108,8 +108,8 @@ public class UCCommand extends CommandBase{
 				UCItemPricer.loadConfigs();
 				sender.addChatMessage(new ChatComponentText("UC: Changes reset"));
 			} else if (astring[0].matches("reset")) {
-					UCItemPricer.loadConfigs();
-					sender.addChatMessage(new ChatComponentText("UC: Price defaults reset"));
+				UCItemPricer.resetDefaults();
+				sender.addChatMessage(new ChatComponentText("UC: Price defaults reloaded"));
 			} else if (astring[0].matches("save")) {
 				UCItemPricer.updatePriceLists();
 				sender.addChatMessage(new ChatComponentText("UC: Changes saved"));
