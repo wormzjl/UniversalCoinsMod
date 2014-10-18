@@ -1,5 +1,9 @@
 package universalcoins;
 
+import universalcoins.commands.UCBalance;
+import universalcoins.commands.UCCommand;
+import universalcoins.commands.UCGive;
+import universalcoins.commands.UCSend;
 import universalcoins.gui.HintGuiRenderer;
 import universalcoins.items.ItemCoin;
 import universalcoins.items.ItemCoinHeap;
@@ -16,7 +20,6 @@ import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
-import universalcoins.util.UCCommand;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCPlayerLoginEventHandler;
@@ -70,7 +73,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.5.7";
+	public static final String version = "1.7.2-1.5.8";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -214,6 +217,10 @@ public class UniversalCoins {
 		ICommandManager command = server.getCommandManager();
 		ServerCommandManager manager = (ServerCommandManager) command;
 		manager.registerCommand(new UCCommand());
+		manager.registerCommand(new UCBalance());
+		manager.registerCommand(new UCGive());
+		manager.registerCommand(new UCSend());
+		
 	}
 
 }

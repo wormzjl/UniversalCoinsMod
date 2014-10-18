@@ -47,9 +47,9 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public boolean shiftPressed = false;
 	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
 	public boolean cardSlotHidden;
-	private static final int[] slots_top = new int[] { 0, 1, 2, 3, 4 };
-	private static final int[] slots_bottom = new int[] { 0, 1, 2, 3, 4 };
-	private static final int[] slots_sides = new int[] { 0, 1, 2, 3, 4 };
+	private static final int[] slots_top = new int[] { 0, 1, 2, 3 };
+	private static final int[] slots_bottom = new int[] { 0, 1, 2, 3 };
+	private static final int[] slots_sides = new int[] { 0, 1, 2, 3 };
 
 	public int autoMode = 0;
 	private int lastAutoMode = 0;

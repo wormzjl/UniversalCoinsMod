@@ -62,7 +62,7 @@ public class ContainerVendor extends Container {
 			
 			// merges the item into player inventory since its in the tileEntity
 			if (slot < 12) {
-				if (!this.mergeItemStack(stackInSlot, 12, 48, true)) {
+				if (!this.mergeItemStack(stackInSlot, 12, 47, true)) {
 					return null;
 				}
 			}

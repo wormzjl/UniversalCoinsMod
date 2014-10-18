@@ -23,7 +23,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileVendor extends TileEntity implements IInventory {
+public class TileVendor extends TileEntity implements IInventory, ISidedInventory {
 	
 	private ItemStack[] inventory = new ItemStack[15];
 	//owner slots
@@ -546,6 +546,31 @@ public class TileVendor extends TileEntity implements IInventory {
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("BlockOwner", blockOwner);
 		tagCompound.setBoolean("Infinite", infiniteSell);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 11 };
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		// put everything in the item storage slots
+		if (var1 >= itemStorageSlot1 && var1 <= itemStorageSlot9) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		// allow pulling items from output slot only
+		if (var1 == itemCoinOutputSlot) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 

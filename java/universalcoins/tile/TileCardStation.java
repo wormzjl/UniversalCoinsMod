@@ -17,7 +17,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileCardStation extends TileEntity implements IInventory{
+public class TileCardStation extends TileEntity implements IInventory, ISidedInventory{
 	private ItemStack[] inventory = new ItemStack[4];
 	public static final int itemCardSlot = 0;
 	public static final int itemCardOutputSlot = 1;	
@@ -301,6 +301,30 @@ public class TileCardStation extends TileEntity implements IInventory{
 		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
 				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
 						zCoord + 0.5) < 64;
+	}
+	
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		//first check if items inserted are coins. put them in the coin input slot if they are.
+		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.itemCoin)
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
+						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack) 
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag)
+						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return new int[] { 0, 1, 2, 3 };
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		return false;
 	}
 
 	@Override
