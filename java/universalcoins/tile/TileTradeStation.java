@@ -5,6 +5,7 @@ import universalcoins.gui.TradeStationGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
+import universalcoins.util.UCWorldData;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -34,9 +35,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
-	private int lastCoinSum = 0;
 	public int itemPrice = 0;
-	private int lastItemPrice = 0;
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
@@ -44,9 +43,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public boolean isLStackButtonActive = false;
 	public boolean isSBagButtonActive = false;
 	public boolean isLBagButtonActive = false;
-	public boolean shiftPressed = false;
 	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
-	public boolean cardSlotHidden;
 	private static final int[] slots_top = new int[] { 0, 1, 2, 3 };
 	private static final int[] slots_bottom = new int[] { 0, 1, 2, 3 };
 	private static final int[] slots_sides = new int[] { 0, 1, 2, 3 };
@@ -56,6 +53,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public int coinMode = 0;
 	private int lastCoinMode = 0;
     public String customName;
+	private boolean inUse;
+
 
 	public TileTradeStation() {
 		super();
@@ -64,10 +63,12 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		activateBuySellButtons();
-		activateRetrieveButtons();
-		runAutoMode();
-		runCoinMode();
+		if (!worldObj.isRemote) {
+			activateBuySellButtons();
+			activateRetrieveButtons();
+			runAutoMode();
+			runCoinMode();
+		}
 	}
 	
 	private void activateBuySellButtons() {
@@ -76,7 +77,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			buyButtonActive = false;
 			sellButtonActive = false;
 		} else {
-			if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+			itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 			if (itemPrice <= -1 || itemPrice == 0) { 
 				itemPrice = 0;
 				buyButtonActive = false;
@@ -98,9 +99,9 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize())
 						&& coinSum >= itemPrice;
 				//enable buy button if card is present and has enough coins
-				if (inventory[itemCardSlot] != null && !buyButtonActive) {
-					int cardSum = getCardSum();
-					buyButtonActive = (cardSum > itemPrice);
+				if (inventory[itemCardSlot] != null && !buyButtonActive && !worldObj.isRemote) {
+					buyButtonActive = (getAccountBalance() > itemPrice);
+					FMLLog.info("Buy active: " + buyButtonActive);
 				}
 			}
 		}
@@ -146,14 +147,14 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (amount > inventory[itemInputSlot].stackSize) {
 			return;
 		}
-		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1) {
 			sellButtonActive = false;
 			return;
 		}
 		//handle damaged items
 		if (inventory[itemInputSlot].isItemDamaged()) {
-			if (!worldObj.isRemote) itemPrice = itemPrice * (inventory[itemInputSlot].getMaxDamage() - 
+			itemPrice = itemPrice * (inventory[itemInputSlot].getMaxDamage() - 
 					inventory[itemInputSlot].getItemDamage()) / inventory[itemInputSlot].getMaxDamage();
 		}
 		inventory[itemInputSlot].stackSize -= amount;
@@ -176,7 +177,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			sellButtonActive = false;
 			return;
 		}
-		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		if (itemPrice == -1) {
 			sellButtonActive = false;
 			return;
@@ -199,9 +200,9 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			buyButtonActive = false;
 			return;
 		}
-		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		//use the card if we have it
-		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice * amount) {
+		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice * amount) {
 			useCard = true;
 		}
 		if (itemPrice == -1 || (coinSum < itemPrice * amount && !useCard)) {
@@ -212,7 +213,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (inventory[itemOutputSlot] == null
 				&& inventory[itemInputSlot].getMaxStackSize() >= amount) {
 			if (useCard) { 
-				reduceCardSum(itemPrice * amount);
+				debitAccount(itemPrice * amount);//TODO handle false
 			}	else {
 				coinSum -= itemPrice * amount;
 			}
@@ -227,7 +228,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				&& inventory[itemOutputSlot].stackSize + amount <= inventory[itemInputSlot]
 						.getMaxStackSize()) {
 			if (useCard) { 
-				reduceCardSum(itemPrice * amount);
+				debitAccount(itemPrice * amount);//TODO handle false
 			}	else {
 				coinSum -= itemPrice * amount;
 			}
@@ -240,9 +241,9 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public void onBuyMaxPressed() {
 		boolean useCard = false;
 		int amount = 0;
-		if (!worldObj.isRemote) itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
+		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		// use the card if we have it
-		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice) {
+		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice) {//TODO
 			useCard = true;
 		}
 		if (itemPrice == -1 || (coinSum < itemPrice && !useCard)) {
@@ -250,10 +251,10 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			return;
 		}
 		if (inventory[itemOutputSlot] == null) { // empty stack
-			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= (useCard ? getCardSum() : coinSum)) {
+			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= (useCard ? getAccountBalance() : coinSum)) {
 				amount = inventory[itemInputSlot].getMaxStackSize(); // buy one stack
 			} else {
-				amount = (useCard ? getCardSum() : coinSum) / itemPrice; // buy as many as i can.
+				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; // buy as many as i can.
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot]
 				.getItem()
@@ -263,12 +264,12 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 						.getMaxStackSize()) {
 
 			if ((inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
-					* itemPrice <= (useCard ? getCardSum() : coinSum)) {
+					* itemPrice <= (useCard ? getAccountBalance() : coinSum)) {
 				amount = inventory[itemOutputSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize;
 				// buy as much as i can fit in a stack
 			} else {
-				amount = (useCard ? getCardSum() : coinSum) / itemPrice; // buy as many as i can.
+				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; // buy as many as i can.
 			}
 		} else {
 			buyButtonActive = false;
@@ -277,25 +278,21 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	public void onAutoModeButtonPressed() {
-		if (!worldObj.isRemote) {
 			if (autoMode == 2) {
 				autoMode = 0;
 			} else
 				autoMode++;
-		}
 	}
 
 	public void onCoinModeButtonPressed() {
-		if (!worldObj.isRemote) {
 			if (coinMode == 5) {
 				coinMode = 0;
 			} else
 				coinMode++;
-		}
 	}
 
 	public void runAutoMode() {
-		if (autoMode == 0 || this.worldObj.isRemote) {
+		if (autoMode == 0) {
 			return;
 		} else if (autoMode == 1) {
 			onBuyMaxPressed();
@@ -306,7 +303,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 	
 	public void runCoinMode() {
-		if (coinMode == 0 || this.worldObj.isRemote) {
+		if (coinMode == 0) {
 			return;
 		} else  {
 			onRetrieveButtonsPressed(coinMode + 1, true);
@@ -414,21 +411,6 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		tagCompound.setInteger("CoinMode", coinMode);
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("CustomName", getInventoryName());
-	}
-	
-	private int getCardSum() {
-		if (inventory[itemCardSlot] == null) return 0;
-		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-		if (tag == null) return 0;
-		return tag.getInteger("CoinSum");
-	}
-	
-	private void reduceCardSum(int amount) {
-		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-		if (tag == null)
-			return;
-		int cardSum = tag.getInteger("CoinSum");
-		tag.setInteger("CoinSum", cardSum - amount);
 	}
 	
 	public void updateTE() {
@@ -595,5 +577,45 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} else {
 			return false;
 		}
+	}
+	
+	public int getAccountBalance() {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				return getWorldInt(accountNumber);
+			}
+		} return -1;
+	}
+	
+	public boolean debitAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance -= amount;
+				setWorldData(accountNumber, balance);
+				return true;
+			}
+		} return false;
+	}
+	
+	private void setWorldData(String tag, int data) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.setInteger(tag, data);
+		wData.markDirty();
+	}
+	
+	private int getWorldInt(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getInteger(tag);
+	}
+	
+	private String getWorldString(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getString(tag);
 	}
 }

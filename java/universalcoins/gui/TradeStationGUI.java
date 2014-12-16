@@ -93,7 +93,7 @@ public class TradeStationGUI extends GuiContainer {
 		String priceInLocal = "Price:";
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 38 - stringWidth, 57, 4210752);
-		if (tileEntity.itemPrice != 0){
+		if (tileEntity.itemPrice > 0){
 			fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 40, 57,
 					4210752);
 		}
@@ -144,27 +144,6 @@ public class TradeStationGUI extends GuiContainer {
 		}
 		else {
 			shiftPressed = false;
-		}
-		if (par1GuiButton.id == idBuyButton){
-			if ( shiftPressed ) {
-				tileEntity.onBuyMaxPressed();
-			}
-			else {
-				tileEntity.onBuyPressed();
-			}
-		}else if (par1GuiButton.id == idSellButton){
-			if ( shiftPressed ) {
-				tileEntity.onSellMaxPressed();
-			}
-			else {
-				tileEntity.onSellPressed();
-			}
-		}else if (par1GuiButton.id == idAutoModeButton) {
-			tileEntity.onAutoModeButtonPressed();
-		}else if (par1GuiButton.id == idCoinModeButton) {
-			tileEntity.onCoinModeButtonPressed();
-		}else if (par1GuiButton.id <= idLBagButton) {
-			tileEntity.onRetrieveButtonsPressed(par1GuiButton.id, shiftPressed);
 		}
 		tileEntity.sendPacket(par1GuiButton.id, shiftPressed);
 	}

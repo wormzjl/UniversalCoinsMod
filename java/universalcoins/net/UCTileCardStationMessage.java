@@ -1,9 +1,8 @@
 package universalcoins.net;
 
+import universalcoins.tile.TileCardStation;
 import net.minecraft.tileentity.TileEntity;
 import io.netty.buffer.ByteBuf;
-import universalcoins.tile.TileCardStation;
-import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -12,40 +11,54 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCTileCardStationMessage implements IMessage, IMessageHandler<UCTileCardStationMessage, IMessage> {
-public int x, y, z, coinSum;
-public String customName;
+private int x, y, z, coinWithdrawalAmount, accountBalance;
+private boolean inUse, depositCoins, withdrawCoins;
+private String player, accountNumber, cardOwner;
 
-    public UCTileCardStationMessage()
-    {
-    }
+    public UCTileCardStationMessage() { }
 
-    public UCTileCardStationMessage(TileTradeStation tileEntity)
-    {
+    public UCTileCardStationMessage(TileCardStation tileEntity) {
         this.x = tileEntity.xCoord;
         this.y = tileEntity.yCoord;
         this.z = tileEntity.zCoord;
-        this.coinSum = tileEntity.coinSum;
-        this.customName = tileEntity.getInventoryName();
+        this.coinWithdrawalAmount = tileEntity.coinWithdrawalAmount;
+        this.accountBalance = tileEntity.accountBalance;
+        this.inUse = tileEntity.inUse;
+        this.depositCoins = tileEntity.depositCoins;
+        this.withdrawCoins = tileEntity.withdrawCoins;
+        this.player = tileEntity.player;
+        this.accountNumber = tileEntity.accountNumber;
+        this.cardOwner = tileEntity.cardOwner;
     }
 
     @Override
-    public void fromBytes(ByteBuf buf)
-    {
+    public void fromBytes(ByteBuf buf) {
         this.x = buf.readInt();
         this.y = buf.readInt();
         this.z = buf.readInt();
-        this.coinSum = buf.readInt();
-        this.customName = ByteBufUtils.readUTF8String(buf);
+        this.coinWithdrawalAmount = buf.readInt();
+        this.accountBalance = buf.readInt();
+        this.inUse = buf.readBoolean();
+        this.depositCoins = buf.readBoolean();
+        this.withdrawCoins = buf.readBoolean();
+        this.player = ByteBufUtils.readUTF8String(buf);
+        this.accountNumber = ByteBufUtils.readUTF8String(buf);
+        this.cardOwner = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
-    public void toBytes(ByteBuf buf)
-    {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeInt(coinSum);
-        ByteBufUtils.writeUTF8String(buf, customName);
+        buf.writeInt(coinWithdrawalAmount);
+        buf.writeInt(accountBalance);
+        buf.writeBoolean(inUse);
+        buf.writeBoolean(depositCoins);
+        buf.writeBoolean(withdrawCoins);
+        ByteBufUtils.writeUTF8String(buf, player);
+        ByteBufUtils.writeUTF8String(buf, accountNumber);
+        ByteBufUtils.writeUTF8String(buf, cardOwner);
     }
 
 	@Override
@@ -55,8 +68,14 @@ public String customName;
 
 		if (tileEntity instanceof TileCardStation) {
 			//FMLLog.info("UC: received TE packet");
-			((TileCardStation) tileEntity).coinSum = message.coinSum;
-			((TileCardStation) tileEntity).setInventoryName(message.customName);
+			((TileCardStation) tileEntity).coinWithdrawalAmount = message.coinWithdrawalAmount;
+			((TileCardStation) tileEntity).accountBalance = message.accountBalance;
+			((TileCardStation) tileEntity).inUse = message.inUse;
+			((TileCardStation) tileEntity).depositCoins = message.depositCoins;
+			((TileCardStation) tileEntity).withdrawCoins = message.withdrawCoins;
+			((TileCardStation) tileEntity).player = message.player;
+			((TileCardStation) tileEntity).accountNumber = message.accountNumber;
+			((TileCardStation) tileEntity).cardOwner = message.cardOwner;
 		}
 		return null;
 	}

@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -52,38 +53,18 @@ public class BlockCardStation extends BlockContainer {
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z,
-			EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		
-		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-		((TileCardStation) tileEntity).player = player.getDisplayName();
-		return true;
-	}
-	
-	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
-		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1);
-		TileEntity tentity = world.getTileEntity(x, y, z);
-		if (tentity instanceof TileCardStation) {
-			TileCardStation te = (TileCardStation) tentity;
-			NBTTagList itemList = new NBTTagList();
-			NBTTagCompound tagCompound = new NBTTagCompound();
-			for (int i = 0; i < te.getSizeInventory(); i++) {
-				ItemStack invStack = te.getStackInSlot(i);
-				if (invStack != null) {
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setByte("Slot", (byte) i);
-					invStack.writeToNBT(tag);
-					itemList.appendTag(tag);
-				}
-			}
-			tagCompound.setTag("Inventory", itemList);
-			tagCompound.setInteger("CoinsLeft", te.coinSum);
-			tagCompound.setString("CustomName", te.getInventoryName());
-			stack.setTagCompound(tagCompound);
-			return stack;
-		} else
-			return stack;
+		if (world.isRemote) {
+            return true;
+        } else if (((TileCardStation) tileEntity).inUse) {
+			player.addChatMessage(new ChatComponentText(((TileCardStation) tileEntity).player + " is using the ATM. Try again later."));
+			return true;
+		} else {
+        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+        	((TileCardStation) tileEntity).player = player.getDisplayName();
+        	return true;
+        }
 	}
 		
 	@Override
@@ -91,45 +72,6 @@ public class BlockCardStation extends BlockContainer {
 		//set block meta so we can use it later for rotation
 		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
-		
-		if (world.isRemote) return;
-		if (stack.hasTagCompound()) {
-			TileEntity te = world.getTileEntity(x, y, z);
-			if (te instanceof TileCardStation) {
-				TileCardStation tentity = (TileCardStation) te;
-				NBTTagCompound tagCompound = stack.getTagCompound();
-				if (tagCompound == null) {
-					return;
-				}
-				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-				for (int i = 0; i < tagList.tagCount(); i++) {
-					NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-					byte slot = tag.getByte("Slot");
-					if (slot >= 0 && slot < tentity.getSizeInventory()) {
-						tentity.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
-					}
-				}
-				tentity.coinSum = tagCompound.getInteger("CoinsLeft");
-				tentity.customName = tagCompound.getString("CustomName");
-			}
-			world.markBlockForUpdate(x, y, z);
-		} else if (stack.hasDisplayName()) {
-            ((TileCardStation)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
-        }
-	}
-	
-	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (!world.isRemote) {
-			if (!player.capabilities.isCreativeMode) {
-				ItemStack stack = getItemStackWithData(world, x, y, z);
-				EntityItem entityItem = new EntityItem(world, x, y, z, stack);
-				world.spawnEntityInWorld(entityItem);
-			}
-			super.removedByPlayer(world, player, x, y, z);
-		}
-		return false;
 	}
 
 	@Override

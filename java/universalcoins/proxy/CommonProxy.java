@@ -9,7 +9,6 @@ import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.items.ItemCoin;
-import universalcoins.items.ItemCoinHeap;
 import universalcoins.items.ItemLargeCoinBag;
 import universalcoins.items.ItemLargeCoinStack;
 import universalcoins.items.ItemSeller;

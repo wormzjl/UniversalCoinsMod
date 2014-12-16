@@ -1,5 +1,7 @@
 package universalcoins.commands;
 
+import java.text.DecimalFormat;
+
 import cpw.mods.fml.common.FMLLog;
 import universalcoins.UniversalCoins;
 import net.minecraft.command.CommandBase;
@@ -10,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldServer;
 
 public class UCBalance extends CommandBase {
@@ -23,26 +26,25 @@ public class UCBalance extends CommandBase {
 
 	@Override
 	public String getCommandName() {
-		return "ucbalance";
+		return StatCollector.translateToLocal("command.balance.name");
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender var1) {
-		return "/ucbalance : Retrive coin balance.";
+		return StatCollector.translateToLocal("command.balance.help");
 	}
 	
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
-		FMLLog.info("Player called balance command.");
         return true;
     }
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring) {
-		FMLLog.info("Processing balance command.");
 		if (sender instanceof EntityPlayerMP) {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
-			sender.addChatMessage(new ChatComponentText("Balance: " + playerCoins));
+			DecimalFormat formatter = new DecimalFormat("###,###,###");
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.balance.result") + formatter.format(playerCoins)));
 		}		
 	}
 

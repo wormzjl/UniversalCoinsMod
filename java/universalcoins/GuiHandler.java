@@ -23,8 +23,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 class GuiHandler implements IGuiHandler {
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
         if(tileEntity instanceof TileTradeStation){
                 return new ContainerTradeStation(player.inventory, (TileTradeStation) tileEntity);
@@ -38,7 +37,7 @@ class GuiHandler implements IGuiHandler {
         		return new ContainerVendor(player.inventory, (TileVendor) tileEntity);
         	} else return new ContainerVendorSale(player.inventory, (TileVendor) tileEntity);
         }
-        if(tileEntity instanceof TileCardStation){
+        if (tileEntity instanceof TileCardStation) {
             return new ContainerCardStation(player.inventory, (TileCardStation) tileEntity);
         }
         return null;
@@ -60,7 +59,7 @@ class GuiHandler implements IGuiHandler {
         		return new VendorGUI(player.inventory, (TileVendor) tileEntity);
         	} else return new VendorSaleGUI(player.inventory, (TileVendor) tileEntity);
         }
-        if(tileEntity instanceof TileCardStation){
+        if (tileEntity instanceof TileCardStation) {
             return new CardStationGUI(player.inventory, (TileCardStation) tileEntity);
         }
         return null;

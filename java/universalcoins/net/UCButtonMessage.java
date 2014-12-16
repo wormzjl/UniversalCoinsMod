@@ -52,8 +52,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 	public IMessage onMessage(UCButtonMessage message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
-		TileEntity tileEntity = world.getTileEntity(message.x, message.y,
-				message.z);
+		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
 		if (tileEntity instanceof TileTradeStation) {
 			if (message.buttonId == TradeStationGUI.idBuyButton) {
 				if (message.shiftPressed) {
@@ -97,12 +96,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			}
 		}
 		if (tileEntity instanceof TileCardStation) {
-			if (message.buttonId == CardStationGUI.idCardButton) {
-				((TileCardStation) tileEntity).onCardButtonPressed();
-			} else if (message.buttonId <= CardStationGUI.idLBagButton) {
-				((TileCardStation) tileEntity).onRetrieveButtonsPressed(
-						message.buttonId, message.shiftPressed);
-			}
+			((TileCardStation) tileEntity).onButtonPressed(message.buttonId);
 		}
 		return null;
 	}

@@ -16,7 +16,8 @@ public class ContainerTradeStation extends Container {
 	private TileTradeStation tileEntity;
 	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
-		
+	private boolean lastBuyButtonActive, lastSellButtonActive, lastCoinButtonActive, 
+		lastSStackButtonActive, lastLStackButtonActive,lastSBagButtonActive,lastLBagButtonActive;
 	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
@@ -100,21 +101,24 @@ public class ContainerTradeStation extends Container {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		
-		for (int i = 0; i < this.crafters.size(); ++i)
-        {
+		for (int i = 0; i < this.crafters.size(); ++i) {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastAutoMode != this.tileEntity.autoMode)
-            {
+            if (this.lastAutoMode != this.tileEntity.autoMode) {
                 icrafting.sendProgressBarUpdate(this, 0, (int) this.tileEntity.autoMode);
             }
-            if (this.lastCoinMode != this.tileEntity.coinMode)
-            {
+            if (this.lastCoinMode != this.tileEntity.coinMode) {
                 icrafting.sendProgressBarUpdate(this, 1, (int) this.tileEntity.coinMode);
             }
             if (this.lastCoinSum != this.tileEntity.coinSum
 				|| this.lastItemPrice != this.tileEntity.itemPrice 
-				|| this.lastName != this.tileEntity.customName) {
+				|| this.lastName != this.tileEntity.customName
+				|| this.lastBuyButtonActive != this.tileEntity.buyButtonActive
+				|| this.lastSellButtonActive != this.tileEntity.sellButtonActive
+				|| this.lastCoinButtonActive != this.tileEntity.coinButtonActive
+				|| this.lastSStackButtonActive != this.tileEntity.isSStackButtonActive
+				|| this.lastLStackButtonActive != this.tileEntity.isLStackButtonActive
+				|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive) {
             	tileEntity.updateTE();
             }
 
@@ -123,6 +127,13 @@ public class ContainerTradeStation extends Container {
 		this.lastCoinSum = this.tileEntity.coinSum;
 		this.lastItemPrice = this.tileEntity.itemPrice;
 		this.lastName = this.tileEntity.customName;
+		this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
+		this.lastSellButtonActive = this.tileEntity.sellButtonActive;
+		this.lastCoinButtonActive = this.tileEntity.coinButtonActive;
+		this.lastSStackButtonActive = this.tileEntity.isSStackButtonActive;
+		this.lastLStackButtonActive = this.tileEntity.isSStackButtonActive;
+		this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
+		this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
         }
 	}
 	

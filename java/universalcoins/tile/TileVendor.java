@@ -203,7 +203,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public void onBuyPressed(int amount) {
 		boolean useCard = false;
 		//use the card if we have it
-		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice * amount) {
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice * amount) {//TODO
 			useCard = true;
 		}
 		if (inventory[itemSellingSlot] == null || userCoinSum < itemPrice * amount && !useCard) {
@@ -289,7 +289,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			return;
 		}
 		// use the card if we have it
-		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice) {
+		if (inventory[itemCardSlot] != null && getCardSum() > itemPrice) {//TODO
 			useCard = true;
 		}
 		if (userCoinSum < itemPrice && !useCard) { // can't buy even one
@@ -314,7 +314,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				amount = (inventory[itemSellingSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize) / inventory[itemOutputSlot].stackSize;
 			} else {
-				amount = (useCard ? getCardSum() : userCoinSum) / itemPrice; // buy as many as i can with available coins.
+				amount = (useCard ? getCardSum() : userCoinSum) / itemPrice; // buy as many as i can with available coins.//TODO
 			}
 		} else {
 			buyButtonActive = false;
@@ -447,14 +447,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}else return true;
 	}
 	
-	private int getCardSum() {
+	private int getCardSum() {//TODO
 		if (inventory[itemCardSlot] == null) return 0;
 		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
 		if (tag == null) return 0;
 		return tag.getInteger("CoinSum");
 	}
 	
-	private void reduceCardSum(int amount) {
+	private void reduceCardSum(int amount) {//TODO
 		NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
 		if (tag == null)
 			return;

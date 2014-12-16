@@ -1,5 +1,6 @@
 package universalcoins.inventory;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import universalcoins.tile.TileCardStation;
@@ -11,17 +12,22 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerCardStation extends Container {
-	private TileCardStation tileEntity;
-	private int lastCoinSum;
+	private String lastPlayer;
+	private boolean lastInUse;
+	private boolean lastDepositCoins;
+	private boolean lastWithdrawCoins;
+	private int lastCoinWithdrawalAmount;
+	private String lastCardOwner;
+	private String lastAccountNumber;
+	private int lastAccountBalance;
+	private TileCardStation tEntity;
 	
-	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tEntity) {
-		tileEntity = tEntity;
+	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tileEntity) {
+		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, TileCardStation.itemCardSlot, 36, 34));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileCardStation.itemCardOutputSlot, 124, 34));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileCardStation.itemCoinSlot, 22, 75));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileCardStation.itemOutputSlot, 138, 75));
+		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 152, 60));
+		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 152, 40));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -29,7 +35,7 @@ public class ContainerCardStation extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return tileEntity.isUseableByPlayer(player);
+		return tEntity.isUseableByPlayer(player);
 	}
 	
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
@@ -55,8 +61,8 @@ public class ContainerCardStation extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 3) {
-				if (!this.mergeItemStack(stackInSlot, 3, 38, true)) {
+			if (slot < 2) {
+				if (!this.mergeItemStack(stackInSlot, 2, 38, true)) {
 					return null;
 				}
 			}
@@ -100,13 +106,26 @@ public class ContainerCardStation extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i)
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
-
-            if (this.lastCoinSum != this.tileEntity.coinSum) {
-                //update
-            	tileEntity.updateTE();
+            
+            if (this.lastPlayer != tEntity.player ||
+    		this.lastInUse != tEntity.inUse ||
+    		this.lastDepositCoins != tEntity.depositCoins ||
+    		this.lastWithdrawCoins != tEntity.withdrawCoins ||
+    		this.lastCoinWithdrawalAmount != tEntity.coinWithdrawalAmount ||
+    		this.lastCardOwner != tEntity.cardOwner ||
+    		this.lastAccountNumber != tEntity.accountNumber ||
+    		this.lastAccountBalance != tEntity.accountBalance) {
+            	tEntity.updateTE();
             }
 
-		this.lastCoinSum = this.tileEntity.coinSum;
+		this.lastPlayer = tEntity.player;
+		this.lastInUse = tEntity.inUse;
+		this.lastDepositCoins = tEntity.depositCoins;
+		this.lastWithdrawCoins = tEntity.withdrawCoins;
+		this.lastCoinWithdrawalAmount = tEntity.coinWithdrawalAmount;
+		this.lastCardOwner = tEntity.cardOwner;
+		this.lastAccountNumber = tEntity.accountNumber;
+		this.lastAccountBalance = tEntity.accountBalance;
         }
 	}
 	

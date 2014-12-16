@@ -3,16 +3,17 @@ package universalcoins;
 import universalcoins.commands.UCBalance;
 import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
+import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
 import universalcoins.gui.HintGuiRenderer;
 import universalcoins.items.ItemCoin;
-import universalcoins.items.ItemCoinHeap;
 import universalcoins.items.ItemLargeCoinBag;
 import universalcoins.items.ItemLargeCoinStack;
 import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCCardStationServerMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -73,7 +74,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.5.8";
+	public static final String version = "1.7.2-1.5.9";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -86,8 +87,7 @@ public class UniversalCoins {
 	public static Boolean coinsInMineshaft;
 	public static Integer mineshaftCoinChance;
 	public static Boolean coinsInDungeon;
-	public static Integer dungeonCoinChance;
-	
+	public static Integer dungeonCoinChance;	
 	public static Integer mobDropMax;
 	public static Integer mobDropChance;
 	public static Double itemSellRatio;
@@ -160,14 +160,15 @@ public class UniversalCoins {
 		if (updateCheck) {
 			FMLCommonHandler.instance().bus().register(new  UCPlayerLoginEventHandler());
 		}
-		
+				
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
 	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
-	    
+	    snw.registerMessage(UCCardStationServerMessage.class, UCCardStationServerMessage.class, 4, Side.SERVER);
+
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
 	}
@@ -218,6 +219,7 @@ public class UniversalCoins {
 		ServerCommandManager manager = (ServerCommandManager) command;
 		manager.registerCommand(new UCCommand());
 		manager.registerCommand(new UCBalance());
+		manager.registerCommand(new UCRebalance());
 		manager.registerCommand(new UCGive());
 		manager.registerCommand(new UCSend());
 		

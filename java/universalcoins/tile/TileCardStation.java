@@ -1,144 +1,163 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
 import universalcoins.UniversalCoins;
-import universalcoins.gui.CardStationGUI;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCCardStationServerMessage;
+import universalcoins.net.UCTileCardStationMessage;
+import universalcoins.net.UCTileTradeStationMessage;
+import universalcoins.net.UCVendorServerMessage;
+import universalcoins.util.UCWorldData;
+import cpw.mods.fml.common.FMLLog;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileCardStation extends TileEntity implements IInventory, ISidedInventory{
-	private ItemStack[] inventory = new ItemStack[4];
-	public static final int itemCardSlot = 0;
-	public static final int itemCardOutputSlot = 1;	
-	public static final int itemCoinSlot = 2;
-	public static final int itemOutputSlot = 3;
+public class TileCardStation extends TileEntity implements IInventory {
+	private ItemStack[] inventory = new ItemStack[2];
+	public static final int itemCoinSlot = 0;
+	public static final int itemCardSlot = 1;
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
-	public String cardOwner;
-	public int coinSum = 0;
-    public String customName;
-    public String player;
-    public boolean isCardButtonActive = false;
-    public boolean isCoinButtonActive = false;
-	public boolean isSStackButtonActive = false;
-	public boolean isLStackButtonActive = false;
-	public boolean isSBagButtonActive = false;
-	public boolean isLBagButtonActive = false;
+	public String player = "";
+	public boolean inUse = false;
+	public boolean depositCoins = false;
+	public boolean withdrawCoins = false;
+	public int coinWithdrawalAmount = 0;
+	public String cardOwner = "";
+	public String accountNumber = "none";
+	public int accountBalance = 0;
 	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		activateRetrieveButtons();
-		activateCardButton();
-	}
-	
-	public void onRetrieveButtonsPressed(int buttonClickedID,
-			boolean shiftPressed) {
-		int absoluteButton = buttonClickedID - CardStationGUI.idCoinButton;
-		int multiplier = 1;
-		for (int i = 0; i < absoluteButton; i++) {
-			multiplier *= 9;
+		if (withdrawCoins) {
+			withdrawCoins();
 		}
-		Item itemOnButton = coins[absoluteButton];
-		if (coinSum < multiplier
-				|| (inventory[itemOutputSlot] != null && inventory[itemOutputSlot]
-						.getItem() != itemOnButton)
-				|| (inventory[itemOutputSlot] != null && inventory[itemOutputSlot].stackSize == 64)) {
-			return;
-		}
-		if (shiftPressed) {
-			if (inventory[itemOutputSlot] == null) {
-				int amount = coinSum / multiplier;
-				if (amount >= 64) {
-					coinSum -= multiplier * 64;
-					inventory[itemOutputSlot] = new ItemStack(itemOnButton);
-					inventory[itemOutputSlot].stackSize = 64;
-				} else {
-					coinSum -= multiplier * amount;
-					inventory[itemOutputSlot] = new ItemStack(itemOnButton);
-					inventory[itemOutputSlot].stackSize = amount;
-				}
-			} else {
-				int amount = Math.min(coinSum / multiplier, inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize);
-				inventory[itemOutputSlot].stackSize += amount;
-				coinSum -= multiplier * amount;
-			}
-		} else {
-			coinSum -= multiplier;
-			if (inventory[itemOutputSlot] == null) {
-				inventory[itemOutputSlot] = new ItemStack(itemOnButton);
-			} else {
-				inventory[itemOutputSlot].stackSize++;
-			}
-		}
-	}
-	
-	private void activateCardButton() {
-		if (coinSum >= 50 || coinSum > 0 && inventory[itemCardOutputSlot] != null) {
-			isCardButtonActive = true;
-		} else isCardButtonActive = false;
-	}
-	
-	private void activateRetrieveButtons() {
-		isCoinButtonActive = false;
-		isSStackButtonActive = false;
-		isLStackButtonActive = false;
-		isSBagButtonActive = false;
-		isLBagButtonActive = false;
-		if (coinSum > 0) {
-			isCoinButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemCoin && inventory[itemOutputSlot].stackSize != 64);
-		}
-		if (coinSum >= 9) {
-			isSStackButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemSmallCoinStack && inventory[itemOutputSlot].stackSize != 64);
-		}
-		if (coinSum >= 81) {
-			isLStackButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemLargeCoinStack && inventory[itemOutputSlot].stackSize != 64);
-		}
-		if (coinSum >= 729) {
-			isSBagButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemSmallCoinBag && inventory[itemOutputSlot].stackSize != 64);
-		}
-		if (coinSum >= 6561) {
-			isLBagButtonActive = inventory[itemOutputSlot] == null
-					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemLargeCoinBag && inventory[itemOutputSlot].stackSize != 64);
-		}
-	}
-	
-	public void onCardButtonPressed() {
-		if (inventory[itemCardOutputSlot] == null && coinSum >= 50) {
-			inventory[itemCardOutputSlot] = new ItemStack(
-					UniversalCoins.proxy.itemUCCard);
-			coinSum -= 50;
-		}
-		if (inventory[itemCardOutputSlot] == null) return;
-		if (inventory[itemCardOutputSlot].stackTagCompound == null) {
-			inventory[itemCardOutputSlot].stackTagCompound = new NBTTagCompound();
-			inventory[itemCardOutputSlot].stackTagCompound.setInteger("CoinSum", 0);
-		}
-		int cardSum = inventory[itemCardOutputSlot].stackTagCompound.getInteger("CoinSum");
-		inventory[itemCardOutputSlot].stackTagCompound.setString("Owner", player);
-		int maxTransfer = Math.min(coinSum, Integer.MAX_VALUE - cardSum);
-		inventory[itemCardOutputSlot].stackTagCompound.setInteger("CoinSum", maxTransfer + cardSum);
-		coinSum -= maxTransfer;
 	}
 
-    @Override
+	@Override
+	public int getSizeInventory() {
+		return inventory.length;
+		}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		if (slot >= inventory.length) {
+			return null;
+		}
+		return inventory[slot];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int count) {
+		// FMLLog.info("Stack Size Decreased in slot " + i);
+				ItemStack newStack;
+				if (inventory[slot] == null) {
+					return null;
+				}
+				if (inventory[slot].stackSize <= count) {
+					newStack = inventory[slot];
+					inventory[slot] = null;
+
+					return newStack;
+				}
+				newStack = ItemStack.copyItemStack(inventory[slot]);
+				newStack.stackSize = count;
+				inventory[slot].stackSize -= count;
+				return newStack;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		if (this.inventory[slot] != null) {
+            ItemStack itemstack = this.inventory[slot];
+            this.inventory[slot] = null;
+            return itemstack;
+        }
+        else {
+            return null;
+        }
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventory[slot] = stack;
+		if (stack != null) {
+			if (slot == itemCoinSlot && depositCoins) {
+				int coinType = getCoinType(stack.getItem());
+				if (coinType != -1) {
+					int itemValue = multiplier[coinType];
+					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
+					if (!worldObj.isRemote) {
+						creditAccount(accountNumber, depositAmount * itemValue);
+						accountBalance = getAccountBalance(accountNumber);
+					}
+					inventory[slot].stackSize -= depositAmount;
+					if (inventory[slot].stackSize == 0) {
+						inventory[slot] = null;
+					}
+				}
+			}
+			if (slot == itemCardSlot && !worldObj.isRemote) {
+				//TODO update old cards with nbt account balance to new cards
+				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0 && 
+						inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(player)) {
+					FMLLog.info("Old card detected. Converting");
+					addPlayerAccount(player);
+					accountNumber = getPlayerAccount(player);
+					creditAccount(accountNumber, inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum"));
+					inventory[itemCardSlot].stackTagCompound.removeTag("CoinSum");
+					inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
+				}
+				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+				cardOwner = inventory[itemCardSlot].stackTagCompound.getString("Owner");
+				accountBalance = getAccountBalance(accountNumber);
+			}
+		}
+	}
+
+	@Override
+	public String getInventoryName() {
+		return UniversalCoins.proxy.blockCardStation.getLocalizedName();
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
+
+	public void sendButtonMessage(int functionID, boolean shiftPressed) {
+		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, functionID, shiftPressed));
+	}
+	
+	@Override
+    public Packet getDescriptionPacket() {
+        return UniversalCoins.snw.getPacketFrom(new UCTileCardStationMessage(this));
+    }
+	
+	public void sendServerUpdatePacket(int withdrawalAmount) {
+		UniversalCoins.snw.sendToServer(new UCCardStationServerMessage(xCoord, yCoord, zCoord, withdrawalAmount));
+	}
+	
+	public void updateTE() {
+		 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
+	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 
@@ -152,14 +171,24 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			}
 		}
 		try {
-			coinSum = tagCompound.getInteger("CoinSum");
+			inUse = tagCompound.getBoolean("InUse");
 		} catch (Throwable ex2) {
-			coinSum = 0;
+			inUse = false;
 		}
 		try {
-			customName = tagCompound.getString("CustomName");
+			depositCoins = tagCompound.getBoolean("DepositCoins");
 		} catch (Throwable ex2) {
-			customName = null;
+			depositCoins = false;
+		}
+		try {
+			withdrawCoins = tagCompound.getBoolean("WithdrawCoins");
+		} catch (Throwable ex2) {
+			withdrawCoins = false;
+		}
+		try {
+			coinWithdrawalAmount = tagCompound.getInteger("CoinWithdrawalAmount");
+		} catch (Throwable ex2) {
+			coinWithdrawalAmount = 0;
 		}
 	}
 	
@@ -176,117 +205,35 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 				itemList.appendTag(tag);
 			}
 		}
-		tagCompound.removeTag("CoinSum");
 		tagCompound.setTag("Inventory", itemList);
-		tagCompound.setInteger("CoinSum", coinSum);
-		tagCompound.setString("CustomName", getInventoryName());
+		tagCompound.setBoolean("InUse", inUse);
+		tagCompound.setBoolean("DepositCoins", depositCoins);
+		tagCompound.setBoolean("WithdrawCoins", withdrawCoins);
+		tagCompound.setInteger("CoinWithdrawalAmount", coinWithdrawalAmount);
+	}
+	
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
+				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
+						zCoord + 0.5) < 64;
 	}
 
-    @Override
+	@Override
 	public void openInventory() {
 	}
 
 	@Override
 	public void closeInventory() {
+		inUse = false;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int var1, ItemStack var2) {
+		return true;
 	}
 	
-	@Override
-	public int getSizeInventory() {
-		return inventory.length;
-	}
-	
-	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockCardStation.getLocalizedName();
-	}
-	
-	public void setInventoryName(String name) {
-		customName = name;
-	}
-
-	public boolean isInventoryNameLocalized() {
-		return false;
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i) {
-		if (i >= inventory.length) {
-			return null;
-		}
-		return inventory[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j) {
-		//FMLLog.info("Stack Size Decreased in slot " + i);
-		ItemStack newStack;
-		if (inventory[i] == null) {
-			return null;
-		}
-		if (inventory[i].stackSize <= j) {
-			newStack = inventory[i];
-			inventory[i] = null;
-
-			return newStack;
-		}
-		newStack = ItemStack.copyItemStack(inventory[i]);
-		newStack.stackSize = j;
-		inventory[i].stackSize -= j;
-		return newStack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
-		if (this.inventory[i] != null) {
-            ItemStack itemstack = this.inventory[i];
-            this.inventory[i] = null;
-            return itemstack;
-        }
-        else {
-            return null;
-        }
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inventory[slot] = stack;
-		if (stack != null) {
-			int coinType = getCoinType(stack.getItem());
-			if (coinType != -1) {
-				int itemValue = multiplier[coinType];
-				int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-				coinSum += depositAmount * itemValue;
-				inventory[slot].stackSize -= depositAmount;
-				if (inventory[slot].stackSize == 0) {
-					inventory[slot] = null;
-				}
-			}
-			if (slot == itemCardSlot) {
-				NBTTagCompound tag = inventory[itemCardSlot].getTagCompound();
-				if (tag == null) return;
-				int cardSum = tag.getInteger("CoinSum");
-				int maxTransfer = Math.min(cardSum, Integer.MAX_VALUE - coinSum);
-				coinSum += maxTransfer;
-				tag.setInteger("CoinSum", cardSum - maxTransfer);
-				tag.setString("Owner", player);
-				if (inventory[itemCardOutputSlot] == null) {
-					inventory[itemCardOutputSlot] = inventory[itemCardSlot];
-					inventory[itemCardSlot] = null;
-				}
-			}
-			updateTE();
-		}
-	}
-
 	private int getCoinType(Item item) {
 		for (int i = 0; i < 5; i++) {
 			if (item == coins[i]) {
@@ -295,67 +242,179 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		}
 		return -1;
 	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
-				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
-						zCoord + 0.5) < 64;
-	}
 	
-	@Override
-	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
-		//first check if items inserted are coins. put them in the coin input slot if they are.
-		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.itemCoin)
-						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
-						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack) 
-						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag)
-						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
-			return true;
-		} else {
-			return false;
+	public void onButtonPressed(int functionId) {
+		if (worldObj.isRemote) return;
+		//handle function IDs sent from CardStationGUI
+		//function1 - new card
+		//function2 - transfer account
+		//function3 - deposit
+		//function4 - withdraw
+		//function5 - get account info
+		//function6 - destroy invalid card
+		if (functionId == 1) {
+			if (getPlayerAccount(player) == "") {
+				addPlayerAccount(player);
+			}
+			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
+			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
+			inventory[itemCardSlot].stackTagCompound.setString("Owner", player);
+			FMLLog.info("creating nbt for card - account number: " + accountNumber);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
+			if (!worldObj.isRemote) accountBalance = getAccountBalance(accountNumber);
+		}
+		if (functionId == 2) {
+			if (getPlayerAccount(player) == "") {
+			} else {
+				transferPlayerAccount(player);
+				inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
+				inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
+				inventory[itemCardSlot].stackTagCompound.setString("Owner", player);
+				inventory[itemCardSlot].stackTagCompound.setString("Account", getPlayerAccount(player));
+				if (!worldObj.isRemote) accountBalance = getAccountBalance(accountNumber);
+			}
+		}
+		if (functionId == 3) {
+			//set to true if player presses deposit button, reset on any other button press
+			depositCoins = true;
+		} else depositCoins = false;
+		if (functionId == 4) {
+			withdrawCoins = true;
+		}
+		if (functionId == 5) {
+			String storedAccount = getPlayerAccount(player);
+			if (storedAccount != "") { 
+				accountNumber = storedAccount;
+				cardOwner = player; //needed for new card auth
+			} else accountNumber = "none";
+		}
+		if (functionId == 6) {
+			inventory[itemCardSlot] = null;
+			FMLLog.info("card destroyed");
+		}
+	}
+
+	private void withdrawCoins() {
+		if (inventory[itemCoinSlot] == null && coinWithdrawalAmount > 0) {
+			// use logarithm to find largest cointype for coins being withdrawn
+			int logVal = Math.min((int) (Math.log(coinWithdrawalAmount) / Math.log(9)), 4);
+			int stackSize = Math.min((int) (coinWithdrawalAmount / Math.pow(9, logVal)), 64);
+			inventory[itemCoinSlot] = (new ItemStack(coins[logVal], stackSize));
+			coinWithdrawalAmount -= (stackSize * Math.pow(9, logVal));
+			if (!worldObj.isRemote) {
+				debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
+				accountBalance = getAccountBalance(accountNumber);
+			}
+		}
+		if (coinWithdrawalAmount <= 0) {
+			withdrawCoins = false;
+			coinWithdrawalAmount = 0;
 		}
 	}
 	
-	@Override
-	public int[] getAccessibleSlotsFromSide(int var1) {
-		return new int[] { 0, 1, 2, 3 };
-	}
-
-	@Override
-	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
-		return false;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int var1, ItemStack var2) {
-		return true;
+	public int getAccountBalance(String accountNumber) {
+		if (getWorldString(accountNumber) != "") {
+			FMLLog.info("Account balance: " + getWorldString(accountNumber));
+			return getWorldInt(accountNumber);
+		} else return -1;	
 	}
 	
-	public boolean canWithdraw () {
-		if (inventory[itemCardOutputSlot] != null && coinSum > 0 ){
-			return true;
-		} else return false;
+	public void debitAccount(String accountNumber, int amount) {
+		if (getWorldString(accountNumber) != "") {
+			int balance = getWorldInt(accountNumber);
+			balance -= amount;
+			setWorldData(accountNumber, balance);
+		}
 	}
 	
-	@Override
-    public Packet getDescriptionPacket() 
-    {
-    	NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
-    }
-    
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) { 
-        readFromNBT(pkt.func_148857_g());
-    }
-	
-	public void updateTE() {
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	public void creditAccount(String accountNumber, int amount) {
+		if (getWorldString(accountNumber) != "") {
+			int balance = getWorldInt(accountNumber);
+			balance += amount;
+			setWorldData(accountNumber, balance);
+		}
 	}
 	
-	public void sendButtonMessage(int button, boolean shiftPressed) {
-		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
+	public String getPlayerAccount(String player) {
+		//returns an empty string if no account found
+		return getWorldString(player);
+	}
+	
+	public void addPlayerAccount(String player) {
+		if (getWorldString(player) == "") {
+			while (getWorldString(accountNumber) == "") {
+				accountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(accountNumber) == "") {
+					setWorldData(player, accountNumber);
+					setWorldData(accountNumber, 0);
+				}
+			}
+		}
+	}
+	
+	public void addGroupAccount(String player) {
+		if (getWorldString("G:" + player) == "") {
+			while (getWorldString(accountNumber) == "") {
+				accountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(accountNumber) == "") {
+					setWorldData("G:" + player, accountNumber);
+					setWorldData(accountNumber, 0);
+				}
+			}
+		}
+	}
+	
+	public void transferPlayerAccount(String player) {
+		String oldAccount = getWorldString(player);
+		int oldBalance = getAccountBalance(oldAccount);
+		delWorldData(player);
+		delWorldData(oldAccount);
+		if (getWorldString(player) == "") {
+			accountNumber = "none";
+			while (getWorldString(accountNumber) == "") {
+				accountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(accountNumber) == "") {
+					setWorldData(player, accountNumber);
+					setWorldData(accountNumber, oldBalance);
+				}
+			}
+		}
+	}
+	
+	private int generateAccountNumber() {
+		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
+	}
+	
+	private void setWorldData(String tag, String data) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.setString(tag, data);
+		wData.markDirty();
+	}
+	
+	private void setWorldData(String tag, int data) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.setInteger(tag, data);
+		wData.markDirty();
+	}
+	
+	private int getWorldInt(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getInteger(tag);
+	}
+	
+	private String getWorldString(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getString(tag);
+	}
+	
+	private void delWorldData(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.removeTag(tag);
+		wData.markDirty();
 	}
 }

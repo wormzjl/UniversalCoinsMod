@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldServer;
 
 public class UCGive extends CommandBase {
@@ -20,12 +21,12 @@ public class UCGive extends CommandBase {
 
 	@Override
 	public String getCommandName() {
-		return "ucgive";
+		return StatCollector.translateToLocal("command.givecoins.name");
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender var1) {
-		return "/ucgive <playerName> <amount> : Give another player coins.";
+		return StatCollector.translateToLocal("command.givecoins.help");
 	}
 
 	@Override
@@ -40,20 +41,23 @@ public class UCGive extends CommandBase {
 			}
 			int coinsToSend = 0;
 			if (recipient == null) {
-				sender.addChatMessage(new ChatComponentText("Player " + astring[0] + " not found."));
+				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.givecoins.error.notfound")));
 				return;
 			}
 			try {
 				coinsToSend = Integer.parseInt(astring[1]);
 			} catch (NumberFormatException e) {
-				sender.addChatMessage(new ChatComponentText("Please specify a valid coin amount."));
+				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.givecoins.error.badentry")));
 				return;
 			}
 			givePlayerCoins(recipient, coinsToSend);
-			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + astring[1] + " coins."));
-			recipient.addChatMessage(new ChatComponentText( sender.getCommandSenderName() + " gave you " + astring[1] + " coins."));
+			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + astring[1] + 
+					" " + StatCollector.translateToLocal("item.itemCoin.name")));
+			recipient.addChatMessage(new ChatComponentText( sender.getCommandSenderName() + " " +
+					StatCollector.translateToLocal("command.givecoins.result") + astring[1] + 
+					" " + StatCollector.translateToLocal("item.itemCoin.name")));
 		} else
-			sender.addChatMessage(new ChatComponentText("Please include player name and amount to give."));
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.givecoins.error.noname")));
 	}
 
 	private int givePlayerCoins(EntityPlayer recipient, int coinsLeft) {

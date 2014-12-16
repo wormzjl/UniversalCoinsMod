@@ -15,7 +15,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldServer;
 
-public class UCSend extends CommandBase {
+public class UCRebalance extends CommandBase {
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	private static final Item[] coins = new Item[] {
 			UniversalCoins.proxy.itemCoin,
@@ -26,20 +26,12 @@ public class UCSend extends CommandBase {
 
 	@Override
 	public String getCommandName() {
-		return StatCollector.translateToLocal("command.send.name");
+		return StatCollector.translateToLocal("command.rebalance.name");
 	}
-	
-	@Override
-	public List getCommandAliases() {
-		List aliases = new ArrayList();
-		aliases.add("pay");
-        return aliases;
-    }
-
 
 	@Override
 	public String getCommandUsage(ICommandSender var1) {
-		return StatCollector.translateToLocal("command.send.help");
+		return StatCollector.translateToLocal("command.rebalance.help");
 	}
 	
 	@Override
@@ -50,57 +42,25 @@ public class UCSend extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring) {
 		if (sender instanceof EntityPlayerMP) {
-			if (astring.length == 2) {
-				// check for player
-				EntityPlayerMP recipient = null;
-				WorldServer[] ws = MinecraftServer.getServer().worldServers;
-				for (WorldServer w : ws) {
-					if (w.playerEntities.contains(w.getPlayerEntityByName(astring[0]))) { 
-						recipient = (EntityPlayerMP) w.getPlayerEntityByName(astring[0]);
-					}
-				}
-				if (recipient == null) {
-					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.send.error.notfound")));
-					return;
-				}
-				int requestedSendAmount = 0;
-				try {
-					requestedSendAmount = Integer.parseInt(astring[1]);
-				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.send.error.badentry")));
-					return;
-				}
-				if (getPlayerCoins((EntityPlayerMP) sender) < requestedSendAmount) {
-					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.send.error.insufficient")));
-					return;
-				}
+			if (astring.length == 0) {
 				// get coins from player inventory
-				int coinsFromSender = 0;
+				int coinTotal = 0;
 				EntityPlayerMP player = (EntityPlayerMP) sender;
 				for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 					ItemStack stack = player.inventory.getStackInSlot(i);
 					for (int j = 0; j < coins.length; j++) {
-						if (stack != null && stack.getItem() == coins[j]
-								&& coinsFromSender < requestedSendAmount) {
-							coinsFromSender += stack.stackSize * multiplier[j];
+						if (stack != null && stack.getItem() == coins[j]) {
+							coinTotal += stack.stackSize * multiplier[j];
 							player.inventory.setInventorySlotContents(i, null);
 						}
 					}
 				}
-				// subtract coins to send from player coins
-				coinsFromSender -= requestedSendAmount;
-				// send coins to recipient
-				int coinChange = givePlayerCoins(recipient, requestedSendAmount);
-				sender.addChatMessage(new ChatComponentText((requestedSendAmount - coinChange) + " " + 
-						StatCollector.translateToLocal("command.send.result.sender") + " " + astring[0]));
-				recipient.addChatMessage(new ChatComponentText((requestedSendAmount - coinChange) + " " + 
-						StatCollector.translateToLocal("command.send.result.receiver") + " " + sender.getCommandSenderName()));
-				// add change back to sender coins
-				coinsFromSender += coinChange;
 				// give sender back change
-				int leftOvers = givePlayerCoins(player, coinsFromSender);
-			} else
-				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.send.error.incomplete")));
+				int leftOvers = givePlayerCoins(player, coinTotal);
+				if (leftOvers > 0) {
+					//TODO spawn coins in world
+				}
+			}
 		}
 	}
 
