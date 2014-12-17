@@ -3,7 +3,7 @@ package universalcoins.net;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
-import universalcoins.gui.VendorSaleGUI;
+import universalcoins.gui.VendorSellGUI;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
@@ -79,18 +79,21 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			tileEntity.writeToNBT(data);
 		}
 		if (tileEntity instanceof TileVendor) {
+			if (message.buttonId == VendorGUI.idModeButton) {
+				((TileVendor) tileEntity).sellMode ^= true; //toggle boolean
+			}
 			if (message.buttonId < VendorGUI.idCoinButton) {
 				//do nothing here
 			} else if (message.buttonId <= VendorGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
-			}else if (message.buttonId == VendorSaleGUI.idBuyButton) {
+			} else if (message.buttonId == VendorSellGUI.idBuyButton) {
 				if (message.shiftPressed) {
 					((TileVendor) tileEntity).onBuyMaxPressed();
 				} else {
 					((TileVendor) tileEntity).onBuyPressed();
 				}
-			} else if (message.buttonId <= VendorSaleGUI.idLBagButton) {
+			} else if (message.buttonId <= VendorSellGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
 			}

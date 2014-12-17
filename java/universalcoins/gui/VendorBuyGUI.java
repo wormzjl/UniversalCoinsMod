@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.FMLLog;
-import universalcoins.inventory.ContainerVendorSale;
+import universalcoins.inventory.ContainerVendorSell;
 import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -23,21 +23,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-public class VendorSaleGUI extends GuiContainer{
+public class VendorBuyGUI extends GuiContainer{
 	private TileVendor tileEntity;
 	private GuiButton buyButton;
-	private GuiCoinButton retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
-	public static final int idBuyButton = 9;
-	public static final int idCoinButton = 10;
-	private static final int idSStackButton = 11;
-	private static final int idLStackButton = 12;
-	public static final int idSBagButton = 13;
-	public static final int idLBagButton = 14;
+	public static final int idSellButton = 8;
 	
 	boolean shiftPressed = false;
 
-	public VendorSaleGUI(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
-		super(new ContainerVendorSale(inventoryPlayer, tEntity));
+	public VendorBuyGUI(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
+		super(new ContainerVendorSell(inventoryPlayer, tEntity));
 		tileEntity = tEntity;
 		
 		xSize = 176;
@@ -47,19 +41,9 @@ public class VendorSaleGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiSlimButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Buy");
-		retrCoinButton = new GuiCoinButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 0);
-		retrSStackButton = new GuiCoinButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 1);
-		retrLStackButton = new GuiCoinButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 2);
-		retrSBagButton = new GuiCoinButton(idSBagButton, 96 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 3);
-		retrLBagButton = new GuiCoinButton(idLBagButton, 114 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 4);
+		buyButton = new GuiSlimButton(idSellButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Sell");
 		buttonList.clear();
 		buttonList.add(buyButton);
-		buttonList.add(retrCoinButton);
-		buttonList.add(retrSStackButton);
-		buttonList.add(retrLStackButton);
-		buttonList.add(retrSBagButton);
-		buttonList.add(retrLBagButton);
 	}
 
 	@Override
@@ -72,11 +56,6 @@ public class VendorSaleGUI extends GuiContainer{
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 		
 		buyButton.enabled = tileEntity.buyButtonActive;
-		retrCoinButton.enabled = tileEntity.uCoinButtonActive;
-		retrSStackButton.enabled = tileEntity.uSStackButtonActive;
-		retrLStackButton.enabled = tileEntity.uLStackButtonActive;
-		retrSBagButton.enabled = tileEntity.uSBagButtonActive;
-		retrLBagButton.enabled = tileEntity.uLBagButtonActive;
 	}
 	
 	@Override

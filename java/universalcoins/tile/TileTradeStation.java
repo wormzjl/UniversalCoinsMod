@@ -212,8 +212,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		}
 		if (inventory[itemOutputSlot] == null
 				&& inventory[itemInputSlot].getMaxStackSize() >= amount) {
-			if (useCard) { 
-				debitAccount(itemPrice * amount);//TODO handle false
+			if (useCard && inventory[itemCardSlot] != null) { 
+				debitAccount(itemPrice * amount);
 			}	else {
 				coinSum -= itemPrice * amount;
 			}
@@ -227,8 +227,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 						.getItemDamage()
 				&& inventory[itemOutputSlot].stackSize + amount <= inventory[itemInputSlot]
 						.getMaxStackSize()) {
-			if (useCard) { 
-				debitAccount(itemPrice * amount);//TODO handle false
+			if (useCard && inventory[itemCardSlot] != null) { 
+				debitAccount(itemPrice * amount);
 			}	else {
 				coinSum -= itemPrice * amount;
 			}
@@ -243,7 +243,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		int amount = 0;
 		itemPrice = UCItemPricer.getItemPrice(inventory[itemInputSlot]);
 		// use the card if we have it
-		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice) {//TODO
+		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice) {
 			useCard = true;
 		}
 		if (itemPrice == -1 || (coinSum < itemPrice && !useCard)) {
@@ -588,16 +588,15 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} return -1;
 	}
 	
-	public boolean debitAccount(int amount) {
+	public void debitAccount(int amount) {
 		if (inventory[itemCardSlot] != null) {
 			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 			if (getWorldString(accountNumber) != "") {
 				int balance = getWorldInt(accountNumber);
 				balance -= amount;
 				setWorldData(accountNumber, balance);
-				return true;
 			}
-		} return false;
+		}
 	}
 	
 	private void setWorldData(String tag, int data) {

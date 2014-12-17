@@ -51,13 +51,14 @@ public class HintGui extends GuiScreen {
 			TileVendor tileEntity = (TileVendor) te;
 			ItemStack itemSelling = tileEntity.getSellItem();
 			List<String> itemInfoStringList = new ArrayList<String>();
+			itemInfoStringList.add(tileEntity.sellMode ? "Buying" : "Selling");
 			if (itemSelling != null) {
 				if (itemSelling.stackSize > 1) {
 					itemInfoStringList.add(itemSelling.stackSize + " " + itemSelling.getDisplayName());
 				} else { 
 					itemInfoStringList.add(itemSelling.getDisplayName());
 				}
-				int longestString = itemInfoStringList.get(0).toString().length();
+				int longestString = itemInfoStringList.get(1).toString().length();
 				if (itemSelling.isItemEnchanted()) {
 					NBTTagList tagList = itemSelling.getEnchantmentTagList();
 					for (int i = 0; i < tagList.tagCount(); i++) {
@@ -72,7 +73,7 @@ public class HintGui extends GuiScreen {
 				}
 				itemInfoStringList.add("Price: " + tileEntity.itemPrice);
 				//add out of stock notification if not infinite and no stock found
-				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory()) {
+				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && !tileEntity.sellMode) {
 					itemInfoStringList.add("Out Of Stock!");
 				}
 				// reset height since we now have more lines
@@ -88,10 +89,9 @@ public class HintGui extends GuiScreen {
 			int color = 0xffffff;
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.0f, 0.0f, -180.0f);
-			drawGradientRect(x, y, x + w, y + h, 0xc0101010, 0xd0101010);
+			drawGradientRect(x, y, x + w - 3, y + h, 0xc0101010, 0xd0101010);
 			for (int i = 0; i < itemInfoStringList.size(); i++) {
-				fontRender.drawString(itemInfoStringList.get(i), x + 4, y + 4
-						+ (10 * i), color);
+				fontRender.drawString(itemInfoStringList.get(i), x + 4 , y + 4 + (10 * i), color);
 			}
 			GL11.glPopMatrix();
 		}

@@ -3,12 +3,13 @@ package universalcoins;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorGUI;
-import universalcoins.gui.VendorSaleGUI;
+import universalcoins.gui.VendorSellGUI;
 import universalcoins.gui.VendorWrenchGUI;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.inventory.ContainerVendor;
-import universalcoins.inventory.ContainerVendorSale;
+import universalcoins.inventory.ContainerVendorBuy;
+import universalcoins.inventory.ContainerVendorSell;
 import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
@@ -35,7 +36,9 @@ class GuiHandler implements IGuiHandler {
         	if(((TileVendor) tileEntity).blockOwner == null || 
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
         		return new ContainerVendor(player.inventory, (TileVendor) tileEntity);
-        	} else return new ContainerVendorSale(player.inventory, (TileVendor) tileEntity);
+        	} else if (((TileVendor) tileEntity).sellMode) {
+        		return new ContainerVendorBuy(player.inventory, (TileVendor) tileEntity);
+        	} else return new ContainerVendorSell(player.inventory, (TileVendor) tileEntity);
         }
         if (tileEntity instanceof TileCardStation) {
             return new ContainerCardStation(player.inventory, (TileCardStation) tileEntity);
@@ -57,7 +60,7 @@ class GuiHandler implements IGuiHandler {
         	if(((TileVendor) tileEntity).blockOwner == null || 
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
         		return new VendorGUI(player.inventory, (TileVendor) tileEntity);
-        	} else return new VendorSaleGUI(player.inventory, (TileVendor) tileEntity);
+        	} else return new VendorSellGUI(player.inventory, (TileVendor) tileEntity);
         }
         if (tileEntity instanceof TileCardStation) {
             return new CardStationGUI(player.inventory, (TileCardStation) tileEntity);

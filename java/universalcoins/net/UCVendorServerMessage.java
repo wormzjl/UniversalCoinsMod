@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.gui.TradeStationGUI;
-import universalcoins.gui.VendorSaleGUI;
+import universalcoins.gui.VendorSellGUI;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import cpw.mods.fml.common.FMLLog;

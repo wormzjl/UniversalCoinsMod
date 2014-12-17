@@ -2,7 +2,6 @@ package universalcoins.inventory;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,26 +10,20 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerVendor extends Container {
+public class ContainerVendorSell extends Container {
 	private TileVendor tileEntity;
-	private int lastCoinSum;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
-	private boolean lastSellMode;
 	
-	public ContainerVendor(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
+	public ContainerVendorSell(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemTradeSlot, 9, 17));
-		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemCoinInputSlot, 35, 55));
-		addSlotToContainer(new UCSlotGhost(tileEntity, TileVendor.itemCardSlot, 17, 55));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 152, 55));
-		
-		//add all the inventory storage slots
-		for (int i = 0; i < 9; i++) {
-				addSlotToContainer(new Slot(tileEntity, TileVendor.itemStorageSlot1 + i, 8 + i * 18, 96));
-		}
+		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemTradeSlot, 21, 24));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemOutputSlot, 137, 24));
+		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, 21, 86));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 21, 66));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 137, 66));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -64,8 +57,8 @@ public class ContainerVendor extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 14) {
-				if (!this.mergeItemStack(stackInSlot, 14, 49, true)) {
+			if (slot < 5) {
+				if (!this.mergeItemStack(stackInSlot, 5, 41, true)) {
 					return null;
 				}
 			}
@@ -73,7 +66,7 @@ public class ContainerVendor extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 12; i++){
+				for (int i = 0; i < 9; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;
@@ -110,18 +103,14 @@ public class ContainerVendor extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastCoinSum != this.tileEntity.coinSum
-            		|| this.lastUserCoinSum != this.tileEntity.userCoinSum
-            		|| this.lastItemPrice != this.tileEntity.itemPrice
-            		|| this.lastSellMode != this.tileEntity.sellMode) {
+            if (this.lastUserCoinSum != this.tileEntity.userCoinSum 
+            		|| this.lastItemPrice != this.tileEntity.itemPrice) {
                 //update
             	tileEntity.updateTE();
             }
 
-		this.lastCoinSum = this.tileEntity.coinSum;
 		this.lastUserCoinSum = this.tileEntity.userCoinSum;
 		this.lastItemPrice = this.tileEntity.itemPrice;
-		this.lastSellMode = this.tileEntity.sellMode;
         }
 	}
 	

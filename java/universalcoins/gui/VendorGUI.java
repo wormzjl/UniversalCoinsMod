@@ -19,15 +19,16 @@ import net.minecraft.util.StatCollector;
 public class VendorGUI extends GuiContainer{
 	private TileVendor tileEntity;
 	private GuiTextField itemPriceField;
-	private GuiButton updateButton, setButton;
+	private GuiButton modeButton, updateButton, setButton;
 	private GuiCoinButton retrCoinButton, retrSStackButton, retrLStackButton, retrSBagButton, retrLBagButton;
-	public static final int idUpdateButton = 0;
-	public static final int idSetButton = 1;
-	public static final int idCoinButton = 2;
-	private static final int idSStackButton = 3;
-	private static final int idLStackButton = 4;
-	public static final int idSBagButton = 5;
-	public static final int idLBagButton = 6;
+	public static final int idModeButton = 0;
+	public static final int idUpdateButton = 1;
+	public static final int idSetButton = 2;
+	public static final int idCoinButton = 3;
+	private static final int idSStackButton = 4;
+	private static final int idLStackButton = 5;
+	public static final int idSBagButton = 6;
+	public static final int idLBagButton = 7;
 	private boolean textActive = false;
 	private boolean shiftPressed = false;
 
@@ -42,14 +43,16 @@ public class VendorGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		updateButton = new GuiSlimButton(idUpdateButton, 80 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 12, "Edit");
-		setButton = new GuiSlimButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 42, 12, "Save");
-		retrCoinButton = new GuiCoinButton(idCoinButton, 78 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
-		retrSStackButton = new GuiCoinButton(idSStackButton, 96 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
-		retrLStackButton = new GuiCoinButton(idLStackButton, 114 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
-		retrSBagButton = new GuiCoinButton(idSBagButton, 132 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
-		retrLBagButton = new GuiCoinButton(idLBagButton, 150 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
+		modeButton = new GuiSlimButton(idModeButton, 8 + (width - xSize) / 2, 35 + (height - ySize) / 2, 62, 12, "Sell Items");
+		updateButton = new GuiSlimButton(idUpdateButton, 79 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, "Edit");
+		setButton = new GuiSlimButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, "Save");
+		retrCoinButton = new GuiCoinButton(idCoinButton, 56 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
+		retrSStackButton = new GuiCoinButton(idSStackButton, 74 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
+		retrLStackButton = new GuiCoinButton(idLStackButton, 92 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
+		retrSBagButton = new GuiCoinButton(idSBagButton, 110 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
+		retrLBagButton = new GuiCoinButton(idLBagButton, 128 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
 		buttonList.clear();
+		buttonList.add(modeButton);
 		buttonList.add(updateButton);
 		buttonList.add(setButton);
 		buttonList.add(retrCoinButton);
@@ -85,7 +88,9 @@ public class VendorGUI extends GuiContainer{
 		retrSStackButton.enabled = tileEntity.isSStackButtonActive;
 		retrLStackButton.enabled = tileEntity.isLStackButtonActive;
 		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
-		retrLBagButton.enabled = tileEntity.isLBagButtonActive;	
+		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
+		
+		modeButton.displayString = (tileEntity.sellMode ? "Buy Items" : "Sell Items");
 	}
 	
 	@Override
@@ -105,7 +110,7 @@ public class VendorGUI extends GuiContainer{
 		//draw coinsum
 		String cSum = String.valueOf(tileEntity.coinSum);
 		stringWidth = fontRendererObj.getStringWidth(cSum);
-		fontRendererObj.drawString(cSum, 125 - stringWidth, 62, 4210752);		
+		fontRendererObj.drawString(cSum, 145 - stringWidth, 60, 4210752);		
 	}
 	
 	protected void actionPerformed(GuiButton button) {
@@ -133,7 +138,6 @@ public class VendorGUI extends GuiContainer{
             textActive = false;
             itemPriceField.setFocused(false);
             tileEntity.sendServerUpdateMessage();
-
 		}
 		tileEntity.sendButtonMessage(button.id, shiftPressed);
 	}

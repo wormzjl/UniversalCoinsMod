@@ -10,16 +10,16 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerVendorSale extends Container {
+public class ContainerVendorBuy extends Container {
 	private TileVendor tileEntity;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
 	
-	public ContainerVendorSale(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
+	public ContainerVendorBuy(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemSellingSlot, 21, 24));
+		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemTradeSlot, 21, 24));
 		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemOutputSlot, 137, 24));
 		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, 21, 86));
 		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 21, 66));

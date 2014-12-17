@@ -16,6 +16,7 @@ import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
+import universalcoins.net.UCTileVendorMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileCardStation;
@@ -165,9 +166,10 @@ public class UniversalCoins {
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
-	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
-	    snw.registerMessage(UCCardStationServerMessage.class, UCCardStationServerMessage.class, 4, Side.SERVER);
+	    snw.registerMessage(UCTileVendorMessage.class, UCTileVendorMessage.class, 2, Side.CLIENT);
+	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 3, Side.CLIENT);
+	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 4, Side.CLIENT);
+	    snw.registerMessage(UCCardStationServerMessage.class, UCCardStationServerMessage.class, 5, Side.SERVER);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
