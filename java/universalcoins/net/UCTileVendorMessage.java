@@ -12,7 +12,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCTileVendorMessage implements IMessage, IMessageHandler<UCTileVendorMessage, IMessage> {
 private int x, y, z, coinSum, userCoinSum, itemPrice;
-private boolean infiniteSell, sellMode, buyButtonActive, coinButtonActive, isSStackButtonActive, isLStackButtonActive,
+private boolean infiniteSell, sellMode, buyButtonActive, sellButtonActive, coinButtonActive, isSStackButtonActive, isLStackButtonActive,
 	isSBagButtonActive, isLBagButtonActive, uCoinButtonActive, uSStackButtonActive, uLStackButtonActive, 
 	uSBagButtonActive, uLBagButtonActive;
 private String blockOwner;
@@ -30,6 +30,7 @@ private String blockOwner;
         this.infiniteSell = tileEntity.infiniteSell;
         this.sellMode = tileEntity.sellMode;
         this.buyButtonActive = tileEntity.buyButtonActive;
+        this.sellButtonActive = tileEntity.sellButtonActive;        
         this.coinButtonActive = tileEntity.coinButtonActive;
         this.isSStackButtonActive = tileEntity.isSStackButtonActive;
         this.isLStackButtonActive = tileEntity.isLStackButtonActive;
@@ -54,6 +55,7 @@ private String blockOwner;
         this.infiniteSell = buf.readBoolean();
         this.sellMode = buf.readBoolean();
         this.buyButtonActive = buf.readBoolean();
+        this.sellButtonActive = buf.readBoolean();
         this.coinButtonActive = buf.readBoolean();
         this.isSStackButtonActive = buf.readBoolean();
         this.isLStackButtonActive = buf.readBoolean();
@@ -78,6 +80,7 @@ private String blockOwner;
         buf.writeBoolean(infiniteSell);
         buf.writeBoolean(sellMode);
         buf.writeBoolean(buyButtonActive);
+        buf.writeBoolean(sellButtonActive);
         buf.writeBoolean(coinButtonActive);
         buf.writeBoolean(isSStackButtonActive);
         buf.writeBoolean(isLStackButtonActive);
@@ -103,6 +106,7 @@ private String blockOwner;
 			((TileVendor) tileEntity).infiniteSell = message.infiniteSell;
 			((TileVendor) tileEntity).sellMode = message.sellMode;
 			((TileVendor) tileEntity).buyButtonActive = message.buyButtonActive;
+			((TileVendor) tileEntity).sellButtonActive = message.sellButtonActive;
 			((TileVendor) tileEntity).coinButtonActive = message.coinButtonActive;
 			((TileVendor) tileEntity).isSStackButtonActive = message.isSStackButtonActive;
 			((TileVendor) tileEntity).isLStackButtonActive = message.isLStackButtonActive;

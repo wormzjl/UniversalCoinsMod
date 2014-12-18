@@ -26,7 +26,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileVendor extends TileEntity implements IInventory, ISidedInventory {
 	
-	private ItemStack[] inventory = new ItemStack[15];
+	private ItemStack[] inventory = new ItemStack[16];
 	//owner slots
 	public static final int itemStorageSlot1 = 0;
 	public static final int itemStorageSlot2 = 1;
@@ -39,12 +39,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public static final int itemStorageSlot9 = 8;
 	public static final int itemTradeSlot = 9;
 	//sale slots
-	public static final int itemOutputSlot = 10;
-	public static final int itemCoinOutputSlot = 11;
-	public static final int itemCoinInputSlot = 12;
-	public static final int itemUserCoinInputSlot = 13;
+	public static final int itemSellSlot = 10;
+	public static final int itemOutputSlot = 11;
+	public static final int itemCoinOutputSlot = 12;
+	public static final int itemCoinInputSlot = 13;
+	public static final int itemUserCoinInputSlot = 14;
 	//card slot
-	public static final int itemCardSlot = 14;
+	public static final int itemCardSlot = 15;
 	
 	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
@@ -57,6 +58,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean infiniteSell = false;
 	public boolean sellMode = false;
 	public boolean buyButtonActive = false;
+	public boolean sellButtonActive = false;	
 	public boolean coinButtonActive = false;
 	public boolean isSStackButtonActive = false;
 	public boolean isLStackButtonActive = false;
@@ -71,9 +73,12 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		activateRetrieveButtons();
-		activateUserRetrieveButtons();
-		activateBuyButton();
+		if (!worldObj.isRemote) {
+			activateRetrieveButtons();
+			activateUserRetrieveButtons();
+			activateBuyButton();
+			activateSellButton();
+		}
 	}
 	
 	private void activateBuyButton() {
@@ -88,6 +93,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			}
 			buyButtonActive = true;
 		} else buyButtonActive = false;
+	}
+	
+	private void activateSellButton() {
+		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem()) {
+			//TODO check coinSum and card balance - deactivate it owner can't buy any
+			sellButtonActive = true;
+		} else sellButtonActive = false;
 	}
 	
 	private void activateRetrieveButtons() {
@@ -324,6 +336,63 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		onBuyPressed(amount);
 	}
 	
+	public void onSellPressed() {
+		onSellPressed(1);
+	}
+
+	public void onSellPressed(int amount) {
+		boolean useCard = false;
+		// use the card if we have it
+		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice) {
+			useCard = true;
+		}
+		if (inventory[itemSellSlot] == null || coinSum < itemPrice && !useCard) {
+			sellButtonActive = false;
+			FMLLog.info("no coins!!!");
+			return;
+		}
+		// find empty slot or matching item in inventory
+		// we need to match the item, damage, and tags to make sure the
+		// stacks are equal
+		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+			if (inventory[itemSellSlot] != null) {
+				//TODO stop buying if out of coins!!!!
+				FMLLog.info("Slot: " + i);
+				FMLLog.info("Amount: " + amount);
+				// copy itemstack if null. We'll set the amount to 0 to start.
+				int thisSale = 0;
+				if (inventory[i] != null && inventory[i].getItem() == inventory[itemTradeSlot].getItem()
+						&& inventory[i].getItemDamage() == inventory[itemTradeSlot].getItemDamage()
+						&& ItemStack.areItemStackTagsEqual(inventory[i], inventory[itemTradeSlot])) {
+					thisSale = Math.min(inventory[i].getMaxStackSize() - inventory[i].stackSize, amount);
+					inventory[i].stackSize += thisSale;
+					inventory[itemSellSlot].stackSize -= thisSale;
+					amount -= thisSale;
+				} else if (inventory[i] == null) {
+					thisSale = Math.min(inventory[itemSellSlot].stackSize, amount);
+					inventory[i] = inventory[itemSellSlot].copy();
+					inventory[i].stackSize = thisSale;
+					inventory[itemSellSlot].stackSize -= thisSale;
+					amount -= thisSale;
+				}
+				if (useCard && inventory[itemCardSlot] != null) {
+					debitAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
+				} else {
+					coinSum -= itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
+				}
+				userCoinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
+				// cleanup empty stacks
+				if (inventory[itemSellSlot] == null || inventory[itemSellSlot].stackSize == 0) {
+					inventory[itemSellSlot] = null;
+				}
+			}
+		}
+	}
+	
+	public void onSellMaxPressed() {
+		onSellPressed(inventory[itemSellSlot].stackSize);
+	}
+	
 	public boolean hasSellingInventory() {
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
 			if (inventory[i] != null && inventory[itemTradeSlot] != null && inventory[i].getItem() == inventory[itemTradeSlot].getItem()) {
@@ -504,6 +573,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} catch (Throwable ex2) {
 			infiniteSell = false;
 		}
+		try {
+			sellMode = tagCompound.getBoolean("Mode");
+		} catch (Throwable ex2) {
+			sellMode = false;
+		}
 	}
 	
 	@Override
@@ -525,6 +599,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("BlockOwner", blockOwner);
 		tagCompound.setBoolean("Infinite", infiniteSell);
+		tagCompound.setBoolean("Mode", sellMode);
 	}
 
 	@Override

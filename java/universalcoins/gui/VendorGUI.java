@@ -90,7 +90,7 @@ public class VendorGUI extends GuiContainer{
 		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
 		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
 		
-		modeButton.displayString = (tileEntity.sellMode ? "Buy Items" : "Sell Items");
+		modeButton.displayString = (tileEntity.sellMode ? "Sell Items" : "Buy Items");
 	}
 	
 	@Override

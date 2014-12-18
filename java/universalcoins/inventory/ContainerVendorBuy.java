@@ -14,16 +14,15 @@ public class ContainerVendorBuy extends Container {
 	private TileVendor tileEntity;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
+	private boolean lastSellButtonActive;
 	
 	public ContainerVendorBuy(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotSelling(tileEntity, TileVendor.itemTradeSlot, 21, 24));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemOutputSlot, 137, 24));
-		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, 21, 86));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 21, 66));
-		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 137, 66));
+		addSlotToContainer(new UCSlotTradeItem(tileEntity, TileVendor.itemTradeSlot, 8, 24));
+		addSlotToContainer(new Slot(tileEntity, TileVendor.itemSellSlot, 26, 24));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 152, 64));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -38,12 +37,12 @@ public class ContainerVendorBuy extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, 119 + i * 18));
+						8 + j * 18, 117 + i * 18));
 			}
 		}
 		
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 175));
 		}
 	}
 	
@@ -57,8 +56,8 @@ public class ContainerVendorBuy extends Container {
 			stack = stackInSlot.copy();
 			
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 5) {
-				if (!this.mergeItemStack(stackInSlot, 5, 41, true)) {
+			if (slot < 4) {
+				if (!this.mergeItemStack(stackInSlot, 4, 39, true)) {
 					return null;
 				}
 			}
@@ -103,14 +102,16 @@ public class ContainerVendorBuy extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastUserCoinSum != this.tileEntity.userCoinSum 
-            		|| this.lastItemPrice != this.tileEntity.itemPrice) {
+            if (this.lastUserCoinSum != tileEntity.userCoinSum 
+            		|| this.lastItemPrice != tileEntity.itemPrice
+            		|| this.lastSellButtonActive != tileEntity.sellButtonActive) {
                 //update
             	tileEntity.updateTE();
             }
 
-		this.lastUserCoinSum = this.tileEntity.userCoinSum;
-		this.lastItemPrice = this.tileEntity.itemPrice;
+		this.lastUserCoinSum = tileEntity.userCoinSum;
+		this.lastItemPrice = tileEntity.itemPrice;
+		this.lastSellButtonActive = tileEntity.sellButtonActive;
         }
 	}
 	

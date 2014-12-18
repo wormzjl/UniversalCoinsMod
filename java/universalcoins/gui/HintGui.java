@@ -51,7 +51,7 @@ public class HintGui extends GuiScreen {
 			TileVendor tileEntity = (TileVendor) te;
 			ItemStack itemSelling = tileEntity.getSellItem();
 			List<String> itemInfoStringList = new ArrayList<String>();
-			itemInfoStringList.add(tileEntity.sellMode ? "Buying" : "Selling");
+			itemInfoStringList.add(tileEntity.sellMode ? "Selling" : "Buying");
 			if (itemSelling != null) {
 				if (itemSelling.stackSize > 1) {
 					itemInfoStringList.add(itemSelling.stackSize + " " + itemSelling.getDisplayName());
@@ -73,7 +73,7 @@ public class HintGui extends GuiScreen {
 				}
 				itemInfoStringList.add("Price: " + tileEntity.itemPrice);
 				//add out of stock notification if not infinite and no stock found
-				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && !tileEntity.sellMode) {
+				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && tileEntity.sellMode) {
 					itemInfoStringList.add("Out Of Stock!");
 				}
 				// reset height since we now have more lines

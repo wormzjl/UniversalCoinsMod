@@ -2,6 +2,7 @@ package universalcoins;
 
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
+import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.gui.VendorWrenchGUI;
@@ -37,8 +38,8 @@ class GuiHandler implements IGuiHandler {
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
         		return new ContainerVendor(player.inventory, (TileVendor) tileEntity);
         	} else if (((TileVendor) tileEntity).sellMode) {
-        		return new ContainerVendorBuy(player.inventory, (TileVendor) tileEntity);
-        	} else return new ContainerVendorSell(player.inventory, (TileVendor) tileEntity);
+        		return new ContainerVendorSell(player.inventory, (TileVendor) tileEntity);
+        	} else return new ContainerVendorBuy(player.inventory, (TileVendor) tileEntity);
         }
         if (tileEntity instanceof TileCardStation) {
             return new ContainerCardStation(player.inventory, (TileCardStation) tileEntity);
@@ -60,7 +61,9 @@ class GuiHandler implements IGuiHandler {
         	if(((TileVendor) tileEntity).blockOwner == null || 
         			((TileVendor) tileEntity).blockOwner.contentEquals(player.getDisplayName())) {
         		return new VendorGUI(player.inventory, (TileVendor) tileEntity);
-        	} else return new VendorSellGUI(player.inventory, (TileVendor) tileEntity);
+        	} else if  (((TileVendor) tileEntity).sellMode) {
+        		return new VendorSellGUI(player.inventory, (TileVendor) tileEntity);
+        	} else return new VendorBuyGUI(player.inventory, (TileVendor) tileEntity);
         }
         if (tileEntity instanceof TileCardStation) {
             return new CardStationGUI(player.inventory, (TileCardStation) tileEntity);

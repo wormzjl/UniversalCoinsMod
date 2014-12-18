@@ -2,6 +2,7 @@ package universalcoins.net;
 
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
+import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.tile.TileCardStation;
@@ -87,6 +88,12 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			} else if (message.buttonId <= VendorGUI.idLBagButton) {
 				((TileVendor) tileEntity).onRetrieveButtonsPressed(
 						message.buttonId, message.shiftPressed);
+			} else if (message.buttonId == VendorBuyGUI.idSellButton) {
+				if (message.shiftPressed) {
+					((TileVendor) tileEntity).onSellMaxPressed();
+				} else {
+					((TileVendor) tileEntity).onSellPressed();
+				} 
 			} else if (message.buttonId == VendorSellGUI.idBuyButton) {
 				if (message.shiftPressed) {
 					((TileVendor) tileEntity).onBuyMaxPressed();

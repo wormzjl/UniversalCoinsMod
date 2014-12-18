@@ -41,18 +41,18 @@ public class VendorSellGUI extends GuiContainer{
 		tileEntity = tEntity;
 		
 		xSize = 176;
-		ySize = 200;
+		ySize = 189;
 	}
 	
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiSlimButton(idBuyButton, 124 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Buy");
-		retrCoinButton = new GuiCoinButton(idCoinButton, 42 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 0);
-		retrSStackButton = new GuiCoinButton(idSStackButton, 60 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 1);
-		retrLStackButton = new GuiCoinButton(idLStackButton, 78 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 2);
-		retrSBagButton = new GuiCoinButton(idSBagButton, 96 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 3);
-		retrLBagButton = new GuiCoinButton(idLBagButton, 114 + (width - xSize) / 2, 84 + (height - ySize) / 2, 18, 18, "", 4);
+		buyButton = new GuiSlimButton(idBuyButton, 126 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Buy");
+		retrCoinButton = new GuiCoinButton(idCoinButton, 56 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
+		retrSStackButton = new GuiCoinButton(idSStackButton, 74 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
+		retrLStackButton = new GuiCoinButton(idLStackButton, 92 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
+		retrSBagButton = new GuiCoinButton(idSBagButton, 110 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
+		retrLBagButton = new GuiCoinButton(idLBagButton, 128 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(retrCoinButton);
@@ -65,7 +65,7 @@ public class VendorSellGUI extends GuiContainer{
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor-sale.png");
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor-sell.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
@@ -83,12 +83,12 @@ public class VendorSellGUI extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString("Vending Block", 6, 5, 4210752);
+		fontRendererObj.drawString("Vending Block", 8, 5, 4210752);
 		// draws "Inventory" or your regional equivalent
 		fontRendererObj.drawString(StatCollector.translateToLocal(
-				"container.inventory"), 6, ySize - 96 + 2, 4210752);
-		fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 46, 29, 4210752);
-		fontRendererObj.drawString(String.valueOf(tileEntity.userCoinSum), 46, 71, 4210752);
+				"container.inventory"), 8, 98, 4210752);
+		fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 59, 29, 4210752);
+		fontRendererObj.drawString(String.valueOf(tileEntity.userCoinSum), 59, 62, 4210752);
 	}
 	
 	protected void actionPerformed(GuiButton button) {
