@@ -81,7 +81,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 		}
 		if (tileEntity instanceof TileVendor) {
 			if (message.buttonId == VendorGUI.idModeButton) {
-				((TileVendor) tileEntity).sellMode ^= true; //toggle boolean
+				((TileVendor) tileEntity).onModeButtonPressed();
 			}
 			if (message.buttonId < VendorGUI.idCoinButton) {
 				//do nothing here

@@ -1,5 +1,6 @@
 package universalcoins.gui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class HintGui extends GuiScreen {
 					HintGui.mc.gameSettings, HintGui.mc.displayWidth,
 					HintGui.mc.displayHeight);
 			FontRenderer fontRender = mc.fontRenderer;
+			boolean warning = false;
 			int width = res.getScaledWidth();
 			int height = res.getScaledHeight();
 			int w = 80;
@@ -42,10 +44,7 @@ public class HintGui extends GuiScreen {
 			MovingObjectPosition mop = mc.objectMouseOver;
 			if (mop == null) return; //null pointer error bugfix?
 			TileEntity te = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
-			if (te == null) {
-				return;
-			}
-			if (!(te instanceof TileVendor)) {
+			if (te == null || !(te instanceof TileVendor)) {
 				return;
 			}
 			TileVendor tileEntity = (TileVendor) te;
@@ -58,7 +57,7 @@ public class HintGui extends GuiScreen {
 				} else { 
 					itemInfoStringList.add(itemSelling.getDisplayName());
 				}
-				int longestString = itemInfoStringList.get(1).toString().length();
+				String longestString = itemInfoStringList.get(1).toString();
 				if (itemSelling.isItemEnchanted()) {
 					NBTTagList tagList = itemSelling.getEnchantmentTagList();
 					for (int i = 0; i < tagList.tagCount(); i++) {
@@ -67,21 +66,28 @@ public class HintGui extends GuiScreen {
 						String eInfo = Enchantment.enchantmentsList[enchant
 								.getInteger("id")].getTranslatedName(enchant
 								.getInteger("lvl"));
-						if (eInfo.length() > longestString) longestString = eInfo.length();
+						if (eInfo.length() > longestString.length()) longestString = eInfo;
 						itemInfoStringList.add(eInfo);
 					}
 				}
-				itemInfoStringList.add("Price: " + tileEntity.itemPrice);
+				DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+				itemInfoStringList.add("Price: " + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
 				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && tileEntity.sellMode) {
+					warning = true;
 					itemInfoStringList.add("Out Of Stock!");
+				}
+				//add out of coins notification if buying and no funds available
+				if (!tileEntity.sellMode && !tileEntity.hasCoins()) {
+					warning = true;
+					itemInfoStringList.add("Out Of Coins!");
 				}
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);
-				if (longestString * 6 > w) { 
-					w = longestString * 6;
-					x = cx - w / 2;
-				}
+				//reset width to longest string plus a bit
+				w = fontRender.getStringWidth(longestString) + 6;
+				//set start point for x draw of background rectangle
+				x = cx - w / 2;
 			} else {
 				return;
 			}
@@ -89,9 +95,14 @@ public class HintGui extends GuiScreen {
 			int color = 0xffffff;
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0.0f, 0.0f, -180.0f);
-			drawGradientRect(x, y, x + w - 3, y + h, 0xc0101010, 0xd0101010);
+			drawGradientRect(x, y, x + w, y + h, 0xc0101010, 0xd0101010);
 			for (int i = 0; i < itemInfoStringList.size(); i++) {
-				fontRender.drawString(itemInfoStringList.get(i), x + 4 , y + 4 + (10 * i), color);
+				if (warning && i == itemInfoStringList.size() - 1) {
+					color = 0xef0000;
+				} else color = 0xffffff;
+				fontRender.drawString(itemInfoStringList.get(i), cx - 
+						fontRender.getStringWidth(itemInfoStringList.get(i)) / 2 ,
+						y + 4 + (10 * i), color);
 			}
 			GL11.glPopMatrix();
 		}

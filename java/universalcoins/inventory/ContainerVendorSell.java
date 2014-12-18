@@ -21,7 +21,7 @@ public class ContainerVendorSell extends Container {
 		// it binds to and the x-y coordinates it resides on-screen
 		addSlotToContainer(new UCSlotTradeItem(tileEntity, TileVendor.itemTradeSlot, 35, 24));
 		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemOutputSlot, 152, 24));
-		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemCardSlot, 17, 57));
+		addSlotToContainer(new UCSlotCard(tileEntity, TileVendor.itemUserCardSlot, 17, 57));
 		addSlotToContainer(new UCSlotCoinInput(tileEntity, TileVendor.itemUserCoinInputSlot, 35, 57));
 		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 152, 57));
 		
