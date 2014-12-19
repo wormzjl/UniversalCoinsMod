@@ -7,7 +7,6 @@ import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCWorldData;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -59,7 +58,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack decrStackSize(int slot, int count) {
-		// FMLLog.info("Stack Size Decreased in slot " + i);
 				ItemStack newStack;
 				if (inventory[slot] == null) {
 					return null;
@@ -111,7 +109,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 				//TODO update old cards with nbt account balance to new cards
 				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0 && 
 						inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(player)) {
-					FMLLog.info("Old card detected. Converting");
 					addPlayerAccount(player);
 					accountNumber = getPlayerAccount(player);
 					creditAccount(accountNumber, inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum"));
@@ -259,7 +256,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
 			inventory[itemCardSlot].stackTagCompound.setString("Owner", player);
-			FMLLog.info("creating nbt for card - account number: " + accountNumber);
 			inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
 			if (!worldObj.isRemote) accountBalance = getAccountBalance(accountNumber);
 		}
@@ -290,7 +286,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 		if (functionId == 6) {
 			inventory[itemCardSlot] = null;
-			FMLLog.info("card destroyed");
 		}
 	}
 
@@ -314,7 +309,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 	
 	public int getAccountBalance(String accountNumber) {
 		if (getWorldString(accountNumber) != "") {
-			FMLLog.info("Account balance: " + getWorldString(accountNumber));
 			return getWorldInt(accountNumber);
 		} else return -1;	
 	}

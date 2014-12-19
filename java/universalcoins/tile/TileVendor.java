@@ -1,15 +1,12 @@
 package universalcoins.tile;
 
-import ibxm.Player;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCWorldData;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -56,7 +53,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public int userCoinSum = 0;
 	public int itemPrice = 0;
 	public boolean infiniteSell = false;
-	public boolean sellMode = false;
+	public boolean sellMode = true;
+	public boolean sellCoins = false;
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;	
 	public boolean coinButtonActive = false;
@@ -77,7 +75,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			activateRetrieveButtons();
 			activateUserRetrieveButtons();
 			activateBuyButton();
-			activateSellButton();
+			activateSellStatus();
 		}
 	}
 	
@@ -95,11 +93,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} else buyButtonActive = false;
 	}
 	
-	private void activateSellButton() {
+	private void activateSellStatus() {
 		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem() &&
 				(getAccountBalance() > itemPrice || coinSum > itemPrice)) {
 			sellButtonActive = true;
 		} else sellButtonActive = false;
+		if (getOwnerAccountBalance() > itemPrice || coinSum > itemPrice) {
+			sellCoins = true;
+		} else sellCoins = false;
 	}
 	
 	private void activateRetrieveButtons() {
@@ -408,10 +409,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		return false;
 	}
 	
-	public boolean hasCoins() {
-		return (getAccountBalance() > itemPrice || coinSum > itemPrice);
-	}
-	
 	public ItemStack getSellItem() {
 		return inventory[itemTradeSlot];
 	}
@@ -606,6 +603,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			sellButtonActive = false;
 		}
 		try {
+			sellCoins = tagCompound.getBoolean("SellCoins");
+		} catch (Throwable ex2) {
+			sellCoins = false;
+		}
+		try {
 			coinButtonActive = tagCompound.getBoolean("CoinButtonActive");
 		} catch (Throwable ex2) {
 			coinButtonActive = false;
@@ -679,6 +681,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("Mode", sellMode);
 		tagCompound.setBoolean("BuyButtonActive", buyButtonActive);
 		tagCompound.setBoolean("SellButtonActive", sellButtonActive);
+		tagCompound.setBoolean("SellCoins", sellCoins);
 		tagCompound.setBoolean("CoinButtonActive", coinButtonActive);
 		tagCompound.setBoolean("SmallStackButtonActive", isSStackButtonActive);
 		tagCompound.setBoolean("LargeStackButtonActive", isLStackButtonActive);

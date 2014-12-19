@@ -73,7 +73,7 @@ public class ContainerVendor extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 12; i++){
+				for (int i = 1; i < 12; i++){ //we start at 1 to avoid shift clicking into trade slot
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;

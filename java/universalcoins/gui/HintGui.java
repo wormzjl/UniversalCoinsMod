@@ -80,7 +80,7 @@ public class HintGui extends GuiScreen {
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.stock"));
 				}
 				//add out of coins notification if buying and no funds available
-				if (!tileEntity.sellMode && !tileEntity.hasCoins()) {
+				if (!tileEntity.sellMode && !tileEntity.sellCoins) {
 					warning = true;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}
