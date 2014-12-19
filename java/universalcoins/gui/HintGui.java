@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class HintGui extends GuiScreen {
@@ -50,7 +51,8 @@ public class HintGui extends GuiScreen {
 			TileVendor tileEntity = (TileVendor) te;
 			ItemStack itemSelling = tileEntity.getSellItem();
 			List<String> itemInfoStringList = new ArrayList<String>();
-			itemInfoStringList.add(tileEntity.sellMode ? "Selling" : "Buying");
+			itemInfoStringList.add(tileEntity.sellMode ? StatCollector.translateToLocal("hintgui.sellmode.sell"): 
+				StatCollector.translateToLocal("hintgui.sellmode.buy"));
 			if (itemSelling != null) {
 				if (itemSelling.stackSize > 1) {
 					itemInfoStringList.add(itemSelling.stackSize + " " + itemSelling.getDisplayName());
@@ -70,17 +72,17 @@ public class HintGui extends GuiScreen {
 						itemInfoStringList.add(eInfo);
 					}
 				}
-				DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-				itemInfoStringList.add("Price: " + formatter.format(tileEntity.itemPrice));
+				DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+				itemInfoStringList.add(StatCollector.translateToLocal("hintgui.price") + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
 				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && tileEntity.sellMode) {
 					warning = true;
-					itemInfoStringList.add("Out Of Stock!");
+					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.stock"));
 				}
 				//add out of coins notification if buying and no funds available
 				if (!tileEntity.sellMode && !tileEntity.hasCoins()) {
 					warning = true;
-					itemInfoStringList.add("Out Of Coins!");
+					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);

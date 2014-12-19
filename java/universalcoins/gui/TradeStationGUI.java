@@ -41,7 +41,9 @@ public class TradeStationGUI extends GuiContainer {
 	boolean shiftPressed = false;
 	boolean autoMode = UniversalCoins.autoModeEnabled;
 	
-	public String[] autoLabels = {"Off","Buy","Sell"};
+	public String[] autoLabels = {StatCollector.translateToLocal("tradestation.gui.autolabel.off"),
+			StatCollector.translateToLocal("tradestation.gui.autolabel.buy"),
+			StatCollector.translateToLocal("tradestation.gui.autolabel.sell")};
 	
 	public TradeStationGUI(InventoryPlayer inventoryPlayer,
 			TileTradeStation parTileEntity) {
@@ -54,14 +56,17 @@ public class TradeStationGUI extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiSlimButton(idBuyButton, 52 + (width - xSize) / 2, 21 + (height - ySize) / 2, 25, 12, "Buy");
-		sellButton = new GuiSlimButton(idSellButton, 52 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 12, "Sell");
+		buyButton = new GuiSlimButton(idBuyButton, 52 + (width - xSize) / 2, 21 + (height - ySize) / 2, 25, 12, 
+				StatCollector.translateToLocal("general.button.buy"));
+		sellButton = new GuiSlimButton(idSellButton, 52 + (width - xSize) / 2, 38 + (height - ySize) / 2, 25, 12, 
+				StatCollector.translateToLocal("general.button.sell"));
 		retrCoinButton = new GuiCoinButton(idCoinButton, 80 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
 		retrSStackButton = new GuiCoinButton(idSStackButton, 98 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
 		retrLStackButton = new GuiCoinButton(idLStackButton, 116 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
 		retrSBagButton = new GuiCoinButton(idSBagButton, 134 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 3);
 		retrLBagButton = new GuiCoinButton(idLBagButton, 152 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 4);
-		coinModeButton = new GuiSlimButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 12, "Coin");
+		coinModeButton = new GuiSlimButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 28, 12, 
+				StatCollector.translateToLocal("tradestation.gui.button.coin"));
 		buttonList.clear();
 		buttonList.add(buyButton);
 		buttonList.add(sellButton);
@@ -75,7 +80,8 @@ public class TradeStationGUI extends GuiContainer {
 		
 		//display only if auto buy/sell enabled?
 		if (autoMode) {
-			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28, 12, "Mode");
+			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 
+					28, 12, StatCollector.translateToLocal("tradestation.gui.button.mode"));
 			buttonList.add(autoModeButton);
 		}
 	}
@@ -98,13 +104,12 @@ public class TradeStationGUI extends GuiContainer {
 					4210752);
 		}
 		else{
-			fontRendererObj.drawString("No item", 41, 57,
-					4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.warning.noitem"), 41, 57, 4210752);
 		}
 		//display only if auto buy/sell enabled
 		if (autoMode) {
-			fontRendererObj.drawString(StatCollector.translateToLocal("Auto Buy/Sell"), 6, 74, 4210752);
-			fontRendererObj.drawString(StatCollector.translateToLocal(autoLabels[tileEntity.autoMode]), 38, 87, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.label.autobuy"), 6, 74, 4210752);
+			fontRendererObj.drawString(autoLabels[tileEntity.autoMode], 38, 87, 4210752);
 		}
 	}
 

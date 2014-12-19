@@ -43,9 +43,12 @@ public class VendorGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		modeButton = new GuiSlimButton(idModeButton, 8 + (width - xSize) / 2, 35 + (height - ySize) / 2, 62, 12, "Sell Items");
-		updateButton = new GuiSlimButton(idUpdateButton, 79 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, "Edit");
-		setButton = new GuiSlimButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, "Save");
+		modeButton = new GuiSlimButton(idModeButton, 8 + (width - xSize) / 2, 35 + (height - ySize) / 2, 62, 12, 
+				StatCollector.translateToLocal("vending.gui.button.mode.sell"));
+		updateButton = new GuiSlimButton(idUpdateButton, 79 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, 
+				StatCollector.translateToLocal("general.button.edit"));
+		setButton = new GuiSlimButton(idSetButton, 124 + (width - xSize) / 2, 35 + (height - ySize) / 2, 44, 12, 
+				StatCollector.translateToLocal("general.button.save"));
 		retrCoinButton = new GuiCoinButton(idCoinButton, 56 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
 		retrSStackButton = new GuiCoinButton(idSStackButton, 74 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
 		retrLStackButton = new GuiCoinButton(idLStackButton, 92 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
@@ -90,15 +93,16 @@ public class VendorGUI extends GuiContainer{
 		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
 		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
 		
-		modeButton.displayString = (tileEntity.sellMode ? "Sell Items" : "Buy Items");
+		modeButton.displayString = (tileEntity.sellMode ? StatCollector.translateToLocal("vending.gui.button.mode.sell") :
+			StatCollector.translateToLocal("vending.gui.button.mode.buy"));
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString("Vending Block", 6, 5, 4210752);
-		String priceInLocal = "Price:";
+		fontRendererObj.drawString("Vending Block", 6, 5, 4210752);//TODO localization
+		String priceInLocal = "Price:";//TODO localization
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 78 - stringWidth, 22, 4210752);
 		//draw itemprice

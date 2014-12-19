@@ -47,7 +47,8 @@ public class VendorSellGUI extends GuiContainer{
 	@Override
 	public void initGui() {
 		super.initGui();
-		buyButton = new GuiSlimButton(idBuyButton, 126 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, "Buy");
+		buyButton = new GuiSlimButton(idBuyButton, 126 + (width - xSize) / 2, 42 + (height - ySize) / 2, 42, 12, 
+				StatCollector.translateToLocal("general.button.buy"));
 		retrCoinButton = new GuiCoinButton(idCoinButton, 56 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 0);
 		retrSStackButton = new GuiCoinButton(idSStackButton, 74 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 1);
 		retrLStackButton = new GuiCoinButton(idLStackButton, 92 + (width - xSize) / 2, 74 + (height - ySize) / 2, 18, 18, "", 2);
@@ -83,7 +84,7 @@ public class VendorSellGUI extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString("Vending Block", 8, 5, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("tile.blockVendor.name"), 8, 5, 4210752);
 		// draws "Inventory" or your regional equivalent
 		fontRendererObj.drawString(StatCollector.translateToLocal(
 				"container.inventory"), 8, 98, 4210752);

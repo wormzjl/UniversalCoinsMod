@@ -1,5 +1,6 @@
 package universalcoins.inventory;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import universalcoins.tile.TileVendor;
@@ -15,6 +16,11 @@ public class ContainerVendorBuy extends Container {
 	private int lastUserCoinSum;
 	private int lastItemPrice;
 	private boolean lastSellButtonActive;
+	private boolean lastUCoinButtonActive;
+	private boolean lastUSStackButtonActive;
+	private boolean lastULStackButtonActive;
+	private boolean lastUSBagButtonActive;
+	private boolean lastULBagButtonActive;
 	
 	public ContainerVendorBuy(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
@@ -104,7 +110,12 @@ public class ContainerVendorBuy extends Container {
 
             if (this.lastUserCoinSum != tileEntity.userCoinSum 
             		|| this.lastItemPrice != tileEntity.itemPrice
-            		|| this.lastSellButtonActive != tileEntity.sellButtonActive) {
+            		|| this.lastSellButtonActive != tileEntity.sellButtonActive
+            		|| this.lastUCoinButtonActive != this.tileEntity.uCoinButtonActive
+            		|| this.lastUSStackButtonActive != this.tileEntity.uSStackButtonActive
+            		|| this.lastULStackButtonActive != this.tileEntity.uLStackButtonActive
+            		|| this.lastUSBagButtonActive != this.tileEntity.uSBagButtonActive
+            		|| this.lastULBagButtonActive != this.tileEntity.uLBagButtonActive) {
                 //update
             	tileEntity.updateTE();
             }
@@ -112,6 +123,11 @@ public class ContainerVendorBuy extends Container {
 		this.lastUserCoinSum = tileEntity.userCoinSum;
 		this.lastItemPrice = tileEntity.itemPrice;
 		this.lastSellButtonActive = tileEntity.sellButtonActive;
+		this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
+        this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
+        this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
+        this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
+        this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
         }
 	}
 	

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 public class VendorWrenchGUI extends GuiContainer {
 	private TileVendor tileEntity;
@@ -34,9 +35,13 @@ public class VendorWrenchGUI extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 		infinite = tileEntity.infiniteSell;
-		infiniteButton = new GuiSlimButton(idInfiniteButton, 9 + (width - xSize) / 2, 54 + (height - ySize) / 2, 148, 12, "Infinite: " + (infinite ? "On" : "Off"));
-		editButton = new GuiSlimButton(idEditButton, 68 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 12, "Edit");
-		applyButton = new GuiSlimButton(idApplyButton, 110 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 12, "Save");
+		infiniteButton = new GuiSlimButton(idInfiniteButton, 9 + (width - xSize) / 2, 54 + 
+				(height - ySize) / 2, 148, 12, infinite ? StatCollector.translateToLocal("vending.wrench.infiniteon") :
+					StatCollector.translateToLocal("vending.wrench.infiniteoff"));
+		editButton = new GuiSlimButton(idEditButton, 68 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 12, 
+				StatCollector.translateToLocal("general.button.edit"));
+		applyButton = new GuiSlimButton(idApplyButton, 110 + (width - xSize) / 2, 34 + (height - ySize) / 2, 40, 12, 
+				StatCollector.translateToLocal("general.button.save"));
 		buttonList.clear();
 		buttonList.add(editButton);
 		buttonList.add(applyButton);
@@ -62,7 +67,7 @@ public class VendorWrenchGUI extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
-		fontRendererObj.drawString("Owner", 6, 5, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("vending.wrench.owner"), 6, 5, 4210752);
 		blockOwnerField.drawTextBox();
 	}
 	
@@ -94,7 +99,8 @@ public class VendorWrenchGUI extends GuiContainer {
 		}
 		if (button.id == idInfiniteButton) {
 			infinite = !infinite;
-			infiniteButton.displayString = "Infinite: " + (infinite ? "On" : "Off");
+			infiniteButton.displayString = (infinite ? StatCollector.translateToLocal("vending.wrench.infiniteon") :
+				StatCollector.translateToLocal("vending.wrench.infiniteoff"));
 			tileEntity.infiniteSell = infinite;
 			tileEntity.sendServerUpdateMessage();
 		}

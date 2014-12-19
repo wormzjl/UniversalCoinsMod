@@ -17,6 +17,14 @@ item.itemVendorWrench.name=Vendor Wrench
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####
+# General
+#####
+general.button.buy=Buy
+general.button.sell=Sell
+general.button.edit=Edit
+general.button.save=Save
+
+#####
 # Commands
 #####
 command.balance.name=balance
@@ -60,19 +68,48 @@ command.send.result.sender=coins sent to
 command.send.result.receiver=coins received from
 
 #####
-# Chat warnings
+# Chat Warnings
 #####
+
+#####
+# TradeStation GUI
+#####
+tradestation.gui.button.coin=Coin
+tradestation.gui.button.mode=Mode
+tradestation.gui.warning.noitem=No item
+tradestation.gui.label.autobuy=Auto Buy/Sell
+tradestation.gui.autolabel.off=Off
+tradestation.gui.autolabel.buy=Buy
+tradestation.gui.autolabel.sell=Sell
+
+#####
+# Vending GUI
+#####
+vending.wrench.owner=Owner
+vending.wrench.infiniteon=Infinite: On
+vending.wrench.infiniteoff=Infinite: Off
+vending.gui.button.mode.sell=Sell Items
+vending.gui.button.mode.buy=Buy Items
+
+#####
+# Hint GUI
+#####
+hintgui.sellmode.sell=Selling
+hintgui.sellmode.buy=Buying
+hintgui.price=Price: 
+hintgui.warning.stock=Out Of Stock!
+hintgui.warning.coins=Out Of Coins!
 
 #####
 # ATM GUI
 #####
-cardstation.welcome.one=       Welcome to
-cardstation.welcome.two=     Universal Bank
+cardstation.welcome.one=C:Welcome to
+cardstation.welcome.two=C:Universal Bank
 cardstation.welcome.three=
 cardstation.welcome.four=
-cardstation.welcome.five=    Insert card or
-cardstation.welcome.six=  press any button
-cardstation.welcome.seven=      to continue
+cardstation.welcome.five=C:Insert card or
+cardstation.welcome.six=C:press any button
+cardstation.welcome.seven=C:to continue
 cardstation.welcome.eight=
 cardstation.main.one=
 cardstation.main.two=<-- Deposit
@@ -83,16 +120,16 @@ cardstation.main.six=<-- New Card
 cardstation.main.seven=
 cardstation.main.eight=<-- New Account
 cardstation.auth.one=
-cardstation.auth.two=        Scanning
+cardstation.auth.two=C:Scanning
 cardstation.auth.three=
 cardstation.auth.four=
 cardstation.auth.five=
 cardstation.auth.six=
 cardstation.auth.seven=
 cardstation.auth.eight=
-cardstation.auth.access= Retrieving account
-cardstation.auth.success=   Account found
-cardstation.auth.fail=  No account found
+cardstation.auth.access=C:Retrieving account
+cardstation.auth.success=C:Account found
+cardstation.auth.fail=C:No account found
 cardstation.deposit.one=Insert coins
 cardstation.deposit.two=
 cardstation.deposit.three=Balance:
@@ -118,9 +155,9 @@ cardstation.newcard.six=<-- New Card
 cardstation.newcard.seven=
 cardstation.newcard.eight=<-- Cancel
 cardstation.transferaccount.one=
-cardstation.transferaccount.two=    All coins will be
-cardstation.transferaccount.three=    transferred to
-cardstation.transferaccount.four=      new account
+cardstation.transferaccount.two=C:All coins will be
+cardstation.transferaccount.three=C:transferred to
+cardstation.transferaccount.four=C:new account
 cardstation.transferaccount.five=
 cardstation.transferaccount.six=<-- Open New Account
 cardstation.transferaccount.seven=
@@ -143,33 +180,33 @@ cardstation.takecoins.seven=
 cardstation.takecoins.eight=<-- Done
 cardstation.insufficient.one=
 cardstation.insufficient.two=
-cardstation.insufficient.three=         ERROR
+cardstation.insufficient.three=C:ERROR
 cardstation.insufficient.four=
-cardstation.insufficient.five=  insufficient funds
+cardstation.insufficient.five=C:insufficient funds
 cardstation.insufficient.six=
 cardstation.insufficient.seven=
 cardstation.insufficient.eight=<-- Previous Menu
 cardstation.invalid.one=
 cardstation.invalid.two=
-cardstation.invalid.three=         ERROR
+cardstation.invalid.three=C:ERROR
 cardstation.invalid.four=
-cardstation.invalid.five=      invalid input
+cardstation.invalid.five=C:invalid input
 cardstation.invalid.six=
 cardstation.invalid.seven=
 cardstation.invalid.eight=<-- Previous Menu
 cardstation.badcard.one=
 cardstation.badcard.two=
-cardstation.badcard.three=     INVALID CARD
+cardstation.badcard.three=C:INVALID CARD
 cardstation.badcard.four=
-cardstation.badcard.five=    Card has been
-cardstation.badcard.six=     confiscated
+cardstation.badcard.five=C:Card has been
+cardstation.badcard.six=C:confiscated
 cardstation.badcard.seven=
 cardstation.badcard.eight=
 cardstation.unauthorized.one=
 cardstation.unauthorized.two=
-cardstation.unauthorized.three= UNAUTORIZED ACCESS
+cardstation.unauthorized.three=C:UNAUTORIZED ACCESS
 cardstation.unauthorized.four=
-cardstation.unauthorized.five=  Only the account
-cardstation.unauthorized.six=  owner can do this
+cardstation.unauthorized.five=C:Only the account
+cardstation.unauthorized.six=C:owner can do this
 cardstation.unauthorized.seven=
 cardstation.unauthorized.eight=

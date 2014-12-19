@@ -94,14 +94,26 @@ public class CardStationGUI extends GuiContainer{
 			this.drawTexturedModalRect(x + 151, y + 19, 176, 0, 18, 18);
 			this.drawTexturedModalRect(x + 34, y + 43, 0, 201, Math.min(barProgress, 104), 5);
 			if (barProgress > 105) {
-				fontRendererObj.drawString(StatCollector.translateToLocal("cardstation.auth.access"), x + 34, y + 52, 4210752);
+				String authString = StatCollector.translateToLocal("cardstation.auth.access");
+				if (authString.startsWith("C:")) authString = authString.substring(2);
+				int stringLength = fontRendererObj.getStringWidth(authString);
+				int cx = width / 2 - stringLength / 2;
+				fontRendererObj.drawString(authString, cx, y + 52, 4210752);
 			}
 			if (barProgress > 120) {
 				if (!tEntity.accountNumber.matches("none")) {
-					fontRendererObj.drawString(StatCollector.translateToLocal("cardstation.auth.success"), x + 34, y + 72, 4210752);
+					String authString = StatCollector.translateToLocal("cardstation.auth.success");
+					if (authString.startsWith("C:")) authString = authString.substring(2);
+					int stringLength = fontRendererObj.getStringWidth(authString);
+					int cx = width / 2 - stringLength / 2;
+					fontRendererObj.drawString(authString, cx, y + 72, 4210752);
 					if (barProgress > 160) {menuState = 2;}
 				} else {
-					fontRendererObj.drawString(StatCollector.translateToLocal("cardstation.auth.fail"), x + 34, y + 72, 4210752);
+					String authString = StatCollector.translateToLocal("cardstation.auth.fail");
+					if (authString.startsWith("C:")) authString = authString.substring(2);
+					int stringLength = fontRendererObj.getStringWidth(authString);
+					int cx = width / 2 - stringLength / 2;
+					fontRendererObj.drawString(authString, cx, y + 72, 4210752);
 					if (barProgress > 160) {menuState = 5;}
 				}
 			}
@@ -289,13 +301,19 @@ public class CardStationGUI extends GuiContainer{
 	}
 	
 	private void drawMenu(int state) {
-        fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".one"), 34, 22, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".two"), 34, 32, 4210752);
-	 	fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".three"), 34, 42, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".four"), 34, 52, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".five"), 34, 62, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".six"), 34, 72, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".seven"), 34, 82, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("cardstation." + menuStateName[state] + ".eight"), 34, 92, 4210752);
+		int lineCoords[] = {22, 32, 42, 52, 62, 72, 82, 92};
+		String[] endString = {".one", ".two", ".three", ".four", ".five", ".six", ".seven", ".eight"};
+		String menuString;
+		for(int x = 0; x < 8; x++) {
+			menuString = StatCollector.translateToLocal("cardstation." + menuStateName[state] + endString[x]);
+			if (menuString.startsWith("C:")) { //center text
+				menuString = menuString.substring(2);//strip centering flag
+				int stringLength = fontRendererObj.getStringWidth(menuString);
+				int cx = xSize / 2 - stringLength / 2;
+				fontRendererObj.drawString(menuString, cx, lineCoords[x], 4210752);
+			} else { //draw normally
+				fontRendererObj.drawString(menuString, 34, lineCoords[x], 4210752);
+			}
+		}
 	}
 }

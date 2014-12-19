@@ -6,7 +6,6 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileTradeStationMessage;
-import universalcoins.net.UCTileVendorMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCWorldData;
@@ -530,9 +529,16 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 	
 	@Override
-    public Packet getDescriptionPacket() {
-		return UniversalCoins.snw.getPacketFrom(new UCTileVendorMessage(this));
-    }
+	public Packet getDescriptionPacket() {
+	NBTTagCompound nbt = new NBTTagCompound();
+	writeToNBT(nbt);
+	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+	}
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+	readFromNBT(pkt.func_148857_g());
+	}
     
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -589,6 +595,66 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} catch (Throwable ex2) {
 			sellMode = false;
 		}
+		try {
+			buyButtonActive = tagCompound.getBoolean("BuyButtonActive");
+		} catch (Throwable ex2) {
+			buyButtonActive = false;
+		}
+		try {
+			sellButtonActive = tagCompound.getBoolean("SellButtonActive");
+		} catch (Throwable ex2) {
+			sellButtonActive = false;
+		}
+		try {
+			coinButtonActive = tagCompound.getBoolean("CoinButtonActive");
+		} catch (Throwable ex2) {
+			coinButtonActive = false;
+		}
+		try {
+			isSStackButtonActive = tagCompound.getBoolean("SmallStackButtonActive");
+		} catch (Throwable ex2) {
+			isSStackButtonActive = false;
+		}
+		try {
+			isLStackButtonActive = tagCompound.getBoolean("LargeStackButtonActive");
+		} catch (Throwable ex2) {
+			isLStackButtonActive = false;
+		}
+		try {
+			isSBagButtonActive = tagCompound.getBoolean("SmallBagButtonActive");
+		} catch (Throwable ex2) {
+			isSBagButtonActive = false;
+		}
+		try {
+			isLBagButtonActive = tagCompound.getBoolean("LargeBagButtonActive");
+		} catch (Throwable ex2) {
+			isLBagButtonActive = false;
+		}
+		try {
+			uCoinButtonActive = tagCompound.getBoolean("UserCoinButtonActive");
+		} catch (Throwable ex2) {
+			uCoinButtonActive = false;
+		}
+		try {
+			uSStackButtonActive = tagCompound.getBoolean("UserSmallStackButtonActive");
+		} catch (Throwable ex2) {
+			uSStackButtonActive = false;
+		}
+		try {
+			uLStackButtonActive = tagCompound.getBoolean("UserLargeStackButtonActive");
+		} catch (Throwable ex2) {
+			uLStackButtonActive = false;
+		}
+		try {
+			uSBagButtonActive = tagCompound.getBoolean("UserSmallBagButtonActive");
+		} catch (Throwable ex2) {
+			uSBagButtonActive = false;
+		}
+		try {
+			uLBagButtonActive = tagCompound.getBoolean("UserLargeBagButtonActive");
+		} catch (Throwable ex2) {
+			uLBagButtonActive = false;
+		}
 	}
 	
 	@Override
@@ -611,6 +677,18 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setString("BlockOwner", blockOwner);
 		tagCompound.setBoolean("Infinite", infiniteSell);
 		tagCompound.setBoolean("Mode", sellMode);
+		tagCompound.setBoolean("BuyButtonActive", buyButtonActive);
+		tagCompound.setBoolean("SellButtonActive", sellButtonActive);
+		tagCompound.setBoolean("CoinButtonActive", coinButtonActive);
+		tagCompound.setBoolean("SmallStackButtonActive", isSStackButtonActive);
+		tagCompound.setBoolean("LargeStackButtonActive", isLStackButtonActive);
+		tagCompound.setBoolean("SmallBagButtonActive", isSBagButtonActive);
+		tagCompound.setBoolean("LargeBagButtonActive", isLBagButtonActive);
+		tagCompound.setBoolean("UserCoinButtonActive", uCoinButtonActive);
+		tagCompound.setBoolean("UserSmallStackButtonActive", uSStackButtonActive);
+		tagCompound.setBoolean("UserLargeStackButtonActive", uLStackButtonActive);
+		tagCompound.setBoolean("UserSmallBagButtonActive", uSBagButtonActive);
+		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
 	}
 
 	@Override
