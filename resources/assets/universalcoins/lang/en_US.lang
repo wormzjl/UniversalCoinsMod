@@ -29,7 +29,8 @@ general.button.save=Save
 #####
 command.balance.name=balance
 command.balance.help=/balance : Retrieve coin balance.
-command.balance.result=Balance: 
+command.balance.result.inventory=Inventory Balance: 
+command.balance.result.account=Account Balance: 
 command.uccommand.name=universalcoins
 command.uccommand.help=/universalcoins help
 command.uccommand.option.help.name=help

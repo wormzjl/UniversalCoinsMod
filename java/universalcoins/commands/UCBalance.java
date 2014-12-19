@@ -4,12 +4,14 @@ import java.text.DecimalFormat;
 
 import cpw.mods.fml.common.FMLLog;
 import universalcoins.UniversalCoins;
+import universalcoins.util.UCWorldData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -43,8 +45,14 @@ public class UCBalance extends CommandBase {
 	public void processCommand(ICommandSender sender, String[] astring) {
 		if (sender instanceof EntityPlayerMP) {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
+			int accountCoins = getAccountBalance((EntityPlayerMP) sender);
 			DecimalFormat formatter = new DecimalFormat("###,###,###");
-			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.balance.result") + formatter.format(playerCoins)));
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
+					"command.balance.result.inventory") + formatter.format(playerCoins)));
+			if (accountCoins != -1) {
+				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
+						"command.balance.result.account") + formatter.format(accountCoins)));
+			}
 		}		
 	}
 
@@ -59,5 +67,26 @@ public class UCBalance extends CommandBase {
 			}
 		}
 		return coinsFound;
+	}
+	
+	public int getAccountBalance(EntityPlayerMP player) {
+		if (getWorldString(player, player.getDisplayName()) != "") {
+			String accountNumber = getWorldString(player, player.getDisplayName());
+			if (getWorldString(player, accountNumber) != "") {
+				return getWorldInt(player, accountNumber);
+			}
+		} return -1;
+	}
+	
+	private int getWorldInt(EntityPlayerMP player, String tag) {
+		UCWorldData wData = UCWorldData.get(player.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getInteger(tag);
+	}
+	
+	private String getWorldString(EntityPlayerMP player, String tag) {
+		UCWorldData wData = UCWorldData.get(player.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getString(tag);
 	}
 }
