@@ -13,7 +13,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class UCTileCardStationMessage implements IMessage, IMessageHandler<UCTileCardStationMessage, IMessage> {
 private int x, y, z, coinWithdrawalAmount, accountBalance;
 private boolean inUse, depositCoins, withdrawCoins;
-private String player, accountNumber, cardOwner;
+private String player, accountNumber, cardOwner, groupAccountName, groupAccountNumber;
 
     public UCTileCardStationMessage() { }
 
@@ -29,6 +29,8 @@ private String player, accountNumber, cardOwner;
         this.player = tileEntity.player;
         this.accountNumber = tileEntity.accountNumber;
         this.cardOwner = tileEntity.cardOwner;
+        this.groupAccountName = tileEntity.groupAccountName;
+        this.groupAccountNumber = tileEntity.groupAccountNumber;
     }
 
     @Override
@@ -44,6 +46,8 @@ private String player, accountNumber, cardOwner;
         this.player = ByteBufUtils.readUTF8String(buf);
         this.accountNumber = ByteBufUtils.readUTF8String(buf);
         this.cardOwner = ByteBufUtils.readUTF8String(buf);
+        this.groupAccountName = ByteBufUtils.readUTF8String(buf);
+        this.groupAccountNumber = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -59,6 +63,8 @@ private String player, accountNumber, cardOwner;
         ByteBufUtils.writeUTF8String(buf, player);
         ByteBufUtils.writeUTF8String(buf, accountNumber);
         ByteBufUtils.writeUTF8String(buf, cardOwner);
+        ByteBufUtils.writeUTF8String(buf, groupAccountName);
+        ByteBufUtils.writeUTF8String(buf, groupAccountNumber);
     }
 
 	@Override
@@ -76,6 +82,8 @@ private String player, accountNumber, cardOwner;
 			((TileCardStation) tileEntity).player = message.player;
 			((TileCardStation) tileEntity).accountNumber = message.accountNumber;
 			((TileCardStation) tileEntity).cardOwner = message.cardOwner;
+			((TileCardStation) tileEntity).groupAccountName = message.groupAccountName;
+			((TileCardStation) tileEntity).groupAccountNumber = message.groupAccountNumber;
 		}
 		return null;
 	}

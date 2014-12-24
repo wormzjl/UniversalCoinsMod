@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import cpw.mods.fml.common.FMLLog;
 import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.tile.TileCardStation;
@@ -25,7 +24,7 @@ import net.minecraft.util.StatCollector;
 
 public class CardStationGUI extends GuiContainer{
 	private GuiButton buttonOne, buttonTwo, buttonThree, buttonFour;
-	private GuiTextField coinAmountField;
+	private GuiTextField textField;
 	private TileCardStation tEntity;
 	public static final int idButtonOne = 0;
 	public static final int idButtonTwo = 1;
@@ -33,9 +32,9 @@ public class CardStationGUI extends GuiContainer{
 	public static final int idButtonFour = 3;
 	
 	public int menuState = 0;
-	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main",  
-		"deposit", "withdraw", "newcard", "transferaccount", "takecard", "takecoins", 
-		"insufficient", "invalid", "badcard", "unauthorized"};
+	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main", "additional", 
+		"balance", "deposit", "withdraw", "newcard", "transferaccount", "groupaccount", "takecard", 
+		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "groupaccountoptions"};
 	int barProgress = 0;
 	
 	boolean shiftPressed = false;
@@ -50,10 +49,10 @@ public class CardStationGUI extends GuiContainer{
 	
 	@Override
 	protected void keyTyped(char c, int i) {
-		if (menuState == 4) {
-			coinAmountField.setFocused(true);
-			coinAmountField.textboxKeyTyped(c, i);
-			coinAmountField.setFocused(false);
+		if (menuState == 6 || menuState == 9) {
+			textField.setFocused(true);
+			textField.textboxKeyTyped(c, i);
+			textField.setFocused(false);
 		} else super.keyTyped(c, i);
 
 	}
@@ -71,10 +70,10 @@ public class CardStationGUI extends GuiContainer{
 		buttonList.add(buttonThree);
 		buttonList.add(buttonFour);
 		
-		coinAmountField = new GuiTextField(this.fontRendererObj, 1, 1, 100, 13);
-		coinAmountField.setFocused(false);
-		coinAmountField.setMaxStringLength(9);
-		coinAmountField.setText("0");
+		textField = new GuiTextField(this.fontRendererObj, 1, 1, 100, 13);
+		textField.setFocused(false);
+		textField.setMaxStringLength(9);
+		textField.setText("0");
 	}
 
 	@Override
@@ -114,25 +113,33 @@ public class CardStationGUI extends GuiContainer{
 					int stringLength = fontRendererObj.getStringWidth(authString);
 					int cx = width / 2 - stringLength / 2;
 					fontRendererObj.drawString(authString, cx, y + 72, 4210752);
-					if (barProgress > 160) {menuState = 5;}
+					if (barProgress > 160) {menuState = 7;}
 				}
 			}
 		}
 		if (menuState == 2 && tEntity.accountBalance == -1) {
 			tEntity.sendButtonMessage(6, false); //message to destroy card
-			menuState = 11;
+			menuState = 14;
 		}
 		
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-		if (menuState == 3) {
+		if (menuState == 4 || menuState == 5) {
 			fontRendererObj.drawString(formatter.format(tEntity.accountBalance), x + 34, y + 52, 4210752);
 		}
-		if (menuState == 4) {
+		if (menuState == 6) {
 			//display account balance
 			fontRendererObj.drawString(formatter.format(tEntity.accountBalance), x + 34, y + 32, 4210752);
-			fontRendererObj.drawString(coinAmountField.getText(), x + 34, y + 52, 4210752);
+			fontRendererObj.drawString(textField.getText(), x + 34, y + 52, 4210752);
 		}
-		if (menuState == 12) {
+		if (menuState == 9) {
+			//display text field for group name entry
+			if (textField.getText() == "0") { //textfield has not been initialized. do it now
+				textField.setMaxStringLength(20);
+				textField.setText(tEntity.groupAccountName);
+			}
+			fontRendererObj.drawString(textField.getText(), x + 34, y + 42, 4210752);
+		}		
+		if (menuState == 15) {
 			barProgress++;
 			if (barProgress > 100) {
 				menuState = 2;
@@ -175,112 +182,157 @@ public class CardStationGUI extends GuiContainer{
 				break;
 			case 2:
 				//main menu
-				if (button.id == idButtonOne){functionID = 3;menuState = 3;}
-				if (button.id == idButtonTwo){menuState = 4;}
-				if (button.id == idButtonThree){
-					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
-						menuState = 12;
-					} else menuState = 5;}
-				if (button.id == idButtonFour){
-					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
-						menuState = 12;
-					} else menuState = 6;}
+				if (button.id == idButtonOne){menuState = 4;}
+				if (button.id == idButtonTwo){functionID = 3;menuState = 5;}
+				if (button.id == idButtonThree){textField.setText("0");menuState = 6;}
+				if (button.id == idButtonFour){menuState = 3;}
 				break;
 			case 3:
+				//additional menu
+				if (button.id == idButtonOne){
+					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					menuState = 15;
+				} else menuState = 7;}
+				if (button.id == idButtonTwo){
+					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					menuState = 15;
+				} else menuState = 8;}
+				if (button.id == idButtonThree){
+					if (!tEntity.groupAccountName.contentEquals("none")) {
+						menuState = 16;
+					} else if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					menuState = 15;
+				} else menuState = 9;}
+				if (button.id == idButtonFour){}
+				break;
+			case 4:
+				//balance
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){}
+				if (button.id == idButtonFour){menuState = 2;}
+				break;
+			case 5:
 				//deposit
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){menuState = 2;}
 				break;
-			case 4:
+			case 6:
 				//withdraw
 				int coinWithdrawalAmount = 0;
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){//Output coins;
-					try { coinWithdrawalAmount = Integer.parseInt(coinAmountField.getText());
+					try { coinWithdrawalAmount = Integer.parseInt(textField.getText());
 					} catch (NumberFormatException ex) {
-		                menuState = 10;
+		                menuState = 13;
 		            } catch (Throwable ex2) {
-		                menuState = 10;
+		                menuState = 13;
 		            }
 					if (coinWithdrawalAmount > tEntity.accountBalance) {
-						menuState = 9;
+						menuState = 12;
 					} else if (coinWithdrawalAmount <= 0) {
-						menuState = 10;
+						menuState = 13;
 					} else { 
 						//send message to server with withdrawal amount
 						tEntity.sendServerUpdatePacket(coinWithdrawalAmount);
 						functionID = 4;
-						menuState = 8;} }
-				if (button.id == idButtonFour){menuState = 2;}
-				break;
-			case 5:
-				//new card
-				if (button.id == idButtonOne){}
-				if (button.id == idButtonTwo){}
-				if (button.id == idButtonThree){
-					//TODO error if coins not present
-					
-					functionID = 1;menuState = 7;}
-				if (button.id == idButtonFour){menuState = 0;}
-				break;
-			case 6:
-				//transfer account
-				if (button.id == idButtonOne){}
-				if (button.id == idButtonTwo){}
-				if (button.id == idButtonThree){functionID = 2;menuState = 7;}
+						menuState = 11;} }
 				if (button.id == idButtonFour){menuState = 2;}
 				break;
 			case 7:
+				//new card
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){					
+					functionID = 1;menuState = 10;}
+				if (button.id == idButtonFour){menuState = 0;}
+				break;
+			case 8:
+				//transfer account
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){functionID = 2;menuState = 10;}
+				if (button.id == idButtonFour){menuState = 2;}
+				break;
+			case 9:
+				//groupaccount
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){
+					if (!tEntity.groupAccountName.contentEquals("none")) {
+						String groupName = textField.getText();
+						tEntity.sendServerUpdatePacket(groupName);
+						functionID = 9;menuState = 10;
+					} else {
+						String groupName = textField.getText();
+						tEntity.sendServerUpdatePacket(groupName);
+						functionID = 7;menuState = 10;}
+					}
+				if (button.id == idButtonFour){menuState = 3;}
+				break;
+			case 10:
 				//take card
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){menuState = 0;}
 				break;
-			case 8:
+			case 11:
 				//take coins
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){menuState = 0;}
 				break;
-			case 9:
+			case 12:
 				//Insufficient funds
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
-				if (button.id == idButtonFour){menuState = 4;}
+				if (button.id == idButtonFour){menuState = 6;}
 				break;
-			case 10:
+			case 13:
 				//Invalid input
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
-				if (button.id == idButtonFour){menuState = 4;}
+				if (button.id == idButtonFour){menuState = 6;}
 				break;
-			case 11:
+			case 14:
 				//Bad card - account not found
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){}
 				break;
-			case 12:
+			case 15:
 				//unauthorized access - card does not belong to player
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){}
 				break;
+			case 16:
+				//group account options
+				if (button.id == idButtonOne){
+					functionID = 7;
+					menuState = 10;
+				}
+				if (button.id == idButtonTwo){
+					menuState = 9;
+				}
+				if (button.id == idButtonThree){}
+				if (button.id == idButtonFour){menuState = 2;}
+				break;
 			default:
 				//we should never get here
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
-				if (button.id == idButtonFour){menuState = 1;}				
+				if (button.id == idButtonFour){}				
 				break;
 		}
 		//We include the shift boolean for compatibility with the button message only. It does nothing

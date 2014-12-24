@@ -20,6 +20,8 @@ public class ContainerCardStation extends Container {
 	private String lastCardOwner;
 	private String lastAccountNumber;
 	private int lastAccountBalance;
+	private String lastGroupAccountName;
+	private String lastGroupAccountNumber;
 	private TileCardStation tEntity;
 	
 	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tileEntity) {
@@ -70,7 +72,7 @@ public class ContainerCardStation extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 9; i++){
+				for (int i = 0; i < 2; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;
@@ -113,8 +115,10 @@ public class ContainerCardStation extends Container {
     		this.lastWithdrawCoins != tEntity.withdrawCoins ||
     		this.lastCoinWithdrawalAmount != tEntity.coinWithdrawalAmount ||
     		this.lastCardOwner != tEntity.cardOwner ||
-    		this.lastAccountNumber != tEntity.accountNumber ||
-    		this.lastAccountBalance != tEntity.accountBalance) {
+    	    this.lastAccountNumber != tEntity.accountNumber ||
+    		this.lastAccountBalance != tEntity.accountBalance ||
+    		this.lastGroupAccountName != tEntity.groupAccountName ||
+    	    this.lastGroupAccountNumber != tEntity.groupAccountNumber) {
             	tEntity.updateTE();
             }
 
@@ -126,6 +130,8 @@ public class ContainerCardStation extends Container {
 		this.lastCardOwner = tEntity.cardOwner;
 		this.lastAccountNumber = tEntity.accountNumber;
 		this.lastAccountBalance = tEntity.accountBalance;
+		this.lastGroupAccountName = tEntity.groupAccountName;
+		this.lastGroupAccountNumber = tEntity.groupAccountNumber;
         }
 	}
 	

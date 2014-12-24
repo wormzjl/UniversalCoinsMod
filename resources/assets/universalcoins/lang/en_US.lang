@@ -50,6 +50,7 @@ command.uccommand.usage.hint=Hint: Use \"this\" in place of <itemName> to get or
 command.uccommand.warning.pricenotset=No price has been set for
 command.uccommand.warning.pricefound=The price for
 command.uccommand.warning.noitem=Please specify item
+####incomplete!!!!!!!!!!!!
 
 command.give.name=givecoins
 command.give.help=/givecoins <playerName> <amount> : Give another player coins.
@@ -71,6 +72,7 @@ command.send.result.receiver=coins received from
 #####
 # Chat Warnings
 #####
+chat.cardstation.warning.inuse=is using the ATM. Try again later.
 
 #####
 # TradeStation GUI
@@ -113,13 +115,21 @@ cardstation.welcome.six=C:press any button
 cardstation.welcome.seven=C:to continue
 cardstation.welcome.eight=
 cardstation.main.one=
-cardstation.main.two=<-- Deposit
+cardstation.main.two=<-- Balance
 cardstation.main.three=
-cardstation.main.four=<-- Withdraw
+cardstation.main.four=<-- Deposit
 cardstation.main.five=
-cardstation.main.six=<-- New Card
+cardstation.main.six=<-- Withdraw
 cardstation.main.seven=
-cardstation.main.eight=<-- New Account
+cardstation.main.eight=<-- Additional Options
+cardstation.additional.one=
+cardstation.additional.two=<-- Card
+cardstation.additional.three=
+cardstation.additional.four=<-- Account
+cardstation.additional.five=
+cardstation.additional.six=<-- Group Account
+cardstation.additional.seven=
+cardstation.additional.eight=
 cardstation.auth.one=
 cardstation.auth.two=C:Scanning
 cardstation.auth.three=
@@ -131,6 +141,14 @@ cardstation.auth.eight=
 cardstation.auth.access=C:Retrieving account
 cardstation.auth.success=C:Account found
 cardstation.auth.fail=C:No account found
+cardstation.balance.one=
+cardstation.balance.two=
+cardstation.balance.three=Balance:
+cardstation.balance.four=
+cardstation.balance.five=
+cardstation.balance.six=
+cardstation.balance.seven=
+cardstation.balance.eight=<-- Previous Menu
 cardstation.deposit.one=Insert coins
 cardstation.deposit.two=
 cardstation.deposit.three=Balance:
@@ -163,6 +181,30 @@ cardstation.transferaccount.five=
 cardstation.transferaccount.six=<-- Open New Account
 cardstation.transferaccount.seven=
 cardstation.transferaccount.eight=<-- Cancel
+cardstation.groupcard.one=
+cardstation.groupcard.two=
+cardstation.groupcard.three=Group:
+cardstation.groupcard.four=
+cardstation.groupcard.five=
+cardstation.groupcard.six=<-- New Card
+cardstation.groupcard.seven=
+cardstation.groupcard.eight=<-- Cancel
+cardstation.groupaccount.one=
+cardstation.groupaccount.two=C:Enter group name
+cardstation.groupaccount.three=
+cardstation.groupaccount.four=
+cardstation.groupaccount.five=
+cardstation.groupaccount.six=<-- Open Account
+cardstation.groupaccount.seven=
+cardstation.groupaccount.eight=<-- Cancel
+cardstation.groupaccountoptions.one=
+cardstation.groupaccountoptions.two=<-- New Card
+cardstation.groupaccountoptions.three=
+cardstation.groupaccountoptions.four=<-- Transfer Account
+cardstation.groupaccountoptions.five=
+cardstation.groupaccountoptions.six=
+cardstation.groupaccountoptions.seven=
+cardstation.groupaccountoptions.eight=<-- Cancel
 cardstation.takecard.one=
 cardstation.takecard.two=
 cardstation.takecard.three=

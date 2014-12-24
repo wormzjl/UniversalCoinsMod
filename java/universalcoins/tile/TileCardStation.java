@@ -1,14 +1,17 @@
 package universalcoins.tile;
 
 import universalcoins.UniversalCoins;
+import universalcoins.inventory.ContainerCardStation;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCCardStationServerMessage;
+import universalcoins.net.UCCardStationServerWithdrawalMessage;
+import universalcoins.net.UCCardStationServerGroupNameMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCWorldData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,12 +37,26 @@ public class TileCardStation extends TileEntity implements IInventory {
 	public String cardOwner = "";
 	public String accountNumber = "none";
 	public int accountBalance = 0;
+	public String groupAccountName = "none";
+	public String groupAccountNumber = "none";
 	
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		if (withdrawCoins) {
 			withdrawCoins();
+		}
+		updateInUse();
+	}
+	
+	private void updateInUse() {
+		if (worldObj.isRemote) return;
+		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(player);
+		if (playerTest != null && playerTest.openContainer != null &&
+				this.worldObj.getPlayerEntityByName(player).openContainer instanceof ContainerCardStation) {
+			inUse = true;
+		} else {
+			inUse = false;
 		}
 	}
 
@@ -76,6 +93,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
+		inUse = false;
 		if (this.inventory[slot] != null) {
             ItemStack itemstack = this.inventory[slot];
             this.inventory[slot] = null;
@@ -106,7 +124,6 @@ public class TileCardStation extends TileEntity implements IInventory {
 				}
 			}
 			if (slot == itemCardSlot && !worldObj.isRemote) {
-				//TODO update old cards with nbt account balance to new cards
 				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0 && 
 						inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(player)) {
 					addPlayerAccount(player);
@@ -117,8 +134,9 @@ public class TileCardStation extends TileEntity implements IInventory {
 				}
 				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 				cardOwner = inventory[itemCardSlot].stackTagCompound.getString("Owner");
+				if (getGroupAccount(player) != "") groupAccountName = getGroupAccount(player);
 				accountBalance = getAccountBalance(accountNumber);
-			}
+				}
 		}
 	}
 
@@ -147,7 +165,11 @@ public class TileCardStation extends TileEntity implements IInventory {
     }
 	
 	public void sendServerUpdatePacket(int withdrawalAmount) {
-		UniversalCoins.snw.sendToServer(new UCCardStationServerMessage(xCoord, yCoord, zCoord, withdrawalAmount));
+		UniversalCoins.snw.sendToServer(new UCCardStationServerWithdrawalMessage(xCoord, yCoord, zCoord, withdrawalAmount));
+	}
+	
+	public void sendServerUpdatePacket(String groupName) {
+		UniversalCoins.snw.sendToServer(new UCCardStationServerGroupNameMessage(xCoord, yCoord, zCoord, groupName));
 	}
 	
 	public void updateTE() {
@@ -219,11 +241,11 @@ public class TileCardStation extends TileEntity implements IInventory {
 
 	@Override
 	public void openInventory() {
+		
 	}
 
 	@Override
 	public void closeInventory() {
-		inUse = false;
 	}
 
 	@Override
@@ -249,6 +271,9 @@ public class TileCardStation extends TileEntity implements IInventory {
 		//function4 - withdraw
 		//function5 - get account info
 		//function6 - destroy invalid card
+		//function7 - new group account
+		//function8 - new group card
+		//function9 - transfer group account 
 		if (functionId == 1) {
 			if (getPlayerAccount(player) == "") {
 				addPlayerAccount(player);
@@ -257,7 +282,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
 			inventory[itemCardSlot].stackTagCompound.setString("Owner", player);
 			inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
-			if (!worldObj.isRemote) accountBalance = getAccountBalance(accountNumber);
+			accountBalance = getAccountBalance(accountNumber);
 		}
 		if (functionId == 2) {
 			if (getPlayerAccount(player) == "") {
@@ -267,7 +292,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 				inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
 				inventory[itemCardSlot].stackTagCompound.setString("Owner", player);
 				inventory[itemCardSlot].stackTagCompound.setString("Account", getPlayerAccount(player));
-				if (!worldObj.isRemote) accountBalance = getAccountBalance(accountNumber);
+				accountBalance = getAccountBalance(accountNumber);
 			}
 		}
 		if (functionId == 3) {
@@ -282,10 +307,43 @@ public class TileCardStation extends TileEntity implements IInventory {
 			if (storedAccount != "") { 
 				accountNumber = storedAccount;
 				cardOwner = player; //needed for new card auth
+				if (getGroupAccount(player) != ""){
+					groupAccountName = getGroupAccount(player);
+					groupAccountNumber = getPlayerAccount(groupAccountName);
+				}
 			} else accountNumber = "none";
 		}
 		if (functionId == 6) {
 			inventory[itemCardSlot] = null;
+		}
+		if (functionId == 7) {
+			if (getGroupAccount(player) == "") {
+				addGroupAccount(groupAccountName);
+			}
+			groupAccountName = getGroupAccount(player);
+			groupAccountNumber = getPlayerAccount(groupAccountName);
+			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
+			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
+			inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
+		}
+		if (functionId == 8) {
+			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
+			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
+			inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
+			accountBalance = getAccountBalance(groupAccountNumber);
+		}
+		if (functionId == 9) {
+			if (getGroupAccount(player) == "") {
+			} else {
+				transferGroupAccount();
+				inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
+				inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
+				inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
+				inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
+				accountBalance = getAccountBalance(groupAccountNumber);
+			}
 		}
 	}
 
@@ -296,10 +354,8 @@ public class TileCardStation extends TileEntity implements IInventory {
 			int stackSize = Math.min((int) (coinWithdrawalAmount / Math.pow(9, logVal)), 64);
 			inventory[itemCoinSlot] = (new ItemStack(coins[logVal], stackSize));
 			coinWithdrawalAmount -= (stackSize * Math.pow(9, logVal));
-			if (!worldObj.isRemote) {
-				debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
-				accountBalance = getAccountBalance(accountNumber);
-			}
+			debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
+			accountBalance = getAccountBalance(accountNumber);
 		}
 		if (coinWithdrawalAmount <= 0) {
 			withdrawCoins = false;
@@ -307,13 +363,13 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 	}
 	
-	public int getAccountBalance(String accountNumber) {
+	private int getAccountBalance(String accountNumber) {
 		if (getWorldString(accountNumber) != "") {
 			return getWorldInt(accountNumber);
 		} else return -1;	
 	}
 	
-	public void debitAccount(String accountNumber, int amount) {
+	private void debitAccount(String accountNumber, int amount) {
 		if (getWorldString(accountNumber) != "") {
 			int balance = getWorldInt(accountNumber);
 			balance -= amount;
@@ -321,7 +377,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 	}
 	
-	public void creditAccount(String accountNumber, int amount) {
+	private void creditAccount(String accountNumber, int amount) {
 		if (getWorldString(accountNumber) != "") {
 			int balance = getWorldInt(accountNumber);
 			balance += amount;
@@ -329,12 +385,12 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 	}
 	
-	public String getPlayerAccount(String player) {
+	private String getPlayerAccount(String player) {
 		//returns an empty string if no account found
 		return getWorldString(player);
 	}
 	
-	public void addPlayerAccount(String player) {
+	private void addPlayerAccount(String player) {
 		if (getWorldString(player) == "") {
 			while (getWorldString(accountNumber) == "") {
 				accountNumber = String.valueOf(generateAccountNumber());
@@ -346,23 +402,53 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 	}
 	
-	public void addGroupAccount(String player) {
-		if (getWorldString("G:" + player) == "") {
-			while (getWorldString(accountNumber) == "") {
-				accountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(accountNumber) == "") {
-					setWorldData("G:" + player, accountNumber);
-					setWorldData(accountNumber, 0);
+	private String getGroupAccount(String player){
+		return getWorldString("G:" + player);
+	}
+	
+	private void addGroupAccount(String groupName) {
+		//group accounts are added as a relation of playername to groupname
+		//groupname are then associated with an account number
+		if (getWorldString("G:" + player) == "" && getWorldString(groupName) == "") {
+			while (getWorldString(groupAccountNumber) == "") {
+				groupAccountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(groupAccountNumber) == "") {
+					setWorldData("G:" + player, groupName);
+					setWorldData(groupName, groupAccountNumber);
+					setWorldData(groupAccountNumber, 0);
 				}
 			}
 		}
 	}
 	
-	public void transferPlayerAccount(String player) {
+	private void transferGroupAccount() {
+		String oldGroup = getWorldString("G:" + player);
+		String oldAccount = getWorldString(oldGroup);
+		int oldBalance = getAccountBalance(oldAccount);
+		delWorldData("G:" + player);
+		delWorldData(oldGroup);
+		delWorldData(oldAccount);
+		if (getWorldString("G:" + player) == "") {
+			groupAccountNumber = "none";
+			while (getWorldString(groupAccountNumber) == "") {
+				groupAccountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(groupAccountNumber) == "") {
+					setWorldData("G:" + player, groupAccountName);
+					setWorldData(groupAccountName, groupAccountNumber);
+					setWorldData(groupAccountNumber, oldBalance);
+				}
+				if (getWorldString(oldAccount) != "") {
+					delWorldData(oldAccount);
+					delWorldData(oldGroup);
+				}
+			}
+		}
+	}
+	
+	private void transferPlayerAccount(String player) {
 		String oldAccount = getWorldString(player);
 		int oldBalance = getAccountBalance(oldAccount);
 		delWorldData(player);
-		delWorldData(oldAccount);
 		if (getWorldString(player) == "") {
 			accountNumber = "none";
 			while (getWorldString(accountNumber) == "") {
@@ -373,6 +459,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 				}
 			}
 		}
+		delWorldData(oldAccount);
 	}
 	
 	private int generateAccountNumber() {

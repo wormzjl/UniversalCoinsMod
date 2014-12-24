@@ -73,7 +73,7 @@ public class ContainerVendorSell extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 9; i++){
+				for (int i = 0; i < 5; i++){
 					if (((Slot)inventorySlots.get(i)).isItemValid(stackInSlot) && this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
 						break;

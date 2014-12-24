@@ -13,7 +13,8 @@ import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCCardStationServerMessage;
+import universalcoins.net.UCCardStationServerGroupNameMessage;
+import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -67,7 +68,8 @@ import cpw.mods.fml.relauncher.Side;
  * 
  **/
 
-@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version)
+@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version,
+acceptedMinecraftVersions = "[1.7.2]", dependencies = "required-after:Forge@[10.12.2.1121,)")
 
 public class UniversalCoins {
 	@Instance("universalcoins")
@@ -167,7 +169,8 @@ public class UniversalCoins {
 	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
 	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
-	    snw.registerMessage(UCCardStationServerMessage.class, UCCardStationServerMessage.class, 4, Side.SERVER);
+	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
+	    snw.registerMessage(UCCardStationServerGroupNameMessage.class, UCCardStationServerGroupNameMessage.class, 5, Side.SERVER);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");

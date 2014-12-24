@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
@@ -55,10 +56,9 @@ public class BlockCardStation extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (world.isRemote) {
-            return true;
-        } else if (((TileCardStation) tileEntity).inUse) {
-			player.addChatMessage(new ChatComponentText(((TileCardStation) tileEntity).player + " is using the ATM. Try again later."));
+		if (((TileCardStation) tileEntity).inUse) {
+			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(((TileCardStation) tileEntity).player + " " + 
+					StatCollector.translateToLocal("chat.cardstation.warning.inuse"))); }
 			return true;
 		} else {
         	player.openGui(UniversalCoins.instance, 0, world, x, y, z);

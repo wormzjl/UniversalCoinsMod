@@ -11,16 +11,17 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class UCCardStationServerMessage  implements IMessage, IMessageHandler<UCCardStationServerMessage, IMessage> {
-	private int x, y, z, withdrawalAmount;
+public class UCCardStationServerGroupNameMessage  implements IMessage, IMessageHandler<UCCardStationServerGroupNameMessage, IMessage> {
+	private int x, y, z;
+	private String groupName;
 
-    public UCCardStationServerMessage() {}
+    public UCCardStationServerGroupNameMessage() {}
 
-    public UCCardStationServerMessage(int x, int y, int z, int withdrawalAmount) { 
+    public UCCardStationServerGroupNameMessage(int x, int y, int z, String stringGroupName) { 
     	this.x = x;
     	this.y = y;
     	this.z = z;
-        this.withdrawalAmount = withdrawalAmount;
+        this.groupName = stringGroupName;
     }
 
     @Override
@@ -28,24 +29,23 @@ public class UCCardStationServerMessage  implements IMessage, IMessageHandler<UC
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeInt(withdrawalAmount);
-    }
+        ByteBufUtils.writeUTF8String(buf, groupName);    }
 
     @Override
     public void fromBytes(ByteBuf buf) { 
         this.x = buf.readInt();
         this.y = buf.readInt();
         this.z = buf.readInt();
-        this.withdrawalAmount = buf.readInt();
+        this.groupName = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
-	public IMessage onMessage(UCCardStationServerMessage message, MessageContext ctx) {
+	public IMessage onMessage(UCCardStationServerGroupNameMessage message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
 		if (tileEntity instanceof TileCardStation) {
-			((TileCardStation) tileEntity).coinWithdrawalAmount = message.withdrawalAmount;
+			((TileCardStation) tileEntity).groupAccountName = message.groupName;
 			}
 			return null;
 	}
