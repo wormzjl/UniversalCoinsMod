@@ -58,7 +58,7 @@ public class UCCommand extends CommandBase {
 			// get item price
 			if (astring.length > 1) {
 				int price = -1;
-				if (astring[1].matches("this")) {
+				if (astring[1].matches(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"))) {
 					ItemStack stack = getPlayerItem(sender);
 					if (stack != null) {
 						price = UCItemPricer.getItemPrice(stack);
@@ -66,16 +66,16 @@ public class UCCommand extends CommandBase {
 				} else {
 					price = UCItemPricer.getItemPrice(astring[1]);
 				}
-				String stackName = getPlayerItem(sender).getDisplayName();
+				String stackName = getPlayerItem(sender).getUnlocalizedName();
 				if (price == -1) {
 					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 							"command.uccommand.warning.pricenotset") + " " + stackName));
 				} else
 					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-							"command.uccommand.warning.pricefound") + " " + stackName + " : " + price));
+							"command.uccommand.warning.pricefound") + " " + stackName + ": " + price));
 			} else
 				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.warning.noitem")));
-		} else if (astring[0].matches("set")) {//TODO
+		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.set.name"))) {
 			// set item price
 			if (astring.length > 2) {
 				boolean result = false;
@@ -83,10 +83,10 @@ public class UCCommand extends CommandBase {
 				try {
 					price = Integer.parseInt(astring[2]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText("UC: Please specify a valid price"));//TODO
+					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.set.price.invalid")));
 					return;
 				}
-				if (astring[1].matches("this")) {
+				if (astring[1].matches(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"))) {
 					ItemStack stack = getPlayerItem(sender);
 					if (stack != null) {
 						result = UCItemPricer.setItemPrice(stack, price);
@@ -95,34 +95,32 @@ public class UCCommand extends CommandBase {
 					result = UCItemPricer.setItemPrice(astring[1], price);
 				}
 				if (result == true) {
-					sender.addChatMessage(new ChatComponentText("UC: price set to " + price));//TODO
+					sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.set.price")
+							+ " " + price));
 					if (firstChange) {
-						sender.addChatMessage(new ChatComponentText("UC: changes will not be saved"));//TODO
+						sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.set.price.firstuse.one")));
 						sender.addChatMessage(new ChatComponentText(
-								"UC: run \"universalcoins save\" to save"));//TODO
+								StatCollector.translateToLocal("command.uccommand.option.set.price.firstuse.two")));
 						sender.addChatMessage(new ChatComponentText(
-								"UC: run \"universalcoins reload\" to undo"));//TODO
+								StatCollector.translateToLocal("command.uccommand.option.set.price.firstuse.three")));
 						firstChange = false;
 					}
 				} else {
 					sender.addChatMessage(new ChatComponentText(
-							"UC: failed to set price"));//TODO
-					sender.addChatMessage(new ChatComponentText(
-							"UC: item may not be priceable"));//TODO
+							StatCollector.translateToLocal("command.uccommand.option.set.price.fail.one")));
 				}
 			} else
 				sender.addChatMessage(new ChatComponentText(
-						"UC: Please specify item and price"));//TODO
-		} else if (astring[0].matches("reload")) {//TODO
+						StatCollector.translateToLocal("command.uccommand.option.set.price.error")));
+		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reload"))) {
 			UCItemPricer.loadConfigs();
-			sender.addChatMessage(new ChatComponentText("UC: Changes reset"));//TODO
-			sender.addChatMessage(new ChatComponentText("UC: Prices reloaded"));//TODO
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.reload.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reset.name"))) {
 			UCItemPricer.resetDefaults();
-			sender.addChatMessage(new ChatComponentText("UC: Price defaults reloaded"));//TODO
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.reset.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.save.name"))) {
 			UCItemPricer.updatePriceLists();
-			sender.addChatMessage(new ChatComponentText("UC: Changes saved"));//TODO
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.save.confirm")));
 		}
 	}
 
