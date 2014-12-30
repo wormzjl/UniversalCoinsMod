@@ -33,8 +33,8 @@ public class CardStationGUI extends GuiContainer{
 	
 	public int menuState = 0;
 	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main", "additional", 
-		"balance", "deposit", "withdraw", "newcard", "transferaccount", "groupaccount", "takecard", 
-		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "groupaccountoptions"};
+		"balance", "deposit", "withdraw", "newcard", "transferaccount", "customaccount", "takecard", 
+		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions"};
 	int barProgress = 0;
 	
 	boolean shiftPressed = false;
@@ -132,10 +132,10 @@ public class CardStationGUI extends GuiContainer{
 			fontRendererObj.drawString(textField.getText(), x + 34, y + 52, 4210752);
 		}
 		if (menuState == 9) {
-			//display text field for group name entry
+			//display text field for custom name entry
 			if (textField.getText() == "0") { //textfield has not been initialized. do it now
 				textField.setMaxStringLength(20);
-				textField.setText(tEntity.groupAccountName);
+				textField.setText(tEntity.customAccountName);
 			}
 			fontRendererObj.drawString(textField.getText(), x + 34, y + 42, 4210752);
 		}		
@@ -198,7 +198,7 @@ public class CardStationGUI extends GuiContainer{
 					menuState = 15;
 				} else menuState = 8;}
 				if (button.id == idButtonThree){
-					if (!tEntity.groupAccountName.contentEquals("none")) {
+					if (!tEntity.customAccountName.contentEquals("none")) {
 						menuState = 16;
 					} else if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
 					menuState = 15;
@@ -258,17 +258,17 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonFour){menuState = 2;}
 				break;
 			case 9:
-				//groupaccount
+				//customaccount
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){
-					if (!tEntity.groupAccountName.contentEquals("none")) {
-						String groupName = textField.getText();
-						tEntity.sendServerUpdatePacket(groupName);
+					if (!tEntity.customAccountName.contentEquals("none")) {
+						String customName = textField.getText();
+						tEntity.sendServerUpdatePacket(customName);
 						functionID = 9;menuState = 10;
 					} else {
-						String groupName = textField.getText();
-						tEntity.sendServerUpdatePacket(groupName);
+						String customName = textField.getText();
+						tEntity.sendServerUpdatePacket(customName);
 						functionID = 7;menuState = 10;}
 					}
 				if (button.id == idButtonFour){menuState = 3;}
@@ -316,7 +316,7 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonFour){}
 				break;
 			case 16:
-				//group account options
+				//custom account options
 				if (button.id == idButtonOne){
 					functionID = 7;
 					menuState = 10;

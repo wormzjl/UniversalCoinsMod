@@ -3,8 +3,8 @@ package universalcoins.tile;
 import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
-import universalcoins.net.UCCardStationServerGroupNameMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -37,8 +37,8 @@ public class TileCardStation extends TileEntity implements IInventory {
 	public String cardOwner = "";
 	public String accountNumber = "none";
 	public int accountBalance = 0;
-	public String groupAccountName = "none";
-	public String groupAccountNumber = "none";
+	public String customAccountName = "none";
+	public String customAccountNumber = "none";
 	
 	@Override
 	public void updateEntity() {
@@ -134,7 +134,7 @@ public class TileCardStation extends TileEntity implements IInventory {
 				}
 				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 				cardOwner = inventory[itemCardSlot].stackTagCompound.getString("Owner");
-				if (getGroupAccount(player) != "") groupAccountName = getGroupAccount(player);
+				if (getCustomAccount(player) != "") customAccountName = getCustomAccount(player);
 				accountBalance = getAccountBalance(accountNumber);
 				}
 		}
@@ -168,8 +168,8 @@ public class TileCardStation extends TileEntity implements IInventory {
 		UniversalCoins.snw.sendToServer(new UCCardStationServerWithdrawalMessage(xCoord, yCoord, zCoord, withdrawalAmount));
 	}
 	
-	public void sendServerUpdatePacket(String groupName) {
-		UniversalCoins.snw.sendToServer(new UCCardStationServerGroupNameMessage(xCoord, yCoord, zCoord, groupName));
+	public void sendServerUpdatePacket(String customName) {
+		UniversalCoins.snw.sendToServer(new UCCardStationServerCustomNameMessage(xCoord, yCoord, zCoord, customName));
 	}
 	
 	public void updateTE() {
@@ -271,9 +271,9 @@ public class TileCardStation extends TileEntity implements IInventory {
 		//function4 - withdraw
 		//function5 - get account info
 		//function6 - destroy invalid card
-		//function7 - new group account
-		//function8 - new group card
-		//function9 - transfer group account 
+		//function7 - new custom account
+		//function8 - new custom card
+		//function9 - transfer custom account 
 		if (functionId == 1) {
 			if (getPlayerAccount(player) == "") {
 				addPlayerAccount(player);
@@ -307,9 +307,10 @@ public class TileCardStation extends TileEntity implements IInventory {
 			if (storedAccount != "") { 
 				accountNumber = storedAccount;
 				cardOwner = player; //needed for new card auth
-				if (getGroupAccount(player) != ""){
-					groupAccountName = getGroupAccount(player);
-					groupAccountNumber = getPlayerAccount(groupAccountName);
+				accountBalance = getAccountBalance(accountNumber);
+				if (getCustomAccount(player) != ""){
+					customAccountName = getCustomAccount(player);
+					customAccountNumber = getPlayerAccount(customAccountName);
 				}
 			} else accountNumber = "none";
 		}
@@ -317,32 +318,32 @@ public class TileCardStation extends TileEntity implements IInventory {
 			inventory[itemCardSlot] = null;
 		}
 		if (functionId == 7) {
-			if (getGroupAccount(player) == "") {
-				addGroupAccount(groupAccountName);
+			if (getCustomAccount(player) == "") {
+				addCustomAccount(customAccountName);
 			}
-			groupAccountName = getGroupAccount(player);
-			groupAccountNumber = getPlayerAccount(groupAccountName);
+			customAccountName = getCustomAccount(player);
+			customAccountNumber = getPlayerAccount(customAccountName);
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
-			inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
-			inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
+			inventory[itemCardSlot].stackTagCompound.setString("Owner", customAccountName);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", customAccountNumber);
 		}
 		if (functionId == 8) {
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
-			inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
-			inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
-			accountBalance = getAccountBalance(groupAccountNumber);
+			inventory[itemCardSlot].stackTagCompound.setString("Owner", customAccountName);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", customAccountNumber);
+			accountBalance = getAccountBalance(customAccountNumber);
 		}
 		if (functionId == 9) {
-			if (getGroupAccount(player) == "") {
+			if (getCustomAccount(player) == "") {
 			} else {
-				transferGroupAccount();
+				transferCustomAccount();
 				inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 				inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
-				inventory[itemCardSlot].stackTagCompound.setString("Owner", groupAccountName);
-				inventory[itemCardSlot].stackTagCompound.setString("Account", groupAccountNumber);
-				accountBalance = getAccountBalance(groupAccountNumber);
+				inventory[itemCardSlot].stackTagCompound.setString("Owner", customAccountName);
+				inventory[itemCardSlot].stackTagCompound.setString("Account", customAccountNumber);
+				accountBalance = getAccountBalance(customAccountNumber);
 			}
 		}
 	}
@@ -402,44 +403,44 @@ public class TileCardStation extends TileEntity implements IInventory {
 		}
 	}
 	
-	private String getGroupAccount(String player){
+	private String getCustomAccount(String player){
 		return getWorldString("G:" + player);
 	}
 	
-	private void addGroupAccount(String groupName) {
-		//group accounts are added as a relation of playername to groupname
-		//groupname are then associated with an account number
-		if (getWorldString("G:" + player) == "" && getWorldString(groupName) == "") {
-			while (getWorldString(groupAccountNumber) == "") {
-				groupAccountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(groupAccountNumber) == "") {
-					setWorldData("G:" + player, groupName);
-					setWorldData(groupName, groupAccountNumber);
-					setWorldData(groupAccountNumber, 0);
+	private void addCustomAccount(String customName) {
+		//custom accounts are added as a relation of playername to customname
+		//customnames are then associated with an account number
+		if (getWorldString("G:" + player) == "" && getWorldString(customName) == "") {
+			while (getWorldString(customAccountNumber) == "") {
+				customAccountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(customAccountNumber) == "") {
+					setWorldData("G:" + player, customName);
+					setWorldData(customName, customAccountNumber);
+					setWorldData(customAccountNumber, 0);
 				}
 			}
 		}
 	}
 	
-	private void transferGroupAccount() {
-		String oldGroup = getWorldString("G:" + player);
-		String oldAccount = getWorldString(oldGroup);
+	private void transferCustomAccount() {
+		String oldName = getWorldString("G:" + player);
+		String oldAccount = getWorldString(oldName);
 		int oldBalance = getAccountBalance(oldAccount);
 		delWorldData("G:" + player);
-		delWorldData(oldGroup);
+		delWorldData(oldName);
 		delWorldData(oldAccount);
 		if (getWorldString("G:" + player) == "") {
-			groupAccountNumber = "none";
-			while (getWorldString(groupAccountNumber) == "") {
-				groupAccountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(groupAccountNumber) == "") {
-					setWorldData("G:" + player, groupAccountName);
-					setWorldData(groupAccountName, groupAccountNumber);
-					setWorldData(groupAccountNumber, oldBalance);
+			customAccountNumber = "none";
+			while (getWorldString(customAccountNumber) == "") {
+				customAccountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(customAccountNumber) == "") {
+					setWorldData("G:" + player, customAccountName);
+					setWorldData(customAccountName, customAccountNumber);
+					setWorldData(customAccountNumber, oldBalance);
 				}
 				if (getWorldString(oldAccount) != "") {
 					delWorldData(oldAccount);
-					delWorldData(oldGroup);
+					delWorldData(oldName);
 				}
 			}
 		}

@@ -29,8 +29,8 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
         this.player = tileEntity.player;
         this.accountNumber = tileEntity.accountNumber;
         this.cardOwner = tileEntity.cardOwner;
-        this.groupAccountName = tileEntity.groupAccountName;
-        this.groupAccountNumber = tileEntity.groupAccountNumber;
+        this.groupAccountName = tileEntity.customAccountName;
+        this.groupAccountNumber = tileEntity.customAccountNumber;
     }
 
     @Override
@@ -82,8 +82,8 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
 			((TileCardStation) tileEntity).player = message.player;
 			((TileCardStation) tileEntity).accountNumber = message.accountNumber;
 			((TileCardStation) tileEntity).cardOwner = message.cardOwner;
-			((TileCardStation) tileEntity).groupAccountName = message.groupAccountName;
-			((TileCardStation) tileEntity).groupAccountNumber = message.groupAccountNumber;
+			((TileCardStation) tileEntity).customAccountName = message.groupAccountName;
+			((TileCardStation) tileEntity).customAccountNumber = message.groupAccountNumber;
 		}
 		return null;
 	}

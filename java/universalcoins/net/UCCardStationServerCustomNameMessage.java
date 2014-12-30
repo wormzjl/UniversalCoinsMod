@@ -11,13 +11,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class UCCardStationServerGroupNameMessage  implements IMessage, IMessageHandler<UCCardStationServerGroupNameMessage, IMessage> {
+public class UCCardStationServerCustomNameMessage  implements IMessage, IMessageHandler<UCCardStationServerCustomNameMessage, IMessage> {
 	private int x, y, z;
 	private String groupName;
 
-    public UCCardStationServerGroupNameMessage() {}
+    public UCCardStationServerCustomNameMessage() {}
 
-    public UCCardStationServerGroupNameMessage(int x, int y, int z, String stringGroupName) { 
+    public UCCardStationServerCustomNameMessage(int x, int y, int z, String stringGroupName) { 
     	this.x = x;
     	this.y = y;
     	this.z = z;
@@ -40,12 +40,12 @@ public class UCCardStationServerGroupNameMessage  implements IMessage, IMessageH
 	}
 
 	@Override
-	public IMessage onMessage(UCCardStationServerGroupNameMessage message, MessageContext ctx) {
+	public IMessage onMessage(UCCardStationServerCustomNameMessage message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
 		if (tileEntity instanceof TileCardStation) {
-			((TileCardStation) tileEntity).groupAccountName = message.groupName;
+			((TileCardStation) tileEntity).customAccountName = message.groupName;
 			}
 			return null;
 	}

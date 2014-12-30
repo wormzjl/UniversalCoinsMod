@@ -117,8 +117,8 @@ public class ContainerCardStation extends Container {
     		this.lastCardOwner != tEntity.cardOwner ||
     	    this.lastAccountNumber != tEntity.accountNumber ||
     		this.lastAccountBalance != tEntity.accountBalance ||
-    		this.lastGroupAccountName != tEntity.groupAccountName ||
-    	    this.lastGroupAccountNumber != tEntity.groupAccountNumber) {
+    		this.lastGroupAccountName != tEntity.customAccountName ||
+    	    this.lastGroupAccountNumber != tEntity.customAccountNumber) {
             	tEntity.updateTE();
             }
 
@@ -130,8 +130,8 @@ public class ContainerCardStation extends Container {
 		this.lastCardOwner = tEntity.cardOwner;
 		this.lastAccountNumber = tEntity.accountNumber;
 		this.lastAccountBalance = tEntity.accountBalance;
-		this.lastGroupAccountName = tEntity.groupAccountName;
-		this.lastGroupAccountNumber = tEntity.groupAccountNumber;
+		this.lastGroupAccountName = tEntity.customAccountName;
+		this.lastGroupAccountNumber = tEntity.customAccountNumber;
         }
 	}
 	

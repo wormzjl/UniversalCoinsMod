@@ -46,12 +46,18 @@ public class UCBalance extends CommandBase {
 		if (sender instanceof EntityPlayerMP) {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
 			int accountCoins = getAccountBalance((EntityPlayerMP) sender);
+			String customAcct = getCustomAccount((EntityPlayerMP) sender);
 			DecimalFormat formatter = new DecimalFormat("###,###,###");
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 					"command.balance.result.inventory") + formatter.format(playerCoins)));
 			if (accountCoins != -1) {
 				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 						"command.balance.result.account") + formatter.format(accountCoins)));
+			}
+			if (customAcct != "") {
+				int accountSum = getCustomAccountBalance((EntityPlayerMP) sender);
+				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
+						"command.balance.result.customaccount") + formatter.format(accountSum)));
 			}
 		}		
 	}
@@ -69,7 +75,22 @@ public class UCBalance extends CommandBase {
 		return coinsFound;
 	}
 	
-	public int getAccountBalance(EntityPlayerMP player) {
+	private String getCustomAccount(EntityPlayerMP player) {
+		//returns an empty string if no account found
+		return getWorldString(player, "G:" + player.getDisplayName());
+	}
+	
+	private int getCustomAccountBalance(EntityPlayerMP player) {
+		String customName = getCustomAccount(player);
+		if (getWorldString(player, customName) != "") {
+			String custNumber = getWorldString(player, customName);
+			if (getWorldString(player, custNumber) != "") {
+				return getWorldInt(player, custNumber);
+			}
+		} return -1;
+	}
+	
+	private int getAccountBalance(EntityPlayerMP player) {
 		if (getWorldString(player, player.getDisplayName()) != "") {
 			String accountNumber = getWorldString(player, player.getDisplayName());
 			if (getWorldString(player, accountNumber) != "") {

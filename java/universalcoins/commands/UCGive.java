@@ -54,7 +54,7 @@ public class UCGive extends CommandBase {
 			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + astring[1] + 
 					" " + StatCollector.translateToLocal("item.itemCoin.name")));
 			recipient.addChatMessage(new ChatComponentText( sender.getCommandSenderName() + " " +
-					StatCollector.translateToLocal("command.givecoins.result") + astring[1] + 
+					StatCollector.translateToLocal("command.givecoins.result") + " " + astring[1] + 
 					" " + StatCollector.translateToLocal("item.itemCoin.name")));
 		} else
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.givecoins.error.noname")));
