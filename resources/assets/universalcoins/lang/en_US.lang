@@ -118,6 +118,7 @@ hintgui.sellmode.buy=Buying
 hintgui.price=Price: 
 hintgui.warning.stock=Out Of Stock!
 hintgui.warning.coins=Out Of Coins!
+hintgui.warning.inventoryfull=Inventory is Full!
 
 #####
 # ATM GUI

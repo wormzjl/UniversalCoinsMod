@@ -84,6 +84,11 @@ public class HintGui extends GuiScreen {
 					warning = true;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}
+				//add inventory full notification
+				if (!tileEntity.sellMode && !tileEntity.hasInventorySpace()) {
+					warning = true;
+					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.inventoryfull"));
+				}
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);
 				//reset width to longest string plus a bit

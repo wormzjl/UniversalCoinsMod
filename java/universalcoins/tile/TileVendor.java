@@ -74,7 +74,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			activateRetrieveButtons();
 			activateUserRetrieveButtons();
 			activateBuyButton();
-			activateSellStatus();
+			activateSellButton();
 		}
 	}
 	
@@ -92,7 +92,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} else buyButtonActive = false;
 	}
 	
-	private void activateSellStatus() {
+	private void activateSellButton() {
 		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem() &&
 				(getAccountBalance() > itemPrice || coinSum > itemPrice)) {
 			sellButtonActive = true;
@@ -100,6 +100,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		if (getOwnerAccountBalance() > itemPrice || coinSum > itemPrice) {
 			sellCoins = true;
 		} else sellCoins = false;
+		if (hasInventorySpace()) {
+			sellButtonActive = true;
+		} else sellButtonActive = false;
 	}
 	
 	private void activateRetrieveButtons() {
@@ -408,6 +411,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		return false;
 	}
 	
+	public boolean hasInventorySpace() {
+		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+			if (inventory[i] == null) return true; //slot is empty. no need to continue
+			if (inventory[i].stackSize < inventory[i].getMaxStackSize()) return true;
+		}
+		return false;
+	}
+	
 	public ItemStack getSellItem() {
 		return inventory[itemTradeSlot];
 	}
@@ -475,6 +486,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				}
 			}
 		}
+		updateTE();
 	}
 	
 	private int getCoinType(Item item) {
