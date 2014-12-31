@@ -1,14 +1,18 @@
 package universalcoins.items;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
-import universalcoins.net.UCAccountQueryMessage;
+import universalcoins.util.UCWorldData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,7 +38,21 @@ public class ItemUCCard extends Item {
 	
 	@Override
     public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
-		if (world.isRemote) UniversalCoins.snw.sendToServer(new UCAccountQueryMessage(itemstack.stackTagCompound.getString("Account")));
+		if (world.isRemote) return true;
+		int accountCoins = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
+					"item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
         return true;
     }
+	
+	private int getAccountBalance(World world, String accountNumber) {
+		return getWorldInt(world, accountNumber);
+	}
+
+	private int getWorldInt(World world, String tag) {
+		UCWorldData wData = UCWorldData.get(world);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getInteger(tag);
+	}
 }

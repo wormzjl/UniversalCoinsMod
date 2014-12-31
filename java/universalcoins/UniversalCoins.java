@@ -15,7 +15,6 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
-import universalcoins.net.UCAccountQueryMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
@@ -154,7 +153,6 @@ public class UniversalCoins {
 	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
 	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
 	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
-	    snw.registerMessage(UCAccountQueryMessage.class, UCAccountQueryMessage.class, 6, Side.SERVER);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
