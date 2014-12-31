@@ -1,5 +1,8 @@
 package universalcoins;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorBuyGUI;
@@ -15,11 +18,6 @@ import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 class GuiHandler implements IGuiHandler {

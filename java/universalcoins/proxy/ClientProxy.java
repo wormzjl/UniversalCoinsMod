@@ -1,6 +1,5 @@
 package universalcoins.proxy;
 
-import net.minecraft.client.renderer.tileentity.RenderItemFrame;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;

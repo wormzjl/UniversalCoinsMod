@@ -1,10 +1,7 @@
 package universalcoins.util;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import universalcoins.UniversalCoins;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 

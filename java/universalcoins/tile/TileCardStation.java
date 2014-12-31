@@ -1,17 +1,6 @@
 package universalcoins.tile;
 
-import universalcoins.UniversalCoins;
-import universalcoins.inventory.ContainerCardStation;
-import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCCardStationServerCustomNameMessage;
-import universalcoins.net.UCCardStationServerWithdrawalMessage;
-import universalcoins.net.UCTileCardStationMessage;
-import universalcoins.net.UCTileTradeStationMessage;
-import universalcoins.net.UCVendorServerMessage;
-import universalcoins.util.UCWorldData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +9,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import universalcoins.UniversalCoins;
+import universalcoins.inventory.ContainerCardStation;
+import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCCardStationServerCustomNameMessage;
+import universalcoins.net.UCCardStationServerWithdrawalMessage;
+import universalcoins.net.UCTileCardStationMessage;
+import universalcoins.util.UCWorldData;
 
 public class TileCardStation extends TileEntity implements IInventory {
 	private ItemStack[] inventory = new ItemStack[2];

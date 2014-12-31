@@ -2,20 +2,16 @@ package universalcoins.commands;
 
 import java.text.DecimalFormat;
 
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.UniversalCoins;
-import universalcoins.util.UCWorldData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.WorldServer;
+import universalcoins.UniversalCoins;
+import universalcoins.util.UCWorldData;
 
 public class UCBalance extends CommandBase {
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
@@ -47,7 +43,7 @@ public class UCBalance extends CommandBase {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
 			int accountCoins = getAccountBalance((EntityPlayerMP) sender);
 			String customAcct = getCustomAccount((EntityPlayerMP) sender);
-			DecimalFormat formatter = new DecimalFormat("###,###,###");
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 					"command.balance.result.inventory") + formatter.format(playerCoins)));
 			if (accountCoins != -1) {

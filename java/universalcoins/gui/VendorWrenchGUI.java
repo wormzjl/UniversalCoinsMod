@@ -1,16 +1,14 @@
 package universalcoins.gui;
 
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.inventory.ContainerVendorWrench;
-import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import universalcoins.inventory.ContainerVendorWrench;
+import universalcoins.tile.TileVendor;
 
 public class VendorWrenchGUI extends GuiContainer {
 	private TileVendor tileEntity;

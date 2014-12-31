@@ -4,10 +4,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
@@ -21,6 +17,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
+import org.lwjgl.opengl.GL11;
+
+import universalcoins.tile.TileVendor;
 
 public class HintGui extends GuiScreen {
 	private static Minecraft mc = Minecraft.getMinecraft();

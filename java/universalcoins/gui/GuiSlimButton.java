@@ -1,12 +1,12 @@
 package universalcoins.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
 
 public class GuiSlimButton extends GuiButton {
 	protected ResourceLocation buttonTexture= new ResourceLocation("universalcoins", "textures/gui/buttons.png");

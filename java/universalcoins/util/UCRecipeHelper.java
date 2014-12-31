@@ -1,14 +1,9 @@
 package universalcoins.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import universalcoins.UniversalCoins;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class UCRecipeHelper {

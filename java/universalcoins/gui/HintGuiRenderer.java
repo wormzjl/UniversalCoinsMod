@@ -1,7 +1,7 @@
 package universalcoins.gui;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class HintGuiRenderer {
 	public static HintGuiRenderer instance = new HintGuiRenderer();

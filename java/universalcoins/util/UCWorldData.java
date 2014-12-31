@@ -1,11 +1,10 @@
 package universalcoins.util;
 
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.UniversalCoins;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
+import universalcoins.UniversalCoins;
 
 public class UCWorldData extends WorldSavedData {
 	

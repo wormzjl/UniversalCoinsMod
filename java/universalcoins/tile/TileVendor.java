@@ -1,12 +1,5 @@
 package universalcoins.tile;
 
-import universalcoins.UniversalCoins;
-import universalcoins.gui.VendorGUI;
-import universalcoins.gui.VendorSellGUI;
-import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCVendorServerMessage;
-import universalcoins.util.UCItemPricer;
-import universalcoins.util.UCWorldData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -19,6 +12,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import universalcoins.UniversalCoins;
+import universalcoins.gui.VendorGUI;
+import universalcoins.gui.VendorSellGUI;
+import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCVendorServerMessage;
+import universalcoins.util.UCWorldData;
 
 public class TileVendor extends TileEntity implements IInventory, ISidedInventory {
 	

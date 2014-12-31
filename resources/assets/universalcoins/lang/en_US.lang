@@ -63,8 +63,6 @@ command.uccommand.usage.hint=Hint: Use \"this\" in place of <itemName> to get or
 command.uccommand.warning.pricenotset=No price has been set for
 command.uccommand.warning.pricefound=The price for
 command.uccommand.warning.noitem=Please specify item
-####incomplete!!!!!!!!!!!!
-
 command.givecoins.name=givecoins
 command.givecoins.help=/givecoins <playerName> <amount> : Give another player coins.
 command.givecoins.error.notfound=Player not found.
@@ -86,6 +84,11 @@ command.send.result.receiver=coins received from
 # Chat Warnings
 #####
 chat.cardstation.warning.inuse=is using the ATM. Try again later.
+
+#####
+# Universal Card Messages
+#####
+item.itemUCCard.balance=Account balance:
 
 #####
 # TradeStation GUI

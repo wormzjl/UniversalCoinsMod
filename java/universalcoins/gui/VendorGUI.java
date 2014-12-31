@@ -1,20 +1,17 @@
 package universalcoins.gui;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.inventory.ContainerVendor;
-import universalcoins.tile.TileVendor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.input.Keyboard;
+
+import universalcoins.inventory.ContainerVendor;
+import universalcoins.tile.TileVendor;
 
 public class VendorGUI extends GuiContainer{
 	private TileVendor tileEntity;

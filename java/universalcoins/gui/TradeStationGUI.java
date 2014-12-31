@@ -1,20 +1,11 @@
 package universalcoins.gui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;

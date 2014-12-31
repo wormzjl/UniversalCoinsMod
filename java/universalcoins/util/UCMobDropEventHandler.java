@@ -2,16 +2,13 @@ package universalcoins.util;
 
 import java.util.Random;
 
-import universalcoins.UniversalCoins;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import cpw.mods.fml.common.FMLLog;
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 public class UCMobDropEventHandler {
 	

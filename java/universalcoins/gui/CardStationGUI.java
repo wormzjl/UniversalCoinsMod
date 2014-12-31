@@ -1,26 +1,19 @@
 package universalcoins.gui;
 
-import java.awt.Color;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import universalcoins.UniversalCoins;
-import universalcoins.inventory.ContainerCardStation;
-import universalcoins.tile.TileCardStation;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
+import org.lwjgl.input.Keyboard;
+
+import universalcoins.inventory.ContainerCardStation;
+import universalcoins.tile.TileCardStation;
 
 public class CardStationGUI extends GuiContainer{
 	private GuiButton buttonOne, buttonTwo, buttonThree, buttonFour;

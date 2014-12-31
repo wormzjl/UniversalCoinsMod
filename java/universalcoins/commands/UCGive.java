@@ -1,6 +1,5 @@
 package universalcoins.commands;
 
-import universalcoins.UniversalCoins;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldServer;
+import universalcoins.UniversalCoins;
 
 public class UCGive extends CommandBase {
 	private static final Item[] coins = new Item[] {

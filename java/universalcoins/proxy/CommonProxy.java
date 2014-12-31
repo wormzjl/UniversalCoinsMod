@@ -1,9 +1,7 @@
 package universalcoins.proxy;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import universalcoins.UniversalCoins;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
@@ -17,7 +15,6 @@ import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemUCCard;
 import universalcoins.items.ItemVendorWrench;
 import universalcoins.util.Vending;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {

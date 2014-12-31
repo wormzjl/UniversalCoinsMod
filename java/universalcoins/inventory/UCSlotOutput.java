@@ -2,7 +2,6 @@ package universalcoins.inventory;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class UCSlotOutput extends Slot {

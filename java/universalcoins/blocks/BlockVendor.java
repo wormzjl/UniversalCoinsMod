@@ -2,22 +2,12 @@ package universalcoins.blocks;
 
 
 import java.util.List;
-import java.util.Random;
 
-import universalcoins.UniversalCoins;
-import universalcoins.items.ItemVendorWrench;
-import universalcoins.render.BlockVendorRenderer;
-import universalcoins.tile.TileTradeStation;
-import universalcoins.tile.TileVendor;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +20,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import universalcoins.UniversalCoins;
+import universalcoins.render.BlockVendorRenderer;
+import universalcoins.tile.TileVendor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVendor extends BlockContainer {
 	Block[] supportBlocks;

@@ -1,14 +1,5 @@
 package universalcoins.tile;
 
-import universalcoins.UniversalCoins;
-import universalcoins.gui.TradeStationGUI;
-import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileTradeStationMessage;
-import universalcoins.util.UCItemPricer;
-import universalcoins.util.UCWorldData;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -16,11 +7,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import universalcoins.UniversalCoins;
+import universalcoins.gui.TradeStationGUI;
+import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCTileTradeStationMessage;
+import universalcoins.util.UCItemPricer;
+import universalcoins.util.UCWorldData;
+import cpw.mods.fml.common.FMLLog;
 
 
 public class TileTradeStation extends TileEntity implements IInventory, ISidedInventory {
