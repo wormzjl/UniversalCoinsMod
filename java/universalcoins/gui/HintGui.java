@@ -59,7 +59,7 @@ public class HintGui extends GuiScreen {
 				} else { 
 					itemInfoStringList.add(itemSelling.getDisplayName());
 				}
-				String longestString = itemInfoStringList.get(1).toString();
+				
 				if (itemSelling.isItemEnchanted()) {
 					NBTTagList tagList = itemSelling.getEnchantmentTagList();
 					for (int i = 0; i < tagList.tagCount(); i++) {
@@ -68,7 +68,7 @@ public class HintGui extends GuiScreen {
 						String eInfo = Enchantment.enchantmentsList[enchant
 								.getInteger("id")].getTranslatedName(enchant
 								.getInteger("lvl"));
-						if (eInfo.length() > longestString.length()) longestString = eInfo;
+						
 						itemInfoStringList.add(eInfo);
 					}
 				}
@@ -87,7 +87,12 @@ public class HintGui extends GuiScreen {
 				// reset height since we now have more lines
 				h = (10 * itemInfoStringList.size() + 4);
 				//reset width to longest string plus a bit
-				w = fontRender.getStringWidth(longestString) + 6;
+				String longestString = itemInfoStringList.get(0).toString();
+				for (int i = 0; i < itemInfoStringList.size(); i++) {
+					if (itemInfoStringList.get(i).toString().length() > longestString.length()) longestString = 
+							itemInfoStringList.get(i).toString();
+				}
+				w = fontRender.getStringWidth(longestString) + 8;
 				//set start point for x draw of background rectangle
 				x = cx - w / 2;
 			} else {
