@@ -207,7 +207,6 @@ public class UniversalCoins {
 		manager.registerCommand(new UCRebalance());
 		manager.registerCommand(new UCGive());
 		manager.registerCommand(new UCSend());
-		
 	}
 
 }

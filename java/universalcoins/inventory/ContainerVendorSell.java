@@ -7,6 +7,7 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import universalcoins.tile.TileVendor;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,6 +15,9 @@ public class ContainerVendorSell extends Container {
 	private TileVendor tileEntity;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
+	private boolean lastOoStock;
+	private boolean lastOoCoins;
+	private boolean lastInvFull;	
 	private boolean lastBuyButtonActive;
 	private boolean lastUCoinButtonActive;
 	private boolean lastUSStackButtonActive;
@@ -109,8 +113,11 @@ public class ContainerVendorSell extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastUserCoinSum != this.tileEntity.userCoinSum 
+            if ( this.lastUserCoinSum != this.tileEntity.userCoinSum 
             		|| this.lastItemPrice != this.tileEntity.itemPrice
+            		|| this.lastOoStock != this.tileEntity.ooStockWarning
+            		|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
+            		|| this.lastInvFull != this.tileEntity.inventoryFullWarning
             		|| this.lastBuyButtonActive != this.tileEntity.buyButtonActive
             		|| this.lastUCoinButtonActive != this.tileEntity.uCoinButtonActive
             		|| this.lastUSStackButtonActive != this.tileEntity.uSStackButtonActive
@@ -119,16 +126,19 @@ public class ContainerVendorSell extends Container {
             		|| this.lastULBagButtonActive != this.tileEntity.uLBagButtonActive) {
                 //update
             	tileEntity.updateTE();
+            	
+            	this.lastUserCoinSum = this.tileEntity.userCoinSum;
+        		this.lastItemPrice = this.tileEntity.itemPrice;
+        		this.lastOoStock = this.tileEntity.ooStockWarning;
+                this.lastOoCoins = this.tileEntity.ooCoinsWarning;
+                this.lastInvFull = this.tileEntity.inventoryFullWarning;
+        		this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
+        		this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
+                this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
+                this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
+                this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
+                this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
             }
-
-		this.lastUserCoinSum = this.tileEntity.userCoinSum;
-		this.lastItemPrice = this.tileEntity.itemPrice;
-		this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
-		this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
-        this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
-        this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
-        this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
-        this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
         }
 	}
 	

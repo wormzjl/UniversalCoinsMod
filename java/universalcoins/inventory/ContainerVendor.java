@@ -12,6 +12,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerVendor extends Container {
 	private TileVendor tileEntity;
+	private boolean lastOoStock;
+	private boolean lastOoCoins;
+	private boolean lastInvFull;
 	private int lastCoinSum;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
@@ -108,19 +111,25 @@ public class ContainerVendor extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i)
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
-
-            if (this.lastCoinSum != this.tileEntity.coinSum
+            
+            if ( this.lastOoStock != this.tileEntity.ooStockWarning
+            		|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
+                    || this.lastInvFull != this.tileEntity.inventoryFullWarning
+                    || this.lastCoinSum != this.tileEntity.coinSum
             		|| this.lastUserCoinSum != this.tileEntity.userCoinSum
             		|| this.lastItemPrice != this.tileEntity.itemPrice
             		|| this.lastSellMode != this.tileEntity.sellMode) {
                 //update
             	tileEntity.updateTE();
+            	
+            	this.lastOoStock = this.tileEntity.ooStockWarning;
+                this.lastOoCoins = this.tileEntity.ooCoinsWarning;
+                this.lastInvFull = this.tileEntity.inventoryFullWarning;
+        		this.lastCoinSum = this.tileEntity.coinSum;
+        		this.lastUserCoinSum = this.tileEntity.userCoinSum;
+        		this.lastItemPrice = this.tileEntity.itemPrice;
+        		this.lastSellMode = this.tileEntity.sellMode;
             }
-
-		this.lastCoinSum = this.tileEntity.coinSum;
-		this.lastUserCoinSum = this.tileEntity.userCoinSum;
-		this.lastItemPrice = this.tileEntity.itemPrice;
-		this.lastSellMode = this.tileEntity.sellMode;
         }
 	}
 	

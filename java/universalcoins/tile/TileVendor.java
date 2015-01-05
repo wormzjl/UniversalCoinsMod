@@ -53,7 +53,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public int itemPrice = 0;
 	public boolean infiniteSell = false;
 	public boolean sellMode = true;
-	public boolean sellCoins = false;
+	public boolean ooStockWarning = true;
+	public boolean ooCoinsWarning = true;
+	public boolean inventoryFullWarning = true;	
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;	
 	public boolean coinButtonActive = false;
@@ -66,6 +68,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean uLStackButtonActive = false;
 	public boolean uSBagButtonActive = false;
 	public boolean uLBagButtonActive = false;
+	
 	
 	@Override
 	public void updateEntity() {
@@ -80,8 +83,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	private void activateBuyButton() {
 		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
-				&& (hasSellingInventory() || infiniteSell)) || 
-				(inventory[itemUserCardSlot] != null && getAccountBalance() > itemPrice)) {
+				&& (!ooStockWarning || infiniteSell)) || 
+				(inventory[itemUserCardSlot] != null && getAccountBalance() > itemPrice && !ooStockWarning)) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
 					buyButtonActive = false;
@@ -94,13 +97,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	private void activateSellButton() {
 		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem() &&
-				(getAccountBalance() > itemPrice || coinSum > itemPrice)) {
-			sellButtonActive = true;
-		} else sellButtonActive = false;
-		if (getOwnerAccountBalance() > itemPrice || coinSum > itemPrice) {
-			sellCoins = true;
-		} else sellCoins = false;
-		if (hasInventorySpace()) {
+				hasInventorySpace() && (getOwnerAccountBalance() >= itemPrice || coinSum >= itemPrice)) {
 			sellButtonActive = true;
 		} else sellButtonActive = false;
 	}
@@ -136,6 +133,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		if (buttonClickedID <= VendorGUI.idLBagButton ) {
 			//get owner coins
 			coinSum = retrieveCoins(coinSum,buttonClickedID, shiftPressed);
+			updateCoinsForPurchase();
 		} else {
 			//get buyer coins
 			userCoinSum = retrieveCoins(userCoinSum,buttonClickedID, shiftPressed);
@@ -246,7 +244,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 						* amount, inventory[itemTradeSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize);
 				inventory[itemOutputSlot].stackSize += totalSale;
-				if (useCard && inventory[itemUserCardSlot] == null) { 
+				if (useCard && inventory[itemUserCardSlot] != null) { 
 					debitAccount(itemPrice * amount);
 				} else {
 					userCoinSum -= itemPrice * amount;
@@ -295,6 +293,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				}
 			}
 		}
+		checkSellingInventory(); //we sold things. Make sure we still have some left
 	}
 	
 	public void onBuyMaxPressed() {
@@ -394,6 +393,10 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				if (inventory[itemSellSlot] == null || inventory[itemSellSlot].stackSize == 0) {
 					inventory[itemSellSlot] = null;
 				}
+				if (amount == 0) {
+					updateCoinsForPurchase(); //we bought stuff. Make sure we have coins left.
+					return; //we are done here. exit the loop.
+				}
 			}
 		}
 	}
@@ -402,21 +405,32 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		sellMode ^= true;
 	}
 	
-	public boolean hasSellingInventory() {
+	public void checkSellingInventory() {
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
 			if (inventory[i] != null && inventory[itemTradeSlot] != null && inventory[i].getItem() == inventory[itemTradeSlot].getItem()) {
-				return true;
+				this.ooStockWarning = false;
+				return;
 			}
-		}
-		return false;
+		} this.ooStockWarning = true; //if we reach this point, we are OOS.
 	}
 	
 	public boolean hasInventorySpace() {
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
-			if (inventory[i] == null) return true; //slot is empty. no need to continue
-			if (inventory[i].stackSize < inventory[i].getMaxStackSize()) return true;
+			if (inventory[i] == null || (inventory[i] == inventory[itemSellSlot] && inventory[i].stackSize < inventory[i].getMaxStackSize())) {
+				this.inventoryFullWarning = false;
+				return true;
+			}
 		}
+		this.inventoryFullWarning = true; //if we reach this point, we have no space left.
 		return false;
+	}
+	
+	public void updateCoinsForPurchase() {
+		if (coinSum >= itemPrice || (inventory[itemCardSlot] != null && getOwnerAccountBalance() >= itemPrice)) {
+			this.ooCoinsWarning = false;
+		} else {
+			this.ooCoinsWarning = true;
+		}
 	}
 	
 	public ItemStack getSellItem() {
@@ -449,12 +463,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		if (inventory[slot].stackSize <= stackSize) {
 			newStack = inventory[slot];
 			inventory[slot] = null;
-
+			if(slot < itemStorageSlot9)checkSellingInventory(); //update inventory status
 			return newStack;
 		}
 		newStack = ItemStack.copyItemStack(inventory[slot]);
 		newStack.stackSize = stackSize;
 		inventory[slot].stackSize -= stackSize;
+		if(slot < itemStorageSlot9)checkSellingInventory();
 		return newStack;
 	}
 
@@ -475,6 +490,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					if (slot == itemCoinInputSlot) {
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
 						coinSum += depositAmount * itemValue;
+						updateCoinsForPurchase();
 					} else {
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - userCoinSum) / itemValue);
 						userCoinSum += depositAmount * itemValue;
@@ -485,8 +501,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					}
 				}
 			}
+			if (slot == itemCardSlot) updateCoinsForPurchase();
+			checkSellingInventory(); //update inventory status
 		}
-		updateTE();
 	}
 	
 	private int getCoinType(Item item) {
@@ -604,6 +621,21 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			sellMode = false;
 		}
 		try {
+			ooStockWarning = tagCompound.getBoolean("OutOfStock");
+		} catch (Throwable ex2) {
+			ooStockWarning = true;
+		}
+		try {
+			ooCoinsWarning = tagCompound.getBoolean("OutOfCoins");
+		} catch (Throwable ex2) {
+			ooCoinsWarning = true;
+		}
+		try {
+			inventoryFullWarning = tagCompound.getBoolean("InventoryFull");
+		} catch (Throwable ex2) {
+			inventoryFullWarning = true;
+		}
+		try {
 			buyButtonActive = tagCompound.getBoolean("BuyButtonActive");
 		} catch (Throwable ex2) {
 			buyButtonActive = false;
@@ -612,11 +644,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			sellButtonActive = tagCompound.getBoolean("SellButtonActive");
 		} catch (Throwable ex2) {
 			sellButtonActive = false;
-		}
-		try {
-			sellCoins = tagCompound.getBoolean("SellCoins");
-		} catch (Throwable ex2) {
-			sellCoins = false;
 		}
 		try {
 			coinButtonActive = tagCompound.getBoolean("CoinButtonActive");
@@ -690,9 +717,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setString("BlockOwner", blockOwner);
 		tagCompound.setBoolean("Infinite", infiniteSell);
 		tagCompound.setBoolean("Mode", sellMode);
+		tagCompound.setBoolean("OutOfStock", ooStockWarning);
+		tagCompound.setBoolean("OutOfCoins", ooCoinsWarning);
+		tagCompound.setBoolean("InventoryFull", inventoryFullWarning);
 		tagCompound.setBoolean("BuyButtonActive", buyButtonActive);
 		tagCompound.setBoolean("SellButtonActive", sellButtonActive);
-		tagCompound.setBoolean("SellCoins", sellCoins);
 		tagCompound.setBoolean("CoinButtonActive", coinButtonActive);
 		tagCompound.setBoolean("SmallStackButtonActive", isSStackButtonActive);
 		tagCompound.setBoolean("LargeStackButtonActive", isLStackButtonActive);

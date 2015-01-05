@@ -75,17 +75,17 @@ public class HintGui extends GuiScreen {
 				DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
 				itemInfoStringList.add(StatCollector.translateToLocal("hintgui.price") + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
-				if (!tileEntity.infiniteSell && !tileEntity.hasSellingInventory() && tileEntity.sellMode) {
+				if (!tileEntity.infiniteSell && tileEntity.sellMode && tileEntity.ooStockWarning) {
 					warning = true;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.stock"));
 				}
 				//add out of coins notification if buying and no funds available
-				if (!tileEntity.sellMode && !tileEntity.sellCoins) {
+				if (!tileEntity.sellMode && tileEntity.ooCoinsWarning) {
 					warning = true;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}
 				//add inventory full notification
-				if (!tileEntity.sellMode && !tileEntity.hasInventorySpace()) {
+				if (!tileEntity.sellMode && tileEntity.inventoryFullWarning) {
 					warning = true;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.inventoryfull"));
 				}

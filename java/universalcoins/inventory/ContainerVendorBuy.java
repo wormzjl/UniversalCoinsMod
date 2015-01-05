@@ -14,6 +14,9 @@ public class ContainerVendorBuy extends Container {
 	private TileVendor tileEntity;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
+	private boolean lastOoStock;
+	private boolean lastOoCoins;
+	private boolean lastInvFull;	
 	private boolean lastSellButtonActive;
 	private boolean lastUCoinButtonActive;
 	private boolean lastUSStackButtonActive;
@@ -107,8 +110,11 @@ public class ContainerVendorBuy extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.lastUserCoinSum != tileEntity.userCoinSum 
-            		|| this.lastItemPrice != tileEntity.itemPrice
+            if ( this.lastItemPrice != tileEntity.itemPrice
+                    || this.lastUserCoinSum != tileEntity.userCoinSum 
+            		|| this.lastOoStock != this.tileEntity.ooStockWarning
+            		|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
+                    || this.lastInvFull != this.tileEntity.inventoryFullWarning
             		|| this.lastSellButtonActive != tileEntity.sellButtonActive
             		|| this.lastUCoinButtonActive != this.tileEntity.uCoinButtonActive
             		|| this.lastUSStackButtonActive != this.tileEntity.uSStackButtonActive
@@ -117,16 +123,19 @@ public class ContainerVendorBuy extends Container {
             		|| this.lastULBagButtonActive != this.tileEntity.uLBagButtonActive) {
                 //update
             	tileEntity.updateTE();
+            	
+            	this.lastUserCoinSum = tileEntity.userCoinSum;
+        		this.lastItemPrice = tileEntity.itemPrice;
+        		this.lastOoStock = this.tileEntity.ooStockWarning;
+                this.lastOoCoins = this.tileEntity.ooCoinsWarning;
+                this.lastInvFull = this.tileEntity.inventoryFullWarning;
+        		this.lastSellButtonActive = tileEntity.sellButtonActive;
+        		this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
+                this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
+                this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
+                this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
+                this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
             }
-
-		this.lastUserCoinSum = tileEntity.userCoinSum;
-		this.lastItemPrice = tileEntity.itemPrice;
-		this.lastSellButtonActive = tileEntity.sellButtonActive;
-		this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
-        this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
-        this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
-        this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
-        this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
         }
 	}
 	
