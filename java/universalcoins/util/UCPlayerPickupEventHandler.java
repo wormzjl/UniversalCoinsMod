@@ -1,9 +1,7 @@
 package universalcoins.util;
 
-import java.awt.Event;
 import java.text.DecimalFormat;
 
-import universalcoins.UniversalCoins;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,7 +10,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import cpw.mods.fml.common.FMLLog;
+import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class UCPlayerPickupEventHandler {

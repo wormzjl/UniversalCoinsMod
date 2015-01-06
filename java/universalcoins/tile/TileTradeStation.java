@@ -16,7 +16,6 @@ import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCWorldData;
-import cpw.mods.fml.common.FMLLog;
 
 
 public class TileTradeStation extends TileEntity implements IInventory, ISidedInventory {
@@ -97,7 +96,6 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				//enable buy button if card is present and has enough coins
 				if (inventory[itemCardSlot] != null && !buyButtonActive && !worldObj.isRemote) {
 					buyButtonActive = (getAccountBalance() > itemPrice);
-					FMLLog.info("Buy active: " + buyButtonActive);
 				}
 			}
 		}

@@ -419,7 +419,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	public boolean hasInventorySpace() {
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
-			if (inventory[i] == null || (inventory[i] == inventory[itemTradeSlot] && inventory[i].stackSize < inventory[i].getMaxStackSize())) {
+			if (inventory[i] == null || (inventory[i].getItem() == inventory[itemTradeSlot].getItem()
+					&& inventory[i].stackSize < inventory[i].getMaxStackSize())) {
 				this.inventoryFullWarning = false;
 				return true;
 			}
@@ -466,7 +467,10 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		if (inventory[slot].stackSize <= stackSize) {
 			newStack = inventory[slot];
 			inventory[slot] = null;
-			if(slot < itemStorageSlot9)checkSellingInventory(); //update inventory status
+			if(slot < itemStorageSlot9){ //update inventory status
+				checkSellingInventory();
+				hasInventorySpace();
+				}
 			return newStack;
 		}
 		newStack = ItemStack.copyItemStack(inventory[slot]);
@@ -504,8 +508,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					}
 				}
 			}
-			if (slot == itemCardSlot) updateCoinsForPurchase();
+			if (slot == itemCardSlot) { updateCoinsForPurchase(); }
 			checkSellingInventory(); //update inventory status
+			hasInventorySpace();
 		}
 	}
 	
