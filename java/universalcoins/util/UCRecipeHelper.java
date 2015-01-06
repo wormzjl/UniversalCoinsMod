@@ -84,4 +84,10 @@ public class UCRecipeHelper {
 			'I', Items.iron_ingot,'C', UniversalCoins.proxy.itemCoin
 		});
 	}
+	
+	public static void addEnderCardRecipes() {
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard), new Object[]{
+				UniversalCoins.proxy.itemUCCard, Items.ender_pearl
+		});
+	}
 }

@@ -1,6 +1,7 @@
 package universalcoins.util;
 
 import java.awt.Event;
+import java.text.DecimalFormat;
 
 import universalcoins.UniversalCoins;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +32,7 @@ public class UCPlayerPickupEventHandler {
 			world = event.entityPlayer.worldObj;
 			EntityPlayer player = event.entityPlayer;
 			ItemStack[] inventory = player.inventory.mainInventory;
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
 			for (int i = 0; i < inventory.length; i++) {
 				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.itemEnderCard) {
 					if (!inventory[i].hasTagCompound()) return; //card has not been initialized. Nothing we can do here
@@ -43,7 +45,8 @@ public class UCPlayerPickupEventHandler {
 					int depositAmount = Math.min(event.item.getEntityItem().stackSize, (Integer.MAX_VALUE - accountBalance ) / coinValue);
 					creditAccount(accountNumber, depositAmount * coinValue);
 					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-							"Player picked up " + depositAmount * coinValue + " Coins"))); //TODO localization
+							"item.itemEnderCard.message.deposit") + " " + formatter.format(depositAmount * coinValue)
+							+ " " + StatCollector.translateToLocal("item.itemCoin.name")));
 					event.item.getEntityItem().stackSize -= depositAmount;
 					if (event.item.getEntityItem().stackSize == 0) {
 						event.setCanceled(true);

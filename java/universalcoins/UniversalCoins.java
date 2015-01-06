@@ -66,6 +66,7 @@ public class UniversalCoins {
 	public static Boolean recipesEnabled;
 	public static Boolean vendorRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
+	public static Boolean enderCardRecipeEnabled;
 	public static Boolean cardSecurityEnabled;
 	public static Boolean collectCoinsInInfinite;
 	public static Boolean mobsDropCoins;
@@ -103,6 +104,9 @@ public class UniversalCoins {
 		Property atmRecipe = config.get(config.CATEGORY_GENERAL, "ATM Recipe", true);
 		atmRecipe.comment = "Set to false to disable crafting recipes for ATM.";
 		atmRecipeEnabled = atmRecipe.getBoolean(true);
+		Property enderCardRecipe = config.get(config.CATEGORY_GENERAL, "Ender Card Recipe", true);
+		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card.";
+		enderCardRecipeEnabled = enderCardRecipe.getBoolean(true);
 		
 		//loot
 		Property mobDrops = config.get(config.CATEGORY_GENERAL, "Mob Drops", true);
@@ -143,11 +147,10 @@ public class UniversalCoins {
 		}
 		
 		if (updateCheck) {
-			FMLCommonHandler.instance().bus().register(new  UCPlayerLoginEventHandler());
+			FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
 		}
 		
-		//TODO add boolean and config option to disable EnderCard
-		MinecraftForge.EVENT_BUS.register(new  UCPlayerPickupEventHandler());
+		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
 				
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
@@ -181,6 +184,9 @@ public class UniversalCoins {
 		}
 		if (atmRecipeEnabled){
 			UCRecipeHelper.addCardStationRecipes();
+		}
+		if (enderCardRecipeEnabled){
+			UCRecipeHelper.addEnderCardRecipes();
 		}
 		if (coinsInMineshaft) {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));

@@ -27,7 +27,7 @@ public class CardStationGUI extends GuiContainer{
 	public int menuState = 0;
 	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main", "additional", 
 		"balance", "deposit", "withdraw", "newcard", "transferaccount", "customaccount", "takecard", 
-		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions"};
+		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions","newaccount"};
 	int barProgress = 0;
 	
 	boolean shiftPressed = false;
@@ -99,14 +99,14 @@ public class CardStationGUI extends GuiContainer{
 					int stringLength = fontRendererObj.getStringWidth(authString);
 					int cx = width / 2 - stringLength / 2;
 					fontRendererObj.drawString(authString, cx, y + 72, 4210752);
-					if (barProgress > 160) {menuState = 2;}
+					if (barProgress > 160) {menuState = 2;barProgress = 0;}
 				} else {
 					String authString = StatCollector.translateToLocal("cardstation.auth.fail");
 					if (authString.startsWith("C:")) authString = authString.substring(2);
 					int stringLength = fontRendererObj.getStringWidth(authString);
 					int cx = width / 2 - stringLength / 2;
 					fontRendererObj.drawString(authString, cx, y + 72, 4210752);
-					if (barProgress > 160) {menuState = 7;}
+					if (barProgress > 160) {menuState = 17;barProgress = 0;}
 				}
 			}
 		}
@@ -115,7 +115,7 @@ public class CardStationGUI extends GuiContainer{
 			menuState = 14;
 		}
 		
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
 		if (menuState == 4 || menuState == 5) {
 			fontRendererObj.drawString(formatter.format(tEntity.accountBalance), x + 34, y + 52, 4210752);
 		}
@@ -131,7 +131,14 @@ public class CardStationGUI extends GuiContainer{
 				textField.setText(tEntity.customAccountName);
 			}
 			fontRendererObj.drawString(textField.getText(), x + 34, y + 42, 4210752);
-		}		
+		}
+		if (menuState == 14) {
+			barProgress++;
+			if (barProgress > 100) {
+				menuState = 0;
+				barProgress = 0;
+			}
+		}
 		if (menuState == 15) {
 			barProgress++;
 			if (barProgress > 100) {
@@ -320,6 +327,14 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonThree){}
 				if (button.id == idButtonFour){menuState = 2;}
 				break;
+			case 17:
+				//new account
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){					
+					functionID = 1;menuState = 10;}
+				if (button.id == idButtonFour){menuState = 0;}
+				break;
 			default:
 				//we should never get here
 				if (button.id == idButtonOne){}
@@ -340,8 +355,11 @@ public class CardStationGUI extends GuiContainer{
 		//function3 - deposit
 		//function4 - withdraw
 		//function5 - get account info
-		//function6 - destroy invalid card - called from drawGuiContainerBackgroundLayer 
-		  //since no buttons are clicked when inserting card
+		//function6 - destroy invalid card - called from drawGuiContainerBackgroundLayer
+		//function7 - new custom account
+		//function8 - new custom card
+		//function9 - transfer custom account
+		//we use function IDs as we don't have specific functions for each button
 		tEntity.sendButtonMessage(functionID, shiftPressed);
 	}
 	

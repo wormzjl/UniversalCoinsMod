@@ -92,6 +92,13 @@ chat.cardstation.warning.inuse=is using the ATM. Try again later.
 item.itemUCCard.balance=Account balance:
 
 #####
+# Ender Card Messages
+#####
+item.itemEnderCard.balance=Account balance:
+item.itemEnderCard.noaccount=Cannot activate. No account found
+item.itemEnderCard.message.deposit=Deposited
+
+#####
 # TradeStation GUI
 #####
 tradestation.gui.button.coin=Coin
@@ -110,6 +117,7 @@ vending.wrench.infiniteon=Infinite: On
 vending.wrench.infiniteoff=Infinite: Off
 vending.gui.button.mode.sell=Sell Items
 vending.gui.button.mode.buy=Buy Items
+vending.gui.price=Price: 
 
 #####
 # Hint GUI
@@ -141,9 +149,9 @@ cardstation.main.six=<-- Withdraw
 cardstation.main.seven=
 cardstation.main.eight=<-- Additional Options
 cardstation.additional.one=
-cardstation.additional.two=<-- Card
+cardstation.additional.two=<-- New Card
 cardstation.additional.three=
-cardstation.additional.four=<-- Account
+cardstation.additional.four=<-- Account Transfer
 cardstation.additional.five=
 cardstation.additional.six=<-- Custom Account
 cardstation.additional.seven=
@@ -184,13 +192,21 @@ cardstation.withdraw.six=<-- Withdraw
 cardstation.withdraw.seven=
 cardstation.withdraw.eight=<-- Previous Menu
 cardstation.newcard.one=
-cardstation.newcard.two=
-cardstation.newcard.three=
+cardstation.newcard.two=C:Additional cards are
+cardstation.newcard.three=C:available at no cost.
 cardstation.newcard.four=
 cardstation.newcard.five=
 cardstation.newcard.six=<-- New Card
 cardstation.newcard.seven=
 cardstation.newcard.eight=<-- Cancel
+cardstation.newaccount.one=
+cardstation.newaccount.two=C:Would you like
+cardstation.newaccount.three=C:to open an account?
+cardstation.newaccount.four=
+cardstation.newaccount.five=
+cardstation.newaccount.six=<-- Open Account
+cardstation.newaccount.seven=
+cardstation.newaccount.eight=<-- Cancel
 cardstation.transferaccount.one=
 cardstation.transferaccount.two=C:All coins will be
 cardstation.transferaccount.three=C:transferred to

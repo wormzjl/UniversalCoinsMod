@@ -23,7 +23,7 @@ public class ItemEnderCard extends Item {
 	public ItemEnderCard() {
 		super();
 		this.maxStackSize = 1;
-		setCreativeTab(UniversalCoins.tabUniversalCoins); //TODO remove this
+		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -45,7 +45,7 @@ public class ItemEnderCard extends Item {
 		if (!itemstack.hasTagCompound()) {
 			if (getPlayerAccount(world, player.getDisplayName()) == "") {
 				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-						"Cannot activate. No account found"))); //TODO localization
+						"item.itemEnderCard.noaccount")));
 				return true;
 			}
 			//add player account info
@@ -54,8 +54,7 @@ public class ItemEnderCard extends Item {
 			itemstack.stackTagCompound.setString("Account", getPlayerAccount(world, player.getDisplayName()));
 		}
 		int accountBalance = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-		//TODO grab coins from player inventory and deposit to account
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
 		ItemStack[] inventory = player.inventory.mainInventory;
 		String accountNumber = itemstack.stackTagCompound.getString("Account");
 		int coinsDeposited = 0;
@@ -81,10 +80,11 @@ public class ItemEnderCard extends Item {
 		}
 		if (coinsDeposited > 0) {
 			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-				"Deposited " + formatter.format(coinsDeposited) + " Coins"))); //TODO localization
+				"item.itemEnderCard.message.deposit") + " " + formatter.format(coinsDeposited) + " " 
+				+ StatCollector.translateToLocal("item.itemCoin.name")));
 		}
 		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-				"item.itemUCCard.balance") + " " + formatter.format(getAccountBalance(world, accountNumber))));
+				"item.itemEnderCard.balance") + " " + formatter.format(getAccountBalance(world, accountNumber))));
         return true;
     }
 	

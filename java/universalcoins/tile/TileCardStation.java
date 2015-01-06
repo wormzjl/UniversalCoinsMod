@@ -2,6 +2,7 @@ package universalcoins.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +18,7 @@ import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.util.UCWorldData;
 
-public class TileCardStation extends TileEntity implements IInventory {
+public class TileCardStation extends TileEntity implements IInventory, ISidedInventory {
 	private ItemStack[] inventory = new ItemStack[2];
 	public static final int itemCoinSlot = 0;
 	public static final int itemCardSlot = 1;
@@ -494,5 +495,20 @@ public class TileCardStation extends TileEntity implements IInventory {
 		NBTTagCompound wdTag = wData.getData();
 		wdTag.removeTag(tag);
 		wData.markDirty();
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return null;
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		return false;
 	}
 }
