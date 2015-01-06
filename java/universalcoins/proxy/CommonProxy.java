@@ -7,6 +7,7 @@ import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.items.ItemCoin;
+import universalcoins.items.ItemEnderCard;
 import universalcoins.items.ItemLargeCoinBag;
 import universalcoins.items.ItemLargeCoinStack;
 import universalcoins.items.ItemSeller;
@@ -25,6 +26,7 @@ public class CommonProxy {
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
 	public static Item itemUCCard;
+	public static Item itemEnderCard;
 	public static Item itemVendorWrench;
 	
 	public static Block blockTradeStation;
@@ -52,6 +54,7 @@ public class CommonProxy {
 		itemSmallCoinBag = new ItemSmallCoinBag().setUnlocalizedName("itemSmallCoinBag");
 		itemLargeCoinBag = new ItemLargeCoinBag().setUnlocalizedName("itemLargeCoinBag");
 		itemUCCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
+		itemEnderCard = new ItemEnderCard().setUnlocalizedName("itemEnderCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		
@@ -62,6 +65,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemSmallCoinBag, itemSmallCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinBag, itemLargeCoinBag.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCCard, itemUCCard.getUnlocalizedName());
+		GameRegistry.registerItem(itemEnderCard, itemEnderCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 	}

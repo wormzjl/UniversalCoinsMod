@@ -28,6 +28,7 @@ import universalcoins.tile.TileVendor;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
+import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -144,6 +145,9 @@ public class UniversalCoins {
 		if (updateCheck) {
 			FMLCommonHandler.instance().bus().register(new  UCPlayerLoginEventHandler());
 		}
+		
+		//TODO add boolean and config option to disable EnderCard
+		MinecraftForge.EVENT_BUS.register(new  UCPlayerPickupEventHandler());
 				
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 

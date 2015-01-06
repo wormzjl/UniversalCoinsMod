@@ -11,6 +11,7 @@ item.itemLargeCoinStack.name=Large Coin Stack
 item.itemSmallCoinBag.name=Coin Bag
 item.itemLargeCoinBag.name=Large Coin Bag
 item.itemUCCard.name=Universal Card
+item.itemEnderCard.name=Ender Card
 item.itemSeller.name=Selling Catalog
 item.itemWrench.name=Wrench
 item.itemVendorWrench.name=Vendor Wrench
