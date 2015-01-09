@@ -24,7 +24,8 @@ import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
-import universalcoins.tile.TileVendor;
+import universalcoins.tile.TileVendorBlock;
+import universalcoins.tile.TileVendorFrame;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
@@ -65,6 +66,7 @@ public class UniversalCoins {
 	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
 	public static Boolean vendorRecipesEnabled;
+	public static Boolean vendorFrameRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
 	public static Boolean cardSecurityEnabled;
@@ -101,6 +103,9 @@ public class UniversalCoins {
 		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
+		Property vendorFrameRecipe = config.get(config.CATEGORY_GENERAL, "Vending Frame Recipe", true);
+		vendorFrameRecipe.comment = "Set to false to disable crafting recipes for Vending Frame.";
+		vendorFrameRecipesEnabled = vendorFrameRecipe.getBoolean(true);
 		Property atmRecipe = config.get(config.CATEGORY_GENERAL, "ATM Recipe", true);
 		atmRecipe.comment = "Set to false to disable crafting recipes for ATM.";
 		atmRecipeEnabled = atmRecipe.getBoolean(true);
@@ -182,6 +187,9 @@ public class UniversalCoins {
 		if (vendorRecipesEnabled){
 			UCRecipeHelper.addVendingBlockRecipes();
 		}
+		if (vendorFrameRecipesEnabled){
+			UCRecipeHelper.addVendingFrameRecipes();
+		}
 		if (atmRecipeEnabled){
 			UCRecipeHelper.addCardStationRecipes();
 		}
@@ -196,7 +204,8 @@ public class UniversalCoins {
 		}
 		
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
-		GameRegistry.registerTileEntity(TileVendor.class, "TileVendor");
+		GameRegistry.registerTileEntity(TileVendorBlock.class, "TileVendorBlock");
+		GameRegistry.registerTileEntity(TileVendorFrame.class, "TileVendorFrame");
 		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}

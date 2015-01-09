@@ -1,7 +1,6 @@
 package universalcoins.tile;
 
 import cpw.mods.fml.common.FMLLog;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -13,7 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.VendorGUI;
@@ -418,15 +417,20 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 	
 	public boolean hasInventorySpace() {
-		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
-			if (inventory[i] == null || (inventory[i].getItem() == inventory[itemTradeSlot].getItem()
-					&& inventory[i].stackSize < inventory[i].getMaxStackSize())) {
-				this.inventoryFullWarning = false;
-				return true;
+		if (inventory[itemTradeSlot] != null) {
+			for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+				if (inventory[i] == null
+						|| (inventory[i].getItem() == inventory[itemTradeSlot]
+								.getItem() && inventory[i].stackSize < inventory[i]
+								.getMaxStackSize())) {
+					this.inventoryFullWarning = false;
+					return true;
+				}
 			}
-		}
-		this.inventoryFullWarning = true; //if we reach this point, we have no space left.
-		return false;
+			this.inventoryFullWarning = true; // if we reach this point, we have no space left.
+			return false;
+		} else
+			return true;
 	}
 	
 	public void updateCoinsForPurchase() {
@@ -525,7 +529,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	@Override
 	public String getInventoryName() {
-		return null;
+		if (super.blockType.toString().contains("Frame") ) {
+			return StatCollector.translateToLocal("tile.blockVendorFrame.name");
+		} else {
+			return StatCollector.translateToLocal("tile.blockVendor.name");
+		}
 	}
 
 	@Override

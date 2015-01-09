@@ -7,11 +7,13 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import universalcoins.tile.TileVendor;
+import universalcoins.tile.TileVendorFrame;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerVendorBuy extends Container {
 	private TileVendor tileEntity;
+	private TileVendorFrame tileEntity2;
 	private int lastUserCoinSum;
 	private int lastItemPrice;
 	private boolean lastOoStock;
@@ -31,6 +33,18 @@ public class ContainerVendorBuy extends Container {
 		addSlotToContainer(new UCSlotTradeItem(tileEntity, TileVendor.itemTradeSlot, 8, 24));
 		addSlotToContainer(new Slot(tileEntity, TileVendor.itemSellSlot, 26, 24));
 		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendor.itemCoinOutputSlot, 152, 64));
+		
+		// commonly used vanilla code that adds the player's inventory
+		bindPlayerInventory(inventoryPlayer);
+	}
+
+	public ContainerVendorBuy(InventoryPlayer inventoryPlayer, TileVendorFrame tEntity) {
+		tileEntity2 = tEntity;
+		// the Slot constructor takes the IInventory and the slot number in that
+		// it binds to and the x-y coordinates it resides on-screen
+		addSlotToContainer(new UCSlotTradeItem(tileEntity, TileVendorFrame.itemTradeSlot, 8, 24));
+		addSlotToContainer(new Slot(tileEntity, TileVendorFrame.itemSellSlot, 26, 24));
+		addSlotToContainer(new UCSlotOutput(tileEntity, TileVendorFrame.itemCoinOutputSlot, 152, 64));
 		
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

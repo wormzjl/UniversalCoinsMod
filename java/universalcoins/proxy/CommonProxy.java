@@ -6,6 +6,7 @@ import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
+import universalcoins.blocks.BlockVendorFrame;
 import universalcoins.items.ItemCoin;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.items.ItemLargeCoinBag;
@@ -31,6 +32,7 @@ public class CommonProxy {
 	
 	public static Block blockTradeStation;
 	public static Block blockVendor;
+	public static Block blockVendorFrame;
 	public static Block blockCardStation;
 	public static Block blockBase;
 	
@@ -38,11 +40,13 @@ public class CommonProxy {
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		blockVendor = new BlockVendor(Vending.supports).setBlockName("blockVendor");
+		blockVendorFrame = new BlockVendorFrame().setBlockName("blockVendorFrame");
 		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
 		blockBase = new BlockBase().setBlockName("blockBase");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();
+		GameRegistry.registerBlock(blockVendorFrame, "blockVendorFrame").getUnlocalizedName();
 		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockBase, "blockBase").getUnlocalizedName();
 	}

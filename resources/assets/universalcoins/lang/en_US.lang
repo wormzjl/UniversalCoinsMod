@@ -3,6 +3,7 @@
 #####
 tile.blockTradeStation.name=Universal Trade Station
 tile.blockVendor.name=Vending Block
+tile.blockVendorFrame.name=Vending Frame
 tile.blockCardStation.name=Universal Bank ATM
 tile.blockBase.name=Base Block
 item.itemCoin.name=Coin
@@ -13,8 +14,8 @@ item.itemLargeCoinBag.name=Large Coin Bag
 item.itemUCCard.name=Universal Card
 item.itemEnderCard.name=Ender Card
 item.itemSeller.name=Selling Catalog
-item.itemWrench.name=Wrench
 item.itemVendorWrench.name=Vendor Wrench
+item.itemVendorFrame.name=Vending Frame
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####

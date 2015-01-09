@@ -70,6 +70,14 @@ public class UCRecipeHelper {
 		}
 	}
 	
+	public static void addVendingFrameRecipes() {
+			GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame), new Object[]{
+				"SSS",
+				"SPS",
+				"SSS", 'S', Items.stick, 'P', Blocks.planks
+				});
+	}
+	
 	public static void addCardStationRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockCardStation), new Object[]{
 			"III",

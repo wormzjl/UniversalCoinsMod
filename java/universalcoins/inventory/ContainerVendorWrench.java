@@ -5,16 +5,22 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import universalcoins.tile.TileVendor;
+import universalcoins.tile.TileVendorFrame;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerVendorWrench extends Container {
 	private TileVendor tileEntity;
+	private TileVendorFrame tileEntity2;
 	private String lastBlockOwner;
 	private Boolean lastInfinite;
 	
-	public ContainerVendorWrench(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
+	public ContainerVendorWrench(InventoryPlayer inventory, TileVendor tEntity) {
 		tileEntity = tEntity;
+	}
+
+	public ContainerVendorWrench(InventoryPlayer inventory, TileVendorFrame tEntity) {
+		tileEntity2 = tEntity;
 	}
 
 	@Override
