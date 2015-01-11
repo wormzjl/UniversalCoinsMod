@@ -1,9 +1,15 @@
 package universalcoins.util;
 
+import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import universalcoins.UniversalCoins;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class UCRecipeHelper {
@@ -94,8 +100,8 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addEnderCardRecipes() {
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard), new Object[]{
-				UniversalCoins.proxy.itemUCCard, Items.ender_pearl
-		});
+		//We have to register a new IRecipe so that the NBT is copied on crafting
+		GameRegistry.addRecipe(new RecipeEnderCard());
+		RecipeSorter.INSTANCE.register("universalcoins:endercard", RecipeEnderCard.class, Category.SHAPELESS, "after:minecraft:shaped");
 	}
 }

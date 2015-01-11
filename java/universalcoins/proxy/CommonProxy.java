@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
+import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.blocks.BlockVendorFrame;
@@ -35,6 +36,7 @@ public class CommonProxy {
 	public static Block blockVendorFrame;
 	public static Block blockCardStation;
 	public static Block blockBase;
+	public static Block blockSafe;	
 	
 	
 	public void registerBlocks() {
@@ -43,12 +45,14 @@ public class CommonProxy {
 		blockVendorFrame = new BlockVendorFrame().setBlockName("blockVendorFrame");
 		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
 		blockBase = new BlockBase().setBlockName("blockBase");
+		blockSafe = new BlockSafe().setBlockName("blockSafe");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendorFrame, "blockVendorFrame").getUnlocalizedName();
 		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockBase, "blockBase").getUnlocalizedName();
+		GameRegistry.registerBlock(blockSafe, "blockSafe").getUnlocalizedName();
 	}
 	
 	public void registerItems() {

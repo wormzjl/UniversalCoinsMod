@@ -23,7 +23,6 @@ public class ItemEnderCard extends Item {
 	public ItemEnderCard() {
 		super();
 		this.maxStackSize = 1;
-		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -41,18 +40,7 @@ public class ItemEnderCard extends Item {
 	
 	@Override
     public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
-		if (world.isRemote) return true;
-		if (!itemstack.hasTagCompound()) {
-			if (getPlayerAccount(world, player.getDisplayName()) == "") {
-				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-						"item.itemEnderCard.noaccount")));
-				return true;
-			}
-			//add player account info
-			itemstack.stackTagCompound = new NBTTagCompound();
-			itemstack.stackTagCompound.setString("Owner", player.getDisplayName());
-			itemstack.stackTagCompound.setString("Account", getPlayerAccount(world, player.getDisplayName()));
-		}
+		if (world.isRemote || !itemstack.hasTagCompound()) return true;
 		int accountBalance = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
 		ItemStack[] inventory = player.inventory.mainInventory;
