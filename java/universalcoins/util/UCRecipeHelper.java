@@ -99,6 +99,15 @@ public class UCRecipeHelper {
 		});
 	}
 	
+	public static void addBlockSafeRecipe() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockSafe), new Object[]{
+			"III",
+			"IEI",
+			"III",
+			'I', Items.iron_ingot,'E', UniversalCoins.proxy.itemEnderCard,
+		});
+	}
+	
 	public static void addEnderCardRecipes() {
 		//We have to register a new IRecipe so that the NBT is copied on crafting
 		GameRegistry.addRecipe(new RecipeEnderCard());

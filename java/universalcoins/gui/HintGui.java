@@ -32,7 +32,7 @@ public class HintGui extends GuiScreen {
 					HintGui.mc.gameSettings, HintGui.mc.displayWidth,
 					HintGui.mc.displayHeight);
 			FontRenderer fontRender = mc.fontRenderer;
-			boolean warning = false;
+			int warning = 0;
 			int width = res.getScaledWidth();
 			int height = res.getScaledHeight();
 			int w = 80;
@@ -76,17 +76,17 @@ public class HintGui extends GuiScreen {
 				itemInfoStringList.add(StatCollector.translateToLocal("hintgui.price") + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
 				if (!tileEntity.infiniteSell && tileEntity.sellMode && tileEntity.ooStockWarning) {
-					warning = true;
+					warning++;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.stock"));
 				}
 				//add out of coins notification if buying and no funds available
 				if (!tileEntity.sellMode && tileEntity.ooCoinsWarning) {
-					warning = true;
+					warning++;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}
 				//add inventory full notification
 				if (!tileEntity.sellMode && tileEntity.inventoryFullWarning) {
-					warning = true;
+					warning++;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.inventoryfull"));
 				}
 				// reset height since we now have more lines
@@ -109,7 +109,7 @@ public class HintGui extends GuiScreen {
 			GL11.glTranslatef(0.0f, 0.0f, -180.0f);
 			drawGradientRect(x, y, x + w, y + h, 0xc0101010, 0xd0101010);
 			for (int i = 0; i < itemInfoStringList.size(); i++) {
-				if (warning && i == itemInfoStringList.size() - 1) {
+				if (i >= itemInfoStringList.size() - warning) {
 					color = 0xef0000;
 				} else color = 0xffffff;
 				fontRender.drawString(itemInfoStringList.get(i), cx - 

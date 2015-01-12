@@ -8,8 +8,11 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
@@ -17,8 +20,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileSafe;
+import universalcoins.tile.TileVendorBlock;
+import universalcoins.tile.TileVendorFrame;
 
 public class BlockSafe extends BlockContainer {
 	
@@ -54,20 +61,41 @@ public class BlockSafe extends BlockContainer {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		//TODO open GUI for owner only
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileSafe) {
+			TileSafe tentity = (TileSafe) te;
+			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+			}
+		}
 		return true;
 	}
 		
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+		if (world.isRemote) return;
+		//set owner to whatever player places the block
+		((TileSafe)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
 		//set block meta so we can use it later for rotation
 		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 	}
+	
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		String ownerName = ((TileSafe)world.getTileEntity(x, y, z)).blockOwner;
+		if (player.capabilities.isCreativeMode) {
+			super.removedByPlayer(world, player, x, y, z);
+			return false;
+		}
+		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
+			super.removedByPlayer(world, player, x, y, z);
+		}
+		return false;
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		//return new TileCardStation();
-		return null;
+		return new TileSafe();
 	}
 }

@@ -465,22 +465,19 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	@Override
-	public ItemStack decrStackSize(int i, int j) {
-		// FMLLog.info("Stack Size Decreased in slot " + i);
-		ItemStack newStack;
-		if (inventory[i] == null) {
-			return null;
+	public ItemStack decrStackSize(int slot, int size) {
+		ItemStack stack = getStackInSlot(slot);
+		if (stack != null) {
+			if (stack.stackSize <= size) {
+				setInventorySlotContents(slot, null);
+			} else {
+				stack = stack.splitStack(size);
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(slot, null);
+				}
+			}
 		}
-		if (inventory[i].stackSize <= j) {
-			newStack = inventory[i];
-			inventory[i] = null;
-
-			return newStack;
-		}
-		newStack = ItemStack.copyItemStack(inventory[i]);
-		newStack.stackSize = j;
-		inventory[i].stackSize -= j;
-		return newStack;
+		return stack;
 	}
 
 	@Override

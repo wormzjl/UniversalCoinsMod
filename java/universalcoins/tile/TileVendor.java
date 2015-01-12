@@ -463,25 +463,23 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int stackSize) {
-		ItemStack newStack;
-		if (inventory[slot] == null) {
-			return null;
-		}
-		if (inventory[slot].stackSize <= stackSize) {
-			newStack = inventory[slot];
-			inventory[slot] = null;
-			if(slot < itemStorageSlot9){ //update inventory status
-				checkSellingInventory();
-				hasInventorySpace();
+	public ItemStack decrStackSize(int slot, int size) {
+		ItemStack stack = getStackInSlot(slot);
+		if (stack != null) {
+			if (stack.stackSize <= size) {
+				setInventorySlotContents(slot, null);
+			} else {
+				stack = stack.splitStack(size);
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(slot, null);
 				}
-			return newStack;
+			}
 		}
-		newStack = ItemStack.copyItemStack(inventory[slot]);
-		newStack.stackSize = stackSize;
-		inventory[slot].stackSize -= stackSize;
-		if(slot < itemStorageSlot9)checkSellingInventory();
-		return newStack;
+		if(slot < itemStorageSlot9){ //update inventory status
+			checkSellingInventory();
+			hasInventorySpace();
+		}
+		return stack;
 	}
 
 	@Override

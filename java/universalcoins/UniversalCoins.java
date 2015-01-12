@@ -23,6 +23,7 @@ import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
@@ -110,7 +111,7 @@ public class UniversalCoins {
 		atmRecipe.comment = "Set to false to disable crafting recipes for ATM.";
 		atmRecipeEnabled = atmRecipe.getBoolean(true);
 		Property enderCardRecipe = config.get(config.CATEGORY_GENERAL, "Ender Card Recipe", true);
-		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card.";
+		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card and Safe.";
 		enderCardRecipeEnabled = enderCardRecipe.getBoolean(true);
 		
 		//loot
@@ -195,6 +196,7 @@ public class UniversalCoins {
 		}
 		if (enderCardRecipeEnabled){
 			UCRecipeHelper.addEnderCardRecipes();
+			UCRecipeHelper.addBlockSafeRecipe();
 		}
 		if (coinsInMineshaft) {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));
@@ -207,6 +209,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileVendorBlock.class, "TileVendorBlock");
 		GameRegistry.registerTileEntity(TileVendorFrame.class, "TileVendorFrame");
 		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
+		GameRegistry.registerTileEntity(TileSafe.class, "TileSafe");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	

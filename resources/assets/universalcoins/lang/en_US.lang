@@ -6,7 +6,7 @@ tile.blockVendor.name=Vending Block
 tile.blockVendorFrame.name=Vending Frame
 tile.blockCardStation.name=Universal Bank ATM
 tile.blockBase.name=Base Block
-tile.blockSafe.name=Safe
+tile.blockSafe.name=Ender Safe
 item.itemCoin.name=Coin
 item.itemSmallCoinStack.name=Coin Stack
 item.itemLargeCoinStack.name=Large Coin Stack
@@ -97,8 +97,12 @@ item.itemUCCard.balance=Account balance:
 # Ender Card Messages
 #####
 item.itemEnderCard.balance=Account balance:
-item.itemEnderCard.noaccount=Cannot activate. No account found
 item.itemEnderCard.message.deposit=Deposited
+
+#####
+# Safe GUI
+#####
+safe.gui.balance=Balance:
 
 #####
 # TradeStation GUI
