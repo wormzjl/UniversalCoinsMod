@@ -91,8 +91,12 @@ public class TradeStationGUI extends GuiContainer {
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 38 - stringWidth, 57, 4210752);
 		if (tileEntity.itemPrice > 0){
-			fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 40, 57,
-					4210752);
+			if (sellButton.func_146115_a()) { //player hovering over sell button
+				int sellPrice = (int) (tileEntity.itemPrice * UniversalCoins.itemSellRatio);
+				fontRendererObj.drawString(String.valueOf(sellPrice), 40, 57, 4210752);
+			} else {
+				fontRendererObj.drawString(String.valueOf(tileEntity.itemPrice), 40, 57, 4210752);
+			}
 		}
 		else{
 			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.warning.noitem"), 41, 57, 4210752);
