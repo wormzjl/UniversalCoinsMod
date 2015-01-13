@@ -30,6 +30,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	public boolean inUse = false;
 	public boolean depositCoins = false;
 	public boolean withdrawCoins = false;
+	public boolean accountError = false;
 	public int coinWithdrawalAmount = 0;
 	public String cardOwner = "";
 	public String accountNumber = "none";
@@ -315,15 +316,19 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			inventory[itemCardSlot] = null;
 		}
 		if (functionId == 7) {
-			if (getCustomAccount(player) == "") {
+			if (getPlayerAccount(customAccountName) != "" && getCustomAccount(player) != customAccountName) {		
+				accountError = true;
+			} else if (getCustomAccount(player) == "") {
+				accountError = false;
 				addCustomAccount(customAccountName);
 			}
+			accountError = false;
 			customAccountName = getCustomAccount(player);
 			customAccountNumber = getPlayerAccount(customAccountName);
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 			inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
 			inventory[itemCardSlot].stackTagCompound.setString("Owner", customAccountName);
-			inventory[itemCardSlot].stackTagCompound.setString("Account", customAccountNumber);
+			inventory[itemCardSlot].stackTagCompound.setString("Account", customAccountNumber);			
 		}
 		if (functionId == 8) {
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
@@ -333,8 +338,10 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			accountBalance = getAccountBalance(customAccountNumber);
 		}
 		if (functionId == 9) {
-			if (getCustomAccount(player) == "") {
+			if (getCustomAccount(player) == "" || getPlayerAccount(customAccountName) != "") {
+				accountError = true;
 			} else {
+				accountError = false;
 				transferCustomAccount();
 				inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
 				inventory[itemCardSlot].stackTagCompound = new NBTTagCompound();
@@ -397,41 +404,46 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 					setWorldData(accountNumber, 0);
 				}
 			}
+		} else {
+			//we have a problem we need to clear stale account data
+			
 		}
 	}
 	
 	private String getCustomAccount(String player){
-		return getWorldString("G:" + player);
+		return getWorldString("¿" + player);
 	}
 	
-	private void addCustomAccount(String customName) {
+	private boolean addCustomAccount(String customName) {
 		//custom accounts are added as a relation of playername to customname
 		//customnames are then associated with an account number
-		if (getWorldString("G:" + player) == "" && getWorldString(customName) == "") {
+		if (getWorldString("¿" + player) == "" && getWorldString(customName) == "") {
 			while (getWorldString(customAccountNumber) == "") {
 				customAccountNumber = String.valueOf(generateAccountNumber());
 				if (getWorldString(customAccountNumber) == "") {
-					setWorldData("G:" + player, customName);
+					setWorldData("¿" + player, customName);
 					setWorldData(customName, customAccountNumber);
 					setWorldData(customAccountNumber, 0);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
 	private void transferCustomAccount() {
-		String oldName = getWorldString("G:" + player);
+		String oldName = getWorldString("¿" + player);
 		String oldAccount = getWorldString(oldName);
 		int oldBalance = getAccountBalance(oldAccount);
-		delWorldData("G:" + player);
+		delWorldData("¿" + player);
 		delWorldData(oldName);
 		delWorldData(oldAccount);
-		if (getWorldString("G:" + player) == "") {
+		if (getWorldString("¿" + player) == "") {
 			customAccountNumber = "none";
 			while (getWorldString(customAccountNumber) == "") {
 				customAccountNumber = String.valueOf(generateAccountNumber());
 				if (getWorldString(customAccountNumber) == "") {
-					setWorldData("G:" + player, customAccountName);
+					setWorldData("¿" + player, customAccountName);
 					setWorldData(customAccountName, customAccountNumber);
 					setWorldData(customAccountNumber, oldBalance);
 				}

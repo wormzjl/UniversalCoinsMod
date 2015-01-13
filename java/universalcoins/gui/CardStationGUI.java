@@ -27,7 +27,7 @@ public class CardStationGUI extends GuiContainer{
 	public int menuState = 0;
 	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main", "additional", 
 		"balance", "deposit", "withdraw", "newcard", "transferaccount", "customaccount", "takecard", 
-		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions","newaccount"};
+		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions","newaccount","duplicateaccount"};
 	int barProgress = 0;
 	
 	boolean shiftPressed = false;
@@ -132,6 +132,12 @@ public class CardStationGUI extends GuiContainer{
 			}
 			fontRendererObj.drawString(textField.getText(), x + 34, y + 42, 4210752);
 		}
+		if (menuState == 10 && tEntity.accountError) {
+			barProgress++;
+			if (barProgress > 20) {
+				menuState = 18;
+			}
+		}
 		if (menuState == 14) {
 			barProgress++;
 			if (barProgress > 100) {
@@ -143,6 +149,13 @@ public class CardStationGUI extends GuiContainer{
 			barProgress++;
 			if (barProgress > 100) {
 				menuState = 2;
+				barProgress = 0;
+			}
+		}
+		if (menuState == 18) {
+			barProgress++;
+			if (barProgress > 100) {
+				menuState = 9;
 				barProgress = 0;
 			}
 		}
@@ -197,7 +210,7 @@ public class CardStationGUI extends GuiContainer{
 					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
 					menuState = 15;
 				} else menuState = 8;}
-				if (button.id == idButtonThree){
+				if (button.id == idButtonThree){				
 					if (!tEntity.customAccountName.contentEquals("none")) {
 						menuState = 16;
 					} else if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
@@ -240,7 +253,7 @@ public class CardStationGUI extends GuiContainer{
 						tEntity.sendServerUpdatePacket(coinWithdrawalAmount);
 						functionID = 4;
 						menuState = 11;} }
-				if (button.id == idButtonFour){menuState = 2;}
+				if (button.id == idButtonFour){textField.setText("0"); menuState = 2;}
 				break;
 			case 7:
 				//new card
@@ -248,7 +261,7 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){					
 					functionID = 1;menuState = 10;}
-				if (button.id == idButtonFour){menuState = 0;}
+				if (button.id == idButtonFour){menuState = 2;}
 				break;
 			case 8:
 				//transfer account
@@ -262,16 +275,18 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){
-					if (!tEntity.customAccountName.contentEquals("none")) {
+					if (!textField.getText().contentEquals("none")){
 						String customName = textField.getText();
+						if (!customName.startsWith("*")){customName = "*" + customName;}
 						tEntity.sendServerUpdatePacket(customName);
-						functionID = 9;menuState = 10;
-					} else {
-						String customName = textField.getText();
-						tEntity.sendServerUpdatePacket(customName);
-						functionID = 7;menuState = 10;}
+						if (tEntity.customAccountName.contentEquals("none")) {
+							functionID = 7;menuState = 10;
+						} else {
+							functionID = 9;menuState = 10;
+						}
 					}
-				if (button.id == idButtonFour){menuState = 3;}
+				}
+				if (button.id == idButtonFour){textField.setText("0");menuState = 3;}
 				break;
 			case 10:
 				//take card
@@ -285,7 +300,7 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}
-				if (button.id == idButtonFour){menuState = 0;}
+				if (button.id == idButtonFour){textField.setText("0");menuState = 0;}
 				break;
 			case 12:
 				//Insufficient funds
@@ -334,6 +349,13 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonThree){					
 					functionID = 1;menuState = 10;}
 				if (button.id == idButtonFour){menuState = 0;}
+				break;
+			case 18:
+				//duplicate account
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){}
+				if (button.id == idButtonFour){}
 				break;
 			default:
 				//we should never get here

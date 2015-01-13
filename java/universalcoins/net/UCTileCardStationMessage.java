@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCTileCardStationMessage implements IMessage, IMessageHandler<UCTileCardStationMessage, IMessage> {
 private int x, y, z, coinWithdrawalAmount, accountBalance;
-private boolean inUse, depositCoins, withdrawCoins;
+private boolean inUse, depositCoins, withdrawCoins,accountError;
 private String player, accountNumber, cardOwner, groupAccountName, groupAccountNumber;
 
     public UCTileCardStationMessage() { }
@@ -25,6 +25,7 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
         this.inUse = tileEntity.inUse;
         this.depositCoins = tileEntity.depositCoins;
         this.withdrawCoins = tileEntity.withdrawCoins;
+        this.accountError = tileEntity.accountError;
         this.player = tileEntity.player;
         this.accountNumber = tileEntity.accountNumber;
         this.cardOwner = tileEntity.cardOwner;
@@ -42,6 +43,7 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
         this.inUse = buf.readBoolean();
         this.depositCoins = buf.readBoolean();
         this.withdrawCoins = buf.readBoolean();
+        this.accountError = buf.readBoolean();
         this.player = ByteBufUtils.readUTF8String(buf);
         this.accountNumber = ByteBufUtils.readUTF8String(buf);
         this.cardOwner = ByteBufUtils.readUTF8String(buf);
@@ -59,6 +61,7 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
         buf.writeBoolean(inUse);
         buf.writeBoolean(depositCoins);
         buf.writeBoolean(withdrawCoins);
+        buf.writeBoolean(accountError);
         ByteBufUtils.writeUTF8String(buf, player);
         ByteBufUtils.writeUTF8String(buf, accountNumber);
         ByteBufUtils.writeUTF8String(buf, cardOwner);
@@ -78,6 +81,7 @@ private String player, accountNumber, cardOwner, groupAccountName, groupAccountN
 			((TileCardStation) tileEntity).inUse = message.inUse;
 			((TileCardStation) tileEntity).depositCoins = message.depositCoins;
 			((TileCardStation) tileEntity).withdrawCoins = message.withdrawCoins;
+			((TileCardStation) tileEntity).accountError = message.accountError;
 			((TileCardStation) tileEntity).player = message.player;
 			((TileCardStation) tileEntity).accountNumber = message.accountNumber;
 			((TileCardStation) tileEntity).cardOwner = message.cardOwner;
