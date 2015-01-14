@@ -36,7 +36,6 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
         }
 
         texturemanager.bindTexture(texturemanager.getResourceLocation(itemStack.getItemSpriteNumber()));
-        TextureUtil.func_147950_a(false, false);
         Tessellator tessellator = Tessellator.instance;
         float f = iicon.getMinU();
         float f1 = iicon.getMaxU();

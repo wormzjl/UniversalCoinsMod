@@ -72,7 +72,7 @@ public class HintGui extends GuiScreen {
 						itemInfoStringList.add(eInfo);
 					}
 				}
-				DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+				DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 				itemInfoStringList.add(StatCollector.translateToLocal("hintgui.price") + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
 				if (!tileEntity.infiniteSell && tileEntity.sellMode && tileEntity.ooStockWarning) {

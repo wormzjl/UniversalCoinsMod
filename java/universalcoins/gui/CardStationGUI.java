@@ -29,6 +29,7 @@ public class CardStationGUI extends GuiContainer{
 		"balance", "deposit", "withdraw", "newcard", "transferaccount", "customaccount", "takecard", 
 		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions","newaccount","duplicateaccount"};
 	int barProgress = 0;
+	int counter = 0;
 	
 	boolean shiftPressed = false;
 
@@ -115,14 +116,14 @@ public class CardStationGUI extends GuiContainer{
 			menuState = 14;
 		}
 		
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		if (menuState == 4 || menuState == 5) {
 			fontRendererObj.drawString(formatter.format(tEntity.accountBalance), x + 34, y + 52, 4210752);
 		}
 		if (menuState == 6) {
 			//display account balance
 			fontRendererObj.drawString(formatter.format(tEntity.accountBalance), x + 34, y + 32, 4210752);
-			fontRendererObj.drawString(textField.getText(), x + 34, y + 52, 4210752);
+			fontRendererObj.drawString(textField.getText() + drawCursor(), x + 34, y + 52, 4210752);
 		}
 		if (menuState == 9) {
 			//display text field for custom name entry
@@ -130,7 +131,7 @@ public class CardStationGUI extends GuiContainer{
 				textField.setMaxStringLength(20);
 				textField.setText(tEntity.customAccountName);
 			}
-			fontRendererObj.drawString(textField.getText(), x + 34, y + 42, 4210752);
+			fontRendererObj.drawString(textField.getText() + drawCursor(), x + 34, y + 42, 4210752);
 		}
 		if (menuState == 10 && tEntity.accountError) {
 			barProgress++;
@@ -400,5 +401,15 @@ public class CardStationGUI extends GuiContainer{
 				fontRendererObj.drawString(menuString, 34, lineCoords[x], 4210752);
 			}
 		}
+	}
+	
+	private String drawCursor() {
+		while (counter < 20) {
+			counter++;
+			return "_";
+		}
+		counter++;
+		if (counter >= 40) counter = 0;
+		return "";
 	}
 }

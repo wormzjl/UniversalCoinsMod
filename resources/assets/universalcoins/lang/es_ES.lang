@@ -1,5 +1,7 @@
 tile.blockTradeStation.name=Estación de Comercio Universal
 tile.blockVendor.name=Máquina Expendedora
+tile.blockCardStation.name=Cajero Automático UC
+tile.blockBase.name=Bloque de Metal Pulido
 item.itemCoin.name=Moneda
 item.itemSmallCoinStack.name=Taco de Monedas
 item.itemLargeCoinStack.name=Taco Grande de Monedas

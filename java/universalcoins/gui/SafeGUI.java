@@ -12,7 +12,8 @@ import universalcoins.tile.TileSafe;
 
 public class SafeGUI extends GuiContainer{
 	private TileSafe tEntity;
-	DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+	DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+
 	
 	public SafeGUI(InventoryPlayer inventoryPlayer, TileSafe tileEntity) {
 		super(new ContainerSafe(inventoryPlayer, tileEntity));

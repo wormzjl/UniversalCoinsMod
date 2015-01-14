@@ -42,7 +42,7 @@ public class ItemEnderCard extends Item {
     public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
 		if (world.isRemote || !itemstack.hasTagCompound()) return true;
 		int accountBalance = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		ItemStack[] inventory = player.inventory.mainInventory;
 		String accountNumber = itemstack.stackTagCompound.getString("Account");
 		int coinsDeposited = 0;
