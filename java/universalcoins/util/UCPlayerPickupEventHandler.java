@@ -11,6 +11,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import universalcoins.UniversalCoins;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class UCPlayerPickupEventHandler {
@@ -30,7 +32,7 @@ public class UCPlayerPickupEventHandler {
 			world = event.entityPlayer.worldObj;
 			EntityPlayer player = event.entityPlayer;
 			ItemStack[] inventory = player.inventory.mainInventory;
-			DecimalFormat formatter = new DecimalFormat("#,###,###,###");//TODO localization
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 			for (int i = 0; i < inventory.length; i++) {
 				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.itemEnderCard) {
 					if (!inventory[i].hasTagCompound()) return; //card has not been initialized. Nothing we can do here

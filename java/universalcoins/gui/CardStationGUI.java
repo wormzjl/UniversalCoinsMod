@@ -12,6 +12,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.FMLLog;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.tile.TileCardStation;
 
@@ -27,7 +28,8 @@ public class CardStationGUI extends GuiContainer{
 	public int menuState = 0;
 	private static final String[] menuStateName = new String[] { "welcome",	"auth", "main", "additional", 
 		"balance", "deposit", "withdraw", "newcard", "transferaccount", "customaccount", "takecard", 
-		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions","newaccount","duplicateaccount"};
+		"takecoins", "insufficient", "invalid", "badcard", "unauthorized", "customaccountoptions",
+		"newaccount","duplicateaccount", "processing"};
 	int barProgress = 0;
 	int counter = 0;
 	
@@ -160,6 +162,16 @@ public class CardStationGUI extends GuiContainer{
 				barProgress = 0;
 			}
 		}
+		if (menuState == 19) {
+			if (tEntity.accountError) {
+				menuState = 18;
+				tEntity.accountError = false;//TODO send server update
+			}
+			if (tEntity.getStackInSlot(tEntity.itemCardSlot) != null) {
+				menuState = 10;
+				barProgress = 0;
+			}
+		}
 	}
 	
 	@Override
@@ -176,6 +188,7 @@ public class CardStationGUI extends GuiContainer{
 		//We are not going to send button IDs to the server
 		//instead, we are going to use function IDs to send
 		//a packet to the server to do things
+		FMLLog.info("Mode: " + menuState);
 		int functionID = 0;
 		switch (menuState) {
 			case 0:
@@ -204,17 +217,17 @@ public class CardStationGUI extends GuiContainer{
 			case 3:
 				//additional menu
 				if (button.id == idButtonOne){
-					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					if (!tEntity.cardOwner.contentEquals(tEntity.playerUID)) {
 					menuState = 15;
 				} else menuState = 7;}
 				if (button.id == idButtonTwo){
-					if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					if (!tEntity.cardOwner.contentEquals(tEntity.playerUID)) {
 					menuState = 15;
 				} else menuState = 8;}
 				if (button.id == idButtonThree){				
 					if (!tEntity.customAccountName.contentEquals("none")) {
 						menuState = 16;
-					} else if (!tEntity.cardOwner.contentEquals(tEntity.player)) {
+					} else if (!tEntity.cardOwner.contentEquals(tEntity.playerUID)) {
 					menuState = 15;
 				} else menuState = 9;}
 				if (button.id == idButtonFour){}
@@ -278,12 +291,11 @@ public class CardStationGUI extends GuiContainer{
 				if (button.id == idButtonThree){
 					if (!textField.getText().contentEquals("none")){
 						String customName = textField.getText();
-						if (!customName.startsWith("*")){customName = "*" + customName;}
 						tEntity.sendServerUpdatePacket(customName);
 						if (tEntity.customAccountName.contentEquals("none")) {
-							functionID = 7;menuState = 10;
+							functionID = 7;menuState = 19;
 						} else {
-							functionID = 9;menuState = 10;
+							functionID = 9;menuState = 19;
 						}
 					}
 				}
@@ -353,6 +365,13 @@ public class CardStationGUI extends GuiContainer{
 				break;
 			case 18:
 				//duplicate account
+				if (button.id == idButtonOne){}
+				if (button.id == idButtonTwo){}
+				if (button.id == idButtonThree){}
+				if (button.id == idButtonFour){}
+				break;
+			case 19:
+				//processing
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
 				if (button.id == idButtonThree){}

@@ -31,8 +31,8 @@ public class ItemUCCard extends Item {
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {		
 		if( stack.stackTagCompound != null ) {
-			list.add("Owner: " + stack.stackTagCompound.getString("Owner"));
-			list.add("Account: " + stack.stackTagCompound.getString("Account"));
+			list.add(stack.stackTagCompound.getString("Name"));
+			list.add(stack.stackTagCompound.getString("Account"));
 		}	
 	}
 	

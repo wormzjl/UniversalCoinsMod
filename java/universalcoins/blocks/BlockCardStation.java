@@ -42,12 +42,13 @@ public class BlockCardStation extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (((TileCardStation) tileEntity).inUse) {
-			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(((TileCardStation) tileEntity).player + " " + 
+			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(((TileCardStation) tileEntity).playerName + " " + 
 					StatCollector.translateToLocal("chat.cardstation.warning.inuse"))); }
 			return true;
 		} else {
         	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-        	((TileCardStation) tileEntity).player = player.getDisplayName();
+        	((TileCardStation) tileEntity).playerName = player.getDisplayName();
+        	((TileCardStation) tileEntity).playerUID = player.getUniqueID().toString();
         	return true;
         }
 	}

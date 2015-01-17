@@ -11,7 +11,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerCardStation extends Container {
-	private String lastPlayer;
+	private String lastPlayerName;
+	private String lastPlayerUID;
 	private boolean lastInUse;
 	private boolean lastDepositCoins;
 	private boolean lastWithdrawCoins;
@@ -108,7 +109,8 @@ public class ContainerCardStation extends Container {
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
             
-            if (this.lastPlayer != tEntity.player ||
+            if (this.lastPlayerName != tEntity.playerName ||
+            this.lastPlayerUID != tEntity.playerUID ||
     		this.lastInUse != tEntity.inUse ||
     		this.lastDepositCoins != tEntity.depositCoins ||
     		this.lastWithdrawCoins != tEntity.withdrawCoins ||
@@ -121,7 +123,8 @@ public class ContainerCardStation extends Container {
             	tEntity.updateTE();
             }
 
-		this.lastPlayer = tEntity.player;
+   		this.lastPlayerName = tEntity.playerName;
+   		this.lastPlayerUID = tEntity.playerUID;
 		this.lastInUse = tEntity.inUse;
 		this.lastDepositCoins = tEntity.depositCoins;
 		this.lastWithdrawCoins = tEntity.withdrawCoins;
