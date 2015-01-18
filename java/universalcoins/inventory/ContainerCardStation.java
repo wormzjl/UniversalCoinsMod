@@ -16,6 +16,7 @@ public class ContainerCardStation extends Container {
 	private boolean lastInUse;
 	private boolean lastDepositCoins;
 	private boolean lastWithdrawCoins;
+	private boolean lastAccountError;
 	private int lastCoinWithdrawalAmount;
 	private String lastCardOwner;
 	private String lastAccountNumber;
@@ -113,7 +114,8 @@ public class ContainerCardStation extends Container {
             this.lastPlayerUID != tEntity.playerUID ||
     		this.lastInUse != tEntity.inUse ||
     		this.lastDepositCoins != tEntity.depositCoins ||
-    		this.lastWithdrawCoins != tEntity.withdrawCoins ||
+    	    this.lastWithdrawCoins != tEntity.withdrawCoins ||
+    	    this.lastAccountError != tEntity.accountError ||
     		this.lastCoinWithdrawalAmount != tEntity.coinWithdrawalAmount ||
     		this.lastCardOwner != tEntity.cardOwner ||
     	    this.lastAccountNumber != tEntity.accountNumber ||
@@ -128,6 +130,7 @@ public class ContainerCardStation extends Container {
 		this.lastInUse = tEntity.inUse;
 		this.lastDepositCoins = tEntity.depositCoins;
 		this.lastWithdrawCoins = tEntity.withdrawCoins;
+		this.lastAccountError = tEntity.accountError;
 		this.lastCoinWithdrawalAmount = tEntity.coinWithdrawalAmount;
 		this.lastCardOwner = tEntity.cardOwner;
 		this.lastAccountNumber = tEntity.accountNumber;

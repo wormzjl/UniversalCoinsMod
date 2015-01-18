@@ -12,7 +12,6 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.FMLLog;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.tile.TileCardStation;
 
@@ -73,8 +72,7 @@ public class CardStationGUI extends GuiContainer{
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
-			int var3) {
+	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/cardStation.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
@@ -164,8 +162,8 @@ public class CardStationGUI extends GuiContainer{
 		}
 		if (menuState == 19) {
 			if (tEntity.accountError) {
+				tEntity.sendButtonMessage(10, false);//send function code 10 (reset accountError)
 				menuState = 18;
-				tEntity.accountError = false;//TODO send server update
 			}
 			if (tEntity.getStackInSlot(tEntity.itemCardSlot) != null) {
 				menuState = 10;
@@ -188,7 +186,6 @@ public class CardStationGUI extends GuiContainer{
 		//We are not going to send button IDs to the server
 		//instead, we are going to use function IDs to send
 		//a packet to the server to do things
-		FMLLog.info("Mode: " + menuState);
 		int functionID = 0;
 		switch (menuState) {
 			case 0:
@@ -230,7 +227,7 @@ public class CardStationGUI extends GuiContainer{
 					} else if (!tEntity.cardOwner.contentEquals(tEntity.playerUID)) {
 					menuState = 15;
 				} else menuState = 9;}
-				if (button.id == idButtonFour){}
+				if (button.id == idButtonFour){menuState = 2;}
 				break;
 			case 4:
 				//balance

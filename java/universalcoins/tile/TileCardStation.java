@@ -263,6 +263,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	
 	public void onButtonPressed(int functionId) {
 		if (worldObj.isRemote) return;
+		accountError = false; //reset error state
 		//handle function IDs sent from CardStationGUI
 		//function1 - new card
 		//function2 - transfer account
@@ -272,7 +273,8 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		//function6 - destroy invalid card
 		//function7 - new custom account
 		//function8 - new custom card
-		//function9 - transfer custom account 
+		//function9 - transfer custom account
+		//function10 - account error reset
 		if (functionId == 1) {
 			if (getPlayerAccount(playerUID) == "") {
 				addPlayerAccount(playerUID);
@@ -319,13 +321,14 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			inventory[itemCardSlot] = null;
 		}
 		if (functionId == 7) {
-			if (getPlayerAccount(customAccountName) != "" && getCustomAccount(playerUID) != customAccountName) {		
+			if (getPlayerAccount(customAccountName) != "") {
 				accountError = true;
+				//we need to reset this so that that function 7 is called again on next attempt at getting an account
+				customAccountName = "none";
+				return;
 			} else if (getCustomAccount(playerUID) == "") {
-				accountError = false;
 				addCustomAccount(customAccountName);
 			}
-			accountError = false;
 			customAccountName = getCustomAccount(playerUID);
 			customAccountNumber = getPlayerAccount(customAccountName);
 			inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
