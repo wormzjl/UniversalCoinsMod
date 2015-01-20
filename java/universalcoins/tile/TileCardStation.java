@@ -1,5 +1,6 @@
 package universalcoins.tile;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -108,6 +109,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		inventory[slot] = stack;
 		if (stack != null) {
 			if (slot == itemCoinSlot && depositCoins) {
+				FMLLog.info("Depositing coins");
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
@@ -125,15 +127,15 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			if (slot == itemCardSlot && !worldObj.isRemote) {
 				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0 && 
 						inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(playerName)) {
-					addPlayerAccount(playerName);
-					accountNumber = getPlayerAccount(playerName);
+					addPlayerAccount(playerUID);
+					accountNumber = getPlayerAccount(playerUID);
 					creditAccount(accountNumber, inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum"));
 					inventory[itemCardSlot].stackTagCompound.removeTag("CoinSum");
 					inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
 				}
 				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 				cardOwner = inventory[itemCardSlot].stackTagCompound.getString("Owner");
-				if (getCustomAccount(playerName) != "") customAccountName = getCustomAccount(playerName);
+				if (getCustomAccount(playerUID) != "") customAccountName = getCustomAccount(playerUID);
 				accountBalance = getAccountBalance(accountNumber);
 				}
 		}

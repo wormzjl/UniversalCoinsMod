@@ -78,9 +78,9 @@ public class UCRecipeHelper {
 	
 	public static void addVendingFrameRecipes() {
 			GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame), new Object[]{
-				"SSS",
-				"SPS",
-				"SSS", 'S', Items.stick, 'P', Blocks.planks
+				"SES",
+				"RPR",
+				"SES", 'S', Items.stick, 'P', Blocks.planks, 'E', Items.ender_pearl, 'R', Items.redstone
 				});
 	}
 	

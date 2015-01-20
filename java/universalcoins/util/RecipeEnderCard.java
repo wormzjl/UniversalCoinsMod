@@ -14,34 +14,19 @@ public class RecipeEnderCard implements IRecipe {
 	@Override
 	public boolean matches(InventoryCrafting var1, World var2) {
 		this.newStack = null;
-		int NumberOfCards = 0;
 		for (int j = 0; j < var1.getSizeInventory(); j++) {
 			if (var1.getStackInSlot(j) != null) {
-				if (var1.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCCard) {
-					NumberOfCards++;
-				}
-			}
+				if (var1.getStackInSlot(j).getItem() == Items.ender_pearl
+						|| (j == 4 && var1.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCCard)) {
+					// continue
+				} else
+					return false;
+			} else
+				return false;
 		}
-		int NumberOfEnderPearls = 0;
-		for (int j = 0; j < var1.getSizeInventory(); j++) {
-			if (var1.getStackInSlot(j) != null) {
-				if (var1.getStackInSlot(j).getItem() == Items.ender_pearl) {
-					NumberOfEnderPearls++;
-				}
-			}
-		}
-		if (NumberOfCards == 1 && NumberOfEnderPearls == 1) {
-			for (int j = 0; j < var1.getSizeInventory(); j++) {
-				if (var1.getStackInSlot(j) != null) {
-					if (var1.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCCard) {
-						newStack = new ItemStack(UniversalCoins.proxy.itemEnderCard);
-						this.newStack.setTagCompound(var1.getStackInSlot(j).getTagCompound());
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		newStack = new ItemStack(UniversalCoins.proxy.itemEnderCard);
+		this.newStack.setTagCompound(var1.getStackInSlot(4).getTagCompound());
+		return true;
 	}
 
 	@Override
@@ -51,7 +36,7 @@ public class RecipeEnderCard implements IRecipe {
 
 	@Override
 	public int getRecipeSize() {
-		return 0;
+		return 9;
 	}
 
 	@Override

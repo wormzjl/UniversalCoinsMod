@@ -38,7 +38,7 @@ public class BlockVendor extends BlockContainer {
 		setStepSound(soundTypeGlass);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);	
 		setHardness(0.3F);
-		setResistance(6000000.0F);
+		setResistance(6000.0F);
 		setBlockBounds(0.0625f, 0.125f, 0.0625f, 0.9375f, 0.9375f, 0.9375f);
 	}
 

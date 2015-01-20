@@ -155,7 +155,12 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
 		}
-		coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
+		if (inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+				&& getAccountBalance() + (itemPrice * amount * UniversalCoins.itemSellRatio) < Integer.MAX_VALUE) {
+			creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio));
+		} else {
+			coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
+		}
 	}
 
 	public void onSellMaxPressed() {
@@ -494,7 +499,12 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
 					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-					coinSum += depositAmount * itemValue;
+					if (inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+							&& getAccountBalance() + (itemPrice * depositAmount) < Integer.MAX_VALUE) {
+						creditAccount(depositAmount * itemValue);
+					} else {
+						coinSum += depositAmount * itemValue;
+					}
 					inventory[slot].stackSize -= depositAmount;
 					if (inventory[slot].stackSize == 0) {
 						inventory[slot] = null;
@@ -585,6 +595,17 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			if (getWorldString(accountNumber) != "") {
 				int balance = getWorldInt(accountNumber);
 				balance -= amount;
+				setWorldData(accountNumber, balance);
+			}
+		}
+	}
+	
+	public void creditAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance += amount;
 				setWorldData(accountNumber, balance);
 			}
 		}

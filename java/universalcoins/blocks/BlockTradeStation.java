@@ -27,7 +27,7 @@ public class BlockTradeStation extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0f);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setResistance(6000000.0F);
+		setResistance(6000.0F);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -39,6 +39,7 @@ public class UCPlayerPickupEventHandler {
 					accountNumber = inventory[i].stackTagCompound.getString("Account");
 					int accountBalance = getAccountBalance(accountNumber);
 					if (accountBalance == -1) return; //get out of here if the card is invalid
+					FMLLog.info("Item picked up: " + event.item.getEntityItem());
 					int coinType = getCoinType(event.item.getEntityItem().getItem());
 					if (coinType == -1) return; //something went wrong
 					int coinValue = multiplier[coinType];

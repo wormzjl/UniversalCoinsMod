@@ -36,7 +36,7 @@ public class CommonProxy {
 	public static Block blockVendorFrame;
 	public static Block blockCardStation;
 	public static Block blockBase;
-	public static Block blockSafe;	
+	public static Block blockSafe;
 	
 	
 	public void registerBlocks() {

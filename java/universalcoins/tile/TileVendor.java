@@ -86,7 +86,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private void activateBuyButton() {
 		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
 				&& (!ooStockWarning || infiniteSell)) || 
-				(inventory[itemUserCardSlot] != null && getAccountBalance() > itemPrice && !ooStockWarning)) {
+				(inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice && !ooStockWarning)) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
 					buyButtonActive = false;
@@ -219,7 +219,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public void onBuyPressed(int amount) {
 		boolean useCard = false;
 		//use the card if we have it
-		if (inventory[itemUserCardSlot] != null && getAccountBalance() > itemPrice * amount) {
+		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice * amount) {
 			useCard = true;
 		}
 		if (inventory[itemTradeSlot] == null || userCoinSum < itemPrice * amount && !useCard) {
@@ -237,7 +237,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				inventory[itemOutputSlot] = inventory[itemTradeSlot].copy();
 				inventory[itemOutputSlot].stackSize = totalSale;
 				if (useCard && inventory[itemUserCardSlot] == null) { 
-					debitAccount(itemPrice * amount);
+					debitUserAccount(itemPrice * amount);
 				}	else {
 					userCoinSum -= itemPrice * amount;
 				}
@@ -247,7 +247,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 						- inventory[itemOutputSlot].stackSize);
 				inventory[itemOutputSlot].stackSize += totalSale;
 				if (useCard && inventory[itemUserCardSlot] != null) { 
-					debitAccount(itemPrice * amount);
+					debitUserAccount(itemPrice * amount);
 				} else {
 					userCoinSum -= itemPrice * amount;
 				}
@@ -255,7 +255,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			if (!UniversalCoins.collectCoinsInInfinite) {
 				coinSum = 0;
 			} else {
-				coinSum += itemPrice * amount;
+				if (inventory[itemCardSlot] != null
+						&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+						&& getOwnerAccountBalance() != -1 
+						&& getOwnerAccountBalance() + (itemPrice * amount) < Integer.MAX_VALUE) {
+					creditOwnerAccount(itemPrice * amount);
+				} else {
+					coinSum += itemPrice * amount;
+				}
 			}
 		} else {
 			// find matching item in inventory
@@ -278,15 +285,21 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					inventory[i].stackSize -= thisSale;
 					totalSale -= thisSale;
 					if (useCard && inventory[itemCardSlot] == null) { 
-						debitAccount(itemPrice * thisSale	/ inventory[itemTradeSlot].stackSize);
+						debitUserAccount(itemPrice * thisSale	/ inventory[itemTradeSlot].stackSize);
 					}	else {
 						userCoinSum -= itemPrice * thisSale	/ inventory[itemTradeSlot].stackSize;
 					}
 					if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
 						coinSum = 0;
 					} else {
-						coinSum += itemPrice * thisSale
-								/ inventory[itemTradeSlot].stackSize;
+						if (inventory[itemCardSlot] != null
+								&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+								&& getOwnerAccountBalance() != -1 
+								&& getOwnerAccountBalance() + (itemPrice * amount) < Integer.MAX_VALUE) {
+							creditOwnerAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
+						} else {
+							coinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
+						}
 					}
 				}
 				// cleanup empty stacks
@@ -306,7 +319,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			return;
 		}
 		// use the card if we have it
-		if (inventory[itemUserCardSlot] != null && getAccountBalance() > itemPrice) {
+		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice) {
 			useCard = true;
 		}
 		if (userCoinSum < itemPrice && !useCard) { // can't buy even one
@@ -315,12 +328,12 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 		if (inventory[itemOutputSlot] == null) { // empty stack
 			if (inventory[itemTradeSlot].getMaxStackSize() * itemPrice / inventory[itemTradeSlot].stackSize <= (
-					useCard ? getAccountBalance() : userCoinSum)) {
+					useCard ? getUserAccountBalance() : userCoinSum)) {
 				// buy as many as will fit in a stack
 				amount = inventory[itemTradeSlot].getMaxStackSize() / inventory[itemTradeSlot].stackSize;
 			} else {
 				// buy as many as i have coins for.
-				amount = (useCard ? getAccountBalance() : userCoinSum) / itemPrice;
+				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice;
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemTradeSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemTradeSlot].getItemDamage()
@@ -332,7 +345,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				amount = (inventory[itemTradeSlot].getMaxStackSize()
 						- inventory[itemOutputSlot].stackSize) / inventory[itemOutputSlot].stackSize;
 			} else {
-				amount = (useCard ? getAccountBalance() : userCoinSum) / itemPrice; // buy as many as i can with available coins.
+				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice; // buy as many as i can with available coins.
 			}
 		} else {
 			buyButtonActive = false;
@@ -390,7 +403,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				} else {
 					coinSum -= itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
 				}
-				userCoinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
+				if (inventory[itemUserCardSlot] != null 
+						&& inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+						&& getUserAccountBalance() != -1 
+						&& getUserAccountBalance() + (itemPrice * thisSale / inventory[itemTradeSlot].stackSize) < Integer.MAX_VALUE) {
+					creditUserAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
+				} else {
+					userCoinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
+				}
 				// cleanup empty stacks
 				if (inventory[itemSellSlot] == null || inventory[itemSellSlot].stackSize == 0) {
 					inventory[itemSellSlot] = null;
@@ -498,11 +518,25 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					int depositAmount = 0;
 					if (slot == itemCoinInputSlot) {
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-						coinSum += depositAmount * itemValue;
+						if (inventory[itemCardSlot] != null
+								&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+								&& getOwnerAccountBalance() != -1 
+								&& getOwnerAccountBalance() + (depositAmount * itemValue) < Integer.MAX_VALUE) {
+							creditOwnerAccount(depositAmount * itemValue);
+						} else {
+							coinSum += depositAmount * itemValue;
+						}
 						updateCoinsForPurchase();
 					} else {
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - userCoinSum) / itemValue);
-						userCoinSum += depositAmount * itemValue;
+						if (inventory[itemUserCardSlot] != null
+								&& inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+								&& getUserAccountBalance() != -1 
+								&& getUserAccountBalance() + (depositAmount * itemValue) < Integer.MAX_VALUE) {
+							creditUserAccount(depositAmount * itemValue);
+						} else {
+							userCoinSum += depositAmount * itemValue;
+						}
 					}
 					inventory[slot].stackSize -= depositAmount;
 					if (inventory[slot].stackSize == 0) {
@@ -773,7 +807,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 	}
 	
-	public int getAccountBalance() {
+	public int getUserAccountBalance() {
 		if (inventory[itemUserCardSlot] != null) {
 			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 			if (getWorldString(accountNumber) != "") {
@@ -782,7 +816,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} return -1;
 	}
 	
-	public boolean debitAccount(int amount) {
+	public boolean debitUserAccount(int amount) {
 		if (inventory[itemUserCardSlot] != null) {
 			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 			if (getWorldString(accountNumber) != "") {
@@ -792,6 +826,17 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				return true;
 			}
 		} return false;
+	}
+	
+	public void creditUserAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance += amount;
+				setWorldData(accountNumber, balance);
+			}
+		}
 	}
 	
 	public int getOwnerAccountBalance() {
@@ -813,6 +858,17 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				return true;
 			}
 		} return false;
+	}
+	
+	public void creditOwnerAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance += amount;
+				setWorldData(accountNumber, balance);
+			}
+		}
 	}
 	
 	private void setWorldData(String tag, int data) {

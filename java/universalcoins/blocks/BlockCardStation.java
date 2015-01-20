@@ -4,6 +4,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
@@ -22,10 +24,10 @@ public class BlockCardStation extends BlockContainer {
 	
 	public BlockCardStation() {
 		super(new Material(MapColor.stoneColor));
-		setHardness(3.0f);
+		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		setBlockTextureName("universalcoins:blockTradeStation1"); //fixes missing texture on block break
-		setResistance(6000000.0F);
+		setResistance(30.0F);
 	}
 	
 	@Override
@@ -64,4 +66,12 @@ public class BlockCardStation extends BlockContainer {
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileCardStation();
 	}
+	
+	@Override
+	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
+        world.setBlockToAir(x, y, z);
+        onBlockDestroyedByExplosion(world, x, y, z, explosion);
+        EntityItem entityItem = new EntityItem( world, x, y, z, new ItemStack(UniversalCoins.proxy.blockSafe, 1));
+		if (!world.isRemote) world.spawnEntityInWorld(entityItem);
+    }
 }

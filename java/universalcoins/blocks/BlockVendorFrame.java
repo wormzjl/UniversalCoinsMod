@@ -29,7 +29,7 @@ public class BlockVendorFrame extends BlockContainer {
 		super(new Material(MapColor.woodColor));
 		setHardness(1.0f);
 		setBlockTextureName("universalcoins:blockVendingFrame"); //fixes missing texture on block break
-		setResistance(6000000.0F);
+		setResistance(6000.0F);
 		setBlockBounds(0, 0, 0, 0, 0, 0);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
