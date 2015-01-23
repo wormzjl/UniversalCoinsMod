@@ -46,6 +46,7 @@ public class CommonProxy {
 		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
 		blockBase = new BlockBase().setBlockName("blockBase");
 		blockSafe = new BlockSafe().setBlockName("blockSafe");
+
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();

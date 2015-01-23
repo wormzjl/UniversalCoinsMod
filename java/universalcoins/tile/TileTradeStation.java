@@ -155,7 +155,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
 		}
-		if (inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
 				&& getAccountBalance() + (itemPrice * amount * UniversalCoins.itemSellRatio) < Integer.MAX_VALUE) {
 			creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio));
 		} else {

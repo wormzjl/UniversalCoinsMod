@@ -1,5 +1,6 @@
 package universalcoins.blocks;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -41,6 +42,11 @@ public class BlockCardStation extends BlockContainer {
 	}
 	
 	@Override
+    public int getRenderType() {
+		    return 0;
+    }
+	
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (((TileCardStation) tileEntity).inUse) {
@@ -57,8 +63,9 @@ public class BlockCardStation extends BlockContainer {
 		
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		//set block meta so we can use it later for rotation
+		if (world.isRemote) return;
 		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		FMLLog.info("rotation: " + rotation);
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 	}
 

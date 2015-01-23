@@ -7,9 +7,9 @@ import net.minecraftforge.common.MinecraftForge;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.HintGuiRenderer;
 import universalcoins.render.BlockVendorRenderer;
-import universalcoins.render.CardStationRenderer;
 import universalcoins.render.ItemCardStationRenderer;
 import universalcoins.render.ItemVendorFrameRenderer;
+import universalcoins.render.TileEntityCardStationRenderer;
 import universalcoins.render.TileEntityVendorRenderer;
 import universalcoins.render.VendorFrameRenderer;
 import universalcoins.tile.TileCardStation;
@@ -27,7 +27,7 @@ public class ClientProxy extends CommonProxy {
 		//register handler for GUI hints for vending blocks
 		MinecraftForge.EVENT_BUS.register(HintGuiRenderer.instance);
 				
-		TileEntitySpecialRenderer render = new CardStationRenderer();
+		TileEntitySpecialRenderer render = new TileEntityCardStationRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCardStation.class, render);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockCardStation), new ItemCardStationRenderer(render, new TileCardStation()));
         
