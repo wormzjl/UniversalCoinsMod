@@ -12,6 +12,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.util.UCWorldData;
@@ -235,23 +236,29 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
-	private String getPlayerAccount(String player) {
-		//creates new account if none found
-		//always returns an account number
-		String accountNumber = getWorldString(player);
-		if (accountNumber == "") {
-			addPlayerAccount(player);
-		}
-		return getWorldString(player);
+	private String getPlayerUID(String playerName) {
+		World world = super.getWorldObj();
+		EntityPlayer player = world.getPlayerEntityByName(playerName);
+		return player.getUniqueID().toString();
 	}
 	
-	private void addPlayerAccount(String player) {
+	private String getPlayerAccount(String playerUID) {
+		//creates new account if none found
+		//always returns an account number
+		String accountNumber = getWorldString(playerUID);
+		if (accountNumber == "") {
+			addPlayerAccount(playerUID);
+		}
+		return getWorldString(playerUID);
+	}
+	
+	private void addPlayerAccount(String playerUID) {
 		String accountNumber = "";
-		if (getWorldString(player) == "") {
+		if (getWorldString(playerUID) == "") {
 			while (getWorldString(accountNumber) == "") {
 				accountNumber = String.valueOf(generateAccountNumber());
 				if (getWorldString(accountNumber) == "") {
-					setWorldData(player, accountNumber);
+					setWorldData(playerUID, accountNumber);
 					setWorldData(accountNumber, 0);
 				}
 			}
@@ -264,7 +271,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	
 	public void updateAccountBalance() {
 		if (blockOwner != "") {
-			String accountNumber = getPlayerAccount(blockOwner);
+			String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
 			if (getWorldString(accountNumber) != "") {
 				accountBalance = getWorldInt(accountNumber);
 			}
@@ -272,7 +279,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	}
 	
 	private void creditAccount(int amount) {
-		String accountNumber = getPlayerAccount(blockOwner);
+		String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
 		if (getWorldString(accountNumber) != "") {
 			int balance = getWorldInt(accountNumber);
 			balance += amount;
@@ -282,7 +289,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	
 	public boolean debitAccount(int amount) {
 		if (blockOwner != "") {
-			String accountNumber = getPlayerAccount(blockOwner);
+			String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
 			if (getWorldString(accountNumber) != "") {
 				int balance = getWorldInt(accountNumber);
 				balance -= amount;

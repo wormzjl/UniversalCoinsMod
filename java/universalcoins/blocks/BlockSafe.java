@@ -15,6 +15,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileSafe;
+import universalcoins.tile.TileVendorBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -57,6 +58,8 @@ public class BlockSafe extends BlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		if (world.isRemote) return;
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te != null ) ((TileSafe)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
 		int l = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
 		switch (l) {
