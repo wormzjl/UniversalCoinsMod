@@ -144,9 +144,9 @@ public class UniversalCoins {
 		Property collectInfinite = config.get(config.CATEGORY_GENERAL, "Collect infinite", true);
 		collectInfinite.comment = "Set to false to disable collecting coins when vending blocks are set to infinite mode.";
 		collectCoinsInInfinite = collectInfinite.getBoolean(true);
-		Property sellRatio = config.get(config.CATEGORY_GENERAL, "Sell Ratio", 0.5);
+		Property sellRatio = config.get(config.CATEGORY_GENERAL, "Sell Ratio", 0.8);
 		sellRatio.comment = "Ratio of sell price to buy price. Set to less than 1.0 to give players a percentage of the full buy price when selling an item. (Range: 0.1 - 1.0)";
-		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.5),1.0));	
+		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));	
 		config.save();
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());

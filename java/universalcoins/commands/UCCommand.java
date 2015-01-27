@@ -1,5 +1,8 @@
 package universalcoins.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -31,6 +34,13 @@ public class UCCommand extends CommandBase {
 	public String getCommandUsage(ICommandSender icommandsender) {
 		return StatCollector.translateToLocal("command.uccommand.help");
 	}
+	
+	@Override
+	public List getCommandAliases() {
+		List aliases = new ArrayList();
+		aliases.add("uc");
+        return aliases;
+    }
 
 	// Method called when the command is typed in
 	@Override

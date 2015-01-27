@@ -23,8 +23,8 @@ itemGroup.tabUniversalCoins=Universal Coins
 #####
 # General
 #####
-general.button.buy=Vender
-general.button.sell=Comprar
+general.button.buy=Comprar
+general.button.sell=Vender
 general.button.edit=Editar
 general.button.save=Guardar
 
@@ -51,8 +51,8 @@ command.uccommand.option.set.help=- set <nombre del objeto> <precio> : Define el
 command.uccommand.option.set.price.invalid=Por favor, especifique un precio valido
 command.uccommand.option.set.price=precio definido como 
 command.uccommand.option.set.price.firstuse.one=Los cambios no serán guardados
-command.uccommand.option.set.price.firstuse.two=Ejecute \"universalcoins save\" para guardar cambios
-command.uccommand.option.set.price.firstuse.three=Ejecute \"universalcoins reload\" para deshacer los cambios
+command.uccommand.option.set.price.firstuse.two=Ejecute "universalcoins save" para guardar cambios
+command.uccommand.option.set.price.firstuse.three=Ejecute "universalcoins reload" para deshacer los cambios
 command.uccommand.option.set.price.fail.one=Fallo al definir precio.
 command.uccommand.option.set.price.error=Por favor especifique un objeto y un precio
 command.uccommand.option.reload=reload
@@ -63,7 +63,7 @@ command.uccommand.option.reset.help=- reset : Reiniciar todos los precios a los 
 command.uccommand.option.save.name=save
 command.uccommand.option.save.confirm=guardar los cambios
 command.uccommand.option.save.help=- save : guardar lista de precios.
-command.uccommand.usage.hint=Consejo: Usa \"this\" en vez de un nombre de objeto para recuperar o definir el precio del objeto en la mano.
+command.uccommand.usage.hint=Consejo: Usa "this" en vez de un nombre de objeto para recuperar o definir el precio del objeto en la mano.
 command.uccommand.warning.pricenotset=No hay precio definido para 
 command.uccommand.warning.pricefound=El precio para
 command.uccommand.warning.noitem=Por favor, indique el objeto

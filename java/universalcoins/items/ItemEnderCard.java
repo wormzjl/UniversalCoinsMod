@@ -35,12 +35,17 @@ public class ItemEnderCard extends Item {
 		if( stack.stackTagCompound != null ) {
 			list.add(stack.stackTagCompound.getString("Name"));
 			list.add(stack.stackTagCompound.getString("Account"));
-		}	
+		} else {
+			list.add(StatCollector.translateToLocal("item.itemUCCard.warning"));
+		}
 	}
 	
 	@Override
     public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
-		if (world.isRemote || !itemstack.hasTagCompound()) return true;
+		if (world.isRemote) return true;
+		if( itemstack.stackTagCompound == null ) {
+			createNBT(itemstack, world, player);
+		}
 		int accountBalance = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		ItemStack[] inventory = player.inventory.mainInventory;
@@ -76,6 +81,28 @@ public class ItemEnderCard extends Item {
         return true;
     }
 	
+	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
+		String accountNumber = getOrCreatePlayerAccount(world, entityPlayer.getPersistentID().toString());
+		stack.stackTagCompound = new NBTTagCompound();
+		stack.stackTagCompound.setString("Name", entityPlayer.getDisplayName());
+		stack.stackTagCompound.setString("Owner", entityPlayer.getPersistentID().toString());
+		stack.stackTagCompound.setString("Account", accountNumber);
+	}
+	
+	private String getOrCreatePlayerAccount(World world, String playerUID) {
+		String accountNumber = getWorldString(world, playerUID);
+		if (accountNumber == "") {
+			while (getWorldString(world, accountNumber) == "") {
+				accountNumber = String.valueOf(generateAccountNumber());
+				if (getWorldString(world, accountNumber) == "") {
+					setWorldData(world, playerUID, accountNumber);
+					setWorldData(world, accountNumber, 0);
+				}
+			}
+		}
+		return accountNumber;
+	}
+	
 	private int getCoinType(Item item) {
 		final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
@@ -86,6 +113,17 @@ public class ItemEnderCard extends Item {
 			}
 		}
 		return -1;
+	}
+	
+	private int generateAccountNumber() {
+		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
+	}
+	
+	private void setWorldData(World world, String tag, String data) {
+		UCWorldData wData = UCWorldData.get(world);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.setString(tag, data);
+		wData.markDirty();
 	}
 	
 	private String getPlayerAccount(World world, String player) {
