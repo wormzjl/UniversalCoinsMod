@@ -1,4 +1,9 @@
 #####
+# es_ES Translation by DanNetwalker
+#####
+
+
+#####
 # Main
 #####
 tile.blockTradeStation.name=Estación de Comercio Universal
@@ -93,6 +98,7 @@ chat.cardstation.warning.inuse=esta usando el cajero. Inténtelo más tarde.
 # Universal Card Messages
 #####
 item.itemUCCard.balance=Balance en Cuenta:
+item.itemUCCard.warning=Tarjeta inactiva. Click derecho para activar.
 
 #####
 # Ender Card Messages
