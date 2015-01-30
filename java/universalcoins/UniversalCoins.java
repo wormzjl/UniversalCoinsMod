@@ -18,6 +18,7 @@ import universalcoins.commands.UCSend;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
+import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -61,7 +62,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.5.9";
+	public static final String version = "1.7.2-1.6.0";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -166,6 +167,7 @@ public class UniversalCoins {
 	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
 	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
 	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
+	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
@@ -181,23 +183,6 @@ public class UniversalCoins {
 		proxy.registerItems();
 		proxy.registerRenderers();
 		
-		UCRecipeHelper.addCoinRecipes();
-		if (recipesEnabled) {
-			UCRecipeHelper.addTradeStationRecipe();
-		}
-		if (vendorRecipesEnabled){
-			UCRecipeHelper.addVendingBlockRecipes();
-		}
-		if (vendorFrameRecipesEnabled){
-			UCRecipeHelper.addVendingFrameRecipes();
-		}
-		if (atmRecipeEnabled){
-			UCRecipeHelper.addCardStationRecipes();
-		}
-		if (enderCardRecipeEnabled){
-			UCRecipeHelper.addEnderCardRecipes();
-			UCRecipeHelper.addBlockSafeRecipe();
-		}
 		if (coinsInMineshaft) {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));
 		}
@@ -229,6 +214,25 @@ public class UniversalCoins {
 		manager.registerCommand(new UCRebalance());
 		manager.registerCommand(new UCGive());
 		manager.registerCommand(new UCSend());
+		
+		//load recipes server side. client side are loaded by UCPlayerLoginEventHandler
+		UCRecipeHelper.addCoinRecipes();
+		if (recipesEnabled) {
+			UCRecipeHelper.addTradeStationRecipe();
+		}
+		if (vendorRecipesEnabled){
+			UCRecipeHelper.addVendingBlockRecipes();
+		}
+		if (vendorFrameRecipesEnabled){
+			UCRecipeHelper.addVendingFrameRecipes();
+		}
+		if (atmRecipeEnabled){
+			UCRecipeHelper.addCardStationRecipes();
+		}
+		if (enderCardRecipeEnabled){
+			UCRecipeHelper.addEnderCardRecipes();
+			UCRecipeHelper.addBlockSafeRecipe();
+		}
 	}
 
 }

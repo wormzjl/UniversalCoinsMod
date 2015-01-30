@@ -49,6 +49,7 @@ public class BlockSafe extends BlockContainer {
 		if (te instanceof TileSafe) {
 			TileSafe tentity = (TileSafe) te;
 			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+				tentity.updateAccountBalance();
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			}
 		}

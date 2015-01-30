@@ -1,6 +1,5 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -109,7 +108,6 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		inventory[slot] = stack;
 		if (stack != null) {
 			if (slot == itemCoinSlot && depositCoins) {
-				FMLLog.info("Depositing coins");
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
@@ -289,7 +287,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			accountBalance = getAccountBalance(accountNumber);
 		}
 		if (functionId == 2) {
-			if (getPlayerAccount(playerName) == "") {
+			if (getPlayerAccount(playerUID) == "") {
 			} else {
 				transferPlayerAccount(playerUID);
 				inventory[itemCardSlot] = new ItemStack(UniversalCoins.proxy.itemUCCard, 1);
@@ -323,7 +321,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			inventory[itemCardSlot] = null;
 		}
 		if (functionId == 7) {
-			if (getPlayerAccount(customAccountName) != "") {
+			if (getPlayerAccount(customAccountName) != "" && !getCustomAccount(playerUID).contentEquals(customAccountName)) {
 				accountError = true;
 				//we need to reset this so that that function 7 is called again on next attempt at getting an account
 				customAccountName = "none";

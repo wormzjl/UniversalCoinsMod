@@ -1,0 +1,71 @@
+package universalcoins.net;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.tileentity.TileEntity;
+import universalcoins.UniversalCoins;
+import universalcoins.tile.TileTradeStation;
+import universalcoins.util.UCRecipeHelper;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+
+public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
+private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, enderCardRecipeEnabled;;
+
+    public UCRecipeMessage()
+    {
+        this.recipesEnabled = UniversalCoins.recipesEnabled;
+        this.vendorRecipesEnabled = UniversalCoins.vendorRecipesEnabled;
+        this.vendorFrameRecipesEnabled = UniversalCoins.vendorFrameRecipesEnabled;
+        this.atmRecipeEnabled = UniversalCoins.atmRecipeEnabled;
+        this.enderCardRecipeEnabled = UniversalCoins.enderCardRecipeEnabled;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf)
+    {
+    	this.recipesEnabled = buf.readBoolean();
+        this.vendorRecipesEnabled = buf.readBoolean();
+        this.vendorFrameRecipesEnabled = buf.readBoolean();
+        this.atmRecipeEnabled = buf.readBoolean();
+        this.enderCardRecipeEnabled = buf.readBoolean();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf)
+    {
+        buf.writeBoolean(recipesEnabled);
+        buf.writeBoolean(vendorRecipesEnabled);
+        buf.writeBoolean(vendorFrameRecipesEnabled);
+        buf.writeBoolean(atmRecipeEnabled);
+        buf.writeBoolean(enderCardRecipeEnabled);
+    }
+
+	@Override
+	public IMessage onMessage(UCRecipeMessage message, MessageContext ctx) {
+		FMLLog.info("UC: received recipe message");
+		UCRecipeHelper.addCoinRecipes();
+		if (message.recipesEnabled) {
+			UCRecipeHelper.addTradeStationRecipe();
+		}
+		if (message.vendorRecipesEnabled){
+			UCRecipeHelper.addVendingBlockRecipes();
+		}
+		if (message.vendorFrameRecipesEnabled){
+			UCRecipeHelper.addVendingFrameRecipes();
+		}
+		if (message.atmRecipeEnabled){
+			UCRecipeHelper.addCardStationRecipes();
+		}
+		if (message.enderCardRecipeEnabled){
+			UCRecipeHelper.addEnderCardRecipes();
+			UCRecipeHelper.addBlockSafeRecipe();
+		}
+			
+		
+		return null;
+	}
+}

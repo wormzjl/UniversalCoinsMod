@@ -34,6 +34,7 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+		//TODO change texture based on plank type
 		ResourceLocation textures = (new ResourceLocation("textures/blocks/planks_birch.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 

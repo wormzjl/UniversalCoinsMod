@@ -270,8 +270,13 @@ public class CardStationGUI extends GuiContainer{
 				//new card
 				if (button.id == idButtonOne){}
 				if (button.id == idButtonTwo){}
-				if (button.id == idButtonThree){					
-					functionID = 1;menuState = 10;}
+				if (button.id == idButtonThree 
+					&& tEntity.getStackInSlot(tEntity.itemCardSlot) == null) {
+						if (!tEntity.cardOwner.contentEquals(tEntity.playerUID)) {menuState = 15;
+						} else {
+							functionID = 1;menuState = 10;
+						}
+					}
 				if (button.id == idButtonFour){menuState = 2;}
 				break;
 			case 8:
@@ -343,8 +348,10 @@ public class CardStationGUI extends GuiContainer{
 			case 16:
 				//custom account options
 				if (button.id == idButtonOne){
-					functionID = 7;
-					menuState = 10;
+					if (tEntity.getStackInSlot(tEntity.itemCardSlot) == null) {
+						functionID = 7;
+						menuState = 19;
+					}
 				}
 				if (button.id == idButtonTwo){
 					menuState = 9;
