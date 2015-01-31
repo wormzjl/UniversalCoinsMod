@@ -72,7 +72,6 @@ public class UniversalCoins {
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
 	public static Boolean cardSecurityEnabled;
-	public static Boolean collectCoinsInInfinite;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
 	public static Integer mineshaftCoinChance;
@@ -142,9 +141,6 @@ public class UniversalCoins {
 		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
 		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
 		autoModeEnabled = autoMode.getBoolean(true);
-		Property collectInfinite = config.get(config.CATEGORY_GENERAL, "Collect infinite", true);
-		collectInfinite.comment = "Set to false to disable collecting coins when vending blocks are set to infinite mode.";
-		collectCoinsInInfinite = collectInfinite.getBoolean(true);
 		Property sellRatio = config.get(config.CATEGORY_GENERAL, "Sell Ratio", 0.8);
 		sellRatio.comment = "Ratio of sell price to buy price. Set to less than 1.0 to give players a percentage of the full buy price when selling an item. (Range: 0.1 - 1.0)";
 		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));	

@@ -75,12 +75,12 @@ public class HintGui extends GuiScreen {
 				DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 				itemInfoStringList.add(StatCollector.translateToLocal("hintgui.price") + formatter.format(tileEntity.itemPrice));
 				//add out of stock notification if not infinite and no stock found
-				if (!tileEntity.infiniteSell && tileEntity.sellMode && tileEntity.ooStockWarning) {
+				if (!tileEntity.infiniteMode && tileEntity.sellMode && tileEntity.ooStockWarning) {
 					warning++;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.stock"));
 				}
 				//add out of coins notification if buying and no funds available
-				if (!tileEntity.sellMode && tileEntity.ooCoinsWarning) {
+				if (!tileEntity.sellMode && tileEntity.ooCoinsWarning && !tileEntity.infiniteMode) {
 					warning++;
 					itemInfoStringList.add(StatCollector.translateToLocal("hintgui.warning.coins"));
 				}

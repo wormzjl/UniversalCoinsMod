@@ -74,7 +74,7 @@ public class BlockVendor extends BlockContainer {
 			tagCompound.setInteger("UserCoinSum", te.userCoinSum);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("BlockOwner", te.blockOwner);
-			tagCompound.setBoolean("Infinite", te.infiniteSell);
+			tagCompound.setBoolean("Infinite", te.infiniteMode);
 			stack.setTagCompound(tagCompound);
 			return stack;
 		} else
@@ -104,7 +104,7 @@ public class BlockVendor extends BlockContainer {
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
 				tentity.blockOwner = tagCompound.getString("BlockOwner");
-				tentity.infiniteSell = tagCompound.getBoolean("Infinite");
+				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
 			}
 			world.markBlockForUpdate(x, y, z);
 			

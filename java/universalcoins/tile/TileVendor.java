@@ -53,7 +53,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public int coinSum = 0;
 	public int userCoinSum = 0;
 	public int itemPrice = 0;
-	public boolean infiniteSell = false;
+	public boolean infiniteMode = false;
 	public boolean sellMode = true;
 	public boolean ooStockWarning = true;
 	public boolean ooCoinsWarning = true;
@@ -85,7 +85,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	private void activateBuyButton() {
 		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
-				&& (!ooStockWarning || infiniteSell)) || 
+				&& (!ooStockWarning || infiniteMode)) || 
 				(inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice && !ooStockWarning)) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
@@ -99,7 +99,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	private void activateSellButton() {
 		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem() &&
-				hasInventorySpace() && (getOwnerAccountBalance() >= itemPrice || coinSum >= itemPrice)) {
+				(hasInventorySpace() && (getOwnerAccountBalance() >= itemPrice || coinSum >= itemPrice) || infiniteMode)) {
 			sellButtonActive = true;
 		} else sellButtonActive = false;
 	}
@@ -232,7 +232,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			buyButtonActive = false;
 			return;
 		}
-		if (infiniteSell) {
+		if (infiniteMode) {
 			if (inventory[itemOutputSlot] == null) {
 				inventory[itemOutputSlot] = inventory[itemTradeSlot].copy();
 				inventory[itemOutputSlot].stackSize = totalSale;
@@ -252,7 +252,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					userCoinSum -= itemPrice * amount;
 				}
 			}
-			if (!UniversalCoins.collectCoinsInInfinite) {
+			if (infiniteMode) {
 				coinSum = 0;
 			} else {
 				if (inventory[itemCardSlot] != null
@@ -289,7 +289,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					}	else {
 						userCoinSum -= itemPrice * thisSale	/ inventory[itemTradeSlot].stackSize;
 					}
-					if (!UniversalCoins.collectCoinsInInfinite && infiniteSell) {
+					if (infiniteMode) {
 						coinSum = 0;
 					} else {
 						if (inventory[itemCardSlot] != null
@@ -363,6 +363,15 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	public void onSellPressed(int amount) {
 		boolean useCard = false;
+		//if infinite mode, we can handle it here and skip the complicated stuff
+		if (infiniteMode) {
+			userCoinSum += itemPrice * amount / inventory[itemTradeSlot].stackSize;
+			inventory[itemSellSlot].stackSize -= amount;
+			if (inventory[itemSellSlot].stackSize == 0) {
+				inventory[itemSellSlot] = null;
+			}
+			return;
+		}
 		// use the card if we have it
 		if (inventory[itemCardSlot] != null && getOwnerAccountBalance() > itemPrice) {
 			useCard = true;
@@ -622,7 +631,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 	
 	public void sendServerUpdateMessage() {
-		UniversalCoins.snw.sendToServer(new UCVendorServerMessage(xCoord, yCoord, zCoord, itemPrice, blockOwner, infiniteSell));
+		UniversalCoins.snw.sendToServer(new UCVendorServerMessage(xCoord, yCoord, zCoord, itemPrice, blockOwner, infiniteMode));
 	}
 	
 	@Override
@@ -659,9 +668,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			blockOwner = null;
 		}
 		try {
-			infiniteSell = tagCompound.getBoolean("Infinite");
+			infiniteMode = tagCompound.getBoolean("Infinite");
 		} catch (Throwable ex2) {
-			infiniteSell = false;
+			infiniteMode = false;
 		}
 		try {
 			sellMode = tagCompound.getBoolean("Mode");
@@ -763,7 +772,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setInteger("UserCoinSum", userCoinSum);		
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("BlockOwner", blockOwner);
-		tagCompound.setBoolean("Infinite", infiniteSell);
+		tagCompound.setBoolean("Infinite", infiniteMode);
 		tagCompound.setBoolean("Mode", sellMode);
 		tagCompound.setBoolean("OutOfStock", ooStockWarning);
 		tagCompound.setBoolean("OutOfCoins", ooCoinsWarning);

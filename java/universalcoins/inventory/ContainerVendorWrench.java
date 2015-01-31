@@ -39,13 +39,13 @@ public class ContainerVendorWrench extends Container {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
             if (this.lastBlockOwner != this.tileEntity.blockOwner 
-            		|| this.lastInfinite != this.tileEntity.infiniteSell) {
+            		|| this.lastInfinite != this.tileEntity.infiniteMode) {
                 //update
             	tileEntity.updateTE();
             }
 
 		this.lastBlockOwner = this.tileEntity.blockOwner;
-		this.lastInfinite = this.tileEntity.infiniteSell;
+		this.lastInfinite = this.tileEntity.infiniteMode;
         }
 	}
 	
