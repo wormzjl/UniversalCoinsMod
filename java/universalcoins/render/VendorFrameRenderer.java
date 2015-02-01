@@ -1,19 +1,15 @@
 package universalcoins.render;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,15 +17,12 @@ import universalcoins.tile.TileVendorFrame;
 
 public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 
-	// The model of your block
-	private final ModelVendorFrame model;
 
 	RenderItem renderer = new RenderItem();
     private final RenderBlocks renderBlocks = new RenderBlocks();
 
 
 	public VendorFrameRenderer() {
-		this.model = new ModelVendorFrame();
 	}
 
 	@Override
@@ -49,11 +42,113 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 		}
 
 		//render block
+		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-		GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
-		this.model.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		GL11.glTranslatef((float) x + 0.5F,(float) y + 0.5F,(float) z + 0.5F);
+		GL11.glRotatef(meta * -90F, 0F, 1F, 0F);
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		tessellator.startDrawingQuads();
+		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		
+		// back
+		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		tessellator.addVertexWithUV(0.875, 0.875, 0, 0.125, 0.125);
+		tessellator.addVertexWithUV(0.875, 0.125, 0, 0.125, 0.875);
+		tessellator.addVertexWithUV(0.125, 0.125, 0, 0.875, 0.875);
+		tessellator.addVertexWithUV(0.125, 0.875, 0, 0.875, 0.125);
+
+		//top
+		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		tessellator.addVertexWithUV(0.125, 0.875, 0, 0.125, 0);
+		tessellator.addVertexWithUV(0.125, 0.875, 0.0625, 0.125, 0.0625);
+		tessellator.addVertexWithUV(0.875, 0.875, 0.0625, 0.875, 0.0625);
+		tessellator.addVertexWithUV(0.875, 0.875, 0, 0.875, 0);
+		
+		//bottom
+		tessellator.setNormal(0.0F, -1.0F, 0.0F);
+		tessellator.addVertexWithUV(0.125, 0.125, 0.0625, 0.875, 0.9375);
+		tessellator.addVertexWithUV(0.125, 0.125, 0, 0.875, 0.875);
+		tessellator.addVertexWithUV(0.875, 0.125, 0, 0.125, 0.875);
+		tessellator.addVertexWithUV(0.875, 0.125, 0.0625, 0.125, 0.9375);
+
+		//left
+		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		tessellator.addVertexWithUV(0.125, 0.875, 0.0625, 0, 0.125);
+		tessellator.addVertexWithUV(0.125, 0.875, 0, 0.125, 0.125);
+		tessellator.addVertexWithUV(0.125, 0.125, 0, 0, 0.875);
+		tessellator.addVertexWithUV(0.125, 0.125, 0.0625, 0.125, 0.875);
+		
+		//right
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		tessellator.addVertexWithUV(0.875, 0.875, 0, 0.875, 0.125);
+		tessellator.addVertexWithUV(0.875, 0.875, 0.0625, 0.75, 0.125);
+		tessellator.addVertexWithUV(0.875, 0.125, 0.0625, 0.75, 0.875);
+		tessellator.addVertexWithUV(0.875, 0.125, 0, 0.875, 0.875);
+		
+		// front center
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.03125, 0.8125, 0.1875);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.03125, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.03125, 0.1875, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.03125, 0.1875, 0.1875);
+		
+		// front left
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		tessellator.addVertexWithUV(0.125, 0.875, 0.0625, 0.1875, 0.125);
+		tessellator.addVertexWithUV(0.125, 0.125, 0.0625, 0.1875, 0.875);
+		tessellator.addVertexWithUV(0.1875, 0.125, 0.0625, 0.125, 0.875);
+		tessellator.addVertexWithUV(0.1875, 0.875, 0.0625, 0.125, 0.125);
+		
+		// front right
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		tessellator.addVertexWithUV(0.8125, 0.875, 0.0625, 0.875, 0.125);
+		tessellator.addVertexWithUV(0.8125, 0.125, 0.0625, 0.875, 0.875);
+		tessellator.addVertexWithUV(0.875, 0.125, 0.0625, 0.8125, 0.875);
+		tessellator.addVertexWithUV(0.875, 0.875, 0.0625, 0.8125, 0.125);
+		
+		// front top
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		tessellator.addVertexWithUV(0.1875, 0.875, 0.0625, 0.1875, 0.125);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.0625, 0.1875, 0.1875);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.0625, 0.8125, 0.1875);
+		tessellator.addVertexWithUV(0.8125, 0.875, 0.0625, 0.8125, 0.125);
+		
+		// front bottom
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.0625, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.1875, 0.125, 0.0625, 0.8125, 0.875);
+		tessellator.addVertexWithUV(0.8125, 0.125, 0.0625, 0.1875, 0.875);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.0625, 0.1875, 0.8125);
+		
+		// inside left
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.0625, 0.8125, 0.1875);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.0625, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.03125, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.03125, 0.8125, 0.1875);
+		
+		// inside right
+		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.0625, 0.8125, 0.1875);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.0625, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.03125, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.03125, 0.8125, 0.1875);
+		
+		// inside top
+		tessellator.setNormal(0.0F, -1.0F, 0.0F);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.0625, 0.1875, 0.1875);
+		tessellator.addVertexWithUV(0.1875, 0.8125, 0.03125, 0.1875, 0.21875);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.03125, 0.8125, 0.21875);
+		tessellator.addVertexWithUV(0.8125, 0.8125, 0.0625, 0.8125, 0.1875);
+		
+		// inside bottom
+		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.03125, 0.8125, 0.78035);
+		tessellator.addVertexWithUV(0.1875, 0.1875, 0.0625, 0.8125, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.0625, 0.1875, 0.8125);
+		tessellator.addVertexWithUV(0.8125, 0.1875, 0.03125, 0.1875, 0.78035);
+		
+		tessellator.draw();
 		
 		//render trade item or block
 		ItemStack itemstack = ((TileVendorFrame) te).getSellItem();
@@ -62,26 +157,10 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 			visStack.stackSize = 1;
 			EntityItem entityitem = new EntityItem(null, 0.0D, 0.0D, 0.0D, visStack);
             entityitem.hoverStart = 0.0F;
-            GL11.glPushMatrix();
-            GL11.glRotatef(180, 1.0F, 0.0F, 0.0F);
             renderer.renderInFrame = true;
-            RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, -1.2D, -0.48D, 0F, 0F);
+            RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.5D, 0.32D, 0.0635D, 0F, 0F);
             renderer.renderInFrame = false;
-            GL11.glPopMatrix();
         }
 		GL11.glPopMatrix();
-	}
-	
-	// Set the lighting stuff, so it changes it's brightness properly.
-	private void adjustLightFixture(World world, int i, int j, int k,
-			Block block) {
-		Tessellator tess = Tessellator.instance;
-		float brightness = block.getLightValue(world, i, j, k);
-		int skyLight = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
-		int modulousModifier = skyLight % 65536;
-		int divModifier = skyLight / 65536;
-		tess.setColorOpaque_F(brightness, brightness, brightness);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
-				(float) modulousModifier, divModifier);
 	}
 }

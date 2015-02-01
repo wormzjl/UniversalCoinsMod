@@ -34,7 +34,6 @@ public class TileEntityCardStationRenderer extends TileEntitySpecialRenderer {
 
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glPushMatrix();
-		//GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glTranslatef((float) x + 0.5F,(float) y + 0.5F,(float) z + 0.5F);
 		GL11.glRotatef(meta * -90F, 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -148,8 +147,6 @@ public class TileEntityCardStationRenderer extends TileEntitySpecialRenderer {
 		tessellator.addVertexWithUV(0.9, 0.4, 0.7, 1, 0.55);
 		
 		tessellator.draw();
-		//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		//GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 	}
 }
