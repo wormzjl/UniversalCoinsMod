@@ -11,10 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
+import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -48,10 +51,16 @@ public class BlockTradeStation extends BlockContainer {
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z,
-			EntityPlayer player, int par6, float par7, float par8, float par9) {
-		player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-		return true;
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (((TileTradeStation) tileEntity).inUse) {
+			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+			return true;
+		} else {
+			player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+			((TileTradeStation) tileEntity).playerName = player.getDisplayName();
+			return true;
+		}
 	}
 	
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {

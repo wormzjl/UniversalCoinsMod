@@ -86,7 +86,7 @@ command.send.result.receiver=coins received from
 #####
 # Chat Warnings
 #####
-chat.cardstation.warning.inuse=is using the ATM. Try again later.
+chat.warning.inuse=Block in use. Try again later.
 
 #####
 # Universal Card Messages

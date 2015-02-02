@@ -92,7 +92,7 @@ command.send.result.receiver=monedas recibidas de
 #####
 # Chat Warnings
 #####
-chat.cardstation.warning.inuse=esta usando el cajero. Inténtelo más tarde.
+chat.warning.inuse=esta usando el cajero. Inténtelo más tarde.
 
 #####
 # Universal Card Messages

@@ -1,6 +1,5 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -17,6 +16,8 @@ import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
+import universalcoins.inventory.ContainerVendorBuy;
+import universalcoins.inventory.ContainerVendorSell;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCWorldData;
@@ -70,6 +71,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean uLStackButtonActive = false;
 	public boolean uSBagButtonActive = false;
 	public boolean uLBagButtonActive = false;
+	public boolean inUse = false;
+	public String playerName = "";
 	
 	
 	@Override
@@ -80,6 +83,19 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			activateUserRetrieveButtons();
 			activateBuyButton();
 			activateSellButton();
+			updateInUse();
+		}
+	}
+	
+	private void updateInUse() {
+		if (worldObj.isRemote) return;
+		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
+		if (playerTest != null && playerTest.openContainer != null &&
+				(this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerVendorBuy
+				|| this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerVendorSell)) {
+			inUse = true;
+		} else {
+			inUse = false;
 		}
 	}
 	
@@ -513,6 +529,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
+		inUse = false;
 		return getStackInSlot(i);
 	}
 
@@ -752,6 +769,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} catch (Throwable ex2) {
 			uLBagButtonActive = false;
 		}
+		try {
+			inUse = tagCompound.getBoolean("InUse");
+		} catch (Throwable ex2) {
+			inUse = false;
+		}
 	}
 	
 	@Override
@@ -789,6 +811,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("UserLargeStackButtonActive", uLStackButtonActive);
 		tagCompound.setBoolean("UserSmallBagButtonActive", uSBagButtonActive);
 		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
+		tagCompound.setBoolean("InUse", inUse);
 	}
 
 	@Override

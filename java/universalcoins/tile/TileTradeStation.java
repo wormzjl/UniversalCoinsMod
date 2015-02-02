@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.TradeStationGUI;
+import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
@@ -48,7 +49,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public int coinMode = 0;
 	private int lastCoinMode = 0;
     public String customName;
-	private boolean inUse;
+	public boolean inUse = false;
+	public String playerName = "";
 
 
 	public TileTradeStation() {
@@ -63,6 +65,18 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			activateRetrieveButtons();
 			runAutoMode();
 			runCoinMode();
+			updateInUse();
+		}
+	}
+	
+	private void updateInUse() {
+		if (worldObj.isRemote) return;
+		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
+		if (playerTest != null && playerTest.openContainer != null &&
+				this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerTradeStation) {
+			inUse = true;
+		} else {
+			inUse = false;
 		}
 	}
 	
@@ -388,6 +402,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} catch (Throwable ex2) {
 			customName = null;
 		}
+		try {
+			inUse = tagCompound.getBoolean("InUse");
+		} catch (Throwable ex2) {
+			inUse = false;
+		}
 	}
 	
 	@Override
@@ -410,6 +429,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		tagCompound.setInteger("CoinMode", coinMode);
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("CustomName", getInventoryName());
+		tagCompound.setBoolean("InUse", inUse);
 	}
 	
 	public void updateTE() {
@@ -487,6 +507,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
+		inUse = false;
 		return getStackInSlot(i);
 	}
 
