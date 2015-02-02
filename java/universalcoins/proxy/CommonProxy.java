@@ -8,6 +8,7 @@ import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockTradeStation;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.blocks.BlockVendorFrame;
+import universalcoins.items.ItemBlockVendor;
 import universalcoins.items.ItemCoin;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.items.ItemLargeCoinBag;
@@ -49,7 +50,7 @@ public class CommonProxy {
 
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
-		GameRegistry.registerBlock(blockVendor, "blockVendor").getUnlocalizedName();
+		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
 		GameRegistry.registerBlock(blockVendorFrame, "blockVendorFrame").getUnlocalizedName();
 		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockBase, "blockBase").getUnlocalizedName();

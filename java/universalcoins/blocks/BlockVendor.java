@@ -187,7 +187,6 @@ public class BlockVendor extends BlockContainer {
     }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item block, CreativeTabs creativeTabs, List list) {
 		for (int i = 0; i < supportBlocks.length; ++i) {
 			list.add(new ItemStack(block, 1, i));
