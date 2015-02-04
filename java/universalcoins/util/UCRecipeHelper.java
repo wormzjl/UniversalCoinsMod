@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -77,11 +78,10 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addVendingFrameRecipes() {
-			GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame), new Object[]{
-				"SES",
-				"RPR",
-				"SES", 'S', Items.stick, 'P', Blocks.planks, 'E', Items.ender_pearl, 'R', Items.redstone
-				});
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame),
+			"SGS",
+			"RPR",
+			"SSS",'S', Items.stick, 'P', "plankWood", 'G', Items.gold_ingot, 'R', Items.redstone));
 	}
 	
 	public static void addCardStationRecipes() {
@@ -109,8 +109,11 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addEnderCardRecipes() {
-		//We have to register a new IRecipe so that the NBT is copied on crafting
-		GameRegistry.addRecipe(new RecipeEnderCard());
-		RecipeSorter.INSTANCE.register("universalcoins:endercard", RecipeEnderCard.class, Category.SHAPELESS, "after:minecraft:shaped");
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard), new Object[]{
+			"XEX",
+			"ECE",
+			"XEX",
+			'E', Items.ender_pearl,'C', UniversalCoins.proxy.itemUCCard,
+		});
 	}
 }

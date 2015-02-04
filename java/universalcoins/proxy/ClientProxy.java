@@ -33,6 +33,6 @@ public class ClientProxy extends CommonProxy {
         
         TileEntitySpecialRenderer render2 = new VendorFrameRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileVendorFrame.class, render2);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockVendorFrame), new ItemVendorFrameRenderer());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockVendorFrame), new ItemVendorFrameRenderer(render2, new TileVendorFrame()));
 	}
 }

@@ -1,7 +1,6 @@
 package universalcoins.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -27,8 +26,22 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
-		//TODO change texture based on plank type
+		//default texture
 		ResourceLocation textures = (new ResourceLocation("textures/blocks/planks_birch.png"));
+		//change texture based on plank type
+		if (((TileVendorFrame) te).blockIcon != null && ((TileVendorFrame) te).blockIcon != "") {
+			blockIcon = ((TileVendorFrame) te).blockIcon;
+		}
+		if (blockIcon != null && blockIcon != "") {
+			String[] tempIconName = blockIcon.split(":", 3); //split string
+			if (tempIconName.length == 1) {
+				textures = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
+				//if minecraft, set resourcelocation using last part
+			} else {
+				textures = (new ResourceLocation(tempIconName[0] + ":textures/blocks/" + tempIconName[1] + ".png"));
+			}
+			//if mod use mod path			
+		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 
 		// adjust block rotation based on block meta

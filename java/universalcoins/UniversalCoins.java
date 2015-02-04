@@ -28,12 +28,14 @@ import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
+import universalcoins.util.UCCraftingEventHandler;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -154,6 +156,8 @@ public class UniversalCoins {
 		}
 		
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
+		
+		FMLCommonHandler.instance().bus().register(new UCCraftingEventHandler());
 				
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 

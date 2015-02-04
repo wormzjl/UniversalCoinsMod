@@ -1,13 +1,8 @@
 package universalcoins.net;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileTradeStation;
 import universalcoins.util.UCRecipeHelper;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -46,7 +41,6 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
 
 	@Override
 	public IMessage onMessage(UCRecipeMessage message, MessageContext ctx) {
-		FMLLog.info("UC: received recipe message");
 		UCRecipeHelper.addCoinRecipes();
 		if (message.recipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();

@@ -73,6 +73,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean uLBagButtonActive = false;
 	public boolean inUse = false;
 	public String playerName = "";
+	public String blockIcon; //used for vendor frame texture
 	
 	
 	@Override
@@ -774,6 +775,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} catch (Throwable ex2) {
 			inUse = false;
 		}
+		try {
+			blockIcon = tagCompound.getString("BlockIcon");
+		} catch (Throwable ex2) {
+			blockIcon = null;
+		}
 	}
 	
 	@Override
@@ -812,6 +818,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("UserSmallBagButtonActive", uSBagButtonActive);
 		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
 		tagCompound.setBoolean("InUse", inUse);
+		tagCompound.setString("BlockIcon", blockIcon);
 	}
 
 	@Override

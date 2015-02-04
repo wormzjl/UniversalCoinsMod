@@ -19,7 +19,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
 import cpw.mods.fml.relauncher.Side;
@@ -32,7 +31,7 @@ public class BlockVendorFrame extends BlockContainer {
 	public BlockVendorFrame() {
 		super(new Material(MapColor.woodColor));
 		setHardness(1.0f);
-		setBlockTextureName("universalcoins:blockVendingFrame"); //fixes missing texture on block break
+		setBlockTextureName("minecraft:planks_oak"); //fixes missing texture on block break
 		setResistance(6000.0F);
 		setBlockBounds(0, 0, 0, 0, 0, 0);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
@@ -157,14 +156,11 @@ public class BlockVendorFrame extends BlockContainer {
 				tentity.coinSum = tagCompound.getInteger("CoinSum");
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
-				tentity.blockOwner = tagCompound.getString("BlockOwner");
+				tentity.blockOwner = player.getCommandSenderName(); //always set to whomever place the block
 				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
+				tentity.blockIcon = tagCompound.getString("blockIcon");
 			}
-			world.markBlockForUpdate(x, y, z);
-			
-		} else {
-			//item has no owner so we'll set one and get out of here
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+			world.markBlockForUpdate(x, y, z);	
 		}
 	}
 	
