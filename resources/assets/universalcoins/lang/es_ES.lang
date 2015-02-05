@@ -92,7 +92,7 @@ command.send.result.receiver=monedas recibidas de
 #####
 # Chat Warnings
 #####
-chat.warning.inuse=esta usando el cajero. Inténtelo más tarde.
+chat.warning.inuse=Bloque en uso. Inténtelo más tarde.
 
 #####
 # Universal Card Messages
