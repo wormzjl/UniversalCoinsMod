@@ -64,7 +64,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.0";
+	public static final String version = "1.7.2-1.6.1";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
