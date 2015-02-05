@@ -132,9 +132,9 @@ public class BlockVendorFrame extends BlockContainer {
 	}
 		
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		//set block meta so we can use it later for rotation
-		int rotation = MathHelper.floor_double((double)((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		if (world.isRemote) return;
 		if (stack.hasTagCompound()) {
@@ -156,17 +156,12 @@ public class BlockVendorFrame extends BlockContainer {
 				tentity.coinSum = tagCompound.getInteger("CoinSum");
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
-				tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
+				tentity.blockOwner = player.getCommandSenderName(); //always set to whomever place the block
 				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
 				tentity.blockIcon = tagCompound.getString("blockIcon");
 			}
 			world.markBlockForUpdate(x, y, z);	
-		} else {
-			//item has no owner so we'll set one and get out of here
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockIcon = "planks_birch"; //default texture
 		}
-			
 	}
 	
 	@Override

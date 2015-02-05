@@ -73,7 +73,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean uLBagButtonActive = false;
 	public boolean inUse = false;
 	public String playerName = "";
-	public String blockIcon = ""; //used for vendor frame texture
+	public String blockIcon; //used for vendor frame texture
 	
 	
 	@Override

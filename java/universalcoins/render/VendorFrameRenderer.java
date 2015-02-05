@@ -18,7 +18,7 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 
 
 	RenderItem renderer = new RenderItem();
-    public String blockIcon;
+    private final RenderBlocks renderBlocks = new RenderBlocks();
 
 
 	public VendorFrameRenderer() {
@@ -35,12 +35,12 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 		if (blockIcon != null && blockIcon != "") {
 			String[] tempIconName = blockIcon.split(":", 3); //split string
 			if (tempIconName.length == 1) {
-				//if minecraft, set resourcelocation using last part
 				textures = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
+				//if minecraft, set resourcelocation using last part
 			} else {
-				//if mod use mod path			
 				textures = (new ResourceLocation(tempIconName[0] + ":textures/blocks/" + tempIconName[1] + ".png"));
 			}
+			//if mod use mod path			
 		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 
