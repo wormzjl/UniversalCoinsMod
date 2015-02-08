@@ -56,6 +56,9 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			inUse = true;
 		} else {
 			inUse = false;
+			withdrawCoins = false;
+			depositCoins = false;
+			accountNumber = "none";
 		}
 	}
 
@@ -107,7 +110,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
 		if (stack != null) {
-			if (slot == itemCoinSlot && depositCoins) {
+			if (slot == itemCoinSlot && depositCoins && accountNumber != "none") {
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
@@ -301,10 +304,12 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		if (functionId == 3) {
 			//set to true if player presses deposit button, reset on any other button press
 			depositCoins = true;
+			withdrawCoins = false;
 		} else depositCoins = false;
 		if (functionId == 4) {
 			withdrawCoins = true;
-		}
+			depositCoins = false;
+		} else withdrawCoins = false;
 		if (functionId == 5) {
 			String storedAccount = getPlayerAccount(playerUID);
 			if (storedAccount != "") { 

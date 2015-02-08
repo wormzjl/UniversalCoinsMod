@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
@@ -25,9 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVendorFrame extends BlockContainer {
-	
-	IIcon blockIcon;
-	
+		
 	public BlockVendorFrame() {
 		super(new Material(MapColor.woodColor));
 		setHardness(1.0f);
@@ -41,7 +38,7 @@ public class BlockVendorFrame extends BlockContainer {
 		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1, 0);
 		TileEntity tentity = world.getTileEntity(x, y, z);
 		if (tentity instanceof TileVendorFrame) {
-			TileVendorFrame te = (TileVendorFrame) tentity;
+			TileVendorFrame te = (TileVendorFrame) tentity;			
 			NBTTagList itemList = new NBTTagList();
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			for (int i = 0; i < te.getSizeInventory(); i++) {
@@ -58,6 +55,8 @@ public class BlockVendorFrame extends BlockContainer {
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("BlockOwner", te.blockOwner);
 			tagCompound.setBoolean("Infinite", te.infiniteMode);
+			tagCompound.setString("BlockIcon", te.blockIcon);
+			
 			stack.setTagCompound(tagCompound);
 			return stack;
 		} else
@@ -136,7 +135,6 @@ public class BlockVendorFrame extends BlockContainer {
 		//set block meta so we can use it later for rotation
 		int rotation = MathHelper.floor_double((double)((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
-		if (world.isRemote) return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileVendorFrame) {
@@ -145,26 +143,36 @@ public class BlockVendorFrame extends BlockContainer {
 				if (tagCompound == null) {
 					return;
 				}
-				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-				for (int i = 0; i < tagList.tagCount(); i++) {
-					NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-					byte slot = tag.getByte("Slot");
-					if (slot < tentity.getSizeInventory()) {
-						tentity.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
-					}
+				if (tagCompound.getString("BlockIcon")  == "") {
+					//this must be a freshly craftd frame. copy texturestack to tileEntity
+					NBTTagList textureList = tagCompound.getTagList("Texture", Constants.NBT.TAG_COMPOUND);
+					byte slot = tagCompound.getByte("Slot");
+					ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
+					tentity.sendTextureUpdateMessage(textureStack);
+					tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
+				} else {					
+					NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+					for (int i = 0; i < tagList.tagCount(); i++) {
+						NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+						byte slot = tag.getByte("Slot");
+						if (slot < tentity.getSizeInventory()) {
+							tentity.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
+						}
 				}
 				tentity.coinSum = tagCompound.getInteger("CoinSum");
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
-				tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
 				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
-				tentity.blockIcon = tagCompound.getString("blockIcon");
+				tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
+				tentity.blockIcon = tagCompound.getString("BlockIcon");
 			}
+		}
+			
 			world.markBlockForUpdate(x, y, z);	
 		} else {
-			//item has no owner so we'll set one and get out of here
+			//Vending Frame pulled from NEI or creative. Cheaters :P
+			((TileVendorFrame)world.getTileEntity(x, y, z)).blockIcon = "planks_birch";
 			((TileVendorFrame)world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockIcon = "planks_birch"; //default texture
 		}
 			
 	}

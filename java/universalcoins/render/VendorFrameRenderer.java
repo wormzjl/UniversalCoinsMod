@@ -18,7 +18,7 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 
 
 	RenderItem renderer = new RenderItem();
-    public String blockIcon;
+    public String blockIcon = "";
 
 
 	public VendorFrameRenderer() {
@@ -29,9 +29,10 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 		//default texture
 		ResourceLocation textures = (new ResourceLocation("textures/blocks/planks_birch.png"));
 		//change texture based on plank type
-		if (((TileVendorFrame) te).blockIcon != null && ((TileVendorFrame) te).blockIcon != "") {
-			blockIcon = ((TileVendorFrame) te).blockIcon;
+		if (((TileVendorFrame) te).blockIcon != "") {
+			blockIcon = (((TileVendorFrame) te).blockIcon);
 		}
+
 		if (blockIcon != null && blockIcon != "") {
 			String[] tempIconName = blockIcon.split(":", 3); //split string
 			if (tempIconName.length == 1) {

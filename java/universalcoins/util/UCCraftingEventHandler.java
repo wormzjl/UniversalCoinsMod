@@ -1,7 +1,9 @@
 package universalcoins.util;
 
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import universalcoins.UniversalCoins;
 import universalcoins.items.ItemEnderCard;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,24 +24,15 @@ public class UCCraftingEventHandler {
 		
 		//we can't compare the itemblock to the block class, so we just compare the unlocalized names here
 		if (event.crafting.getItem().getUnlocalizedName().contentEquals(UniversalCoins.proxy.blockVendorFrame.getUnlocalizedName())) {
-			String blockIcon = craftMatrix.getStackInSlot(4).getIconIndex().getIconName();
-			//the iconIndex function does not work with BOP so we have to do a bit of a hack here
-			if (blockIcon.startsWith("biomesoplenty")){
-				String[] iconInfo = blockIcon.split(":");
-				String[] blockName = craftMatrix.getStackInSlot(4).getUnlocalizedName().split("\\.", 3);
-				String woodType = blockName[2].replace("Plank", "");
-				//hellbark does not follow the same naming convention
-				if (woodType.contains("hell")) woodType = "hell_bark";
-				blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
-				//bamboo needs a hack too
-				if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
-				//I feel dirty now :(
-			}
+			ItemStack textureStack = craftMatrix.getStackInSlot(4);
+			NBTTagList itemList = new NBTTagList();
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("blockIcon", blockIcon);
+			if (textureStack != null) {
+				tag.setByte("Slot", (byte) 0);
+				textureStack.writeToNBT(tag);
+			}
+			tag.setTag("Texture", itemList);
 			event.crafting.setTagCompound(tag);
-		}
-		
-		
+		}		
 	}
 }

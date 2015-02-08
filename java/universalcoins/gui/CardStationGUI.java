@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.tile.TileCardStation;
 
-public class CardStationGUI extends GuiContainer{
+public class CardStationGUI extends GuiContainer {
 	private GuiButton buttonOne, buttonTwo, buttonThree, buttonFour;
 	private GuiTextField textField;
 	private TileCardStation tEntity;

@@ -1,20 +1,14 @@
 package universalcoins.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
+import net.minecraftforge.common.util.Constants;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class ItemVendorFrameRenderer implements IItemRenderer {
 	TileEntitySpecialRenderer render;
@@ -59,8 +53,39 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
 			GL11.glTranslatef(0F, 0.4F, -1.0F);
 		}
 		String blockIcon = null;
-		if (item.hasTagCompound())blockIcon = item.stackTagCompound.getString("blockIcon");
+		if (item.hasTagCompound()) {
+			NBTTagCompound tag = item.getTagCompound();
+			blockIcon = tag.getString("BlockIcon");
+			//if itemStack has blockIcon, use it
+			if (blockIcon == "") {
+				//TODO get itemstack held in NBT
+				NBTTagList tagList = tag.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+				byte slot = tag.getByte("Texture");
+				ItemStack textureStack = ItemStack.loadItemStackFromNBT(tag);
+				if (textureStack != null) {
+					blockIcon = getBlockIcon(textureStack);
+				}
+			}
+		}
 		((VendorFrameRenderer) render).blockIcon = blockIcon;
 		this.render.renderTileEntityAt(this.dummytile, 0.0D, 0.0D, 0.0D, 0.0F);
+	}
+	
+	private String getBlockIcon(ItemStack stack) {
+		//if (stack == null) return "plank_oak";
+		String blockIcon = stack.getIconIndex().getIconName();
+		//the iconIndex function does not work with BOP so we have to do a bit of a hack here
+		if (blockIcon.startsWith("biomesoplenty")){
+			String[] iconInfo = blockIcon.split(":");
+			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
+			String woodType = blockName[2].replace("Plank", "");
+			//hellbark does not follow the same naming convention
+			if (woodType.contains("hell")) woodType = "hell_bark";
+			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+			//bamboo needs a hack too
+			if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+			//I feel dirty now :(
+		}
+		return blockIcon;
 	}
 }
