@@ -66,7 +66,7 @@ command.uccommand.option.reset.name=reset
 command.uccommand.option.reset.confirm=UC: precios por defecto recargados
 command.uccommand.option.reset.help=- reset : Reiniciar todos los precios a los valores de fabrica. No reemplazara precios no definidos por defecto
 command.uccommand.option.save.name=save
-command.uccommand.option.save.confirm=guardar los cambios
+command.uccommand.option.save.confirm=Cambios guardados
 command.uccommand.option.save.help=- save : guardar lista de precios.
 command.uccommand.usage.hint=Consejo: Usa "this" en vez de un nombre de objeto para recuperar o definir el precio del objeto en la mano.
 command.uccommand.warning.pricenotset=No hay precio definido para 
@@ -92,7 +92,7 @@ command.send.result.receiver=monedas recibidas de
 #####
 # Chat Warnings
 #####
-chat.warning.inuse=Bloque en uso. Inténtelo más tarde.
+chat.warning.inuse=Bloque en uso. Inténtelo más tarde
 
 #####
 # Universal Card Messages
