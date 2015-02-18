@@ -104,7 +104,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private void activateBuyButton() {
 		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE 
 				&& (!ooStockWarning || infiniteMode)) || 
-				(inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice && !ooStockWarning)) {
+				(inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice && (!ooStockWarning|| infiniteMode))) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
 					buyButtonActive = false;
@@ -240,7 +240,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice * amount) {
 			useCard = true;
 		}
-		if (inventory[itemTradeSlot] == null || userCoinSum < itemPrice * amount && !useCard) {
+		if (!useCard && (inventory[itemTradeSlot] == null || userCoinSum < itemPrice * amount)) {
 			buyButtonActive = false;
 			return;
 		}
@@ -254,7 +254,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			if (inventory[itemOutputSlot] == null) {
 				inventory[itemOutputSlot] = inventory[itemTradeSlot].copy();
 				inventory[itemOutputSlot].stackSize = totalSale;
-				if (useCard && inventory[itemUserCardSlot] == null) { 
+				if (useCard && inventory[itemUserCardSlot] != null) { 
 					debitUserAccount(itemPrice * amount);
 				}	else {
 					userCoinSum -= itemPrice * amount;
