@@ -26,6 +26,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "nobody";
+	public String accountNumber = "0";
 	public int accountBalance = 0;
 
 
@@ -191,6 +192,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		}
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setString("Owner", blockOwner);
+		tagCompound.setString("AccountNumber", accountNumber);
 		tagCompound.setInteger("Balance", accountBalance);
 	}
 	
@@ -211,6 +213,11 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			blockOwner = tagCompound.getString("Owner");
 		} catch (Throwable ex2) {
 			blockOwner = "nobody";
+		}
+		try {
+			accountNumber = tagCompound.getString("AccountNumber");
+		} catch (Throwable ex2) {
+			accountNumber = "0";
 		}
 		try {
 			accountBalance = tagCompound.getInteger("Balance");
@@ -234,6 +241,10 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
     
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
+	public void setSafeAccount(String playerName) {
+		accountNumber = getPlayerAccount(getPlayerUID(playerName));
 	}
 	
 	private String getPlayerUID(String playerName) {
@@ -270,33 +281,27 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	}
 	
 	public void updateAccountBalance() {
-		if (blockOwner != "") {
-			String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
-			if (getWorldString(accountNumber) != "") {
-				accountBalance = getWorldInt(accountNumber);
-			}
+		if (getWorldString(accountNumber) != "0") {
+			accountBalance = getWorldInt(accountNumber);
 		}
 	}
 	
 	private void creditAccount(int amount) {
-		String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
-		if (getWorldString(accountNumber) != "") {
+		if (getWorldString(accountNumber) != "0") {
 			int balance = getWorldInt(accountNumber);
 			balance += amount;
 			setWorldData(accountNumber, balance);
 		}
 	}
 	
-	public boolean debitAccount(int amount) {
+	private void debitAccount(int amount) {
 		if (blockOwner != "") {
-			String accountNumber = getPlayerAccount(getPlayerUID(blockOwner));
-			if (getWorldString(accountNumber) != "") {
+			if (getWorldString(accountNumber) != "0") {
 				int balance = getWorldInt(accountNumber);
 				balance -= amount;
 				setWorldData(accountNumber, balance);
-				return true;
 			}
-		} return false;
+		}
 	}
 	
 	private void setWorldData(String tag, String data) {

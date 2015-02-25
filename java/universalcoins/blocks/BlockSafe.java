@@ -60,7 +60,10 @@ public class BlockSafe extends BlockContainer {
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		if (world.isRemote) return;
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te != null ) ((TileSafe)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+		if (te != null ) {
+			((TileSafe)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+			((TileSafe)world.getTileEntity(x, y, z)).setSafeAccount(player.getCommandSenderName());
+		}
 		int l = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
 		switch (l) {
