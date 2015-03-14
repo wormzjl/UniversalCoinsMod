@@ -65,7 +65,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.4";
+	public static final String version = "1.7.2-1.6.5";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -74,7 +74,7 @@ public class UniversalCoins {
 	public static Boolean vendorFrameRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
-	public static Boolean cardSecurityEnabled;
+	public static Boolean tradeStationBuyEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
 	public static Integer mineshaftCoinChance;
@@ -146,7 +146,10 @@ public class UniversalCoins {
 		autoModeEnabled = autoMode.getBoolean(true);
 		Property sellRatio = config.get(config.CATEGORY_GENERAL, "Sell Ratio", 0.8);
 		sellRatio.comment = "Ratio of sell price to buy price. Set to less than 1.0 to give players a percentage of the full buy price when selling an item. (Range: 0.1 - 1.0)";
-		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));	
+		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));
+		Property tsBuyEnabled = config.get(config.CATEGORY_GENERAL, "Trade Station Buy enabled", true);
+		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
+		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
 		config.save();
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());

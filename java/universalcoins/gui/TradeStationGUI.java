@@ -59,7 +59,7 @@ public class TradeStationGUI extends GuiContainer {
 		coinModeButton = new GuiSlimButton(idCoinModeButton, 110 + (width - xSize) / 2, 98 + (height - ySize) / 2, 46, 12, 
 				StatCollector.translateToLocal("tradestation.gui.button.coin"));
 		buttonList.clear();
-		buttonList.add(buyButton);
+		if (UniversalCoins.tradeStationBuyEnabled ) buttonList.add(buyButton);
 		buttonList.add(sellButton);
 		buttonList.add(retrCoinButton);
 		buttonList.add(retrSStackButton);
@@ -91,7 +91,7 @@ public class TradeStationGUI extends GuiContainer {
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 48 - stringWidth, 57, 4210752);
 		if (tileEntity.itemPrice > 0){
-			if (sellButton.func_146115_a()) { //player hovering over sell button
+			if (sellButton.func_146115_a() || !UniversalCoins.tradeStationBuyEnabled) { //player hovering over sell button or buy button disabled
 				int sellPrice = (int) (tileEntity.itemPrice * UniversalCoins.itemSellRatio);
 				fontRendererObj.drawString(String.valueOf(sellPrice), 48, 57, 4210752);
 			} else {

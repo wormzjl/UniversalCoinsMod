@@ -103,14 +103,13 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					sellButtonActive = false;
 				}
 				
-				buyButtonActive = (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot])
-						.getItem() == inventory[itemInputSlot].getItem()
-						&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize())
-						&& coinSum >= itemPrice;
-				//enable buy button if card is present and has enough coins
-				if (inventory[itemCardSlot] != null && !buyButtonActive && !worldObj.isRemote) {
-					buyButtonActive = (getAccountBalance() > itemPrice);
-				}
+				buyButtonActive = (UniversalCoins.tradeStationBuyEnabled 
+						&& (inventory[itemOutputSlot] == null 
+							|| (inventory[itemOutputSlot]).getItem() == inventory[itemInputSlot].getItem() 
+							&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize())
+						&& (coinSum >= itemPrice || (inventory[itemCardSlot] != null 
+								&& !worldObj.isRemote 
+								&& getAccountBalance() > itemPrice)));
 			}
 		}
 	}
@@ -209,7 +208,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	public void onBuyPressed(int amount) {
 		boolean useCard = false;
-		if (inventory[itemInputSlot] == null) {
+		if (inventory[itemInputSlot] == null || !UniversalCoins.tradeStationBuyEnabled) {
 			buyButtonActive = false;
 			return;
 		}
