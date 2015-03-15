@@ -292,8 +292,13 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public void onAutoModeButtonPressed() {
 			if (autoMode == 2) {
 				autoMode = 0;
-			} else
+			} else {
 				autoMode++;
+				if (autoMode == 1 && !UniversalCoins.tradeStationBuyEnabled) {
+					autoMode++;
+				}
+			}
+			
 	}
 
 	public void onCoinModeButtonPressed() {

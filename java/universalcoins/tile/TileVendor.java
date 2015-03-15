@@ -18,6 +18,7 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.inventory.ContainerVendorBuy;
 import universalcoins.inventory.ContainerVendorSell;
+import universalcoins.items.ItemEnderCard;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCVendorFrameTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -383,7 +384,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		boolean useCard = false;
 		//if infinite mode, we can handle it here and skip the complicated stuff
 		if (infiniteMode) {
-			userCoinSum += itemPrice * amount / inventory[itemTradeSlot].stackSize;
+			if (inventory[itemUserCardSlot] != null && inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+					&& getUserAccountBalance() != -1 
+					&& getUserAccountBalance() + (itemPrice * amount / inventory[itemTradeSlot].stackSize) < Integer.MAX_VALUE) {
+				creditUserAccount(itemPrice * amount / inventory[itemTradeSlot].stackSize);
+			} else {
+				userCoinSum += itemPrice * amount / inventory[itemTradeSlot].stackSize;
+			}
 			inventory[itemSellSlot].stackSize -= amount;
 			if (inventory[itemSellSlot].stackSize == 0) {
 				inventory[itemSellSlot] = null;
@@ -430,8 +437,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				} else {
 					coinSum -= itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
 				}
-				if (inventory[itemUserCardSlot] != null 
-						&& inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard 
+				if (inventory[itemUserCardSlot] != null
+						&& inventory[itemUserCardSlot].getItem() instanceof ItemEnderCard
 						&& getUserAccountBalance() != -1 
 						&& getUserAccountBalance() + (itemPrice * thisSale / inventory[itemTradeSlot].stackSize) < Integer.MAX_VALUE) {
 					creditUserAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
@@ -573,6 +580,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				}
 			}
 			if (slot == itemCardSlot) { updateCoinsForPurchase(); }
+			if (slot == itemUserCardSlot
+				&& inventory[itemUserCardSlot].getItem() instanceof ItemEnderCard
+				&& getUserAccountBalance() != -1 
+				&& getUserAccountBalance() + userCoinSum < Integer.MAX_VALUE) {
+				creditUserAccount(userCoinSum);
+				userCoinSum = 0;
+			}
 			checkSellingInventory(); //update inventory status
 			hasInventorySpace();
 		}
@@ -888,7 +902,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 	
 	public void creditUserAccount(int amount) {
-		if (inventory[itemCardSlot] != null) {
+		if (inventory[itemUserCardSlot] != null) {
 			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 			if (getWorldString(accountNumber) != "") {
 				int balance = getWorldInt(accountNumber);

@@ -17,7 +17,6 @@ public class UCWorldData extends WorldSavedData {
 	      if (result == null) {
 	    	  result = new UCWorldData(key);
 	    	  storage.setData(key, result);
-	      } else {
 	      }
 	      return result;
 	   }
