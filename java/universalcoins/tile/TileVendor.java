@@ -1,5 +1,6 @@
 package universalcoins.tile;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -11,6 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
@@ -641,6 +643,55 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			inventory[itemTradeSlot] = stack.copy();
 			return false;
 		}else return true;
+	}
+	
+	public void updateSigns(){
+		//grab TE and see if we have a sign
+		TileEntitySign tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+		if (tesign != null) {
+			updateSignText(tesign);
+		}
+		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord + 1, yCoord - 1, zCoord);
+		if (tesign != null) {
+			updateSignText(tesign);
+		}
+		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord - 1, yCoord - 1, zCoord);
+		if (tesign != null) {
+			updateSignText(tesign);
+		}
+		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord + 1);
+		if (tesign != null) {
+			updateSignText(tesign);
+		}
+		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord - 1);
+		if (tesign != null) {
+			updateSignText(tesign);
+		}
+	}
+	
+	private void updateSignText(TileEntitySign tesign) {
+		// TODO modify sign search based on frame or block
+		if (inventory[itemTradeSlot] != null && tesign != null) {
+			tesign.signText[0] = sellMode ? "Selling" : "Buying";
+			tesign.signText[1] = inventory[itemTradeSlot].getDisplayName();
+			if (inventory[itemTradeSlot].isItemEnchanted()) {
+				tesign.signText[2] = "";
+				NBTTagList tagList = inventory[itemTradeSlot]
+						.getEnchantmentTagList();
+				for (int i = 0; i < tagList.tagCount(); i++) {
+					NBTTagCompound enchant = ((NBTTagList) tagList)
+							.getCompoundTagAt(i);
+					tesign.signText[2] = tesign.signText[2]
+							.concat(Enchantment.enchantmentsList[enchant
+									.getInteger("id")]
+									.getTranslatedName(enchant
+											.getInteger("lvl"))
+									+ ", ");
+				}
+			}
+			tesign.signText[3] = "Price: " + itemPrice;
+			tesign.markDirty();
+		}
 	}
 	
 	@Override

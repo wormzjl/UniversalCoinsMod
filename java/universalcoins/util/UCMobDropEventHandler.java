@@ -3,8 +3,7 @@ package universalcoins.util;
 import java.util.Random;
 
 import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import universalcoins.UniversalCoins;
@@ -23,18 +22,15 @@ public class UCMobDropEventHandler {
 				chance = random.nextInt(UniversalCoins.mobDropChance);
 			}
 			int dropped = random.nextInt(UniversalCoins.mobDropMax) + 1;
-
-			if ((event.entity instanceof EntityZombie || event.entity instanceof EntitySkeleton)
-					&& !event.entity.worldObj.isRemote && chance == 0) {
-				event.entityLiving.entityDropItem(new ItemStack(
-						UniversalCoins.proxy.itemCoin, dropped), 0.0F);
-			}
-
+			
 			// endermen drop small coin stacks instead of coins
-			if ((event.entity instanceof EntityEnderman)
-					&& !event.entity.worldObj.isRemote) {
+			if ((event.entity instanceof EntityEnderman) && !event.entity.worldObj.isRemote) {
 				event.entityLiving.entityDropItem(new ItemStack(
 						UniversalCoins.proxy.itemSmallCoinStack, dropped), 0.0F);
+				//all other mobs drop coins
+			} else if ((event.entity instanceof EntityMob) && !event.entity.worldObj.isRemote && chance == 0) {
+				event.entityLiving.entityDropItem(new ItemStack(
+						UniversalCoins.proxy.itemCoin, dropped), 0.0F);
 			}
 		}
 	}

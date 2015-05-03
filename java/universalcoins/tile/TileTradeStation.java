@@ -45,9 +45,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	private static final int[] slots_sides = new int[] { 0, 1, 2, 3 };
 
 	public int autoMode = 0;
-	private int lastAutoMode = 0;
 	public int coinMode = 0;
-	private int lastCoinMode = 0;
     public String customName;
 	public boolean inUse = false;
 	public String playerName = "";
