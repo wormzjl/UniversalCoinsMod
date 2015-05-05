@@ -645,55 +645,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}else return true;
 	}
 	
-	public void updateSigns(){
-		//grab TE and see if we have a sign
-		TileEntitySign tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-		if (tesign != null) {
-			updateSignText(tesign);
-		}
-		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord + 1, yCoord - 1, zCoord);
-		if (tesign != null) {
-			updateSignText(tesign);
-		}
-		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord - 1, yCoord - 1, zCoord);
-		if (tesign != null) {
-			updateSignText(tesign);
-		}
-		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord + 1);
-		if (tesign != null) {
-			updateSignText(tesign);
-		}
-		tesign = (TileEntitySign)super.worldObj.getTileEntity(xCoord, yCoord - 1, zCoord - 1);
-		if (tesign != null) {
-			updateSignText(tesign);
-		}
-	}
-	
-	private void updateSignText(TileEntitySign tesign) {
-		// TODO modify sign search based on frame or block
-		if (inventory[itemTradeSlot] != null && tesign != null) {
-			tesign.signText[0] = sellMode ? "Selling" : "Buying";
-			tesign.signText[1] = inventory[itemTradeSlot].getDisplayName();
-			if (inventory[itemTradeSlot].isItemEnchanted()) {
-				tesign.signText[2] = "";
-				NBTTagList tagList = inventory[itemTradeSlot]
-						.getEnchantmentTagList();
-				for (int i = 0; i < tagList.tagCount(); i++) {
-					NBTTagCompound enchant = ((NBTTagList) tagList)
-							.getCompoundTagAt(i);
-					tesign.signText[2] = tesign.signText[2]
-							.concat(Enchantment.enchantmentsList[enchant
-									.getInteger("id")]
-									.getTranslatedName(enchant
-											.getInteger("lvl"))
-									+ ", ");
-				}
-			}
-			tesign.signText[3] = "Price: " + itemPrice;
-			tesign.markDirty();
-		}
-	}
-	
 	@Override
 	public Packet getDescriptionPacket() {
 	NBTTagCompound nbt = new NBTTagCompound();
