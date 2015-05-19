@@ -23,9 +23,7 @@ public class UCRecipeHelper {
 	private static ItemStack oneLSack = new ItemStack(UniversalCoins.proxy.itemLargeCoinBag);
 	
 	
-	public static void addCoinRecipes(){
-		
-		
+	public static void addCoinRecipes(){		
 		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemCoin, 9), new Object[]{
 			oneSStack
 		});
@@ -71,13 +69,15 @@ public class UCRecipeHelper {
 		for(int i=0; i < Vending.supports.length; i++){
 			GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockVendor,1,i), new Object[]{
 				"XXX",
-				"XGX",
-				"*R*", 'X', Blocks.glass, 'G', Items.gold_ingot, 'R', Items.redstone, '*', Vending.reagents[i]
+				"XRX",
+				"*G*", 'X', Blocks.glass , 'G', Items.gold_ingot, 'R', Items.redstone, '*', Vending.reagents[i]
 				});
 		}
 	}
 	
 	public static void addVendingFrameRecipes() {
+		GameRegistry.addRecipe(new RecipeVendingFrame());
+		RecipeSorter.register("universalcoins:endercard", RecipeVendingFrame.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame),
 			"SGS",
 			"RPR",
@@ -109,6 +109,10 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addEnderCardRecipes() {
+		//we register our custom recipe and then register the normal way
+		//the custom takes priority for crafting while the normal allows nei and craftguide to display the recipe
+		GameRegistry.addRecipe(new RecipeEnderCard());
+		RecipeSorter.register("universalcoins:endercard", RecipeEnderCard.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard), new Object[]{
 			"XEX",
 			"ECE",

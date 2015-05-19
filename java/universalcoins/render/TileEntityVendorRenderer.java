@@ -46,12 +46,12 @@ public class TileEntityVendorRenderer extends TileEntitySpecialRenderer {
 		int i = (int) x;
 		int j = (int) y;
 		int k = (int) z;
-		//int meta = worldObj.getBlockMetadata(i, j, k);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.35F, (float) z + 0.5F);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
 		try {
+			//render trade item
 			renderer.doRender(entity, 0, 0, 0, 0, f);
 		} catch (Throwable e) {
 		}

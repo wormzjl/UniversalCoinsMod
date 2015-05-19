@@ -300,10 +300,10 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	public void onCoinModeButtonPressed() {
-			if (coinMode == 5) {
-				coinMode = 0;
+			if (coinMode == 0) {
+				coinMode = 5;
 			} else
-				coinMode++;
+				coinMode--;
 	}
 
 	public void runAutoMode() {

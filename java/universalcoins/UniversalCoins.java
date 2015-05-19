@@ -29,7 +29,6 @@ import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
-import universalcoins.util.UCCraftingEventHandler;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
@@ -151,6 +150,7 @@ public class UniversalCoins {
 		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
 		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
 		config.save();
+		
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
 		}
@@ -160,9 +160,7 @@ public class UniversalCoins {
 		}
 		
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
-		
-		FMLCommonHandler.instance().bus().register(new UCCraftingEventHandler());
-				
+						
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
 	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
