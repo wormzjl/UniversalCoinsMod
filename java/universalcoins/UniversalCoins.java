@@ -20,6 +20,7 @@ import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCTileCardStationMessage;
+import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorFrameTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
@@ -36,7 +37,6 @@ import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -172,6 +172,7 @@ public class UniversalCoins {
 	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
 	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
 	    snw.registerMessage(UCVendorFrameTextureMessage.class, UCVendorFrameTextureMessage.class, 7, Side.SERVER);
+	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");

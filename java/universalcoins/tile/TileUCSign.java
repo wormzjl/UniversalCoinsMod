@@ -1,10 +1,10 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntitySign;
+import universalcoins.UniversalCoins;
+import universalcoins.net.UCTileSignMessage;
 
 public class TileUCSign extends TileEntitySign {
 		
@@ -21,4 +21,11 @@ public class TileUCSign extends TileEntitySign {
 	public void updateSign() {
 		super.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
+	
+	@Override
+	public Packet getDescriptionPacket() {
+        String[] astring = new String[4];
+        System.arraycopy(this.signText, 0, astring, 0, 4);
+        return UniversalCoins.snw.getPacketFrom(new UCTileSignMessage(this.xCoord, this.yCoord, this.zCoord, astring));
+    }
 }

@@ -95,12 +95,12 @@ public class TileEntityUCSignRenderer extends TileEntitySignRenderer {
 	            		fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, color);
 	            	} else {
 		            	//display a subset of string while scrolling through entire string
-	            		if (counter / 10 < s.length() - 16) {
-	            			subset = s.substring(counter / 10, counter / 10 + 16);
+	            		if (counter / 10 < s.length() - 15) {
+	            			subset = s.substring(counter / 10, counter / 10 + 15);
 	            		} else if (counter / 10 < s.length() - 8) {
-	            			subset = s.substring(s.length() - 16 , s.length());
+	            			subset = s.substring(s.length() - 15 , s.length());
 	            		} else if (counter / 10 < s.length()) {	            		
-	            			subset = s.substring(0, 16);
+	            			subset = s.substring(0, 15);
 	            		}
             			fontrenderer.drawString(subset, -fontrenderer.getStringWidth(subset) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
 	            		counter++;
