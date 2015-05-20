@@ -6,6 +6,7 @@ import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockTradeStation;
+import universalcoins.blocks.BlockUCSign;
 import universalcoins.blocks.BlockVendor;
 import universalcoins.blocks.BlockVendorFrame;
 import universalcoins.items.ItemBlockVendor;
@@ -17,7 +18,9 @@ import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemUCCard;
+import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
+import universalcoins.tile.TileUCSign;
 import universalcoins.util.Vending;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -31,6 +34,7 @@ public class CommonProxy {
 	public static Item itemUCCard;
 	public static Item itemEnderCard;
 	public static Item itemVendorWrench;
+	public static Item itemUCSign;
 	
 	public static Block blockTradeStation;
 	public static Block blockVendor;
@@ -38,6 +42,8 @@ public class CommonProxy {
 	public static Block blockCardStation;
 	public static Block blockBase;
 	public static Block blockSafe;
+	public static Block standing_ucsign;
+	public static Block wall_ucsign;
 	
 	
 	public void registerBlocks() {
@@ -47,7 +53,8 @@ public class CommonProxy {
 		blockCardStation = new BlockCardStation().setBlockName("blockCardStation");
 		blockBase = new BlockBase().setBlockName("blockBase");
 		blockSafe = new BlockSafe().setBlockName("blockSafe");
-
+		standing_ucsign = new BlockUCSign(TileUCSign.class, true).setBlockName("standing_ucsign");
+		wall_ucsign = new BlockUCSign(TileUCSign.class, false).setBlockName("wall_ucsign");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
@@ -55,6 +62,8 @@ public class CommonProxy {
 		GameRegistry.registerBlock(blockCardStation, "blockCardStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockBase, "blockBase").getUnlocalizedName();
 		GameRegistry.registerBlock(blockSafe, "blockSafe").getUnlocalizedName();
+		GameRegistry.registerBlock(standing_ucsign, "standing_ucsign").getUnlocalizedName();
+		GameRegistry.registerBlock(wall_ucsign, "wall_ucsign").getUnlocalizedName();
 	}
 	
 	public void registerItems() {
@@ -67,7 +76,7 @@ public class CommonProxy {
 		itemEnderCard = new ItemEnderCard().setUnlocalizedName("itemEnderCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
-		
+		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
@@ -78,6 +87,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemEnderCard, itemEnderCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
+		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
 	}
 
 	public void registerRenderers() {

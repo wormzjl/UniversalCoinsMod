@@ -1,6 +1,5 @@
 package universalcoins.tile;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -12,7 +11,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
@@ -28,7 +26,7 @@ import universalcoins.util.UCWorldData;
 
 public class TileVendor extends TileEntity implements IInventory, ISidedInventory {
 	
-	private ItemStack[] inventory = new ItemStack[17];
+	protected ItemStack[] inventory = new ItemStack[17];
 	//owner slots
 	public static final int itemStorageSlot1 = 0;
 	public static final int itemStorageSlot2 = 1;
@@ -466,10 +464,16 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public void checkSellingInventory() {
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
 			if (inventory[i] != null && inventory[itemTradeSlot] != null && inventory[i].getItem() == inventory[itemTradeSlot].getItem()) {
-				this.ooStockWarning = false;
+				if (ooStockWarning) {
+					this.ooStockWarning = false;
+					updateSigns();
+				}
 				return;
 			}
-		} this.ooStockWarning = true; //if we reach this point, we are OOS.
+		} if (!ooStockWarning) {
+			this.ooStockWarning = true; //if we reach this point, we are OOS.
+			updateSigns();
+		}
 	}
 	
 	public boolean hasInventorySpace() {
@@ -479,11 +483,17 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 						|| (inventory[i].getItem() == inventory[itemTradeSlot]
 								.getItem() && inventory[i].stackSize < inventory[i]
 								.getMaxStackSize())) {
-					this.inventoryFullWarning = false;
+					if (inventoryFullWarning) {
+						this.inventoryFullWarning = false;
+						updateSigns();
+					}
 					return true;
 				}
 			}
-			this.inventoryFullWarning = true; // if we reach this point, we have no space left.
+			if (!inventoryFullWarning) {
+				this.inventoryFullWarning = true; // if we reach this point, we have no space left.
+				updateSigns();
+			}
 			return false;
 		} else
 			return true;
@@ -491,9 +501,15 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	public void updateCoinsForPurchase() {
 		if (coinSum >= itemPrice || (inventory[itemCardSlot] != null && getOwnerAccountBalance() >= itemPrice)) {
-			this.ooCoinsWarning = false;
+			if (ooCoinsWarning) {
+				this.ooCoinsWarning = false;
+				updateSigns();
+			}
 		} else {
-			this.ooCoinsWarning = true;
+			if (!ooCoinsWarning) {
+				this.ooCoinsWarning = true;
+				updateSigns();
+			}
 		}
 	}
 	
@@ -855,6 +871,10 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
 		tagCompound.setBoolean("InUse", inUse);
 		tagCompound.setString("BlockIcon", blockIcon);
+	}
+	
+	public void updateSigns() {
+		
 	}
 
 	@Override

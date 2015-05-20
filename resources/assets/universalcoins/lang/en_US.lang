@@ -17,6 +17,7 @@ item.itemEnderCard.name=Ender Card
 item.itemSeller.name=Selling Catalog
 item.itemVendorWrench.name=Vendor Wrench
 item.itemVendorFrame.name=Vending Frame
+item.itemUCSign.name=Advanced Sign
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####

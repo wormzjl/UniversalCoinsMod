@@ -84,6 +84,15 @@ public class UCRecipeHelper {
 			"SSS",'S', Items.stick, 'P', "plankWood", 'G', Items.gold_ingot, 'R', Items.redstone));
 	}
 	
+	public static void addSignRecipes() {
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemUCSign), 
+			new Object[]{ new ItemStack(Items.sign)
+		});
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.sign), new Object[]{
+			new ItemStack(UniversalCoins.proxy.itemUCSign)
+		});
+	}
+	
 	public static void addCardStationRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockCardStation), new Object[]{
 			"III",

@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.tile.TileVendor;
+import universalcoins.tile.TileVendorBlock;
+import universalcoins.tile.TileVendorFrame;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -55,6 +57,12 @@ public class UCVendorServerMessage  implements IMessage, IMessageHandler<UCVendo
 			((TileVendor) tileEntity).blockOwner = message.blockOwner;
 			((TileVendor) tileEntity).infiniteMode = message.infinite;
 			}
+		if (tileEntity instanceof TileVendorFrame) {
+			((TileVendorFrame) tileEntity).updateSigns();
+		}
+		if (tileEntity instanceof TileVendorBlock) {
+			((TileVendorBlock) tileEntity).updateSigns();
+		}
 			return null;
 	}
 }

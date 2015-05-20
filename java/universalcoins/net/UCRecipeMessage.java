@@ -58,6 +58,7 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
 		}
+		UCRecipeHelper.addSignRecipes();
 			
 		
 		return null;

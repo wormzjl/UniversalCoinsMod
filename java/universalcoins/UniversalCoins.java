@@ -27,6 +27,7 @@ import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileTradeStation;
+import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
 import universalcoins.util.UCItemPricer;
@@ -57,7 +58,7 @@ import cpw.mods.fml.relauncher.Side;
  **/
 
 @Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version,
-acceptedMinecraftVersions = "[1.7.2]", dependencies = "required-after:Forge@[10.12.2.1121,)")
+acceptedMinecraftVersions = "[1.7.2]", dependencies = "required-after:Forge@[10.12.2.1147,)")
 
 public class UniversalCoins {
 	@Instance("universalcoins")
@@ -198,6 +199,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileVendorFrame.class, "TileVendorFrame");
 		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
 		GameRegistry.registerTileEntity(TileSafe.class, "TileSafe");
+		GameRegistry.registerTileEntity(TileUCSign.class, "TileUCSign");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	
@@ -236,6 +238,7 @@ public class UniversalCoins {
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
 		}
+		UCRecipeHelper.addSignRecipes();
 	}
 
 }
