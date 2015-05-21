@@ -2,6 +2,7 @@ package universalcoins.proxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import universalcoins.blocks.BlockBandit;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockSafe;
@@ -44,6 +45,7 @@ public class CommonProxy {
 	public static Block blockSafe;
 	public static Block standing_ucsign;
 	public static Block wall_ucsign;
+	public static Block blockBandit;
 	
 	
 	public void registerBlocks() {
@@ -55,6 +57,7 @@ public class CommonProxy {
 		blockSafe = new BlockSafe().setBlockName("blockSafe");
 		standing_ucsign = new BlockUCSign(TileUCSign.class, true).setBlockName("standing_ucsign");
 		wall_ucsign = new BlockUCSign(TileUCSign.class, false).setBlockName("wall_ucsign");
+		blockBandit = new BlockBandit().setBlockName("blockBandit");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
@@ -64,6 +67,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(blockSafe, "blockSafe").getUnlocalizedName();
 		GameRegistry.registerBlock(standing_ucsign, "standing_ucsign").getUnlocalizedName();
 		GameRegistry.registerBlock(wall_ucsign, "wall_ucsign").getUnlocalizedName();
+		GameRegistry.registerBlock(blockBandit, "blockBandit").getUnlocalizedName();
 	}
 	
 	public void registerItems() {

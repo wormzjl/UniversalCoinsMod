@@ -7,6 +7,7 @@ tile.blockVendorFrame.name=Vending Frame
 tile.blockCardStation.name=Universal Bank ATM
 tile.blockBase.name=Base Block
 tile.blockSafe.name=Ender Safe
+tile.blockBandit.name=Slot Machine
 item.itemCoin.name=Coin
 item.itemSmallCoinStack.name=Coin Stack
 item.itemLargeCoinStack.name=Large Coin Stack
@@ -27,6 +28,8 @@ general.button.buy=Buy
 general.button.sell=Sell
 general.button.edit=Edit
 general.button.save=Save
+general.button.spin=Spin
+general.button.cash=Cash
 
 #####
 # Commands

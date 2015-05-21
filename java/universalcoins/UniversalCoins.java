@@ -25,6 +25,7 @@ import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorFrameTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
+import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileTradeStation;
@@ -53,7 +54,7 @@ import cpw.mods.fml.relauncher.Side;
 /**
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
  * 
- * @author ted_996, notabadminer, AUTOMATIC_MAIDEN
+ * @author notabadminer, ted_996, AUTOMATIC_MAIDEN
  * 
  **/
 
@@ -65,7 +66,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.6";
+	public static final String version = "1.7.2-1.6.7";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean updateCheck;
@@ -74,6 +75,7 @@ public class UniversalCoins {
 	public static Boolean vendorFrameRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
+	public static Boolean banditRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
@@ -83,6 +85,9 @@ public class UniversalCoins {
 	public static Integer mobDropMax;
 	public static Integer mobDropChance;
 	public static Double itemSellRatio;
+	public static Integer twoMatchPayout;
+	public static Integer threeMatchPayout;
+	public static Integer fourMatchPayout;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -116,6 +121,9 @@ public class UniversalCoins {
 		Property enderCardRecipe = config.get(config.CATEGORY_GENERAL, "Ender Card Recipe", true);
 		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card and Safe.";
 		enderCardRecipeEnabled = enderCardRecipe.getBoolean(true);
+		Property banditRecipe = config.get(config.CATEGORY_GENERAL, "Slot Machine Recipe", true);
+		banditRecipe.comment = "Set to false to disable crafting recipes for Slot Machine.";
+		banditRecipeEnabled = banditRecipe.getBoolean(true);
 		
 		//loot
 		Property mobDrops = config.get(config.CATEGORY_GENERAL, "Mob Drops", true);
@@ -139,6 +147,15 @@ public class UniversalCoins {
 		Property dungeonCoinRate = config.get(config.CATEGORY_GENERAL, "Dungeon CoinBag Spawnrate", 20);
 		dungeonCoinRate.comment = "Rate of coinbag spawning in dungeon chests. Higher value equals more common. Default is 20.";
 		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
+		Property twoMatch = config.get(config.CATEGORY_GENERAL, "Two of a kind payout", 1);
+		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 1";
+		twoMatchPayout = Math.max(0,twoMatch.getInt(1));
+		Property threeMatch = config.get(config.CATEGORY_GENERAL, "Three of a kind payout", 20);
+		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 20";
+		threeMatchPayout = Math.max(0,threeMatch.getInt(30));
+		Property fourMatch = config.get(config.CATEGORY_GENERAL, "Four of a kind payout", 10000);
+		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 10000";
+		fourMatchPayout = Math.max(0,fourMatch.getInt(10000));
 		
 		//features		
 		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
@@ -201,6 +218,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
 		GameRegistry.registerTileEntity(TileSafe.class, "TileSafe");
 		GameRegistry.registerTileEntity(TileUCSign.class, "TileUCSign");
+		GameRegistry.registerTileEntity(TileBandit.class, "TileBandit");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	
