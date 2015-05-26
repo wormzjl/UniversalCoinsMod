@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import universalcoins.UniversalCoins;
+import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 
 public class BlockSignal extends BlockContainer {
@@ -46,7 +48,13 @@ public class BlockSignal extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof TileSignal) {
+				TileSignal tentity = (TileSignal) te;
+				if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+		        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				}
+			}
 		}
 		else {
 			if (world.isRemote) return false;
@@ -97,6 +105,15 @@ public class BlockSignal extends BlockContainer {
         EntityItem entityItem = new EntityItem( world, x, y, z, new ItemStack(this, 1));
 		if (!world.isRemote) world.spawnEntityInWorld(entityItem);
     }
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+		if (world.isRemote) return;
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te != null ) {
+			((TileSignal)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+		}
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {

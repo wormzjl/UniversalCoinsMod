@@ -8,7 +8,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
-private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, enderCardRecipeEnabled;;
+private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
+enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
 
     public UCRecipeMessage()
     {
@@ -17,6 +18,8 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
         this.vendorFrameRecipesEnabled = UniversalCoins.vendorFrameRecipesEnabled;
         this.atmRecipeEnabled = UniversalCoins.atmRecipeEnabled;
         this.enderCardRecipeEnabled = UniversalCoins.enderCardRecipeEnabled;
+        this.banditRecipeEnabled = UniversalCoins.banditRecipeEnabled;
+        this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
     }
 
     @Override
@@ -27,6 +30,8 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
         this.vendorFrameRecipesEnabled = buf.readBoolean();
         this.atmRecipeEnabled = buf.readBoolean();
         this.enderCardRecipeEnabled = buf.readBoolean();
+        this.banditRecipeEnabled = buf.readBoolean();
+        this.signalRecipeEnabled = buf.readBoolean();
     }
 
     @Override
@@ -37,6 +42,8 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
         buf.writeBoolean(vendorFrameRecipesEnabled);
         buf.writeBoolean(atmRecipeEnabled);
         buf.writeBoolean(enderCardRecipeEnabled);
+        buf.writeBoolean(banditRecipeEnabled);
+        buf.writeBoolean(signalRecipeEnabled);
     }
 
 	@Override
@@ -57,6 +64,12 @@ private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled,
 		if (message.enderCardRecipeEnabled){
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
+		}
+		if (banditRecipeEnabled){
+			UCRecipeHelper.addBanditRecipes();
+		}
+		if (signalRecipeEnabled){
+			UCRecipeHelper.addSignalRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 			

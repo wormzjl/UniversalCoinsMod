@@ -113,7 +113,7 @@ public class UCRecipeHelper {
 			"III",
 			"IEI",
 			"III",
-			'I', Items.iron_ingot,'E', UniversalCoins.proxy.itemEnderCard,
+			'I', Items.iron_ingot,'E', UniversalCoins.proxy.itemEnderCard
 		});
 	}
 	
@@ -126,7 +126,23 @@ public class UCRecipeHelper {
 			"XEX",
 			"ECE",
 			"XEX",
-			'E', Items.ender_pearl,'C', UniversalCoins.proxy.itemUCCard,
+			'E', Items.ender_pearl,'C', UniversalCoins.proxy.itemUCCard
+		});
+	}
+	public static void addBanditRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockBandit), new Object[]{
+			"IGI",
+			"IRI",
+			"III",
+			'I', Items.iron_ingot,'R', Items.redstone, 'G', Items.gold_ingot
+		});
+	}
+	public static void addSignalRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockSignal), new Object[]{
+			"XIX",
+			"IRI",
+			"XIX",
+			'I', Items.iron_ingot,'R', Items.redstone
 		});
 	}
 }

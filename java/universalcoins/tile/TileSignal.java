@@ -24,6 +24,7 @@ public class TileSignal extends TileEntity implements IInventory {
 	public static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
+	public String blockOwner = "";
 	public int coinSum = 0;
 	public int fee = 1;
 	public int duration = 1;
@@ -182,6 +183,7 @@ public class TileSignal extends TileEntity implements IInventory {
 			}
 		}
 		tagCompound.setTag("Inventory", itemList);
+		tagCompound.setString("blockOwner", blockOwner);
 		tagCompound.setInteger("coinSum", coinSum);
 		tagCompound.setInteger("fee", fee);
 		tagCompound.setInteger("duration", duration);
@@ -202,6 +204,11 @@ public class TileSignal extends TileEntity implements IInventory {
 			if (slot >= 0 && slot < inventory.length) {
 				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
+		}
+		try {
+			blockOwner = tagCompound.getString("blockOwner");
+		} catch (Throwable ex2) {
+			blockOwner = "";
 		}
 		try {
 			coinSum = tagCompound.getInteger("coinSum");

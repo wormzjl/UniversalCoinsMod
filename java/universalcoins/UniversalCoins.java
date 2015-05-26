@@ -77,6 +77,7 @@ public class UniversalCoins {
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
 	public static Boolean banditRecipeEnabled;
+	public static Boolean signalRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
@@ -125,6 +126,9 @@ public class UniversalCoins {
 		Property banditRecipe = config.get("Recipes", "Slot Machine Recipe", true);
 		banditRecipe.comment = "Set to false to disable crafting recipes for Slot Machine.";
 		banditRecipeEnabled = banditRecipe.getBoolean(true);
+		Property signalRecipe = config.get("Recipes", "Redstone Signal Generator Recipe", true);
+		signalRecipe.comment = "Set to false to disable crafting recipes for Redstone Signal Generator.";
+		signalRecipeEnabled = signalRecipe.getBoolean(true);
 		
 		//loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
@@ -150,9 +154,9 @@ public class UniversalCoins {
 		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
 		
 		//slot machine
-		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 1);
-		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 1";
-		twoMatchPayout = Math.max(0,twoMatch.getInt(1));
+		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 0);
+		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 0";
+		twoMatchPayout = Math.max(0,twoMatch.getInt(0));
 		Property threeMatch = config.get("Slot Machine", "Three of a kind payout", 20);
 		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 20";
 		threeMatchPayout = Math.max(0,threeMatch.getInt(30));
@@ -260,6 +264,12 @@ public class UniversalCoins {
 		if (enderCardRecipeEnabled){
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
+		}
+		if (banditRecipeEnabled){
+			UCRecipeHelper.addBanditRecipes();
+		}
+		if (signalRecipeEnabled){
+			UCRecipeHelper.addSignalRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 	}

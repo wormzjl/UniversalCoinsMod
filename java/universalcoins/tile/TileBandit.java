@@ -32,7 +32,7 @@ public class TileBandit extends TileEntity implements IInventory {
 	public String playerName = "";
 	public boolean inUse = false;
 	public int[] reelPos = {0, 0, 0, 0};
-	private int[] reelStops = {0, 26, 54, 80, 108, 134};
+	private int[] reelStops = {0, 26, 54, 80, 108, 134, 162, 188};
 	
 	public TileBandit() {
 		super();
