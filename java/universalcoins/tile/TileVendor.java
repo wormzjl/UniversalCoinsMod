@@ -873,8 +873,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setString("BlockIcon", blockIcon);
 	}
 	
-	public void updateSigns() {
-		
+	public void updateSigns() {	
 	}
 
 	@Override

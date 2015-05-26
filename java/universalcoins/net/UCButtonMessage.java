@@ -10,6 +10,7 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -109,6 +110,9 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 		}
 		if (tileEntity instanceof TileBandit) {
 			((TileBandit) tileEntity).onButtonPressed(message.buttonId);
+		}
+		if (tileEntity instanceof TileSignal) {
+			((TileSignal) tileEntity).onButtonPressed(message.buttonId, shiftPressed);
 		}
 		return null;
 	}

@@ -8,6 +8,7 @@ tile.blockCardStation.name=Universal Bank ATM
 tile.blockBase.name=Base Block
 tile.blockSafe.name=Ender Safe
 tile.blockBandit.name=Slot Machine
+tile.blockSignal.name=Redstone Signal Generator
 item.itemCoin.name=Coin
 item.itemSmallCoinStack.name=Coin Stack
 item.itemLargeCoinStack.name=Large Coin Stack
@@ -19,6 +20,7 @@ item.itemSeller.name=Selling Catalog
 item.itemVendorWrench.name=Vendor Wrench
 item.itemVendorFrame.name=Vending Frame
 item.itemUCSign.name=Advanced Sign
+item.itemLinkCard.name=Remote Storage Link Card
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####
@@ -29,7 +31,7 @@ general.button.sell=Sell
 general.button.edit=Edit
 general.button.save=Save
 general.button.spin=Spin
-general.button.cash=Cash
+general.button.coin=Coin
 
 #####
 # Commands
@@ -132,14 +134,26 @@ vending.gui.button.mode.buy=Buy
 vending.gui.price=Price: 
 
 #####
-# Hint GUI
+# Sign GUI
 #####
-hintgui.sellmode.sell=Selling
-hintgui.sellmode.buy=Buying
-hintgui.price=Price: 
-hintgui.warning.stock=Out Of Stock!
-hintgui.warning.coins=Out Of Coins!
-hintgui.warning.inventoryfull=Inventory is Full!
+sign.sellmode.sell=Selling
+sign.sellmode.buy=Buying
+sign.price=Price: 
+sign.warning.stock=Out Of Stock!
+sign.warning.coins=Out Of Coins!
+sign.warning.inventoryfull=Inventory is Full!
+
+#####
+# Signal Generator GUI
+#####
+signal.label.fee=Coins:
+signal.label.duration=Duration:
+signal.face.label.second=second
+signal.face.label.seconds=seconds
+signal.face.label.coin=coin
+signal.face.label.coins=coins
+
+
 
 #####
 # ATM GUI

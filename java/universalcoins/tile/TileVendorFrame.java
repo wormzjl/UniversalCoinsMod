@@ -15,18 +15,19 @@ public class TileVendorFrame extends TileVendor {
 	public void updateSigns() {
 
 		if (inventory[itemTradeSlot] != null) {
-			signText[0] = sellMode ? "Selling" : "Buying";
+			signText[0] = sellMode ? StatCollector.translateToLocal("sign.sellmode.sell")
+					: StatCollector.translateToLocal("sign.sellmode.buy");
 			//add out of stock notification if not infinite and no stock found
 			if (!infiniteMode && sellMode && ooStockWarning) {
-				signText[0] = (StatCollector.translateToLocal("hintgui.warning.stock"));
+				signText[0] = (StatCollector.translateToLocal("sign.warning.stock"));
 			}
 			//add out of coins notification if buying and no funds available
 			if (!sellMode && ooCoinsWarning && !infiniteMode) {
-				signText[0] = (StatCollector.translateToLocal("hintgui.warning.coins"));
+				signText[0] = (StatCollector.translateToLocal("sign.warning.coins"));
 			}
 			//add inventory full notification
 			if (!sellMode && inventoryFullWarning) {
-				signText[0] = (StatCollector.translateToLocal("hintgui.warning.inventoryfull"));
+				signText[0] = (StatCollector.translateToLocal("sign.warning.inventoryfull"));
 			}
 			signText[1] = inventory[itemTradeSlot].getDisplayName();
 			if (inventory[itemTradeSlot].isItemEnchanted()) {
@@ -39,7 +40,7 @@ public class TileVendorFrame extends TileVendor {
 							.getInteger("lvl")) + ", ");
 				}
 			} else signText[2] = "";
-			signText[3] = "Price: " + itemPrice;
+			signText[3] = StatCollector.translateToLocal("sign.price") + itemPrice;
 			
 			//find and update all signs
 			TileEntity te;

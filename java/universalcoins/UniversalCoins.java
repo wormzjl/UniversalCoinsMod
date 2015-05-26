@@ -28,6 +28,7 @@ import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
+import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
@@ -106,65 +107,67 @@ public class UniversalCoins {
 		updateCheck = modUpdate.getBoolean(true);
 		
 		//recipes
-		Property recipes = config.get(config.CATEGORY_GENERAL, "Trade Station Recipes", true);
+		Property recipes = config.get("Recipes", "Trade Station Recipes", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
 		recipesEnabled = recipes.getBoolean(true);
-		Property vendorRecipes = config.get(config.CATEGORY_GENERAL, "Vending Block Recipes", true);
+		Property vendorRecipes = config.get("Recipes", "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
-		Property vendorFrameRecipe = config.get(config.CATEGORY_GENERAL, "Vending Frame Recipe", true);
+		Property vendorFrameRecipe = config.get("Recipes", "Vending Frame Recipe", true);
 		vendorFrameRecipe.comment = "Set to false to disable crafting recipes for Vending Frame.";
 		vendorFrameRecipesEnabled = vendorFrameRecipe.getBoolean(true);
-		Property atmRecipe = config.get(config.CATEGORY_GENERAL, "ATM Recipe", true);
+		Property atmRecipe = config.get("Recipes", "ATM Recipe", true);
 		atmRecipe.comment = "Set to false to disable crafting recipes for ATM.";
 		atmRecipeEnabled = atmRecipe.getBoolean(true);
-		Property enderCardRecipe = config.get(config.CATEGORY_GENERAL, "Ender Card Recipe", true);
+		Property enderCardRecipe = config.get("Recipes", "Ender Card Recipe", true);
 		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card and Safe.";
 		enderCardRecipeEnabled = enderCardRecipe.getBoolean(true);
-		Property banditRecipe = config.get(config.CATEGORY_GENERAL, "Slot Machine Recipe", true);
+		Property banditRecipe = config.get("Recipes", "Slot Machine Recipe", true);
 		banditRecipe.comment = "Set to false to disable crafting recipes for Slot Machine.";
 		banditRecipeEnabled = banditRecipe.getBoolean(true);
 		
 		//loot
-		Property mobDrops = config.get(config.CATEGORY_GENERAL, "Mob Drops", true);
+		Property mobDrops = config.get("Loot", "Mob Drops", true);
 		mobDrops.comment = "Set to false to disable mobs dropping coins on death.";
 		mobsDropCoins = mobDrops.getBoolean(true);
-		Property dropAmount = config.get(config.CATEGORY_GENERAL, "Mob Drop Max", 39);
+		Property dropAmount = config.get("Loot", "Mob Drop Max", 39);
 		dropAmount.comment = "Max mob drop stacksize. Minimum 1. Maximum 64. Default 39.";
 		mobDropMax = Math.max(1,Math.min(dropAmount.getInt(39),64));
-		Property dropChance = config.get(config.CATEGORY_GENERAL, "Mob Drop Chance", 3);
+		Property dropChance = config.get("Loot", "Mob Drop Chance", 3);
 		dropChance.comment = "Chance of a mob dropping coins. Lower number means higher chance. Minimum 0 (always drop). Default 3 (1 in 4 chance).";
 		mobDropChance = Math.max(0,Math.min(dropChance.getInt(3),100));
-		Property mineshaftCoins = config.get(config.CATEGORY_GENERAL, "Mineshaft CoinBag", true);
+		Property mineshaftCoins = config.get("Loot", "Mineshaft CoinBag", true);
 		mineshaftCoins.comment = "Set to false to disable coinbag spawning in mineshaft chests.";
 		coinsInMineshaft = mineshaftCoins.getBoolean(true);
-		Property mineshaftCoinRate = config.get(config.CATEGORY_GENERAL, "Mineshaft CoinBag Spawnrate", 20);
+		Property mineshaftCoinRate = config.get("Loot", "Mineshaft CoinBag Spawnrate", 20);
 		mineshaftCoinRate.comment = "Rate of coinbag spawning in mineshaft chests. Higher value equals more common. Default is 20.";
 		mineshaftCoinChance = Math.max(1,Math.min(mineshaftCoinRate.getInt(20),100));
-		Property dungeonCoins = config.get(config.CATEGORY_GENERAL, "Dungeon CoinBag", true);
+		Property dungeonCoins = config.get("Loot", "Dungeon CoinBag", true);
 		dungeonCoins.comment = "Set to false to disable coinbag spawning in dungeon chests.";
 		coinsInDungeon = dungeonCoins.getBoolean(true);
-		Property dungeonCoinRate = config.get(config.CATEGORY_GENERAL, "Dungeon CoinBag Spawnrate", 20);
+		Property dungeonCoinRate = config.get("Loot", "Dungeon CoinBag Spawnrate", 20);
 		dungeonCoinRate.comment = "Rate of coinbag spawning in dungeon chests. Higher value equals more common. Default is 20.";
 		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
-		Property twoMatch = config.get(config.CATEGORY_GENERAL, "Two of a kind payout", 1);
+		
+		//slot machine
+		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 1);
 		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 1";
 		twoMatchPayout = Math.max(0,twoMatch.getInt(1));
-		Property threeMatch = config.get(config.CATEGORY_GENERAL, "Three of a kind payout", 20);
+		Property threeMatch = config.get("Slot Machine", "Three of a kind payout", 20);
 		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 20";
 		threeMatchPayout = Math.max(0,threeMatch.getInt(30));
-		Property fourMatch = config.get(config.CATEGORY_GENERAL, "Four of a kind payout", 10000);
+		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 10000);
 		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 10000";
 		fourMatchPayout = Math.max(0,fourMatch.getInt(10000));
 		
-		//features		
-		Property autoMode = config.get(config.CATEGORY_GENERAL, "Auto mode enabled", true);
+		//trade station		
+		Property autoMode = config.get("Trade Station", "Auto mode enabled", true);
 		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
 		autoModeEnabled = autoMode.getBoolean(true);
-		Property sellRatio = config.get(config.CATEGORY_GENERAL, "Sell Ratio", 0.8);
+		Property sellRatio = config.get("Trade Station", "Sell Ratio", 0.8);
 		sellRatio.comment = "Ratio of sell price to buy price. Set to less than 1.0 to give players a percentage of the full buy price when selling an item. (Range: 0.1 - 1.0)";
 		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));
-		Property tsBuyEnabled = config.get(config.CATEGORY_GENERAL, "Trade Station Buy enabled", true);
+		Property tsBuyEnabled = config.get("Trade Station", "Trade Station Buy enabled", true);
 		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
 		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
 		config.save();
@@ -219,6 +222,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileSafe.class, "TileSafe");
 		GameRegistry.registerTileEntity(TileUCSign.class, "TileUCSign");
 		GameRegistry.registerTileEntity(TileBandit.class, "TileBandit");
+		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	

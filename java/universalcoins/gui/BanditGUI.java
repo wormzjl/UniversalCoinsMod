@@ -18,9 +18,9 @@ import universalcoins.tile.TileBandit;
 public class BanditGUI extends GuiContainer {
 	
 	private TileBandit tEntity;
-	private GuiButton spinButton, cashButton;
+	private GuiButton spinButton, coinButton;
 	public static final int idPullButton = 0;
-	public static final int idCashButton = 1;
+	public static final int idCoinButton = 1;
 	boolean shiftPressed = false;
 	private int[] counter = {164, 164, 164, 164};
 	private boolean[] reelActive = {true, true, true, true};
@@ -39,10 +39,10 @@ public class BanditGUI extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 		spinButton = new GuiSlimButton(idPullButton, 130 + (width - xSize) / 2, 30 + (height - ySize) / 2, 32, 12, StatCollector.translateToLocal("general.button.spin"));
-		cashButton = new GuiSlimButton(idCashButton, 130 + (width - xSize) / 2, 45 + (height - ySize) / 2, 32, 12, StatCollector.translateToLocal("general.button.cash"));
+		coinButton = new GuiSlimButton(idCoinButton, 130 + (width - xSize) / 2, 45 + (height - ySize) / 2, 32, 12, StatCollector.translateToLocal("general.button.coin"));
 		buttonList.clear();
 		buttonList.add(spinButton);
-		buttonList.add(cashButton);
+		buttonList.add(coinButton);
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class BanditGUI extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 		//diable if player has no money
 		spinButton.enabled = tEntity.coinSum > 0;
-		cashButton.enabled = tEntity.coinSum > 0;
+		coinButton.enabled = tEntity.coinSum > 0;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/bandit.png");
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);

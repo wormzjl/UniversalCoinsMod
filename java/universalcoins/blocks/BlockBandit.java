@@ -12,12 +12,15 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileBandit;
+import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
 
 public class BlockBandit extends BlockContainer {
@@ -47,11 +50,15 @@ public class BlockBandit extends BlockContainer {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileBandit) {
-			player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-		}
-		return true;
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity instanceof TileBandit && ((TileBandit) tileEntity).inUse) {
+			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+			return true;
+		} else {
+        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+        	((TileBandit) tileEntity).playerName = player.getDisplayName();
+        	return true;
+        }
 	}
 		
 	@Override

@@ -6,12 +6,15 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import universalcoins.UniversalCoins;
 import universalcoins.render.BlockVendorRenderer;
 import universalcoins.render.ItemCardStationRenderer;
+import universalcoins.render.ItemSignalRenderer;
 import universalcoins.render.ItemVendorFrameRenderer;
 import universalcoins.render.TileEntityCardStationRenderer;
+import universalcoins.render.TileEntitySignalRenderer;
 import universalcoins.render.TileEntityUCSignRenderer;
 import universalcoins.render.TileEntityVendorRenderer;
 import universalcoins.render.VendorFrameRenderer;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
@@ -35,5 +38,9 @@ public class ClientProxy extends CommonProxy {
         
         TileEntitySpecialRenderer render3 = new TileEntityUCSignRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileUCSign.class, render3);
+		
+		TileEntitySpecialRenderer render4 = new TileEntitySignalRenderer();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSignal.class, render4);
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockSignal), new ItemSignalRenderer(render4, new TileSignal()));
 	}
 }

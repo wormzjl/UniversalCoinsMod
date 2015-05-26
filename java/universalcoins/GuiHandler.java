@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.SafeGUI;
+import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
@@ -14,6 +15,7 @@ import universalcoins.gui.VendorWrenchGUI;
 import universalcoins.inventory.ContainerBandit;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.inventory.ContainerSafe;
+import universalcoins.inventory.ContainerSignal;
 import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.inventory.ContainerVendor;
 import universalcoins.inventory.ContainerVendorBuy;
@@ -22,6 +24,7 @@ import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
+import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -54,6 +57,9 @@ class GuiHandler implements IGuiHandler {
         if (tileEntity instanceof TileBandit) {
             return new ContainerBandit(player.inventory, (TileBandit) tileEntity);
         }
+        if (tileEntity instanceof TileSignal) {
+            return new ContainerSignal(player.inventory, (TileSignal) tileEntity);
+        }
         return null;
 	}
 
@@ -83,6 +89,9 @@ class GuiHandler implements IGuiHandler {
         }
         if (tileEntity instanceof TileBandit) {
             return new BanditGUI(player.inventory, (TileBandit) tileEntity);
+        }
+        if (tileEntity instanceof TileSignal) {
+            return new SignalGUI(player.inventory, (TileSignal) tileEntity);
         }
         return null;
 		}	
