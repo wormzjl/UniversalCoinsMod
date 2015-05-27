@@ -63,8 +63,8 @@ public class BanditGUI extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-		//diable if player has no money
-		spinButton.enabled = tEntity.coinSum > 0;
+		//disable if player has no money
+		spinButton.enabled = tEntity.coinSum > 0 || tEntity.cardAvailable;
 		coinButton.enabled = tEntity.coinSum > 0;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/bandit.png");

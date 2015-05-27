@@ -31,7 +31,6 @@ public class TradeStationGUI extends GuiContainer {
 	public static final int idAutoModeButton = 8;
 
 	boolean shiftPressed = false;
-	boolean autoMode = UniversalCoins.autoModeEnabled;
 	
 	public String[] autoLabels = {StatCollector.translateToLocal("tradestation.gui.autolabel.off"),
 			StatCollector.translateToLocal("tradestation.gui.autolabel.buy"),
@@ -71,7 +70,7 @@ public class TradeStationGUI extends GuiContainer {
 		
 		
 		//display only if auto buy/sell enabled?
-		if (autoMode) {
+		if (tileEntity.autoModeButtonActive) {
 			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 
 					28, 12, StatCollector.translateToLocal("tradestation.gui.button.mode"));
 			buttonList.add(autoModeButton);
@@ -103,7 +102,7 @@ public class TradeStationGUI extends GuiContainer {
 			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.warning.noitem"), 48, 57, 4210752);
 		}
 		//display only if auto buy/sell enabled
-		if (autoMode) {
+		if (tileEntity.autoModeButtonActive) {
 			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.label.autobuy"), 6, 74, 4210752);
 			fontRendererObj.drawString(autoLabels[tileEntity.autoMode], 38, 87, 4210752);
 		}
@@ -128,7 +127,7 @@ public class TradeStationGUI extends GuiContainer {
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 		
 		//draw auto mode box if auto buy/sell enabled
-		if (autoMode) {
+		if (tileEntity.autoModeButtonActive) {
 			this.drawTexturedModalRect(x + 35, y + 83, 184, 0, 50, 15);
 		}
 		

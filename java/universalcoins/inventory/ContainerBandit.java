@@ -14,6 +14,7 @@ public class ContainerBandit extends Container {
 	
 	private TileBandit tEntity;
 	private int lastCoinSum;
+	private boolean lastCardAvailable;
 	private String lastCustomName;
 	private boolean lastInUse = false;
 	private int[] lastReelPos = {0, 0, 0, 0};
@@ -107,6 +108,7 @@ public class ContainerBandit extends Container {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
             
             if (this.lastCoinSum != tEntity.coinSum ||
+            		this.lastCardAvailable != tEntity.cardAvailable||
                     this.lastInUse != tEntity.inUse||
                     this.lastReelPos[0] != tEntity.reelPos[0]||
                     this.lastReelPos[1] != tEntity.reelPos[1]||
@@ -116,6 +118,7 @@ public class ContainerBandit extends Container {
             }
 
 	   		this.lastCoinSum = tEntity.coinSum;
+	   		this.lastCardAvailable = tEntity.cardAvailable;
 	   		this.lastInUse = tEntity.inUse;
 	   		this.lastReelPos[0] = tEntity.reelPos[0];
 	        this.lastReelPos[1] = tEntity.reelPos[1];

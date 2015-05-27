@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerBandit;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.util.UCWorldData;
 
 public class TileBandit extends TileEntity implements IInventory {
 	
@@ -28,6 +29,7 @@ public class TileBandit extends TileEntity implements IInventory {
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
+	public boolean cardAvailable = false;
 	public String customName = "";
 	public String playerName = "";
 	public boolean inUse = false;
@@ -38,14 +40,32 @@ public class TileBandit extends TileEntity implements IInventory {
 		super();
 	}
 	
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if (!worldObj.isRemote) {
+			updateInUse();
+		}
+	}
+	
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			inventory[itemOutputSlot] = null;
-			coinSum--;
+			if (cardAvailable) {
+				debitAccount(1);
+			} else {
+				coinSum--;
+			}
 			leverPull();
+			checkCard();
 		}
 		if (buttonId == 1) {
-			fillOutputSlot();
+			if (cardAvailable && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard) {
+				creditAccount(coinSum);
+				coinSum = 0;
+			} else {
+				fillOutputSlot();
+			}
 		}
 		if (buttonId == 2) {
 			int matchCount = 0;
@@ -114,6 +134,14 @@ public class TileBandit extends TileEntity implements IInventory {
 		}
 		return -1;
 	}
+	
+	public void checkCard() {
+		if (inventory[itemCardSlot] != null && getAccountBalance() > 1) {
+			cardAvailable = true;
+		} else {
+			cardAvailable = false;
+		}
+	}
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
@@ -158,6 +186,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		}
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("coinSum", coinSum);
+		tagCompound.setBoolean("cardAvailable", cardAvailable);
 		tagCompound.setString("customName", customName);
 		tagCompound.setBoolean("inUse", inUse);
 		tagCompound.setInteger("reelPos0", reelPos[0]);
@@ -183,6 +212,11 @@ public class TileBandit extends TileEntity implements IInventory {
 			coinSum = tagCompound.getInteger("coinSum");
 		} catch (Throwable ex2) {
 			coinSum = 0;
+		}
+		try {
+			cardAvailable = tagCompound.getBoolean("cardAvailable");
+		} catch (Throwable ex2) {
+			cardAvailable = false;
 		}
 		try {
 			customName = tagCompound.getString("customName");
@@ -236,6 +270,9 @@ public class TileBandit extends TileEntity implements IInventory {
 					inventory[slot] = null;
 				}
 			}
+			if (slot == itemCardSlot) {
+				checkCard();
+			}
 		}
 		coinsTaken(stack);
 		return stack;
@@ -288,6 +325,9 @@ public class TileBandit extends TileEntity implements IInventory {
 					}
 				}
 			}
+			if (slot == itemCardSlot) {
+				checkCard();
+			}
 		}		
 	}
 
@@ -309,5 +349,54 @@ public class TileBandit extends TileEntity implements IInventory {
 		return false;
 	}
 
+	public int getAccountBalance() {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				return getWorldInt(accountNumber);
+			}
+		} return -1;
+	}
+	
+	public void debitAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance -= amount;
+				setWorldData(accountNumber, balance);
+			}
+		}
+	}
+	
+	public void creditAccount(int amount) {
+		if (inventory[itemCardSlot] != null) {
+			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+			if (getWorldString(accountNumber) != "") {
+				int balance = getWorldInt(accountNumber);
+				balance += amount;
+				setWorldData(accountNumber, balance);
+			}
+		}
+	}
+	
+	private void setWorldData(String tag, int data) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		wdTag.setInteger(tag, data);
+		wData.markDirty();
+	}
+	
+	private int getWorldInt(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getInteger(tag);
+	}
+	
+	private String getWorldString(String tag) {
+		UCWorldData wData = UCWorldData.get(super.worldObj);
+		NBTTagCompound wdTag = wData.getData();
+		return wdTag.getString(tag);
+	}
 
 }

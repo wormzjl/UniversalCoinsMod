@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -12,7 +13,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 public class UCTileTradeStationMessage implements IMessage, IMessageHandler<UCTileTradeStationMessage, IMessage> {
 public int x, y, z, coinSum, itemPrice;
 public String customName;
-private boolean buyButtonActive, sellButtonActive, coinButtonActive, 
+private boolean buyButtonActive, sellButtonActive, autoModeButtonActive, coinButtonActive, 
 isSStackButtonActive, isLStackButtonActive, isSBagButtonActive, isLBagButtonActive, inUse;
 
     public UCTileTradeStationMessage()
@@ -29,6 +30,7 @@ isSStackButtonActive, isLStackButtonActive, isSBagButtonActive, isLBagButtonActi
         this.customName = tileEntity.getInventoryName();
         this.buyButtonActive = tileEntity.buyButtonActive;
         this.sellButtonActive = tileEntity.sellButtonActive;
+        this.autoModeButtonActive = tileEntity.autoModeButtonActive;
         this.coinButtonActive = tileEntity.coinButtonActive;
         this.isSStackButtonActive = tileEntity.isSStackButtonActive;
         this.isLStackButtonActive = tileEntity.isLStackButtonActive;
@@ -49,6 +51,7 @@ isSStackButtonActive, isLStackButtonActive, isSBagButtonActive, isLBagButtonActi
         this.customName = ByteBufUtils.readUTF8String(buf);
         this.buyButtonActive = buf.readBoolean();
         this.sellButtonActive = buf.readBoolean();
+        this.autoModeButtonActive = buf.readBoolean();        
         this.coinButtonActive = buf.readBoolean();
         this.isSStackButtonActive = buf.readBoolean();
         this.isLStackButtonActive = buf.readBoolean();
@@ -68,6 +71,7 @@ isSStackButtonActive, isLStackButtonActive, isSBagButtonActive, isLBagButtonActi
         ByteBufUtils.writeUTF8String(buf, customName);
         buf.writeBoolean(buyButtonActive);
         buf.writeBoolean(sellButtonActive);
+        buf.writeBoolean(autoModeButtonActive);
         buf.writeBoolean(coinButtonActive);
         buf.writeBoolean(isSStackButtonActive);
         buf.writeBoolean(isLStackButtonActive);
@@ -88,6 +92,7 @@ isSStackButtonActive, isLStackButtonActive, isSBagButtonActive, isLBagButtonActi
 			((TileTradeStation) tileEntity).setInventoryName(message.customName);
 			((TileTradeStation) tileEntity).buyButtonActive = message.buyButtonActive;
 			((TileTradeStation) tileEntity).sellButtonActive = message.sellButtonActive;
+			((TileTradeStation) tileEntity).autoModeButtonActive = message.autoModeButtonActive;
 			((TileTradeStation) tileEntity).coinButtonActive = message.coinButtonActive;
 			((TileTradeStation) tileEntity).isSStackButtonActive = message.isSStackButtonActive;
 			((TileTradeStation) tileEntity).isLStackButtonActive = message.isLStackButtonActive;
