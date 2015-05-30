@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.inventory.ContainerBandit;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UCWorldData;
 
@@ -38,14 +37,6 @@ public class TileBandit extends TileEntity implements IInventory {
 	
 	public TileBandit() {
 		super();
-	}
-	
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (!worldObj.isRemote) {
-			updateInUse();
-		}
 	}
 	
 	public void onButtonPressed(int buttonId) {
@@ -98,15 +89,9 @@ public class TileBandit extends TileEntity implements IInventory {
 		}
 	}
 	
-	private void updateInUse() {
+	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
-		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
-		if (playerTest != null && playerTest.openContainer != null &&
-				this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerBandit) {
-			inUse = true;
-		} else {
 			inUse = false;
-		}
 	}
 	
 	public String getInventoryName() {
@@ -305,7 +290,6 @@ public class TileBandit extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		inUse = false;
 		return getStackInSlot(i);
 	}
 

@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 
 public class BlockSignal extends BlockContainer {

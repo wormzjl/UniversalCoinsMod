@@ -1,15 +1,13 @@
 package universalcoins.items;
 
-import universalcoins.UniversalCoins;
-import universalcoins.tile.TileUCSign;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSign;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import universalcoins.UniversalCoins;
+import universalcoins.tile.TileUCSign;
 
 public class ItemUCSign extends ItemSign {
 	

@@ -1,16 +1,11 @@
 package universalcoins.util;
 
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import universalcoins.UniversalCoins;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class UCRecipeHelper {
@@ -143,6 +138,11 @@ public class UCRecipeHelper {
 			"IRI",
 			"XIX",
 			'I', Items.iron_ingot,'R', Items.redstone
+		});
+	}
+	public static void addLinkCardRecipes() {
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.linkCard), new Object[]{
+				Items.paper, Items.paper, Items.ender_pearl
 		});
 	}
 }

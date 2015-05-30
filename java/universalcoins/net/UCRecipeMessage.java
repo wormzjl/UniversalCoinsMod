@@ -9,7 +9,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
 private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
-enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
+enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled;
 
     public UCRecipeMessage()
     {
@@ -20,6 +20,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
         this.enderCardRecipeEnabled = UniversalCoins.enderCardRecipeEnabled;
         this.banditRecipeEnabled = UniversalCoins.banditRecipeEnabled;
         this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
+        this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
     }
 
     @Override
@@ -32,6 +33,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
         this.enderCardRecipeEnabled = buf.readBoolean();
         this.banditRecipeEnabled = buf.readBoolean();
         this.signalRecipeEnabled = buf.readBoolean();
+        this.linkCardRecipeEnabled = buf.readBoolean();
     }
 
     @Override
@@ -44,6 +46,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
         buf.writeBoolean(enderCardRecipeEnabled);
         buf.writeBoolean(banditRecipeEnabled);
         buf.writeBoolean(signalRecipeEnabled);
+        buf.writeBoolean(linkCardRecipeEnabled);
     }
 
 	@Override
@@ -70,6 +73,9 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled;
 		}
 		if (signalRecipeEnabled){
 			UCRecipeHelper.addSignalRecipes();
+		}
+		if (linkCardRecipeEnabled){
+			UCRecipeHelper.addLinkCardRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 			

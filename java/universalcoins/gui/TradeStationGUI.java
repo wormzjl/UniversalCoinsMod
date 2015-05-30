@@ -10,7 +10,6 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.FMLLog;
 import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.tile.TileTradeStation;

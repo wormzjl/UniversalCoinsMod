@@ -150,4 +150,8 @@ public class ContainerTradeStation extends Container {
             this.tileEntity.coinMode = par2;
         }
     }
+	
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
+		this.tileEntity.inUseCleanup();
+	}
 }

@@ -1,11 +1,9 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.StatCollector;
 
 public class TileVendorFrame extends TileVendor {

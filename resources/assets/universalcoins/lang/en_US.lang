@@ -20,7 +20,7 @@ item.itemSeller.name=Selling Catalog
 item.itemVendorWrench.name=Vendor Wrench
 item.itemVendorFrame.name=Vending Frame
 item.itemUCSign.name=Advanced Sign
-item.itemLinkCard.name=Remote Storage Link Card
+item.linkCard.name=Remote Storage Linking Card
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####
@@ -105,6 +105,14 @@ item.itemUCCard.warning=Card not activated. Right click to activate.
 #####
 item.itemEnderCard.balance=Account balance:
 item.itemEnderCard.message.deposit=Deposited
+
+#####
+# Linking Card Messages
+#####
+item.linkCard.blank=Blank
+item.linkCard.stored=Location Stored
+item.linkCard.message.stored=Location stored: 
+item.linkCard.message.set=Remote storage location set.
 
 #####
 # Safe GUI

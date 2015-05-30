@@ -17,7 +17,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -59,6 +58,7 @@ public class BlockTradeStation extends BlockContainer {
 		} else {
 			player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			((TileTradeStation) tileEntity).playerName = player.getDisplayName();
+			((TileTradeStation) tileEntity).inUse = true;
 			return true;
 		}
 	}

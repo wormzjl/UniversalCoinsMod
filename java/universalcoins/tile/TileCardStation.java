@@ -11,7 +11,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.inventory.ContainerCardStation;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
@@ -39,27 +38,12 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	public String customAccountName = "none";
 	public String customAccountNumber = "none";
 	
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (withdrawCoins) {
-			withdrawCoins();
-		}
-		updateInUse();
-	}
-	
-	private void updateInUse() {
+	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
-		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
-		if (playerTest != null && playerTest.openContainer != null &&
-				this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerCardStation) {
-			inUse = true;
-		} else {
 			inUse = false;
 			withdrawCoins = false;
 			depositCoins = false;
 			accountNumber = "none";
-		}
 	}
 
 	@Override
@@ -76,26 +60,24 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int count) {
-				ItemStack newStack;
-				if (inventory[slot] == null) {
-					return null;
+	public ItemStack decrStackSize(int slot, int size) {
+		ItemStack stack = getStackInSlot(slot);
+		if (stack != null) {
+			if (stack.stackSize <= size) {
+				setInventorySlotContents(slot, null);
+			} else {
+				stack = stack.splitStack(size);
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(slot, null);
 				}
-				if (inventory[slot].stackSize <= count) {
-					newStack = inventory[slot];
-					inventory[slot] = null;
-
-					return newStack;
-				}
-				newStack = ItemStack.copyItemStack(inventory[slot]);
-				newStack.stackSize = count;
-				inventory[slot].stackSize -= count;
-				return newStack;
+			}
+		}
+		fillCoinSlot();
+		return stack;
 	}
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot) {
-		inUse = false;
 		if (this.inventory[slot] != null) {
             ItemStack itemstack = this.inventory[slot];
             this.inventory[slot] = null;
@@ -313,6 +295,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		if (functionId == 4) {
 			withdrawCoins = true;
 			depositCoins = false;
+			fillCoinSlot();
 		} else withdrawCoins = false;
 		if (functionId == 5) {
 			String storedAccount = getPlayerAccount(playerUID);
@@ -370,7 +353,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		}
 	}
 
-	private void withdrawCoins() {
+	private void fillCoinSlot() {
 		if (inventory[itemCoinSlot] == null && coinWithdrawalAmount > 0) {
 			// use logarithm to find largest cointype for coins being withdrawn
 			int logVal = Math.min((int) (Math.log(coinWithdrawalAmount) / Math.log(9)), 4);

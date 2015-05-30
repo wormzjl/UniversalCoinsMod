@@ -1,10 +1,9 @@
 package universalcoins.blocks;
 
-import universalcoins.tile.TileUCSign;
 import net.minecraft.block.BlockSign;
-import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalcoins.tile.TileUCSign;
 
 public class BlockUCSign extends BlockSign {
 	

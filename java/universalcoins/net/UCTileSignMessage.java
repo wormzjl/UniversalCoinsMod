@@ -1,10 +1,8 @@
 package universalcoins.net;
 
-import universalcoins.tile.TileUCSign;
-import universalcoins.tile.TileVendor;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.tileentity.TileEntity;
+import universalcoins.tile.TileUCSign;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

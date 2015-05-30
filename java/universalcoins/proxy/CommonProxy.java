@@ -22,6 +22,7 @@ import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemUCCard;
 import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
+import universalcoins.items.LinkCard;
 import universalcoins.tile.TileUCSign;
 import universalcoins.util.Vending;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -37,6 +38,7 @@ public class CommonProxy {
 	public static Item itemEnderCard;
 	public static Item itemVendorWrench;
 	public static Item itemUCSign;
+	public static Item linkCard;
 	
 	public static Block blockTradeStation;
 	public static Block blockVendor;
@@ -85,6 +87,7 @@ public class CommonProxy {
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
+		linkCard = new LinkCard().setUnlocalizedName("linkCard");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
@@ -96,6 +99,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
+		GameRegistry.registerItem(linkCard, linkCard.getUnlocalizedName());
 	}
 
 	public void registerRenderers() {

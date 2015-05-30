@@ -11,13 +11,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
-import universalcoins.inventory.ContainerVendorBuy;
-import universalcoins.inventory.ContainerVendorSell;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCVendorFrameTextureMessage;
@@ -76,6 +76,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean inUse = false;
 	public String playerName = "";
 	public String blockIcon = ""; //used for vendor frame texture
+	private int remoteX = 0;
+	private int remoteY = 0;
+	private int remoteZ = 0;
 	
 	
 	@Override
@@ -86,20 +89,13 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			activateUserRetrieveButtons();
 			activateBuyButton();
 			activateSellButton();
-			updateInUse();
+			if (ooStockWarning) checkRemoteStorage();
 		}
 	}
 	
-	private void updateInUse() {
+	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
-		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
-		if (playerTest != null && playerTest.openContainer != null &&
-				(this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerVendorBuy
-				|| this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerVendorSell)) {
-			inUse = true;
-		} else {
 			inUse = false;
-		}
 	}
 	
 	private void activateBuyButton() {
@@ -832,6 +828,21 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} catch (Throwable ex2) {
 			blockIcon = "";
 		}
+		try {
+			remoteX = tagCompound.getInteger("remoteX");
+		} catch (Throwable ex2) {
+			remoteX = 0;
+		}
+		try {
+			remoteY = tagCompound.getInteger("remoteY");
+		} catch (Throwable ex2) {
+			remoteY = 0;
+		}
+		try {
+			remoteZ = tagCompound.getInteger("remoteZ");
+		} catch (Throwable ex2) {
+			remoteZ = 0;
+		}
 	}
 	
 	@Override
@@ -871,6 +882,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
 		tagCompound.setBoolean("InUse", inUse);
 		tagCompound.setString("BlockIcon", blockIcon);
+		tagCompound.setInteger("remoteX", remoteX);
+		tagCompound.setInteger("remoteY", remoteY);
+		tagCompound.setInteger("remoteZ", remoteZ);
 	}
 	
 	public void updateSigns() {	
@@ -908,6 +922,34 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				return getWorldInt(accountNumber);
 			}
 		} return -1;
+	}
+	
+	public void setRemoteStorage(int[] storageLocation) {
+		remoteX = storageLocation[0];
+		remoteY = storageLocation[1];
+		remoteZ = storageLocation[2];
+	}
+	
+	public void checkRemoteStorage() {
+		if (remoteX != 0 && remoteY != 0 && remoteZ != 0) {
+			for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
+				if (inventory[i] == null) {
+					loadRemoteChunk(xCoord, yCoord, zCoord);
+					TileEntity te = worldObj.getTileEntity(remoteX, remoteY, remoteZ);				
+					if (te != null && te instanceof TileEntityChest) {
+						TileEntityChest chest = (TileEntityChest) te;
+						for (int j = 0; j < chest.getSizeInventory(); j++) {
+							if (inventory[i] == null && chest.getStackInSlot(j) != null 
+									&& chest.getStackInSlot(j).getItem() == inventory[itemTradeSlot].getItem()) {
+								inventory[i] = chest.getStackInSlot(j);
+								chest.setInventorySlotContents(j, null);
+								checkSellingInventory();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	public boolean debitUserAccount(int amount) {
@@ -982,5 +1024,10 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		UCWorldData wData = UCWorldData.get(super.worldObj);
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.getString(tag);
+	}
+	
+	private void loadRemoteChunk(int x, int y, int z) {
+		Chunk ch = worldObj.getChunkFromBlockCoords(x, y);
+		worldObj.getChunkProvider().loadChunk(ch.xPosition, ch.zPosition);
 	}
 }

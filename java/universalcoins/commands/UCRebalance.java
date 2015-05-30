@@ -2,7 +2,6 @@ package universalcoins.commands;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityItem;

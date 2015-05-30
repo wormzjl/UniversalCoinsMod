@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.TradeStationGUI;
-import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
@@ -63,19 +62,12 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			activateRetrieveButtons();
 			runAutoMode();
 			runCoinMode();
-			updateInUse();
 		}
 	}
 	
-	private void updateInUse() {
+	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
-		EntityPlayer playerTest = this.worldObj.getPlayerEntityByName(playerName);
-		if (playerTest != null && playerTest.openContainer != null &&
-				this.worldObj.getPlayerEntityByName(playerName).openContainer instanceof ContainerTradeStation) {
-			inUse = true;
-		} else {
 			inUse = false;
-		}
 	}
 	
 	private void activateBuySellButtons() {

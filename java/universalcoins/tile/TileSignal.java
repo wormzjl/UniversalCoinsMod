@@ -1,8 +1,5 @@
 package universalcoins.tile;
 
-import cpw.mods.fml.common.FMLLog;
-import universalcoins.UniversalCoins;
-import universalcoins.net.UCButtonMessage;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,6 +12,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
+import universalcoins.UniversalCoins;
+import universalcoins.net.UCButtonMessage;
 
 public class TileSignal extends TileEntity implements IInventory {
 	

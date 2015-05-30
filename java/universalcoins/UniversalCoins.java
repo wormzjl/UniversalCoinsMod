@@ -78,6 +78,7 @@ public class UniversalCoins {
 	public static Boolean enderCardRecipeEnabled;
 	public static Boolean banditRecipeEnabled;
 	public static Boolean signalRecipeEnabled;
+	public static Boolean linkCardRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
@@ -129,6 +130,9 @@ public class UniversalCoins {
 		Property signalRecipe = config.get("Recipes", "Redstone Signal Generator Recipe", true);
 		signalRecipe.comment = "Set to false to disable crafting recipes for Redstone Signal Generator.";
 		signalRecipeEnabled = signalRecipe.getBoolean(true);
+		Property linkCardRecipe = config.get("Recipes", "Remote Storage Linking Card Recipe", true);
+		linkCardRecipe.comment = "Set to false to disable crafting recipes for Linking Card.";
+		linkCardRecipeEnabled = linkCardRecipe.getBoolean(true);
 		
 		//loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
@@ -270,6 +274,9 @@ public class UniversalCoins {
 		}
 		if (signalRecipeEnabled){
 			UCRecipeHelper.addSignalRecipes();
+		}
+		if (linkCardRecipeEnabled){
+			UCRecipeHelper.addLinkCardRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 	}

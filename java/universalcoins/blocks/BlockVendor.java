@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.render.BlockVendorRenderer;
-import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorBlock;
 import cpw.mods.fml.relauncher.Side;
@@ -60,6 +59,7 @@ public class BlockVendor extends BlockContainer {
 		} else {
 			player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			((TileVendor) tileEntity).playerName = player.getDisplayName();
+			((TileVendor) tileEntity).inUse = true;
 			return true;
 		}
 	}

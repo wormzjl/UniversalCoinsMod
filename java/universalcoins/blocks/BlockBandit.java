@@ -1,8 +1,5 @@
 package universalcoins.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -20,8 +17,8 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileBandit;
-import universalcoins.tile.TileCardStation;
-import universalcoins.tile.TileSafe;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBandit extends BlockContainer {
 	
@@ -47,18 +44,21 @@ public class BlockBandit extends BlockContainer {
 		return meta == 0 && side == 3 ? blockIconFace : (side == meta ? blockIconFace : blockIcon);
 	}
 	
-	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity instanceof TileBandit && ((TileBandit) tileEntity).inUse) {
-			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
-			return true;
-		} else {
-        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-        	((TileBandit) tileEntity).playerName = player.getDisplayName();
-        	return true;
-        }
+		if (tileEntity instanceof TileBandit) {
+			 if (((TileBandit)tileEntity).inUse) {
+				 if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				 return true;
+			 } else {
+				 player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				 ((TileBandit) tileEntity).playerName = player.getDisplayName();
+				 ((TileBandit) tileEntity).inUse = true;
+				 return true;
+			 }
+		}
+		return false;
 	}
 		
 	@Override

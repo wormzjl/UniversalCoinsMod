@@ -5,8 +5,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCRecipeMessage;
-import universalcoins.net.UCTileTradeStationMessage;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 

@@ -7,7 +7,6 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import universalcoins.tile.TileVendor;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -145,5 +144,8 @@ public class ContainerVendorSell extends Container {
             //this.tileEntity.autoMode = par2;
         }
     }
-
+	
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
+		this.tileEntity.inUseCleanup();
+	}
 }

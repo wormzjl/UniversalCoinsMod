@@ -148,5 +148,8 @@ public class ContainerCardStation extends Container {
             //this.tileEntity.autoMode = par2;
         }
     }
-
+	
+	 public void onContainerClosed(EntityPlayer par1EntityPlayer) {
+		this.tEntity.inUseCleanup();
+    }
 }
