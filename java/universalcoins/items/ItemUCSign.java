@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSign;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileUCSign;
 
 public class ItemUCSign extends ItemSign {
 	
@@ -66,32 +66,20 @@ public class ItemUCSign extends ItemSign {
             {
                 return false;
             }
-            else if (par3World.isRemote)
-            {
-                return true;
+        	if (par7 == 1) {
+                int i1 = MathHelper.floor_double((double)((par2EntityPlayer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
+                par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.standing_ucsign, i1, 3);
             }
-            else
-            {
-                if (par7 == 1)
-                {
-                    int i1 = MathHelper.floor_double((double)((par2EntityPlayer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
-                    par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.standing_ucsign, i1, 3);
-                }
-                else
-                {
-                    par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.wall_ucsign, par7, 3);
-                }
-
-                --par1ItemStack.stackSize;
-                TileUCSign tileentitysign = (TileUCSign)par3World.getTileEntity(par4, par5, par6);
-
-                if (tileentitysign != null)
-                {
-                    par2EntityPlayer.func_146100_a(tileentitysign);
-                }
-
-                return true;
+            else {
+                par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.wall_ucsign, par7, 3);
             }
+
+            --par1ItemStack.stackSize;
+        	TileEntity tileentitysign = par3World.getTileEntity(par4, par5, par6);
+            if (tileentitysign != null) {
+            	par2EntityPlayer.openGui(UniversalCoins.instance, 1, par3World, par4, par5, par6);
+            }
+            return true;
         }
     }
 }

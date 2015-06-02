@@ -57,5 +57,8 @@ public class ContainerVendorWrench extends Container {
             //this.tileEntity.autoMode = par2;
         }
     }
-
+	
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
+		this.tileEntity.inUseCleanup();
+	}
 }

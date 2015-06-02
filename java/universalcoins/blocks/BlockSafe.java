@@ -44,9 +44,9 @@ public class BlockSafe extends BlockContainer {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileSafe) {
-			TileSafe tentity = (TileSafe) te;
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity != null && tileEntity instanceof TileSafe) {
+			TileSafe tentity = (TileSafe) tileEntity;
 			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 				tentity.updateAccountBalance();
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
@@ -58,10 +58,11 @@ public class BlockSafe extends BlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		if (world.isRemote) return;
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te != null ) {
-			((TileSafe)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
-			((TileSafe)world.getTileEntity(x, y, z)).setSafeAccount(player.getCommandSenderName());
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		if (tileEntity != null && tileEntity instanceof TileSafe) {
+			TileSafe tentity = (TileSafe) tileEntity;
+			tentity.blockOwner = player.getCommandSenderName();
+			tentity.setSafeAccount(player.getCommandSenderName());
 		}
 		int l = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 

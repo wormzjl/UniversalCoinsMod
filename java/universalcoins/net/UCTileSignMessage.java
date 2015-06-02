@@ -14,15 +14,17 @@ public class UCTileSignMessage implements IMessage, IMessageHandler<UCTileSignMe
     private int yCoord;
     private int zCoord;
     private String[] signText;
+    private String blockOwner;
 
     public UCTileSignMessage() {
     }
 
-    public UCTileSignMessage(int x, int y, int z, String[] signText) {
+    public UCTileSignMessage(int x, int y, int z, String[] signText, String blockOwner) {
     	 this.xCoord = x;
          this.yCoord = y;
          this.zCoord = z;
          this.signText = new String[] {signText[0], signText[1], signText[2], signText[3]};
+         this.blockOwner = blockOwner;
     }
 
     @Override
@@ -31,10 +33,10 @@ public class UCTileSignMessage implements IMessage, IMessageHandler<UCTileSignMe
         this.yCoord = buf.readShort();
         this.zCoord = buf.readInt();
         this.signText = new String[4];
-
         for (int i = 0; i < 4; ++i) {
         	this.signText[i] = ByteBufUtils.readUTF8String(buf);
         }
+        this.blockOwner = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class UCTileSignMessage implements IMessage, IMessageHandler<UCTileSignMe
         for (int i = 0; i < 4; ++i) {
         	ByteBufUtils.writeUTF8String(buf, this.signText[i]);
         }
+        ByteBufUtils.writeUTF8String(buf, this.blockOwner);
     }
 
 	@Override
@@ -53,8 +56,9 @@ public class UCTileSignMessage implements IMessage, IMessageHandler<UCTileSignMe
 		TileEntity tileEntity = FMLClientHandler.instance().getClient().theWorld
 				.getTileEntity(message.xCoord, message.yCoord, message.zCoord);
 		
-		if (tileEntity instanceof TileUCSign) {
+		if (tileEntity != null && tileEntity instanceof TileUCSign) {
 			((TileUCSign) tileEntity).signText = message.signText;
+			((TileUCSign) tileEntity).blockOwner = message.blockOwner;
 		}
 		return null;
 	}

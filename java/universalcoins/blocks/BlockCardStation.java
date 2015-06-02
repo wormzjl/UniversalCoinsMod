@@ -48,17 +48,19 @@ public class BlockCardStation extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity == null) return false;
-		if (((TileCardStation) tileEntity).inUse) {
-			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
-			return true;
-		} else {
-        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-        	((TileCardStation) tileEntity).playerName = player.getDisplayName();
-        	((TileCardStation) tileEntity).playerUID = player.getUniqueID().toString();
-        	((TileCardStation) tileEntity).inUse = true;
-        	return true;
-        }
+		if (tileEntity != null && tileEntity instanceof TileCardStation) {
+			if (((TileCardStation) tileEntity).inUse) {
+				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				return true;
+			} else {
+	        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+	        	((TileCardStation) tileEntity).playerName = player.getDisplayName();
+	        	((TileCardStation) tileEntity).playerUID = player.getUniqueID().toString();
+	        	((TileCardStation) tileEntity).inUse = true;
+	        	return true;
+	        }
+		}
+		return false;
 	}
 		
 	@Override

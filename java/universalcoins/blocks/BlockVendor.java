@@ -45,23 +45,22 @@ public class BlockVendor extends BlockContainer {
 		setBlockBounds(0.0625f, 0.125f, 0.0625f, 0.9375f, 0.9375f, 0.9375f);
 	}
 
-	/*@Override
-	public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer) {
-		
-	}*/
-
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (((TileVendor) tileEntity).inUse) {
-			if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
-			return true;
-		} else {
-			player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-			((TileVendor) tileEntity).playerName = player.getDisplayName();
-			((TileVendor) tileEntity).inUse = true;
-			return true;
+		if (tileEntity != null && tileEntity instanceof TileVendor) {
+			TileVendor tentity = (TileVendor) tileEntity;
+			if (tentity.inUse) {
+				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				return true;
+			} else {
+				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				tentity.playerName = player.getDisplayName();
+				tentity.inUse = true;
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {

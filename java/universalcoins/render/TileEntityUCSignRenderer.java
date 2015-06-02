@@ -19,9 +19,7 @@ public class TileEntityUCSignRenderer extends TileEntitySignRenderer {
 	
 	    private static final ResourceLocation field_147513_b = new ResourceLocation("textures/entity/sign.png");
 	    private final ModelSign field_147514_c = new ModelSign();
-	    private static final String __OBFID = "CL_00000970";
 	    private int counter = 0;
-		private String subset = "";
 
 		public void renderTileEntityAt(TileEntitySign p_147512_1_, double p_147512_2_, double p_147512_4_, double p_147512_6_, float p_147512_8_)
 	    {
@@ -85,26 +83,25 @@ public class TileEntityUCSignRenderer extends TileEntitySignRenderer {
 	                s = "> " + s + " <";
 	                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
 	            }
-	            else
-	            {
+	            else  {
+	            	String colorCode = "§0";
+            		if (s.startsWith("&") && s.length() > 1 && String.valueOf(s.charAt(1)).matches("[0-9a-fA-F]+")) {
+            			colorCode = "§" + s.substring(1, 2);
+            			s = s.substring(2);
+            		}
 	            	if (s.length() <= 16) {
-	            		int color = 0x000000;
-	            		if (s.contains("!")) {
-	            			color = 0xef0000;
-	            		}
-	            		fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, color);
+	            		fontrenderer.drawString(colorCode + s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
 	            	} else {
-		            	//display a subset of string while scrolling through entire string
-	            		if (counter / 10 < s.length() - 15) {
-	            			subset = s.substring(counter / 10, counter / 10 + 15);
-	            		} else if (counter / 10 < s.length() - 8) {
-	            			subset = s.substring(s.length() - 15 , s.length());
-	            		} else if (counter / 10 < s.length()) {	            		
+	            		//display a subset of string while scrolling through entire string
+	            		String subset = "";
+	            		if (counter / 10 < s.length() - 8) {
+	            			subset = s.substring(Math.min(counter / 10, s.length() - 15), Math.min(counter / 10 + 15, s.length()));
+	            		} else  {	            		
 	            			subset = s.substring(0, 15);
 	            		}
-            			fontrenderer.drawString(subset, -fontrenderer.getStringWidth(subset) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
+            			fontrenderer.drawString(colorCode + subset, -fontrenderer.getStringWidth(subset) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
 	            		counter++;
-	            		if (counter / 10 > s.length()) counter = 0;
+	            		if (counter / 10 > s.length() + 8) counter = 0;
 	            	}
 	            }
 	        }

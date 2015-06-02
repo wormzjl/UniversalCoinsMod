@@ -19,6 +19,7 @@ import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCRecipeMessage;
+import universalcoins.net.UCSignServerMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCTileTradeStationMessage;
@@ -201,6 +202,7 @@ public class UniversalCoins {
 	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
 	    snw.registerMessage(UCVendorFrameTextureMessage.class, UCVendorFrameTextureMessage.class, 7, Side.SERVER);
 	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
+	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
 
 	    //update check using versionchecker
 	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");

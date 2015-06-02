@@ -5,6 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
+import universalcoins.gui.GuiEditUCSign;
 import universalcoins.gui.SafeGUI;
 import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
@@ -26,6 +27,7 @@ import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
+import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -92,6 +94,9 @@ class GuiHandler implements IGuiHandler {
         }
         if (tileEntity instanceof TileSignal) {
             return new SignalGUI(player.inventory, (TileSignal) tileEntity);
+        }
+        if (tileEntity instanceof TileUCSign) {
+            return new GuiEditUCSign((TileUCSign) tileEntity);
         }
         return null;
 		}	

@@ -48,7 +48,7 @@ public class BlockSignal extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if (te instanceof TileSignal) {
+			if (te != null && te instanceof TileSignal) {
 				TileSignal tentity = (TileSignal) te;
 				if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 		        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);

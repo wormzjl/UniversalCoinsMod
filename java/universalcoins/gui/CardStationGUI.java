@@ -427,12 +427,14 @@ public class CardStationGUI extends GuiContainer {
 	}
 	
 	private String drawCursor() {
-		while (counter < 20) {
-			counter++;
-			return "_";
-		}
 		counter++;
-		if (counter >= 40) counter = 0;
-		return "";
+		if (counter >= 40) {
+			counter = 0;
+		} 
+		if (counter < 20) {
+			return "_";
+		} else {
+			return "";
+		}
 	}
 }
