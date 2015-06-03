@@ -45,6 +45,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -68,10 +69,9 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.8";
+	public static final String version = "1.7.2-1.6.9";
 	
 	public static Boolean autoModeEnabled;
-	public static Boolean updateCheck;
 	public static Boolean recipesEnabled;
 	public static Boolean vendorRecipesEnabled;
 	public static Boolean vendorFrameRecipesEnabled;
@@ -104,10 +104,6 @@ public class UniversalCoins {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		//update
-		Property modUpdate = config.get(config.CATEGORY_GENERAL, "Update Check", true);
-		modUpdate.comment = "Set to false to remove chat notification of updates.";
-		updateCheck = modUpdate.getBoolean(true);
 		
 		//recipes
 		Property recipes = config.get("Recipes", "Trade Station Recipes", true);
@@ -185,10 +181,6 @@ public class UniversalCoins {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
 		}
 		
-		if (updateCheck) {
-			FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
-		}
-		
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
 						
 		//network packet handling
@@ -205,7 +197,8 @@ public class UniversalCoins {
 	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
 
 	    //update check using versionchecker
-	    //FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
+	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", 
+	    		"https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
 	}
 	
 	@EventHandler

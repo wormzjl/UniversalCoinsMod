@@ -51,7 +51,7 @@ public class LinkCard extends Item {
             if (world.getTileEntity(i, j, k) instanceof TileEntityChest) {
             	//notify player we have a chest
             	player.addChatMessage(new ChatComponentText(
-            			StatCollector.translateToLocal("item.linkCard.message.stored" + i + " " + j + " " + k)));
+            			StatCollector.translateToLocal("item.linkCard.message.stored") + i + " " + j + " " + k));
             	itemstack.stackTagCompound = new NBTTagCompound();
             	itemstack.stackTagCompound.setIntArray("storageLocation", new int[] {i, j, k});
             }
