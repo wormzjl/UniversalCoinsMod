@@ -1,0 +1,26 @@
+{
+	"versionList": [
+		{
+			"mcVersion":"Minecraft 1.7.2",
+			"modVersion":"1.7.2-1.6.9",
+			"changeLog": [
+				"changed version update check to VersionChecker mod",
+				"removed internal version check code"
+			],
+			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
+			"isDirectLink":"false",
+			"newFileName":""
+		},
+		{
+			"mcVersion":"Minecraft 1.7.10",
+			"modVersion":"1.7.10-1.6.9",
+			"changeLog": [
+				"changed version update check to VersionChecker mod",
+				"removed internal version check code"
+			],
+			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
+			"isDirectLink":"false",
+			"newFileName":""
+		}
+	]
+}
