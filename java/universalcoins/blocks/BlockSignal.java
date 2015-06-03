@@ -10,6 +10,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -71,10 +73,10 @@ public class BlockSignal extends BlockContainer {
 				}
 			}
 			if (coinsFound < tentity.fee) {
-				//TODO notify the player of insufficient funds
+				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("signal.message.notenough")));
 			} else {
 				//we have enough coins to cover the fee so we pay it and return the change
-				//TODO notify the player of fee acceptance
+				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("signal.message.activated")));
 				coinsFound -= tentity.fee;
 				tentity.activateSignal();
 			}

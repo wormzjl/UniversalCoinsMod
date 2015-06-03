@@ -1,8 +1,13 @@
 package universalcoins.blocks;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
@@ -52,6 +57,8 @@ public class BlockUCSign extends BlockSign {
 			return false;
 		}
 		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
+			EntityItem entityItem = new EntityItem(world, x, y, z, new ItemStack(UniversalCoins.proxy.itemUCSign));
+			world.spawnEntityInWorld(entityItem);
 			super.removedByPlayer(world, player, x, y, z);
 		}
 		return false;
@@ -63,4 +70,9 @@ public class BlockUCSign extends BlockSign {
 				((TileUCSign)tileEntity).scanChestContents();
 			}
 	 }
+	 
+	 @Override
+	 public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	        return UniversalCoins.proxy.itemUCSign;
+	    }
 }

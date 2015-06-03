@@ -160,6 +160,8 @@ signal.face.label.second=second
 signal.face.label.seconds=seconds
 signal.face.label.coin=coin
 signal.face.label.coins=coins
+signal.message.notenough=Not enough coins!
+signal.message.activated=Signal activated.
 
 
 

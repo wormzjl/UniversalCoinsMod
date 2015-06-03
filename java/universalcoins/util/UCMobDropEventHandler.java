@@ -7,7 +7,6 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import universalcoins.UniversalCoins;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class UCMobDropEventHandler {
@@ -15,7 +14,6 @@ public class UCMobDropEventHandler {
 	@SubscribeEvent
 	public void onEntityDrop(LivingDropsEvent event) {
 		if (event.source.getEntity() != null && event.source.getEntity().toString().contains("EntityPlayerMP")) {
-			FMLLog.info("damage source player");
 			Random random = new Random();
 			int chance;
 			if (UniversalCoins.mobDropChance <= 0) {

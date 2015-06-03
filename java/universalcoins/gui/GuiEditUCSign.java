@@ -110,9 +110,14 @@ public class GuiEditUCSign extends GuiScreen {
         
         //draw active line indicator
         if (tileSign.lineBeingEdited != -1) {
-        	int stringLength = fontRendererObj.getStringWidth(tileSign.signText[tileSign.lineBeingEdited]);
-        	fontRendererObj.drawString("> ", (this.width - stringLength) / 2 - 8, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
-        	fontRendererObj.drawString(" <", (this.width + stringLength) / 2, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+        	if (tileSign.signText[tileSign.lineBeingEdited].length() > 15) {
+        		fontRendererObj.drawString("> ", (this.width - 90) / 2 - 8, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+        		fontRendererObj.drawString(" <", (this.width + 	90) / 2, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+        	} else {
+        		int stringLength = fontRendererObj.getStringWidth(tileSign.signText[tileSign.lineBeingEdited]);
+        		fontRendererObj.drawString("> ", (this.width - stringLength) / 2 - 8, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+        		fontRendererObj.drawString(" <", (this.width + stringLength) / 2, this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+        	}
         }
         //draw sign text
         String displayString;

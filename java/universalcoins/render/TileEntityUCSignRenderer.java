@@ -72,25 +72,27 @@ public class TileEntityUCSignRenderer extends TileEntitySignRenderer {
 	        GL11.glScalef(f3, -f3, f3);
 	        GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
 	        GL11.glDepthMask(false);
-	        byte b0 = 0;
+	        int[] colors = {0x000000, 0x0000AA, 0x00AA00, 0x00AAAA, 0xAA0000, 
+	        		0xAA00AA, 0xFFAA00, 0xAAAAAA, 0x555555, 0x5555FF, 0x55FF55,
+	        		0x55FFFF, 0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF};
 
 	        for (int i = 0; i < p_147512_1_.signText.length; ++i)
 	        {
 	            String s = p_147512_1_.signText[i];
+	            int colorCode = 0;
+	            if (s.startsWith("&") && s.length() > 1 && String.valueOf(s.charAt(1)).matches("[0-9a-fA-F]+")) {
+        			colorCode = Integer.parseInt(s.substring(1, 2), 16);
+        			s = s.substring(2);
+        		}
 
 	            if (i == p_147512_1_.lineBeingEdited)
 	            {
 	                s = "> " + s + " <";
-	                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
+	                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, colors[colorCode]);
 	            }
 	            else  {
-	            	String colorCode = "§0";
-            		if (s.startsWith("&") && s.length() > 1 && String.valueOf(s.charAt(1)).matches("[0-9a-fA-F]+")) {
-            			colorCode = "§" + s.substring(1, 2);
-            			s = s.substring(2);
-            		}
 	            	if (s.length() <= 16) {
-	            		fontrenderer.drawString(colorCode + s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
+	            		fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - p_147512_1_.signText.length * 5, colors[colorCode]);
 	            	} else {
 	            		//display a subset of string while scrolling through entire string
 	            		String subset = "";
@@ -99,7 +101,7 @@ public class TileEntityUCSignRenderer extends TileEntitySignRenderer {
 	            		} else  {	            		
 	            			subset = s.substring(0, 15);
 	            		}
-            			fontrenderer.drawString(colorCode + subset, -fontrenderer.getStringWidth(subset) / 2, i * 10 - p_147512_1_.signText.length * 5, b0);
+            			fontrenderer.drawString(subset, -fontrenderer.getStringWidth(subset) / 2, i * 10 - p_147512_1_.signText.length * 5, colors[colorCode]);
 	            		counter++;
 	            		if (counter / 10 > s.length() + 8) counter = 0;
 	            	}
