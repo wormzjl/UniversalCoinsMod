@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.FMLLog;
 
 public class UCItemPricer {
@@ -52,7 +53,12 @@ public class UCItemPricer {
 	}
 	
 	private static void loadDefaults() throws IOException {
-		String configList[] = {"defaultConfigs/minecraft.cfg","defaultConfigs/BuildCraft.cfg","defaultConfigs/universalcoins.cfg"};
+		String[] configList = {
+				"defaultConfigs/minecraft.cfg",
+				"defaultConfigs/BuildCraft.cfg",
+				"defaultConfigs/universalcoins.cfg",
+				"defaultConfigs/oredictionary.cfg",
+				};
 		InputStream priceResource;
 		//load those files into hashmap(ucPriceMap)
 		for (int i = 0; i < configList.length; i++) {
@@ -113,8 +119,13 @@ public class UCItemPricer {
 						// fail quietly
 					}
 				}
-				
 			}
+			//parse oredictionary
+			for (String ore :  OreDictionary.getOreNames()) {
+				ucModnameMap.put(ore, "oredictionary");
+				ucPriceMap.put(ore, -1);
+			}
+
 			// iterate through the items and update the hashmaps
 			for (ItemStack itemstack : itemsDiscovered) {
 				// update ucModnameMap with items found
@@ -200,6 +211,16 @@ private static void loadPricelists() throws IOException {
 		if (ucPriceMap.get(itemName) != null) {
 			ItemPrice = ucPriceMap.get(itemName);
 		}
+		//lookup item in oreDictionary if not priced
+		if (ItemPrice == -1) {
+			int[] id = OreDictionary.getOreIDs(itemStack);
+			if (id != null) {
+				itemName = OreDictionary.getOreName(id[0]);
+				if (ucPriceMap.get(itemName) != null) {
+					ItemPrice = ucPriceMap.get(itemName);
+				}
+			}
+		}
 		return ItemPrice;
 	}
 	
@@ -267,10 +288,10 @@ private static void loadPricelists() throws IOException {
 	}
 	
 	public static void resetDefaults() {
-		try {
-			loadDefaults();
-		} catch (IOException e) {
-			// fail quietly
-		}
+			try {
+				loadDefaults();
+			} catch (IOException e) {
+				// fail quietly
+			}
 	}
 }
