@@ -931,7 +931,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 	
 	public void checkRemoteStorage() {
-		if (remoteX != 0 && remoteY != 0 && remoteZ != 0) {
+		if (remoteX != 0 && remoteY != 0 && remoteZ != 0  && inventory[itemTradeSlot] != null) {
 			for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
 				if (inventory[i] == null) {
 					loadRemoteChunk(xCoord, yCoord, zCoord);
@@ -939,7 +939,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					if (te != null && te instanceof TileEntityChest) {
 						TileEntityChest chest = (TileEntityChest) te;
 						for (int j = 0; j < chest.getSizeInventory(); j++) {
-							if (inventory[i] == null && chest.getStackInSlot(j) != null 
+							if (inventory[i] == null && chest.getStackInSlot(j) != null
 									&& chest.getStackInSlot(j).getItem() == inventory[itemTradeSlot].getItem()) {
 								inventory[i] = chest.getStackInSlot(j);
 								chest.setInventorySlotContents(j, null);

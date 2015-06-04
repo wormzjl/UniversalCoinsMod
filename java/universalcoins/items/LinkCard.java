@@ -57,8 +57,8 @@ public class LinkCard extends Item {
             }
             if (world.getTileEntity(i, j, k) instanceof TileVendor) {
             	TileVendor te = (TileVendor) world.getTileEntity(i, j, k);
-            	int[] storageLocation = itemstack.stackTagCompound.getIntArray("storageLocation");
-            	if (storageLocation.length > 0) {
+            	if (itemstack.hasTagCompound()) {
+	            	int[] storageLocation = itemstack.stackTagCompound.getIntArray("storageLocation");
             		player.addChatMessage(new ChatComponentText(
                 			StatCollector.translateToLocal("item.linkCard.message.set")));
                 	te.setRemoteStorage(storageLocation);
