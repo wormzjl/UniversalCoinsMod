@@ -17,9 +17,9 @@ import universalcoins.tile.TileVendor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class LinkCard extends Item {
+public class ItemLinkCard extends Item {
 	
-	public LinkCard() {
+	public ItemLinkCard() {
 		super();
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		this.maxStackSize = 1;

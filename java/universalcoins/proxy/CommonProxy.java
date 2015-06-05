@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import universalcoins.blocks.BlockBandit;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
+import universalcoins.blocks.BlockPackager;
 import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockSignal;
 import universalcoins.blocks.BlockTradeStation;
@@ -16,13 +17,14 @@ import universalcoins.items.ItemCoin;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.items.ItemLargeCoinBag;
 import universalcoins.items.ItemLargeCoinStack;
+import universalcoins.items.ItemLinkCard;
+import universalcoins.items.ItemPackage;
 import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemUCCard;
 import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
-import universalcoins.items.LinkCard;
 import universalcoins.tile.TileUCSign;
 import universalcoins.util.Vending;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -38,7 +40,8 @@ public class CommonProxy {
 	public static Item itemEnderCard;
 	public static Item itemVendorWrench;
 	public static Item itemUCSign;
-	public static Item linkCard;
+	public static Item itemLinkCard;
+	public static Item itemPackage;
 	
 	public static Block blockTradeStation;
 	public static Block blockVendor;
@@ -50,6 +53,7 @@ public class CommonProxy {
 	public static Block wall_ucsign;
 	public static Block blockBandit;
 	public static Block blockSignal;
+	public static Block blockPackager;
 	
 	
 	public void registerBlocks() {
@@ -63,6 +67,7 @@ public class CommonProxy {
 		wall_ucsign = new BlockUCSign(TileUCSign.class, false).setBlockName("wall_ucsign");
 		blockBandit = new BlockBandit().setBlockName("blockBandit");
 		blockSignal = new BlockSignal().setBlockName("blockSignal");
+		blockPackager = new BlockPackager().setBlockName("blockPackager");
 		
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
@@ -74,6 +79,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(wall_ucsign, "wall_ucsign").getUnlocalizedName();
 		GameRegistry.registerBlock(blockBandit, "blockBandit").getUnlocalizedName();
 		GameRegistry.registerBlock(blockSignal, "blockSignal").getUnlocalizedName();
+		GameRegistry.registerBlock(blockPackager, "blockPackager").getUnlocalizedName();
 	}
 	
 	public void registerItems() {
@@ -87,7 +93,8 @@ public class CommonProxy {
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
-		linkCard = new LinkCard().setUnlocalizedName("linkCard");
+		itemLinkCard = new ItemLinkCard().setUnlocalizedName("itemLinkCard");
+		itemPackage = new ItemPackage().setUnlocalizedName("itemLPackage");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
@@ -99,7 +106,8 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
-		GameRegistry.registerItem(linkCard, linkCard.getUnlocalizedName());
+		GameRegistry.registerItem(itemLinkCard, itemLinkCard.getUnlocalizedName());
+		GameRegistry.registerItem(itemPackage, itemPackage.getUnlocalizedName());
 	}
 
 	public void registerRenderers() {

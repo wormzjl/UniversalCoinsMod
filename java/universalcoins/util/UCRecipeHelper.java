@@ -141,7 +141,7 @@ public class UCRecipeHelper {
 		});
 	}
 	public static void addLinkCardRecipes() {
-		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.linkCard), new Object[]{
+		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemLinkCard), new Object[]{
 				Items.paper, Items.paper, Items.ender_pearl
 		});
 	}

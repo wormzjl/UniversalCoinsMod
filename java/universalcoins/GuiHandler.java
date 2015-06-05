@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.GuiEditUCSign;
+import universalcoins.gui.PackagerGUI;
 import universalcoins.gui.SafeGUI;
 import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
@@ -15,6 +16,7 @@ import universalcoins.gui.VendorSellGUI;
 import universalcoins.gui.VendorWrenchGUI;
 import universalcoins.inventory.ContainerBandit;
 import universalcoins.inventory.ContainerCardStation;
+import universalcoins.inventory.ContainerPackager;
 import universalcoins.inventory.ContainerSafe;
 import universalcoins.inventory.ContainerSignal;
 import universalcoins.inventory.ContainerTradeStation;
@@ -24,6 +26,7 @@ import universalcoins.inventory.ContainerVendorSell;
 import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TilePackager;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
@@ -62,6 +65,9 @@ class GuiHandler implements IGuiHandler {
         if (tileEntity instanceof TileSignal) {
             return new ContainerSignal(player.inventory, (TileSignal) tileEntity);
         }
+        if (tileEntity instanceof TilePackager) {
+            return new ContainerPackager(player.inventory, (TilePackager) tileEntity);
+        }
         return null;
 	}
 
@@ -97,6 +103,9 @@ class GuiHandler implements IGuiHandler {
         }
         if (tileEntity instanceof TileUCSign) {
             return new GuiEditUCSign((TileUCSign) tileEntity);
+        }
+        if (tileEntity instanceof TilePackager) {
+            return new PackagerGUI(player.inventory, (TilePackager) tileEntity);
         }
         return null;
 		}	

@@ -28,6 +28,7 @@ import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TilePackager;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
@@ -36,10 +37,8 @@ import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
-import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -69,7 +68,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.9";
+	public static final String version = "1.7.2-1.6.10";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean recipesEnabled;
@@ -81,6 +80,7 @@ public class UniversalCoins {
 	public static Boolean signalRecipeEnabled;
 	public static Boolean linkCardRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
+	public static Boolean packagerRecipeEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
 	public static Integer mineshaftCoinChance;
@@ -130,6 +130,9 @@ public class UniversalCoins {
 		Property linkCardRecipe = config.get("Recipes", "Remote Storage Linking Card Recipe", true);
 		linkCardRecipe.comment = "Set to false to disable crafting recipes for Linking Card.";
 		linkCardRecipeEnabled = linkCardRecipe.getBoolean(true);
+		Property packagerRecipe = config.get("Recipes", "Packager Recipe", true);
+		packagerRecipe.comment = "Set to false to disable crafting recipes for Packager.";
+		packagerRecipeEnabled = packagerRecipe.getBoolean(true);
 		
 		//loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
@@ -155,15 +158,15 @@ public class UniversalCoins {
 		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
 		
 		//slot machine
-		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 0);
-		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 0";
-		twoMatchPayout = Math.max(0,twoMatch.getInt(0));
-		Property threeMatch = config.get("Slot Machine", "Three of a kind payout", 200);
-		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 200";
-		threeMatchPayout = Math.max(0,threeMatch.getInt(200));
-		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 20000);
-		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 20000";
-		fourMatchPayout = Math.max(0,fourMatch.getInt(20000));
+		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 1);
+		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 1";
+		twoMatchPayout = Math.max(0,twoMatch.getInt(1));
+		Property threeMatch = config.get("Slot Machine", "Three of a kind payout", 64);
+		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 64";
+		threeMatchPayout = Math.max(0,threeMatch.getInt(64));
+		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 1000);
+		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 1000";
+		fourMatchPayout = Math.max(0,fourMatch.getInt(1000));
 		
 		//trade station		
 		Property autoMode = config.get("Trade Station", "Auto mode enabled", true);
@@ -176,6 +179,9 @@ public class UniversalCoins {
 		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
 		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
 		config.save();
+		
+		//packager
+		
 		
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
@@ -226,6 +232,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileUCSign.class, "TileUCSign");
 		GameRegistry.registerTileEntity(TileBandit.class, "TileBandit");
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
+		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	

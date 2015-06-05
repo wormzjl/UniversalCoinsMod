@@ -90,8 +90,8 @@ public class VendorGUI extends GuiContainer{
 		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
 		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
 		
-		modeButton.displayString = (tileEntity.sellMode ? StatCollector.translateToLocal("vending.gui.button.mode.sell") :
-			StatCollector.translateToLocal("vending.gui.button.mode.buy"));
+		modeButton.displayString = (tileEntity.sellMode ? StatCollector.translateToLocal("general.button.sell") :
+			StatCollector.translateToLocal("general.button.buy"));
 	}
 	
 	@Override
@@ -99,7 +99,7 @@ public class VendorGUI extends GuiContainer{
 		// draw text and stuff here
 		// the parameters for drawString are: string, x, y, color
 		fontRendererObj.drawString(tileEntity.getInventoryName(), 6, 5, 4210752);
-		String priceInLocal = StatCollector.translateToLocal("vending.gui.price");
+		String priceInLocal = StatCollector.translateToLocal("general.label.price");
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 78 - stringWidth, 22, 4210752);
 		//draw itemprice

@@ -10,6 +10,7 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TilePackager;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
@@ -113,6 +114,9 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 		}
 		if (tileEntity instanceof TileSignal) {
 			((TileSignal) tileEntity).onButtonPressed(message.buttonId, shiftPressed);
+		}
+		if (tileEntity instanceof TilePackager) {
+			((TilePackager) tileEntity).onButtonPressed(message.buttonId);
 		}
 		return null;
 	}
