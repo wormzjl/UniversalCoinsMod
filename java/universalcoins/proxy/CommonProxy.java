@@ -94,7 +94,7 @@ public class CommonProxy {
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
 		itemLinkCard = new ItemLinkCard().setUnlocalizedName("itemLinkCard");
-		itemPackage = new ItemPackage().setUnlocalizedName("itemLPackage");
+		itemPackage = new ItemPackage().setUnlocalizedName("itemPackage");
 		
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());

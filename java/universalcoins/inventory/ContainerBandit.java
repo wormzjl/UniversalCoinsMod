@@ -62,8 +62,6 @@ public class ContainerBandit extends Container {
 			if (slot < 3) {
 				if (!this.mergeItemStack(stackInSlot, 3, 39, true)) {
 					return null;
-				} else {
-					tEntity.coinsTaken(stack);
 				}
 			}
 			// places it into the tileEntity is possible since its in the player

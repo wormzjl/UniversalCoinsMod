@@ -1,5 +1,6 @@
 package universalcoins.tile;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -79,7 +80,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private int remoteX = 0;
 	private int remoteY = 0;
 	private int remoteZ = 0;
-	
 	
 	@Override
 	public void updateEntity() {
@@ -887,7 +887,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setInteger("remoteZ", remoteZ);
 	}
 	
-	public void updateSigns() {	
+	public void updateSigns() {			
 	}
 
 	@Override

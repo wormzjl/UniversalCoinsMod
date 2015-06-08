@@ -22,7 +22,7 @@ public class BanditGUI extends GuiContainer {
 	public static final int idPullButton = 0;
 	public static final int idCoinButton = 1;
 	boolean shiftPressed = false;
-	private int[] counter = {216, 216, 216, 216};
+	private int[] counter = {219, 219, 219, 219};
 	private boolean[] reelActive = {true, true, true, true};
 	private boolean resultCheck = false;
 	private int[] reelDrawPos = {13, 41, 69, 97};

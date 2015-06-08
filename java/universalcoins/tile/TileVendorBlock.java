@@ -1,14 +1,17 @@
 package universalcoins.tile;
 
+import universalcoins.UniversalCoins;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.Constants;
 
 public class TileVendorBlock extends TileVendor {
 
-String signText[] = {"","","",""};
+	String signText[] = {"","","",""};
 	
 	public void updateSigns() {
 
@@ -41,6 +44,19 @@ String signText[] = {"","","",""};
 							.getInteger("lvl")) + ", ");
 				}
 			} else signText[2] = "";
+			if (inventory[itemTradeSlot].getItem() == UniversalCoins.proxy.itemPackage) {
+				if( inventory[itemTradeSlot].stackTagCompound != null ) {
+					NBTTagList tagList = inventory[itemTradeSlot].stackTagCompound.getTagList("Inventory",
+							Constants.NBT.TAG_COMPOUND);
+					for (int i = 0; i < tagList.tagCount(); i++) {
+						NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+						byte slot = tag.getByte("Slot");
+							int itemCount = ItemStack.loadItemStackFromNBT(tag).stackSize;
+							String itemName = ItemStack.loadItemStackFromNBT(tag).getDisplayName();
+							signText[2] += itemCount + ":" + itemName + " ";
+					}
+				}
+			}
 			signText[3] = "Price: " + itemPrice;
 			
 			//find and update all signs

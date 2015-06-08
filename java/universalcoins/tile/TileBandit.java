@@ -33,7 +33,7 @@ public class TileBandit extends TileEntity implements IInventory {
 	public String playerName = "";
 	public boolean inUse = false;
 	public int[] reelPos = {0, 0, 0, 0};
-	private int[] reelStops = {0, 26, 54, 80, 108, 134, 162, 188};
+	private int[] reelStops = {0, 22, 44, 66, 88, 110, 132, 154, 176, 198};
 	
 	public TileBandit() {
 		super();
@@ -259,22 +259,7 @@ public class TileBandit extends TileEntity implements IInventory {
 				checkCard();
 			}
 		}
-		coinsTaken(stack);
 		return stack;
-	}
-	
-	public void coinsTaken(ItemStack stack) {
-		int coinType = getCoinType(stack.getItem());
-		if (coinType != -1) {
-			int itemValue = multiplier[coinType];
-			int debitAmount = 0;
-			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-			if(!worldObj.isRemote) {
-				coinSum -= debitAmount * itemValue;
-				//debitAccount(debitAmount * itemValue);
-				//updateAccountBalance();
-			}
-		}
 	}
 	
 	public void fillOutputSlot() {
@@ -285,6 +270,12 @@ public class TileBandit extends TileEntity implements IInventory {
 			int stackSize = Math.min((int) (coinSum / Math.pow(9, logVal)), 64);
 			// add a stack to the slot
 			inventory[itemOutputSlot] = new ItemStack(coins[logVal], stackSize);
+			int itemValue = multiplier[logVal];
+			int debitAmount = 0;
+			debitAmount = Math.min(stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+			if(!worldObj.isRemote) {
+				coinSum -= debitAmount * itemValue;
+			}
 		}
 	}
 

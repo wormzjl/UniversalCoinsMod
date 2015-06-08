@@ -39,7 +39,7 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 				//if minecraft, set resourcelocation using last part
 				textures = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
 			} else {
-				//if mod use mod path			
+				//if mod use mod path
 				textures = (new ResourceLocation(tempIconName[0] + ":textures/blocks/" + tempIconName[1] + ".png"));
 			}
 		}

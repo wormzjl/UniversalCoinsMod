@@ -78,7 +78,8 @@ public class BlockVendor extends BlockContainer {
 					invStack.writeToNBT(tag);
 					itemList.appendTag(tag);
 				}
-			}tagCompound.setTag("Inventory", itemList);
+			}
+			tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("CoinSum", te.coinSum);
 			tagCompound.setInteger("UserCoinSum", te.userCoinSum);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);

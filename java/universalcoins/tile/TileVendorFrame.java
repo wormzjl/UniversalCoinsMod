@@ -1,10 +1,13 @@
 package universalcoins.tile;
 
+import universalcoins.UniversalCoins;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.Constants;
 
 public class TileVendorFrame extends TileVendor {
 	
@@ -13,8 +16,8 @@ public class TileVendorFrame extends TileVendor {
 	public void updateSigns() {
 
 		if (inventory[itemTradeSlot] != null) {
-			signText[0] = sellMode ? StatCollector.translateToLocal("sign.sellmode.sell")
-					: StatCollector.translateToLocal("sign.sellmode.buy");
+			
+			signText[0] = sellMode ? "Selling" : "Buying";
 			//add out of stock notification if not infinite and no stock found
 			if (!infiniteMode && sellMode && ooStockWarning) {
 				signText[0] = "&4" + (StatCollector.translateToLocal("sign.warning.stock"));
@@ -27,7 +30,11 @@ public class TileVendorFrame extends TileVendor {
 			if (!sellMode && inventoryFullWarning) {
 				signText[0] = "&4" + (StatCollector.translateToLocal("sign.warning.inventoryfull"));
 			}
-			signText[1] = inventory[itemTradeSlot].getDisplayName();
+			if (inventory[itemTradeSlot].stackSize > 1) {
+				signText[1] = inventory[itemTradeSlot].stackSize + " " + inventory[itemTradeSlot].getDisplayName();
+			} else { 
+				signText[1] = inventory[itemTradeSlot].getDisplayName();
+			}
 			if (inventory[itemTradeSlot].isItemEnchanted()) {
 				signText[2] = "";
 				NBTTagList tagList = inventory[itemTradeSlot].getEnchantmentTagList();
@@ -38,7 +45,20 @@ public class TileVendorFrame extends TileVendor {
 							.getInteger("lvl")) + ", ");
 				}
 			} else signText[2] = "";
-			signText[3] = StatCollector.translateToLocal("sign.price") + itemPrice;
+			if (inventory[itemTradeSlot].getItem() == UniversalCoins.proxy.itemPackage) {
+				if( inventory[itemTradeSlot].stackTagCompound != null ) {
+					NBTTagList tagList = inventory[itemTradeSlot].stackTagCompound.getTagList("Inventory",
+							Constants.NBT.TAG_COMPOUND);
+					for (int i = 0; i < tagList.tagCount(); i++) {
+						NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+						byte slot = tag.getByte("Slot");
+							int itemCount = ItemStack.loadItemStackFromNBT(tag).stackSize;
+							String itemName = ItemStack.loadItemStackFromNBT(tag).getDisplayName();
+							signText[2] += itemCount + ":" + itemName + " ";
+					}
+				}
+			}
+			signText[3] = "Price: " + itemPrice;
 			
 			//find and update all signs
 			TileEntity te;

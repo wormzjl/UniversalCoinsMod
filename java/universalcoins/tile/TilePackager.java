@@ -42,6 +42,22 @@ public class TilePackager extends TileEntity implements IInventory {
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			//TODO pack things up and take coins
+			coinSum -= packageCost;
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.itemPackage);
+			
+			NBTTagList itemList = new NBTTagList();
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			for (int i = 0; i < itemPackageSlot.length; i++) {
+				ItemStack invStack = inventory[i];
+				if (invStack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setByte("Slot", (byte) i);
+					invStack.writeToNBT(tag);
+					itemList.appendTag(tag);
+				}
+			}
+			tagCompound.setTag("Inventory", itemList);
+			inventory[itemOutputSlot].setTagCompound(tagCompound);
 		}
 		if (buttonId == 1) {
 			fillOutputSlot();

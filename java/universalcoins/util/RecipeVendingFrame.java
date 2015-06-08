@@ -6,7 +6,6 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import universalcoins.UniversalCoins;
@@ -33,14 +32,21 @@ public class RecipeVendingFrame implements IRecipe {
 		}
 		newStack = new ItemStack(UniversalCoins.proxy.blockVendorFrame);		
 		String blockIcon = var1.getStackInSlot(4).getIconIndex().getIconName();
-		ItemStack textureStack = var1.getStackInSlot(4);
-		NBTTagList itemList = new NBTTagList();
-		NBTTagCompound tag = new NBTTagCompound();
-		if (textureStack != null) {
-			tag.setByte("Slot", (byte) 0);
-			textureStack.writeToNBT(tag);
+		
+		//the iconIndex function does not work with BOP so we have to do a bit of a hack here
+		if (blockIcon.startsWith("biomesoplenty")){
+			String[] iconInfo = blockIcon.split(":");
+			String[] blockName = var1.getStackInSlot(4).getUnlocalizedName().split("\\.", 3);
+			String woodType = blockName[2].replace("Plank", "");
+			//hellbark does not follow the same naming convention
+			if (woodType.contains("hell")) woodType = "hell_bark";
+			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+			//bamboo needs a hack too
+			if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+			//I feel dirty now :(
 		}
-		tag.setTag("Texture", itemList);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("BlockIcon", blockIcon);
 		this.newStack.setTagCompound(tag);
 		return true;
 	}
