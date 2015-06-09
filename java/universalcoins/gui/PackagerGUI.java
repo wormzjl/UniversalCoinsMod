@@ -28,6 +28,7 @@ public class PackagerGUI extends GuiContainer {
 	boolean shiftPressed = false;
 	private int[] defaultCoord = {8, 26};
 	private int hideCoord = Integer.MAX_VALUE;
+	private boolean buttonHover = false;
 	
 	public PackagerGUI(InventoryPlayer inventoryPlayer, TilePackager tileEntity) {
 		super(new ContainerPackager(inventoryPlayer, tileEntity));
@@ -66,11 +67,34 @@ public class PackagerGUI extends GuiContainer {
 		fontRendererObj.drawString(
 				StatCollector.translateToLocal("container.inventory"), 8,
 				96, 4210752);
-		//draw coin sum right aligned
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-		String coinSumString = String.valueOf(formatter.format(tEntity.coinSum));
-		int stringWidth = fontRendererObj.getStringWidth(coinSumString);
-		fontRendererObj.drawString(coinSumString, 144 - stringWidth, 78, 4210752);
+		
+		//draw package price if button hover true
+		buttonHover = false;
+		if (smallButton.func_146115_a()) {
+			String cost = "Cost: " + tEntity.packageCost[0];
+			int stringWidth = fontRendererObj.getStringWidth(cost);
+			fontRendererObj.drawString(cost, 144 - stringWidth, 78, 4210752);
+			buttonHover = true;
+		}
+		if (medButton.func_146115_a()) {
+			String cost = "Cost: " + tEntity.packageCost[1];
+			int stringWidth = fontRendererObj.getStringWidth(cost);
+			fontRendererObj.drawString(cost, 144 - stringWidth, 78, 4210752);
+			buttonHover = true;
+		}
+		if (largeButton.func_146115_a()) {
+			String cost = "Cost: " + tEntity.packageCost[2];
+			int stringWidth = fontRendererObj.getStringWidth(cost);
+			fontRendererObj.drawString(cost, 144 - stringWidth, 78, 4210752);
+			buttonHover = true;
+		}
+		if (!buttonHover) {
+			//draw coin sum right aligned
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+			String coinSumString = String.valueOf(formatter.format(tEntity.coinSum));
+			int stringWidth = fontRendererObj.getStringWidth(coinSumString);
+			fontRendererObj.drawString(coinSumString, 144 - stringWidth, 78, 4210752);
+		}
 		
 		
 	}
@@ -78,7 +102,7 @@ public class PackagerGUI extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 		//disable if player has no money
-		packageButton.enabled = tEntity.coinSum >= tEntity.packageCost || tEntity.cardAvailable;
+		packageButton.enabled = tEntity.coinSum >= tEntity.packageCost[tEntity.packageSize] || tEntity.cardAvailable;
 		coinButton.enabled = tEntity.coinSum > 0;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/packager.png");

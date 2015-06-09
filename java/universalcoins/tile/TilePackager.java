@@ -1,5 +1,6 @@
 package universalcoins.tile;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -32,7 +33,7 @@ public class TilePackager extends TileEntity implements IInventory {
 	public String playerName = "";
 	public boolean inUse = false;
 	public int packageSize = 0;
-	public int packageCost = 20;
+	public int[] packageCost = {20, 40, 80};
 
 	
 	public TilePackager() {
@@ -42,7 +43,7 @@ public class TilePackager extends TileEntity implements IInventory {
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			//TODO pack things up and take coins
-			coinSum -= packageCost;
+			coinSum -= packageCost[packageSize];
 			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.itemPackage);
 			
 			NBTTagList itemList = new NBTTagList();
@@ -65,9 +66,33 @@ public class TilePackager extends TileEntity implements IInventory {
 		//TODO on package change, move any stacks to player inventory
 		if (buttonId == 2) {
 			packageSize = 0;
+			for (int i = 0; i < 4; i++) {
+				if (inventory[i] != null) {
+					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
+						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
+					} else {
+						//spawn in world
+						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
+						worldObj.spawnEntityInWorld(entityItem);
+					}
+					inventory[i] = null;
+				}
+			}
 		}
 		if (buttonId == 3) {
 			packageSize = 1;
+			for (int i = 0; i < 2; i++) {
+				if (inventory[i] != null) {
+					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
+						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
+					} else {
+						//spawn in world
+						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
+						worldObj.spawnEntityInWorld(entityItem);
+					}
+					inventory[i] = null;
+				}
+			}
 		}
 		if (buttonId == 4) {
 			packageSize = 2;
@@ -106,7 +131,7 @@ public class TilePackager extends TileEntity implements IInventory {
 	}
 	
 	public void checkCard() {
-		if (inventory[itemCardSlot] != null && getAccountBalance() >= packageCost) {
+		if (inventory[itemCardSlot] != null && getAccountBalance() >= packageCost[packageSize]) {
 			cardAvailable = true;
 		} else {
 			cardAvailable = false;
