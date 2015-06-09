@@ -27,7 +27,7 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
 		//default texture
-		ResourceLocation textures = (new ResourceLocation("textures/blocks/planks_birch.png"));
+		ResourceLocation blockTexture = (new ResourceLocation("textures/blocks/planks_birch.png"));
 		//change texture based on plank type
 		if (((TileVendorFrame) te).blockIcon != "") {
 			blockIcon = (((TileVendorFrame) te).blockIcon);
@@ -37,13 +37,14 @@ public class VendorFrameRenderer extends TileEntitySpecialRenderer {
 			String[] tempIconName = blockIcon.split(":", 3); //split string
 			if (tempIconName.length == 1) {
 				//if minecraft, set resourcelocation using last part
-				textures = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
+				blockTexture = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
 			} else {
 				//if mod use mod path
-				textures = (new ResourceLocation(tempIconName[0] + ":textures/blocks/" + tempIconName[1] + ".png"));
+				blockTexture = (new ResourceLocation(tempIconName[0] + ":textures/blocks/" + tempIconName[1] + ".png"));
 			}
 		}
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
+		
+		this.bindTexture(blockTexture);
 
 		// adjust block rotation based on block meta
 		int meta = te.blockMetadata;

@@ -214,7 +214,7 @@ private static void loadPricelists() throws IOException {
 		//lookup item in oreDictionary if not priced
 		if (ItemPrice == -1) {
 			int[] id = OreDictionary.getOreIDs(itemStack);
-			if (id != null) {
+			if (id.length > 0) {
 				itemName = OreDictionary.getOreName(id[0]);
 				if (ucPriceMap.get(itemName) != null) {
 					ItemPrice = ucPriceMap.get(itemName);

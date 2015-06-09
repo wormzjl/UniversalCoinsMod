@@ -8,6 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
@@ -57,11 +58,25 @@ public class BlockUCSign extends BlockSign {
 			return false;
 		}
 		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
-			EntityItem entityItem = new EntityItem(world, x, y, z, new ItemStack(UniversalCoins.proxy.itemUCSign));
+			ItemStack stack = getItemStackWithData(world, x, y, z);			
+			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
 			world.spawnEntityInWorld(entityItem);
 			super.removedByPlayer(world, player, x, y, z);
 		}
 		return false;
+	}
+	
+	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
+		ItemStack stack = new ItemStack(UniversalCoins.proxy.itemUCSign);
+		TileEntity tentity = world.getTileEntity(x, y, z);
+		if (tentity instanceof TileUCSign) {
+			TileUCSign te = (TileUCSign) tentity;
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			tagCompound.setString("blockIcon", te.blockIcon);
+			stack.setTagCompound(tagCompound);
+			return stack;
+		} else
+			return stack;
 	}
 	
 	 public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {

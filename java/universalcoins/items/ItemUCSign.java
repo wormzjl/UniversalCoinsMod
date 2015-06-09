@@ -1,13 +1,17 @@
 package universalcoins.items;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSign;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
+import universalcoins.tile.TileUCSign;
 
 public class ItemUCSign extends ItemSign {
 	
@@ -21,13 +25,13 @@ public class ItemUCSign extends ItemSign {
      * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
      * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
      */
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
         if (par7 == 0)
         {
             return false;
         }
-        else if (!par3World.getBlock(par4, par5, par6).getMaterial().isSolid())
+        else if (!world.getBlock(par4, par5, par6).getMaterial().isSolid())
         {
             return false;
         }
@@ -58,28 +62,40 @@ public class ItemUCSign extends ItemSign {
                 ++par4;
             }
 
-            if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7, par1ItemStack))
+            if (!player.canPlayerEdit(par4, par5, par6, par7, itemStack))
             {
                 return false;
             }
-            else if (!Blocks.standing_sign.canPlaceBlockAt(par3World, par4, par5, par6))
+            else if (!Blocks.standing_sign.canPlaceBlockAt(world, par4, par5, par6))
             {
                 return false;
             }
         	if (par7 == 1) {
-                int i1 = MathHelper.floor_double((double)((par2EntityPlayer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
-                par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.standing_ucsign, i1, 3);
+                int i1 = MathHelper.floor_double((double)((player.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
+                world.setBlock(par4, par5, par6, UniversalCoins.proxy.standing_ucsign, i1, 3);
             }
             else {
-                par3World.setBlock(par4, par5, par6, UniversalCoins.proxy.wall_ucsign, par7, 3);
+                world.setBlock(par4, par5, par6, UniversalCoins.proxy.wall_ucsign, par7, 3);
             }
 
-            --par1ItemStack.stackSize;
-        	TileEntity tileentitysign = par3World.getTileEntity(par4, par5, par6);
+            --itemStack.stackSize;
+        	TileEntity tileentitysign = world.getTileEntity(par4, par5, par6);
             if (tileentitysign != null) {
-            	par2EntityPlayer.openGui(UniversalCoins.instance, 1, par3World, par4, par5, par6);
+            	if (itemStack.hasTagCompound()) {
+            		NBTTagCompound tagCompound = itemStack.getTagCompound();
+            		((TileUCSign)tileentitysign).blockIcon = tagCompound.getString("blockIcon");
+            	}
+            	player.openGui(UniversalCoins.instance, 1, world, par4, par5, par6);
             }
             return true;
         }
+    }
+    
+    @Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+    	if (stack.hasTagCompound()) {
+    		NBTTagCompound tagCompound = stack.getTagCompound();
+    		list.add(tagCompound.getString("blockIcon"));
+    	}
     }
 }

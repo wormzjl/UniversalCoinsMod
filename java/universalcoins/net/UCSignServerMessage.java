@@ -11,11 +11,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCSignServerMessage  implements IMessage, IMessageHandler<UCSignServerMessage, IMessage> {
 	private int x, y, z;
-	private String signText0, signText1, signText2, signText3, blockOwner;
+	private String signText0, signText1, signText2, signText3, blockOwner, blockIcon;
 
     public UCSignServerMessage() {}
 
-    public UCSignServerMessage(int x, int y, int z, String[] signText, String blockOwner) { 
+    public UCSignServerMessage(int x, int y, int z, String[] signText, String blockOwner, String blockIcon) { 
     	this.x = x;
     	this.y = y;
     	this.z = z;
@@ -24,6 +24,7 @@ public class UCSignServerMessage  implements IMessage, IMessageHandler<UCSignSer
         this.signText2 = signText[2];
         this.signText3 = signText[3];
         this.blockOwner = blockOwner;
+        this.blockIcon = blockIcon;
     }
 
     @Override
@@ -36,6 +37,7 @@ public class UCSignServerMessage  implements IMessage, IMessageHandler<UCSignSer
         ByteBufUtils.writeUTF8String(buf, signText2);
         ByteBufUtils.writeUTF8String(buf, signText3);
         ByteBufUtils.writeUTF8String(buf, blockOwner);
+        ByteBufUtils.writeUTF8String(buf, blockIcon);
     }
 
     @Override
@@ -48,6 +50,7 @@ public class UCSignServerMessage  implements IMessage, IMessageHandler<UCSignSer
         this.signText2 = ByteBufUtils.readUTF8String(buf);
         this.signText3 = ByteBufUtils.readUTF8String(buf);
         this.blockOwner = ByteBufUtils.readUTF8String(buf);
+        this.blockIcon = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
@@ -62,6 +65,7 @@ public class UCSignServerMessage  implements IMessage, IMessageHandler<UCSignSer
 			tentity.signText[2] = message.signText2;
 			tentity.signText[3] = message.signText3;
 			tentity.blockOwner = message.blockOwner;
+			tentity.blockIcon = message.blockIcon;
 			tentity.updateSign();
 			tentity.markDirty();
 			}

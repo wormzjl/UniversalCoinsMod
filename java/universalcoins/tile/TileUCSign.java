@@ -14,6 +14,7 @@ import universalcoins.net.UCTileSignMessage;
 public class TileUCSign extends TileEntitySign {
 		
 	public String blockOwner = "";
+	public String blockIcon = "";
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
@@ -26,7 +27,12 @@ public class TileUCSign extends TileEntitySign {
 			blockOwner = tagCompound.getString("blockOwner");
 		} catch (Throwable ex2) {
 			blockOwner = "";
-		}        
+		}
+        try {
+			blockIcon = tagCompound.getString("blockIcon");
+		} catch (Throwable ex2) {
+			blockIcon = "";
+		}
     }
 	
 	 public void writeToNBT(NBTTagCompound tagCompound)
@@ -37,6 +43,7 @@ public class TileUCSign extends TileEntitySign {
 	        tagCompound.setString("Text3", this.signText[2]);
 	        tagCompound.setString("Text4", this.signText[3]);
 	        tagCompound.setString("blockOwner", blockOwner);
+	        tagCompound.setString("blockIcon", blockIcon);
 	    }
 	
 	public void updateSign() {
@@ -44,14 +51,14 @@ public class TileUCSign extends TileEntitySign {
 	}
 	
 	public void sendServerUpdateMessage() {
-		UniversalCoins.snw.sendToServer(new UCSignServerMessage(xCoord, yCoord, zCoord, signText, blockOwner));
+		UniversalCoins.snw.sendToServer(new UCSignServerMessage(xCoord, yCoord, zCoord, signText, blockOwner, blockIcon));
 	}
 	
 	@Override
 	public Packet getDescriptionPacket() {
         String[] astring = new String[4];
         System.arraycopy(this.signText, 0, astring, 0, 4);
-        return UniversalCoins.snw.getPacketFrom(new UCTileSignMessage(this.xCoord, this.yCoord, this.zCoord, astring, blockOwner));
+        return UniversalCoins.snw.getPacketFrom(new UCTileSignMessage(this.xCoord, this.yCoord, this.zCoord, astring, blockOwner, blockIcon));
     }
 	
 	public void scanChestContents() {	

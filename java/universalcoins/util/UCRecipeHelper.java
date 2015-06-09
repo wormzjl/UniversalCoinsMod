@@ -80,6 +80,8 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addSignRecipes() {
+		GameRegistry.addRecipe(new RecipeAdvancedSign());
+		RecipeSorter.register("universalcoins:advancedsign", RecipeAdvancedSign.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemUCSign), 
 			new Object[]{ new ItemStack(Items.sign)
 		});
