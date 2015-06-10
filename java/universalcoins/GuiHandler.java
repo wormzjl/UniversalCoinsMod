@@ -96,6 +96,9 @@ class GuiHandler implements IGuiHandler {
             return new SafeGUI(player.inventory, (TileSafe) tileEntity);
         }
         if (tileEntity instanceof TileBandit) {
+        	//if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+        	//	return new GuiBanditConfig((TileBandit) tileEntity);
+        	//}
             return new BanditGUI(player.inventory, (TileBandit) tileEntity);
         }
         if (tileEntity instanceof TileSignal) {

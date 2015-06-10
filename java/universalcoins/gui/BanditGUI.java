@@ -22,10 +22,10 @@ public class BanditGUI extends GuiContainer {
 	public static final int idPullButton = 0;
 	public static final int idCoinButton = 1;
 	boolean shiftPressed = false;
-	private int[] counter = {219, 219, 219, 219};
-	private boolean[] reelActive = {true, true, true, true};
+	private int[] counter = {219, 219, 219, 219, 219};
+	private boolean[] reelActive = {true, true, true, true, true};
 	private boolean resultCheck = false;
-	private int[] reelDrawPos = {13, 41, 69, 97};
+	private int[] reelDrawPos = {13, 35, 57, 79, 101};
 	
 	public BanditGUI(InventoryPlayer inventoryPlayer, TileBandit tileEntity) {
 		super(new ContainerBandit(inventoryPlayer, tileEntity));
@@ -64,7 +64,7 @@ public class BanditGUI extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
 		//disable if player has no money
-		spinButton.enabled = tEntity.coinSum > 0 || tEntity.cardAvailable;
+		spinButton.enabled = tEntity.coinSum > tEntity.spinFee || tEntity.cardAvailable;
 		coinButton.enabled = tEntity.coinSum > 0;
 
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/bandit.png");
@@ -76,7 +76,7 @@ public class BanditGUI extends GuiContainer {
 		
 		//draw reels
 		for (int i = 0; i < reelDrawPos.length; i++) {
-			this.drawTexturedModalRect(x + reelDrawPos[i], y + 26, 176, 0 + counter[i], 28, 36);
+			this.drawTexturedModalRect(x + reelDrawPos[i], y + 26, 176, 0 + counter[i], 21, 36);
 			if (reelActive[i]) {
 				if (counter[i] == tEntity.reelPos[i]) { 
 					reelActive[i] = false;

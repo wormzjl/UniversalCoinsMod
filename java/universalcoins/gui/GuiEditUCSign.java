@@ -35,7 +35,7 @@ public class GuiEditUCSign extends GuiScreen {
         Keyboard.enableRepeatEvents(true);
         this.tileSign.setEditable(false);
         this.buttonList.clear();
-        this.buttonList.add(this.doneBtn = new GuiButton(0, this.width / 2 - 100, this.height / 2 - 120, "Done"));
+        this.buttonList.add(this.doneBtn = new GuiButton(0, this.width / 2 - 50, this.height / 2 + 50, 100 , 19, "Done"));
     }
 	
 	public void onGuiClosed() {
@@ -132,5 +132,7 @@ public class GuiEditUCSign extends GuiScreen {
         }
           
         this.tileSign.lineBeingEdited = -1;
+        
+        super.drawScreen(par1, par2, par3);
     }
 }

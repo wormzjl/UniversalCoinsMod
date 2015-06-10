@@ -28,11 +28,14 @@ public class TileBandit extends TileEntity implements IInventory {
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
+	public int spinFee = 1;
+	public int fourMatchPayout = 0;
+	public int fiveMatchPayout = 0;	
 	public boolean cardAvailable = false;
 	public String customName = "";
 	public String playerName = "";
 	public boolean inUse = false;
-	public int[] reelPos = {0, 0, 0, 0};
+	public int[] reelPos = {0, 0, 0, 0, 0};
 	private int[] reelStops = {0, 22, 44, 66, 88, 110, 132, 154, 176, 198};
 	
 	public TileBandit() {
@@ -43,9 +46,9 @@ public class TileBandit extends TileEntity implements IInventory {
 		if (buttonId == 0) {
 			inventory[itemOutputSlot] = null;
 			if (cardAvailable) {
-				debitAccount(1);
+				debitAccount(spinFee);
 			} else {
-				coinSum--;
+				coinSum -= spinFee;
 			}
 			leverPull();
 			checkCard();
@@ -67,14 +70,11 @@ public class TileBandit extends TileEntity implements IInventory {
 						matchCount++;
 					}
 				}
+				if (matchCount == 5) {
+					coinSum += fiveMatchPayout;
+				}
 				if (matchCount == 4) {
-					coinSum += UniversalCoins.fourMatchPayout;
-				}
-				if (matchCount == 3) {
-					coinSum += UniversalCoins.threeMatchPayout;
-				}
-				if (matchCount == 2) {
-					coinSum += UniversalCoins.twoMatchPayout;
+					coinSum += fourMatchPayout;
 				}
 			}
 		}
@@ -121,7 +121,7 @@ public class TileBandit extends TileEntity implements IInventory {
 	}
 	
 	public void checkCard() {
-		if (inventory[itemCardSlot] != null && getAccountBalance() > 1) {
+		if (inventory[itemCardSlot] != null && getAccountBalance() > spinFee) {
 			cardAvailable = true;
 		} else {
 			cardAvailable = false;
@@ -171,6 +171,9 @@ public class TileBandit extends TileEntity implements IInventory {
 		}
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("coinSum", coinSum);
+		tagCompound.setInteger("spinFee", spinFee);
+		tagCompound.setInteger("fourMatchPayout", fourMatchPayout);
+		tagCompound.setInteger("fiveMatchPayout", fiveMatchPayout);
 		tagCompound.setBoolean("cardAvailable", cardAvailable);
 		tagCompound.setString("customName", customName);
 		tagCompound.setBoolean("inUse", inUse);
@@ -178,6 +181,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		tagCompound.setInteger("reelPos1", reelPos[1]);
 		tagCompound.setInteger("reelPos2", reelPos[2]);
 		tagCompound.setInteger("reelPos3", reelPos[3]);
+		tagCompound.setInteger("reelPos4", reelPos[4]);
 	}
 	
 	@Override
@@ -197,6 +201,21 @@ public class TileBandit extends TileEntity implements IInventory {
 			coinSum = tagCompound.getInteger("coinSum");
 		} catch (Throwable ex2) {
 			coinSum = 0;
+		}
+		try {
+			spinFee = tagCompound.getInteger("spinFee");
+		} catch (Throwable ex2) {
+			spinFee = 1;
+		}
+		try {
+			fourMatchPayout = tagCompound.getInteger("fourMatchPayout");
+		} catch (Throwable ex2) {
+			fourMatchPayout = UniversalCoins.fourMatchPayout;
+		}
+		try {
+			fiveMatchPayout = tagCompound.getInteger("fiveMatchPayout");
+		} catch (Throwable ex2) {
+			fiveMatchPayout = UniversalCoins.fiveMatchPayout;
 		}
 		try {
 			cardAvailable = tagCompound.getBoolean("cardAvailable");
@@ -227,6 +246,11 @@ public class TileBandit extends TileEntity implements IInventory {
 			reelPos[3] = tagCompound.getInteger("reelPos3");
 		} catch (Throwable ex2) {
 			reelPos[3] = 0;
+		}
+		try {
+			reelPos[4] = tagCompound.getInteger("reelPos4");
+		} catch (Throwable ex2) {
+			reelPos[4] = 0;
 		}
 	}
 

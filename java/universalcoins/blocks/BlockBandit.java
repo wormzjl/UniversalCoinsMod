@@ -17,6 +17,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileBandit;
+import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -79,6 +80,11 @@ public class BlockBandit extends BlockContainer {
 		case 3:
 			world.setBlockMetadataWithNotify(x, y, z, 4, l);
 			break;
+		}
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileBandit) {
+			((TileBandit)te).fourMatchPayout = UniversalCoins.fourMatchPayout;
+			((TileBandit)te).fiveMatchPayout = UniversalCoins.fiveMatchPayout;
 		}
 	}
 	

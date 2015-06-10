@@ -89,9 +89,8 @@ public class UniversalCoins {
 	public static Integer mobDropMax;
 	public static Integer mobDropChance;
 	public static Double itemSellRatio;
-	public static Integer twoMatchPayout;
-	public static Integer threeMatchPayout;
 	public static Integer fourMatchPayout;
+	public static Integer fiveMatchPayout;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -158,15 +157,12 @@ public class UniversalCoins {
 		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
 		
 		//slot machine
-		Property twoMatch = config.get("Slot Machine", "Two of a kind payout", 1);
-		twoMatch.comment = "Set payout of slot machine when two of a kind is spun. Default: 1";
-		twoMatchPayout = Math.max(0,twoMatch.getInt(1));
-		Property threeMatch = config.get("Slot Machine", "Three of a kind payout", 64);
-		threeMatch.comment = "Set payout of slot machine when three of a kind is spun. Default: 64";
-		threeMatchPayout = Math.max(0,threeMatch.getInt(64));
-		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 1000);
-		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 1000";
-		fourMatchPayout = Math.max(0,fourMatch.getInt(1000));
+		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 100);
+		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 100";
+		fourMatchPayout = Math.max(0,fourMatch.getInt(100));
+		Property fiveMatch = config.get("Slot Machine", "Five of a kind payout", 10000);
+		fiveMatch.comment = "Set payout of slot machine when five of a kind is spun. Default: 10000";
+		fiveMatchPayout = Math.max(0,fiveMatch.getInt(10000));
 		
 		//trade station		
 		Property autoMode = config.get("Trade Station", "Auto mode enabled", true);
