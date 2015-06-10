@@ -44,7 +44,6 @@ public class TileBandit extends TileEntity implements IInventory {
 	
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
-			inventory[itemOutputSlot] = null;
 			if (cardAvailable) {
 				debitAccount(spinFee);
 			} else {

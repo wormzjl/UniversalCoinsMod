@@ -20,7 +20,7 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 	    private boolean showStick = false;
 
 		public void renderTileEntityAt(TileUCSign tileEntity, double xCoord, double yCoord, double zCoord, float p_147512_8_) {
-			ResourceLocation blockTexture = new ResourceLocation("textures/blocks/planks_oak.png");
+			ResourceLocation blockTexture = new ResourceLocation("textures/blocks/planks_birch.png");
 	        Block block = tileEntity.getBlockType();
 	        GL11.glPushMatrix();
 	        float f1 = 0.6666667F;
