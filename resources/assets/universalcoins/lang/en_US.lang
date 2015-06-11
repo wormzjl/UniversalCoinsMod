@@ -163,6 +163,15 @@ signal.message.notenough=Not enough coins!
 signal.message.activated=Signal activated.
 
 #####
+# Slot Machine Gui
+#####
+bandit.label.payout=Payout:
+bandit.label.fee=Fee
+bandit.label.four=Match Four
+bandit.label.five=Match Five
+
+
+#####
 # Packager GUI
 #####
 packager.button.small=Small

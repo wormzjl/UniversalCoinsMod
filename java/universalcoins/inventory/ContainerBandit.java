@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerBandit extends Container {
 	
 	private TileBandit tEntity;
-	private int lastCoinSum;
+	private int lastCoinSum, lastSpinFee, lastFourMatchPayout, lastFiveMatchPayout;
 	private boolean lastCardAvailable;
 	private String lastCustomName;
 	private boolean lastInUse = false;
@@ -108,6 +108,9 @@ public class ContainerBandit extends Container {
             if (this.lastCoinSum != tEntity.coinSum ||
             		this.lastCardAvailable != tEntity.cardAvailable||
                     this.lastInUse != tEntity.inUse||
+                    this.lastSpinFee != tEntity.spinFee||
+                    this.lastFourMatchPayout != tEntity.fourMatchPayout||
+                    this.lastFiveMatchPayout != tEntity.fiveMatchPayout||
                     this.lastReelPos[0] != tEntity.reelPos[0]||
                     this.lastReelPos[1] != tEntity.reelPos[1]||
                     this.lastReelPos[2] != tEntity.reelPos[2]||
@@ -118,6 +121,9 @@ public class ContainerBandit extends Container {
 	   		this.lastCoinSum = tEntity.coinSum;
 	   		this.lastCardAvailable = tEntity.cardAvailable;
 	   		this.lastInUse = tEntity.inUse;
+	   		this.lastSpinFee = tEntity.spinFee;
+	   		this.lastFourMatchPayout = tEntity.fourMatchPayout;
+	   		this.lastFiveMatchPayout = tEntity.fiveMatchPayout;
 	   		this.lastReelPos[0] = tEntity.reelPos[0];
 	        this.lastReelPos[1] = tEntity.reelPos[1];
 	        this.lastReelPos[2] = tEntity.reelPos[2];

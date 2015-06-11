@@ -3,13 +3,14 @@ package universalcoins;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalcoins.gui.BanditConfigGUI;
 import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
-import universalcoins.gui.GuiEditUCSign;
 import universalcoins.gui.PackagerGUI;
 import universalcoins.gui.SafeGUI;
 import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
+import universalcoins.gui.UCSignEditGUI;
 import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
@@ -60,7 +61,11 @@ class GuiHandler implements IGuiHandler {
             return new ContainerSafe(player.inventory, (TileSafe) tileEntity);
         }
         if (tileEntity instanceof TileBandit) {
-            return new ContainerBandit(player.inventory, (TileBandit) tileEntity);
+        	if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+        		return null;
+        	} else {
+        		return new ContainerBandit(player.inventory, (TileBandit) tileEntity);
+        	}
         }
         if (tileEntity instanceof TileSignal) {
             return new ContainerSignal(player.inventory, (TileSignal) tileEntity);
@@ -96,16 +101,17 @@ class GuiHandler implements IGuiHandler {
             return new SafeGUI(player.inventory, (TileSafe) tileEntity);
         }
         if (tileEntity instanceof TileBandit) {
-        	//if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
-        	//	return new GuiBanditConfig((TileBandit) tileEntity);
-        	//}
-            return new BanditGUI(player.inventory, (TileBandit) tileEntity);
+        	if (player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+        		return new BanditConfigGUI((TileBandit) tileEntity);
+        	} else {
+                return new BanditGUI(player.inventory, (TileBandit) tileEntity);
+        	}
         }
         if (tileEntity instanceof TileSignal) {
             return new SignalGUI(player.inventory, (TileSignal) tileEntity);
         }
         if (tileEntity instanceof TileUCSign) {
-            return new GuiEditUCSign((TileUCSign) tileEntity);
+            return new UCSignEditGUI((TileUCSign) tileEntity);
         }
         if (tileEntity instanceof TilePackager) {
             return new PackagerGUI(player.inventory, (TilePackager) tileEntity);

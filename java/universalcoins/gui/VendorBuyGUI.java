@@ -6,9 +6,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.input.Keyboard;
-
 import universalcoins.inventory.ContainerVendorBuy;
 import universalcoins.tile.TileVendor;
 
@@ -23,8 +20,6 @@ public class VendorBuyGUI extends GuiContainer{
 	public static final int idSBagButton = 13;
 	public static final int idLBagButton = 14;
 	
-	boolean shiftPressed = false;
-
 	public VendorBuyGUI(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		super(new ContainerVendorBuy(inventoryPlayer, tEntity));
 		tileEntity = tEntity;
@@ -82,12 +77,6 @@ public class VendorBuyGUI extends GuiContainer{
 	}
 	
 	protected void actionPerformed(GuiButton button) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
-		tileEntity.sendButtonMessage(button.id, shiftPressed);
+		tileEntity.sendButtonMessage(button.id, isShiftKeyDown());
 	}
 }

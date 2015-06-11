@@ -81,30 +81,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			tileEntity.writeToNBT(data);
 		}
 		if (tileEntity instanceof TileVendor) {
-			if (message.buttonId == VendorGUI.idModeButton) {
-				((TileVendor) tileEntity).onModeButtonPressed();
-			}
-			if (message.buttonId < VendorGUI.idCoinButton) {
-				//do nothing here
-			} else if (message.buttonId <= VendorGUI.idLBagButton) {
-				((TileVendor) tileEntity).onRetrieveButtonsPressed(
-						message.buttonId, message.shiftPressed);
-			} else if (message.buttonId == VendorBuyGUI.idSellButton) {
-				if (message.shiftPressed) {
-					((TileVendor) tileEntity).onSellMaxPressed();
-				} else {
-					((TileVendor) tileEntity).onSellPressed();
-				} 
-			} else if (message.buttonId == VendorSellGUI.idBuyButton) {
-				if (message.shiftPressed) {
-					((TileVendor) tileEntity).onBuyMaxPressed();
-				} else {
-					((TileVendor) tileEntity).onBuyPressed();
-				}
-			} else if (message.buttonId <= VendorSellGUI.idLBagButton) {
-				((TileVendor) tileEntity).onRetrieveButtonsPressed(
-						message.buttonId, message.shiftPressed);
-			}
+			((TileVendor) tileEntity).onButtonPressed(message.buttonId, shiftPressed);
 		}
 		if (tileEntity instanceof TileCardStation) {
 			((TileCardStation) tileEntity).onButtonPressed(message.buttonId);

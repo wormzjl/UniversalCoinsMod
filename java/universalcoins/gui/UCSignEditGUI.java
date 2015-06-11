@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalcoins.tile.TileUCSign;
 
-public class GuiEditUCSign extends GuiScreen {
+public class UCSignEditGUI extends GuiScreen {
 	
 	/** The title string that is displayed in the top-center of the screen. */
     protected String screenTitle = "Edit sign message:";
@@ -24,7 +24,7 @@ public class GuiEditUCSign extends GuiScreen {
     private int editLine;
     private GuiButton doneBtn;
 
-	public GuiEditUCSign(TileEntitySign tileEntity) {
+	public UCSignEditGUI(TileEntitySign tileEntity) {
 		this.tileSign = (TileUCSign) tileEntity;
 	}
 	

@@ -72,7 +72,7 @@ public class BlockUCSign extends BlockSign {
 		if (tentity instanceof TileUCSign) {
 			TileUCSign te = (TileUCSign) tentity;
 			NBTTagCompound tagCompound = new NBTTagCompound();
-			tagCompound.setString("blockIcon", te.blockIcon);
+			tagCompound.setString("BlockIcon", te.blockIcon);
 			stack.setTagCompound(tagCompound);
 			return stack;
 		} else

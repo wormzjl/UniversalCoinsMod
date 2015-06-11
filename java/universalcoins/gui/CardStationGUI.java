@@ -9,9 +9,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.input.Keyboard;
-
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.tile.TileCardStation;
 
@@ -32,8 +29,6 @@ public class CardStationGUI extends GuiContainer {
 	int barProgress = 0;
 	int counter = 0;
 	
-	boolean shiftPressed = false;
-
 	public CardStationGUI(InventoryPlayer inventoryPlayer, TileCardStation tileEntity) {
 		super(new ContainerCardStation(inventoryPlayer, tileEntity));
 		tEntity = tileEntity;
@@ -389,13 +384,7 @@ public class CardStationGUI extends GuiContainer {
 				if (button.id == idButtonFour){}				
 				break;
 		}
-		//We include the shift boolean for compatibility with the button message only. It does nothing
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
+		
 		//function1 - new card
 		//function2 - transfer account
 		//function3 - deposit
@@ -406,7 +395,7 @@ public class CardStationGUI extends GuiContainer {
 		//function8 - new custom card
 		//function9 - transfer custom account
 		//we use function IDs as we don't have specific functions for each button
-		tEntity.sendButtonMessage(functionID, shiftPressed);
+		tEntity.sendButtonMessage(functionID, isShiftKeyDown());
 	}
 	
 	private void drawMenu(int state) {

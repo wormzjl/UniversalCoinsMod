@@ -49,7 +49,7 @@ public class BlockBandit extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileBandit) {
-			 if (((TileBandit)tileEntity).inUse) {
+			 if (((TileBandit)tileEntity).inUse && player.getDisplayName() != ((TileBandit) tileEntity).playerName) {
 				 if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				 return true;
 			 } else {

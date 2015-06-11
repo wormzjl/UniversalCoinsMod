@@ -1,6 +1,5 @@
 package universalcoins.tile;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -17,11 +16,11 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
+import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCVendorFrameTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCWorldData;
 
@@ -77,6 +76,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public boolean inUse = false;
 	public String playerName = "";
 	public String blockIcon = ""; //used for vendor frame texture
+	public int textColor = 0x0;
 	private int remoteX = 0;
 	private int remoteY = 0;
 	private int remoteZ = 0;
@@ -681,25 +681,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		UniversalCoins.snw.sendToServer(new UCVendorServerMessage(xCoord, yCoord, zCoord, itemPrice, blockOwner, infiniteMode));
 	}
 	
-	public void sendTextureUpdateMessage(ItemStack stack) {
-		if (!worldObj.isRemote) return;
-			//if (stack == null) return "plank_oak";
-			String blockIcon = stack.getIconIndex().getIconName();
-			//the iconIndex function does not work with BOP so we have to do a bit of a hack here
-			if (blockIcon.startsWith("biomesoplenty")){
-				String[] iconInfo = blockIcon.split(":");
-				String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
-				String woodType = blockName[2].replace("Plank", "");
-				//hellbark does not follow the same naming convention
-				if (woodType.contains("hell")) woodType = "hell_bark";
-				blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
-				//bamboo needs a hack too
-				if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
-				//I feel dirty now :(
-			}
-		UniversalCoins.snw.sendToServer(new UCVendorFrameTextureMessage(xCoord, yCoord, zCoord, blockIcon));
-	}
-	
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
@@ -829,6 +810,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			blockIcon = "";
 		}
 		try {
+			textColor = tagCompound.getInteger("TextColor");
+		} catch (Throwable ex2) {
+			textColor = 0x0;
+		}
+		try {
 			remoteX = tagCompound.getInteger("remoteX");
 		} catch (Throwable ex2) {
 			remoteX = 0;
@@ -882,6 +868,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		tagCompound.setBoolean("UserLargeBagButtonActive", uLBagButtonActive);
 		tagCompound.setBoolean("InUse", inUse);
 		tagCompound.setString("BlockIcon", blockIcon);
+		tagCompound.setInteger("TextColor", textColor );
 		tagCompound.setInteger("remoteX", remoteX);
 		tagCompound.setInteger("remoteY", remoteY);
 		tagCompound.setInteger("remoteZ", remoteZ);
@@ -1029,5 +1016,37 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private void loadRemoteChunk(int x, int y, int z) {
 		Chunk ch = worldObj.getChunkFromBlockCoords(x, y);
 		worldObj.getChunkProvider().loadChunk(ch.xPosition, ch.zPosition);
+	}
+
+	public void onButtonPressed(int buttonId, boolean shiftPressed) {
+		if (buttonId == VendorGUI.idModeButton) {
+			onModeButtonPressed();
+		}
+		if (buttonId < VendorGUI.idCoinButton) {
+			//do nothing here
+		} else if (buttonId <= VendorGUI.idLBagButton) {
+			onRetrieveButtonsPressed(
+					buttonId, shiftPressed);
+		} else if (buttonId == VendorBuyGUI.idSellButton) {
+			if (shiftPressed) {
+				onSellMaxPressed();
+			} else {
+				onSellPressed();
+			} 
+		} else if (buttonId == VendorSellGUI.idBuyButton) {
+			if (shiftPressed) {
+				onBuyMaxPressed();
+			} else {
+				onBuyPressed();
+			}
+		} else if (buttonId <= VendorSellGUI.idLBagButton) {
+			onRetrieveButtonsPressed(buttonId, shiftPressed);
+		}
+		if (buttonId == VendorGUI.idtcmButton) {
+			if(textColor > 0) textColor--;
+		}
+		if (buttonId == VendorGUI.idtcpButton) {
+			if(textColor < 15) textColor++;
+		}
 	}
 }

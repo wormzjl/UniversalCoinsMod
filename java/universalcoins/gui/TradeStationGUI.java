@@ -7,7 +7,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.UniversalCoins;
@@ -28,8 +27,6 @@ public class TradeStationGUI extends GuiContainer {
 	public static final int idLBagButton = 6;
 	public static final int idCoinModeButton = 7;
 	public static final int idAutoModeButton = 8;
-
-	boolean shiftPressed = false;
 	
 	public String[] autoLabels = {StatCollector.translateToLocal("tradestation.gui.autolabel.off"),
 			StatCollector.translateToLocal("tradestation.gui.autolabel.buy"),
@@ -138,12 +135,6 @@ public class TradeStationGUI extends GuiContainer {
 	}
 	
 	protected void actionPerformed(GuiButton par1GuiButton) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
-		tileEntity.sendPacket(par1GuiButton.id, shiftPressed);
+		tileEntity.sendPacket(par1GuiButton.id, isShiftKeyDown());
 	}
 }

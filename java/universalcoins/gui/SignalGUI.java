@@ -9,7 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.inventory.ContainerSignal;
@@ -24,9 +23,7 @@ public class SignalGUI extends GuiContainer {
 	public static final int idDurPlusButton = 2;
 	public static final int idCoinMinusButton = 3;
 	public static final int idCoinPlusButton = 4;
-	
-	boolean shiftPressed = false;
-	
+		
 	public SignalGUI(InventoryPlayer inventoryPlayer, TileSignal tileEntity) {
 		super(new ContainerSignal(inventoryPlayer, tileEntity));
 		tEntity = tileEntity;
@@ -96,13 +93,6 @@ public class SignalGUI extends GuiContainer {
 	}
 	
 	protected void actionPerformed(GuiButton button) {
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
-		tEntity.sendPacket(button.id, shiftPressed);
+		tEntity.sendPacket(button.id, isShiftKeyDown());
 	}
 }

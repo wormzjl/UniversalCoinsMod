@@ -14,8 +14,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
+import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UCWorldData;
+import cpw.mods.fml.common.FMLLog;
 
 public class TileBandit extends TileEntity implements IInventory {
 	
@@ -51,6 +53,7 @@ public class TileBandit extends TileEntity implements IInventory {
 			}
 			leverPull();
 			checkCard();
+			worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:button", 0.4F, 1.0F, true);
 		}
 		if (buttonId == 1) {
 			if (cardAvailable && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard) {
@@ -71,9 +74,11 @@ public class TileBandit extends TileEntity implements IInventory {
 				}
 				if (matchCount == 5) {
 					coinSum += fiveMatchPayout;
+					worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 0.4F, 1.0F, true);
 				}
 				if (matchCount == 4) {
 					coinSum += fourMatchPayout;
+					worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 0.4F, 1.0F, true);
 				}
 			}
 		}
@@ -153,6 +158,10 @@ public class TileBandit extends TileEntity implements IInventory {
 	
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+	
+	public void sendServerUpdateMessage() {
+		UniversalCoins.snw.sendToServer(new UCBanditServerMessage(xCoord, yCoord, zCoord, spinFee, fourMatchPayout, fiveMatchPayout));		
 	}
 	
 	@Override
@@ -396,5 +405,4 @@ public class TileBandit extends TileEntity implements IInventory {
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.getString(tag);
 	}
-
 }

@@ -15,6 +15,7 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
+import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
@@ -23,7 +24,6 @@ import universalcoins.net.UCSignServerMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCTileTradeStationMessage;
-import universalcoins.net.UCVendorFrameTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileBandit;
@@ -68,7 +68,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.10";
+	public static final String version = "1.7.2-1.6.11";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean recipesEnabled;
@@ -91,6 +91,9 @@ public class UniversalCoins {
 	public static Double itemSellRatio;
 	public static Integer fourMatchPayout;
 	public static Integer fiveMatchPayout;
+	public static Integer smallPackagePrice;
+	public static Integer medPackagePrice;
+	public static Integer largePackagePrice;
 	
 	public static SimpleNetworkWrapper snw;
 	
@@ -177,7 +180,15 @@ public class UniversalCoins {
 		config.save();
 		
 		//packager
-		
+		Property smallPackage = config.get("Packager", "Small Package Price", 10);
+		smallPackage.comment = "Set the price of small package";
+		smallPackagePrice = Math.max(1,Math.min(smallPackage.getInt(10),1000));
+		Property medPackage = config.get("Packager", "Medium Package Price", 20);
+		medPackage.comment = "Set the price of medium package";
+		medPackagePrice = Math.max(1,Math.min(medPackage.getInt(20),1000));
+		Property largePackage = config.get("Packager", "Large Package Price", 40);
+		largePackage.comment = "Set the price of large package";
+		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
 		
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
@@ -194,9 +205,9 @@ public class UniversalCoins {
 	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
 	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
 	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
-	    snw.registerMessage(UCVendorFrameTextureMessage.class, UCVendorFrameTextureMessage.class, 7, Side.SERVER);
-	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
-	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
+	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 7, Side.CLIENT);
+	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 8, Side.SERVER);
+	    snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 9, Side.SERVER);
 
 	    //update check using versionchecker
 	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", 
@@ -276,7 +287,11 @@ public class UniversalCoins {
 		if (linkCardRecipeEnabled){
 			UCRecipeHelper.addLinkCardRecipes();
 		}
+		if (packagerRecipeEnabled){
+			UCRecipeHelper.addPackagerRecipes();
+		}
 		UCRecipeHelper.addSignRecipes();
+		UCRecipeHelper.addPlankTextureRecipes();
 	}
 
 }

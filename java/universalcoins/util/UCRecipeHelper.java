@@ -80,8 +80,6 @@ public class UCRecipeHelper {
 	}
 	
 	public static void addSignRecipes() {
-		GameRegistry.addRecipe(new RecipeAdvancedSign());
-		RecipeSorter.register("universalcoins:advancedsign", RecipeAdvancedSign.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemUCSign), 
 			new Object[]{ new ItemStack(Items.sign)
 		});
@@ -126,6 +124,7 @@ public class UCRecipeHelper {
 			'E', Items.ender_pearl,'C', UniversalCoins.proxy.itemUCCard
 		});
 	}
+	
 	public static void addBanditRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockBandit), new Object[]{
 			"IGI",
@@ -134,6 +133,7 @@ public class UCRecipeHelper {
 			'I', Items.iron_ingot,'R', Items.redstone, 'G', Items.gold_ingot
 		});
 	}
+	
 	public static void addSignalRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockSignal), new Object[]{
 			"XIX",
@@ -142,9 +142,24 @@ public class UCRecipeHelper {
 			'I', Items.iron_ingot,'R', Items.redstone
 		});
 	}
+	
 	public static void addLinkCardRecipes() {
 		GameRegistry.addShapelessRecipe(new ItemStack(UniversalCoins.proxy.itemLinkCard), new Object[]{
 				Items.paper, Items.paper, Items.ender_pearl
 		});
+	}
+	
+	public static void addPackagerRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockPackager), new Object[]{
+			"IPI",
+			"SRS",
+			"IRI",
+			'I', Items.iron_ingot,'R', Items.redstone, 'S', Items.string, 'P', Items.paper
+		});
+	}
+	
+	public static void addPlankTextureRecipes() {
+		GameRegistry.addRecipe(new RecipePlankTextureChange());
+		RecipeSorter.register("universalcoins:plankchange", RecipePlankTextureChange.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
 }

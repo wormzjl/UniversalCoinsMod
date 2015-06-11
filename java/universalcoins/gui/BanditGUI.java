@@ -9,7 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.inventory.ContainerBandit;
@@ -21,7 +20,6 @@ public class BanditGUI extends GuiContainer {
 	private GuiButton spinButton, coinButton;
 	public static final int idPullButton = 0;
 	public static final int idCoinButton = 1;
-	boolean shiftPressed = false;
 	private int[] counter = {219, 219, 219, 219, 219};
 	private boolean[] reelActive = {true, true, true, true, true};
 	private boolean resultCheck = false;
@@ -89,7 +87,7 @@ public class BanditGUI extends GuiContainer {
 		
 		//do we need to check the results?
 		if (!reelActive[0] && !reelActive[1] && !reelActive[2] && !reelActive[3] && resultCheck) {
-			tEntity.sendPacket(2, shiftPressed);
+			tEntity.sendPacket(2, isShiftKeyDown());
 			resultCheck = false;
 		}
 	}
@@ -102,13 +100,6 @@ public class BanditGUI extends GuiContainer {
 				counter[i]-=2;
 			}
 		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
-		tEntity.sendPacket(button.id, shiftPressed);
+		tEntity.sendPacket(button.id, isShiftKeyDown());
 	}
 }

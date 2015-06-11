@@ -33,7 +33,8 @@ public class TilePackager extends TileEntity implements IInventory {
 	public String playerName = "";
 	public boolean inUse = false;
 	public int packageSize = 0;
-	public int[] packageCost = {20, 40, 80};
+	public int[] packageCost = {UniversalCoins.smallPackagePrice, 
+			UniversalCoins.medPackagePrice, UniversalCoins.largePackagePrice};
 
 	
 	public TilePackager() {
@@ -185,6 +186,9 @@ public class TilePackager extends TileEntity implements IInventory {
 		tagCompound.setString("customName", customName);
 		tagCompound.setBoolean("inUse", inUse);
 		tagCompound.setInteger("packageSize", packageSize);
+		tagCompound.setInteger("smallPrice", packageCost[0]);
+		tagCompound.setInteger("medPrice", packageCost[1]);
+		tagCompound.setInteger("largePrice", packageCost[2]);
 	}
 	
 	@Override
@@ -219,6 +223,21 @@ public class TilePackager extends TileEntity implements IInventory {
 			packageSize = tagCompound.getInteger("packageSize");
 		} catch (Throwable ex2) {
 			packageSize = 0;
+		}
+		try {
+			packageCost[0] = tagCompound.getInteger("smallPrice");
+		} catch (Throwable ex2) {
+			packageCost[0] = UniversalCoins.smallPackagePrice;
+		}
+		try {
+			packageCost[1] = tagCompound.getInteger("medPrice");
+		} catch (Throwable ex2) {
+			packageCost[1] = UniversalCoins.medPackagePrice;
+		}
+		try {
+			packageCost[2] = tagCompound.getInteger("largePrice");
+		} catch (Throwable ex2) {
+			packageCost[2] = UniversalCoins.largePackagePrice;
 		}
 	}
 

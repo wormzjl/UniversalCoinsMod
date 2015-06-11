@@ -16,26 +16,28 @@ public class TileVendorBlock extends TileVendor {
 	public void updateSigns() {
 
 		if (inventory[itemTradeSlot] != null) {
-			signText[0] = sellMode ? "Selling" : "Buying";
+			signText[0] = sellMode ? "&"+ Integer.toHexString(textColor) + "Selling" 
+					: "&"+ Integer.toHexString(textColor) + "Buying";
 			//add out of stock notification if not infinite and no stock found
 			if (!infiniteMode && sellMode && ooStockWarning) {
-				signText[0] = "&4" + (StatCollector.translateToLocal("sign.warning.stock"));
+				signText[0] = "&"+ Integer.toHexString(textColor) + (StatCollector.translateToLocal("sign.warning.stock"));
 			}
 			//add out of coins notification if buying and no funds available
 			if (!sellMode && ooCoinsWarning && !infiniteMode) {
-				signText[0] = "&4" + (StatCollector.translateToLocal("sign.warning.coins"));
+				signText[0] = "&"+ Integer.toHexString(textColor) + (StatCollector.translateToLocal("sign.warning.coins"));
 			}
 			//add inventory full notification
 			if (!sellMode && inventoryFullWarning) {
-				signText[0] = "&4" + (StatCollector.translateToLocal("sign.warning.inventoryfull"));
+				signText[0] = "&"+ Integer.toHexString(textColor) + (StatCollector.translateToLocal("sign.warning.inventoryfull"));
 			}
 			if (inventory[itemTradeSlot].stackSize > 1) {
-				signText[1] = inventory[itemTradeSlot].stackSize + " " + inventory[itemTradeSlot].getDisplayName();
+				signText[1] = "&"+ Integer.toHexString(textColor) + inventory[itemTradeSlot].stackSize 
+						+ " " + inventory[itemTradeSlot].getDisplayName();
 			} else { 
-				signText[1] = inventory[itemTradeSlot].getDisplayName();
+				signText[1] = "&"+ Integer.toHexString(textColor) + inventory[itemTradeSlot].getDisplayName();
 			}
 			if (inventory[itemTradeSlot].isItemEnchanted()) {
-				signText[2] = "";
+				signText[2] = "&"+ Integer.toHexString(textColor);
 				NBTTagList tagList = inventory[itemTradeSlot].getEnchantmentTagList();
 				for (int i = 0; i < tagList.tagCount(); i++) {
 					NBTTagCompound enchant = ((NBTTagList) tagList).getCompoundTagAt(i);
@@ -45,6 +47,7 @@ public class TileVendorBlock extends TileVendor {
 				}
 			} else signText[2] = "";
 			if (inventory[itemTradeSlot].getItem() == UniversalCoins.proxy.itemPackage) {
+				signText[2] = "&"+ Integer.toHexString(textColor);
 				if( inventory[itemTradeSlot].stackTagCompound != null ) {
 					NBTTagList tagList = inventory[itemTradeSlot].stackTagCompound.getTagList("Inventory",
 							Constants.NBT.TAG_COMPOUND);
@@ -57,7 +60,7 @@ public class TileVendorBlock extends TileVendor {
 					}
 				}
 			}
-			signText[3] = "Price: " + itemPrice;
+			signText[3] = "&"+ Integer.toHexString(textColor) + "Price: " + itemPrice;
 			
 			//find and update all signs
 			TileEntity te;

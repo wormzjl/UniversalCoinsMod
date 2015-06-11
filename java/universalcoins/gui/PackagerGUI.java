@@ -10,7 +10,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import universalcoins.inventory.ContainerPackager;
@@ -25,7 +24,6 @@ public class PackagerGUI extends GuiContainer {
 	public static final int idSmallButton = 2;
 	public static final int idMedButton = 3;
 	public static final int idLargeButton = 4;
-	boolean shiftPressed = false;
 	private int[] defaultCoord = {8, 26};
 	private int hideCoord = Integer.MAX_VALUE;
 	private boolean buttonHover = false;
@@ -172,14 +170,7 @@ public class PackagerGUI extends GuiContainer {
 		if (button.id == 4) {
 			updateSlots(2);
 		}
-		
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			shiftPressed = true;
-		}
-		else {
-			shiftPressed = false;
-		}
-		tEntity.sendPacket(button.id, shiftPressed);
+
+		tEntity.sendPacket(button.id, isShiftKeyDown());
 	}
 }

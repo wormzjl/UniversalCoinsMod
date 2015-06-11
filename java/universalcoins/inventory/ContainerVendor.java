@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerVendor extends Container {
 	private TileVendor tileEntity;
 	private boolean lastOoStock, lastOoCoins, lastInvFull, lastSellMode, lastInUse;
-	private int lastCoinSum, lastUserCoinSum, lastItemPrice;
+	private int lastCoinSum, lastUserCoinSum, lastItemPrice, lastTextColor;
 	
 	public ContainerVendor(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
@@ -114,6 +114,7 @@ public class ContainerVendor extends Container {
             		|| this.lastUserCoinSum != this.tileEntity.userCoinSum
             		|| this.lastItemPrice != this.tileEntity.itemPrice
             		|| this.lastSellMode != this.tileEntity.sellMode
+            		|| this.lastTextColor != this.tileEntity.textColor
             		|| this.lastInUse != this.tileEntity.inUse) {
                 //update
             	tileEntity.updateTE();
@@ -125,6 +126,7 @@ public class ContainerVendor extends Container {
         		this.lastUserCoinSum = this.tileEntity.userCoinSum;
         		this.lastItemPrice = this.tileEntity.itemPrice;
         		this.lastSellMode = this.tileEntity.sellMode;
+        		this.lastTextColor = this.tileEntity.textColor;
         		this.lastInUse = this.tileEntity.inUse;
             }
         }

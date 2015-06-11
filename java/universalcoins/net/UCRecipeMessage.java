@@ -9,7 +9,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
 private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
-enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled;
+enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled, packagerRecipeEnabled;
 
     public UCRecipeMessage()
     {
@@ -21,6 +21,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
         this.banditRecipeEnabled = UniversalCoins.banditRecipeEnabled;
         this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
         this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
+        this.packagerRecipeEnabled = UniversalCoins.packagerRecipeEnabled;
     }
 
     @Override
@@ -34,6 +35,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
         this.banditRecipeEnabled = buf.readBoolean();
         this.signalRecipeEnabled = buf.readBoolean();
         this.linkCardRecipeEnabled = buf.readBoolean();
+        this.packagerRecipeEnabled = buf.readBoolean();
     }
 
     @Override
@@ -47,6 +49,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
         buf.writeBoolean(banditRecipeEnabled);
         buf.writeBoolean(signalRecipeEnabled);
         buf.writeBoolean(linkCardRecipeEnabled);
+        buf.writeBoolean(packagerRecipeEnabled);
     }
 
 	@Override
@@ -68,17 +71,20 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
 		}
-		if (banditRecipeEnabled){
+		if (message.banditRecipeEnabled){
 			UCRecipeHelper.addBanditRecipes();
 		}
-		if (signalRecipeEnabled){
+		if (message.signalRecipeEnabled){
 			UCRecipeHelper.addSignalRecipes();
 		}
-		if (linkCardRecipeEnabled){
+		if (message.linkCardRecipeEnabled){
 			UCRecipeHelper.addLinkCardRecipes();
 		}
+		if (message.packagerRecipeEnabled){
+			UCRecipeHelper.addPackagerRecipes();
+		}
 		UCRecipeHelper.addSignRecipes();
-			
+		UCRecipeHelper.addPlankTextureRecipes();
 		
 		return null;
 	}

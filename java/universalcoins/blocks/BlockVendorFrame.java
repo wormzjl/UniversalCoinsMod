@@ -136,50 +136,42 @@ public class BlockVendorFrame extends BlockContainer {
 	}
 		
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		//set block meta so we can use it later for rotation
-		int rotation = MathHelper.floor_double((double)((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+	public void onBlockPlacedBy(World world, int x, int y, int z,
+			EntityLivingBase entity, ItemStack stack) {
+		// set block meta so we can use it later for rotation
+		int rotation = MathHelper
+				.floor_double((double) ((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileVendorFrame) {
 				TileVendorFrame tentity = (TileVendorFrame) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
-				if (tagCompound == null) {
-					return;
-				}
-				if (tagCompound.getString("BlockIcon")  == "") {
-					//this must be a freshly craftd frame. copy texturestack to tileEntity
-					NBTTagList textureList = tagCompound.getTagList("Texture", Constants.NBT.TAG_COMPOUND);
-					byte slot = tagCompound.getByte("Slot");
-					ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
-					tentity.sendTextureUpdateMessage(textureStack);
-					tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
-				} else {					
-					NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+				if (tagList.tagCount() > 0) {
 					for (int i = 0; i < tagList.tagCount(); i++) {
 						NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 						byte slot = tag.getByte("Slot");
 						if (slot < tentity.getSizeInventory()) {
 							tentity.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(tag));
 						}
+					}
 				}
 				tentity.coinSum = tagCompound.getInteger("CoinSum");
 				tentity.userCoinSum = tagCompound.getInteger("UserCoinSum");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
 				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
-				tentity.blockOwner = entity.getCommandSenderName(); //always set to whomever places the block
+				tentity.blockOwner = entity.getCommandSenderName();
 				tentity.blockIcon = tagCompound.getString("BlockIcon");
 			}
-		}
-			
-			world.markBlockForUpdate(x, y, z);	
+			world.markBlockForUpdate(x, y, z);
 		} else {
-			//Vending Frame pulled from NEI or creative. Cheaters :P
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockIcon = "planks_birch";
-			((TileVendorFrame)world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
+			// Vending Frame pulled from NEI or creative. Cheaters :P
+			((TileVendorFrame) world.getTileEntity(x, y, z)).blockIcon = "planks_birch";
+			((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner = entity
+					.getCommandSenderName();
 		}
-			
+
 	}
 	
 	@Override

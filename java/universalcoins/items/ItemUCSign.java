@@ -83,7 +83,7 @@ public class ItemUCSign extends ItemSign {
             if (tileentitysign != null) {
             	if (itemStack.hasTagCompound()) {
             		NBTTagCompound tagCompound = itemStack.getTagCompound();
-            		((TileUCSign)tileentitysign).blockIcon = tagCompound.getString("blockIcon");
+            		((TileUCSign)tileentitysign).blockIcon = tagCompound.getString("BlockIcon");
             	}
             	player.openGui(UniversalCoins.instance, 1, world, par4, par5, par6);
             }
@@ -95,7 +95,7 @@ public class ItemUCSign extends ItemSign {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
     	if (stack.hasTagCompound()) {
     		NBTTagCompound tagCompound = stack.getTagCompound();
-    		list.add(tagCompound.getString("blockIcon"));
+    		list.add(tagCompound.getString("BlockIcon"));
     	}
     }
 }

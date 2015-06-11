@@ -13,20 +13,21 @@ import org.lwjgl.opengl.GL11;
 
 import universalcoins.tile.TileBandit;
 
-public class GuiBanditConfig extends GuiScreen {
+public class BanditConfigGUI extends GuiScreen {
     private TileBandit tileBandit;
-    private GuiButton costEdit, fourMatchEdit, fiveMatchEdit, editButton, doneButton;
+    private GuiButton costEdit, fourMatchEdit, fiveMatchEdit, editButton;
     private int xSize = 175;
     private int ySize = 121;
     private int x = 0;
     private int y = 0;
     private DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-    private double payoutPercentage = 0;
+    private String payoutPercentage = "0";
     private GuiTextField textField;
     private String catDisplay = "Fee";
     private int spinFee, fourMatch, fiveMatch;
+    private int guiMode = 0;
 
-	public GuiBanditConfig(TileBandit tileEntity) {
+	public BanditConfigGUI(TileBandit tileEntity) {
 		this.tileBandit = (TileBandit) tileEntity;
 	}
 	
@@ -39,14 +40,13 @@ public class GuiBanditConfig extends GuiScreen {
     	costEdit = new GuiSlimButton(0 , x + 13, y + 52, 12, 12, StatCollector.translateToLocal(""));
     	fourMatchEdit = new GuiSlimButton(1 , x + 25, y + 52, 12, 12, StatCollector.translateToLocal(""));
     	fiveMatchEdit = new GuiSlimButton(2 , x + 37, y + 52, 12, 12, StatCollector.translateToLocal(""));
-    	editButton = new GuiSlimButton(3 , x + 99, y + 52, 30, 12, StatCollector.translateToLocal("Edit"));
-    	doneButton = new GuiSlimButton(4 , x + 129, y + 52, 30, 12, StatCollector.translateToLocal("Save"));
+    	editButton = new GuiSlimButton(3 , x + 87, y + 52, 73, 12, 
+    			StatCollector.translateToLocal(StatCollector.translateToLocal("general.button.edit")));
         this.buttonList.clear();
 		buttonList.add(costEdit);
 		buttonList.add(fourMatchEdit);
 		buttonList.add(fiveMatchEdit);
 		buttonList.add(editButton);
-		buttonList.add(doneButton);
 		
 		textField = new GuiTextField(this.fontRendererObj, x + 88, y + 36, 70, 14);
 		textField.setFocused(false);
@@ -57,50 +57,55 @@ public class GuiBanditConfig extends GuiScreen {
 		spinFee = tileBandit.spinFee;
 		fourMatch = tileBandit.fourMatchPayout;
 		fiveMatch = tileBandit.fiveMatchPayout;
+		
+		updatePayoutPercentage();
     }
     
+    @Override
     protected void keyTyped(char c, int i) {
-		if (textField.isFocused()) {
+		if (textField.isFocused() && !isShiftKeyDown()) {
 			if (i == 14 || (i > 1 && i < 12)) {
 				textField.textboxKeyTyped(c, i);
 			}
-		} else super.keyTyped(c, i);
+		}
+		super.keyTyped(c, i);
 	}
 	
 	public void onGuiClosed() {
-		//tileBandit.sendServerUpdateMessage();
+		tileBandit.spinFee = spinFee;
+		tileBandit.fourMatchPayout = fourMatch;
+		tileBandit.fiveMatchPayout = fiveMatch;
+		tileBandit.sendServerUpdateMessage();
     }
 
     protected void actionPerformed(GuiButton button) {
         if (button.enabled) {
         	if (button.id == 0) {
-        		catDisplay = "Fee";
+        		guiMode = 0;
+        		catDisplay = StatCollector.translateToLocal("bandit.label.fee");
         		textField.setText(String.valueOf(spinFee));
         	}
         	if (button.id == 1) {
-        		catDisplay = "Four Match";
+        		guiMode = 1;
+        		catDisplay = StatCollector.translateToLocal("bandit.label.four");
         		textField.setText(String.valueOf(fourMatch));
         	}
         	if (button.id == 2) {
-        		catDisplay = "Five Match";
+        		guiMode = 2;
+        		catDisplay = StatCollector.translateToLocal("bandit.label.five");
         		textField.setText(String.valueOf(fiveMatch));
         	}
         	if (button.id == 3) {
         		if (!textField.isFocused()) {
         			textField.setFocused(true);
-        		} else {
-        			try {
-                        //tileEntity.itemPrice = Integer.parseInt(textField.getText());
-                    } catch (NumberFormatException ex) {
-                        // iPrice is a non-numeric string, do nothing
-                    } catch (Throwable ex2) {
-                        // fail silently?
-                    }
+        		} else if (!textField.getText().isEmpty() ){
+        			if (guiMode == 0) spinFee = Integer.valueOf(textField.getText());
+        			if (guiMode == 1) fourMatch = Integer.valueOf(textField.getText());
+        			if (guiMode == 2) fiveMatch = Integer.valueOf(textField.getText());
                     textField.setFocused(false);
         		}
     		}
             if (button.id == 4) {
-                this.tileBandit.markDirty();
                 this.mc.displayGuiScreen((GuiScreen)null);
             }      
         updatePayoutPercentage();
@@ -118,16 +123,22 @@ public class GuiBanditConfig extends GuiScreen {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 		
+		//change button text depending on edit mode
+		editButton.displayString = textField.isFocused() ? StatCollector.translateToLocal("general.button.save") : 
+			StatCollector.translateToLocal("general.button.edit");
+		
 		fontRendererObj.drawString(tileBandit.getInventoryName(), x + 6, y + 5, 4210752);
-		String cost = String.valueOf(formatter.format(spinFee));
-		int stringWidth = fontRendererObj.getStringWidth(cost);
-		fontRendererObj.drawString("Fee", x + 15, y + 40, 4210752);
-		fontRendererObj.drawString(cost, x + 156 - stringWidth, y + 40, 4210752);
+		fontRendererObj.drawString(catDisplay, x + 15, y + 40, 4210752);
+		if (!textField.getText().isEmpty()) {
+			String cost = String.valueOf(formatter.format(Integer.parseInt(textField.getText())));
+			int stringWidth = fontRendererObj.getStringWidth(cost);
+			fontRendererObj.drawString(cost, x + 156 - stringWidth, y + 40, 4210752);
+		}
 	
-		String label = String.valueOf(String.valueOf("Payout:"));
-		stringWidth = fontRendererObj.getStringWidth(label);
+		String label = StatCollector.translateToLocal("bandit.label.payout");
+		int stringWidth = fontRendererObj.getStringWidth(label);
 		fontRendererObj.drawString(label, x + 98 - stringWidth, y + 98, 4210752);
-		String percent = String.valueOf(String.valueOf(payoutPercentage) + "%");
+		String percent = payoutPercentage + "%";
 		stringWidth = fontRendererObj.getStringWidth(percent);
 		fontRendererObj.drawString(percent, x + 156 - stringWidth, y + 98, 4210752);
 				
@@ -135,6 +146,6 @@ public class GuiBanditConfig extends GuiScreen {
     }
     
     private void updatePayoutPercentage() {
-    	payoutPercentage = ((450 * (double)tileBandit.fourMatchPayout + 10 * (double)tileBandit.fiveMatchPayout) / 100000 * tileBandit.spinFee * 100 );
+    	payoutPercentage = String.format("%.2f", ((450 * (double)fourMatch + 10 * (double)fiveMatch) / (100000 * spinFee) * 100));
     }
 }
