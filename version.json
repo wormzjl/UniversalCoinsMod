@@ -2,7 +2,7 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.9",
+			"modVersion":"1.7.2-1.6.10",
 			"changeLog": [
 				"changed version update check to VersionChecker mod",
 				"removed internal version check code"
@@ -13,7 +13,7 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.9",
+			"modVersion":"1.7.10-1.6.10",
 			"changeLog": [
 				"changed version update check to VersionChecker mod",
 				"removed internal version check code"
