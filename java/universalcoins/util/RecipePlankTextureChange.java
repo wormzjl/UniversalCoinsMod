@@ -31,7 +31,7 @@ public class RecipePlankTextureChange implements IRecipe {
 					(inventorycrafting.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCSign ||
 					Block.getBlockFromItem(inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
 				hasItem = true;
-				newStack = inventorycrafting.getStackInSlot(j);
+				newStack = inventorycrafting.getStackInSlot(j).copy();
 				continue;
 			}
 			if (inventorycrafting.getStackInSlot(j) != null) {
@@ -69,7 +69,7 @@ public class RecipePlankTextureChange implements IRecipe {
 
 	@Override
 	public int getRecipeSize() {
-		return 2;
+		return 9;
 	}
 
 	@Override
