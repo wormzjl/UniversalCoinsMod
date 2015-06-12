@@ -16,6 +16,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
+import universalcoins.blocks.BlockVendorFrame;
 import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
@@ -618,7 +619,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	@Override
 	public String getInventoryName() {
-		if (super.blockType.toString().contains("Frame") ) {
+		if (super.blockType instanceof BlockVendorFrame) {
 			return StatCollector.translateToLocal("tile.blockVendorFrame.name");
 		} else {
 			return StatCollector.translateToLocal("tile.blockVendor.name");

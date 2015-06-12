@@ -53,7 +53,6 @@ public class TileBandit extends TileEntity implements IInventory {
 			}
 			leverPull();
 			checkCard();
-			worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:button", 0.4F, 1.0F, true);
 		}
 		if (buttonId == 1) {
 			if (cardAvailable && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard) {
@@ -64,23 +63,33 @@ public class TileBandit extends TileEntity implements IInventory {
 			}
 		}
 		if (buttonId == 2) {
-			int matchCount = 0;
-			for (int i = 0; i < reelStops.length; i++) {
-				matchCount = 0;
-				for (int j = 0; j < reelPos.length; j++) {
-					if (reelStops[i] == reelPos[j]) {
-						matchCount++;
-					}
-				}
-				if (matchCount == 5) {
-					coinSum += fiveMatchPayout;
-					worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 0.4F, 1.0F, true);
-				}
-				if (matchCount == 4) {
-					coinSum += fourMatchPayout;
-					worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 0.4F, 1.0F, true);
+			checkMatch();
+		}
+	}
+	
+	public void checkMatch() {
+		int matchCount = 0;
+		for (int i = 0; i < reelStops.length; i++) {
+			matchCount = 0;
+			for (int j = 0; j < reelPos.length; j++) {
+				if (reelStops[i] == reelPos[j]) {
+					matchCount++;
 				}
 			}
+			if (matchCount == 5) {
+				coinSum += fiveMatchPayout;
+				worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 1.0F, 1.0F, true);
+			}
+			if (matchCount == 4) {
+				coinSum += fourMatchPayout;
+				worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:winner", 1.0F, 1.0F, true);
+			}
+		}
+	}
+	
+	public void playSound(int soundId) {
+		if (soundId == 0) {
+			worldObj.playSound(xCoord, yCoord, zCoord, "universalcoins:button", 0.4F, 1.0F, true);
 		}
 	}
 	

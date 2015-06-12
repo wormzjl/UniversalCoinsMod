@@ -88,6 +88,7 @@ public class BanditGUI extends GuiContainer {
 		//do we need to check the results?
 		if (!reelActive[0] && !reelActive[1] && !reelActive[2] && !reelActive[3] && resultCheck) {
 			tEntity.sendPacket(2, isShiftKeyDown());
+			tEntity.checkMatch();
 			resultCheck = false;
 		}
 	}
@@ -98,6 +99,7 @@ public class BanditGUI extends GuiContainer {
 			for (int i = 0; i < reelActive.length; i++) {
 				reelActive[i] = true;
 				counter[i]-=2;
+				tEntity.playSound(0);
 			}
 		}
 		tEntity.sendPacket(button.id, isShiftKeyDown());
