@@ -21,6 +21,7 @@ import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCSignServerMessage;
+import universalcoins.net.UCTextureMessage;
 import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCTileTradeStationMessage;
@@ -205,9 +206,10 @@ public class UniversalCoins {
 	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
 	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
 	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
-	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 7, Side.CLIENT);
-	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 8, Side.SERVER);
-	    snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 9, Side.SERVER);
+	    snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 7, Side.SERVER);
+	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
+	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
+	    snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
 
 	    //update check using versionchecker
 	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", 

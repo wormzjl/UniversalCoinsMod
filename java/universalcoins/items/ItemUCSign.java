@@ -7,9 +7,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemSign;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileUCSign;
 
@@ -79,12 +81,20 @@ public class ItemUCSign extends ItemSign {
             }
 
             --itemStack.stackSize;
-        	TileEntity tileentitysign = world.getTileEntity(par4, par5, par6);
-            if (tileentitysign != null) {
+        	TileEntity te = world.getTileEntity(par4, par5, par6);
+            if (te != null && te instanceof TileUCSign) {
             	if (itemStack.hasTagCompound()) {
             		NBTTagCompound tagCompound = itemStack.getTagCompound();
-            		((TileUCSign)tileentitysign).blockIcon = tagCompound.getString("BlockIcon");
+            		if (tagCompound.getString("BlockIcon")  == "") {
+    					NBTTagList textureList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+    					byte slot = tagCompound.getByte("Texture");
+    					ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
+    					((TileUCSign)te).sendTextureUpdateMessage(textureStack);
+    				} else {
+    					((TileUCSign)te).blockIcon = tagCompound.getString("BlockIcon");
+    				}
             	}
+            	((TileUCSign)te).blockOwner = player.getDisplayName();
             	player.openGui(UniversalCoins.instance, 1, world, par4, par5, par6);
             }
             return true;
@@ -95,7 +105,25 @@ public class ItemUCSign extends ItemSign {
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
     	if (stack.hasTagCompound()) {
     		NBTTagCompound tagCompound = stack.getTagCompound();
-    		list.add(tagCompound.getString("BlockIcon"));
+    		if (tagCompound.getString("BlockIcon")  == "") {
+				NBTTagList textureList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+				byte slot = tagCompound.getByte("Texture");
+				ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
+				String blockIcon = textureStack.getIconIndex().getIconName();
+				if (blockIcon.startsWith("biomesoplenty")){
+					String[] iconInfo = blockIcon.split(":");
+					String[] blockName = textureStack.getUnlocalizedName().split("\\.", 3);
+					String woodType = blockName[2].replace("Plank", "");
+					//hellbark does not follow the same naming convention
+					if (woodType.contains("hell")) woodType = "hell_bark";
+					blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+					//bamboo needs a hack too
+					if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+				}
+				list.add(blockIcon);
+			} else {
+	    		list.add(tagCompound.getString("BlockIcon"));
+			}
     	}
     }
 }

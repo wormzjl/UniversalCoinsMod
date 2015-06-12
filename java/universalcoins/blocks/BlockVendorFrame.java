@@ -147,6 +147,12 @@ public class BlockVendorFrame extends BlockContainer {
 			if (te instanceof TileVendorFrame) {
 				TileVendorFrame tentity = (TileVendorFrame) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
+				if (tagCompound.getString("BlockIcon")  == "") {
+					NBTTagList textureList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+					byte slot = tagCompound.getByte("Texture");
+					ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
+					tentity.sendTextureUpdateMessage(textureStack);
+				}
 				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 				if (tagList.tagCount() > 0) {
 					for (int i = 0; i < tagList.tagCount(); i++) {

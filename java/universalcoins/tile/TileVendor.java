@@ -21,6 +21,7 @@ import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
 import universalcoins.items.ItemEnderCard;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UCWorldData;
 
@@ -679,6 +680,23 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	public void sendServerUpdateMessage() {
 		UniversalCoins.snw.sendToServer(new UCVendorServerMessage(xCoord, yCoord, zCoord, itemPrice, blockOwner, infiniteMode));
+	}
+	
+	public void sendTextureUpdateMessage(ItemStack stack) {
+		if (!worldObj.isRemote) return;
+			String blockIcon = stack.getIconIndex().getIconName();
+			//the iconIndex function does not work with BOP so we have to do a bit of a hack here
+			if (blockIcon.startsWith("biomesoplenty")){
+				String[] iconInfo = blockIcon.split(":");
+				String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
+				String woodType = blockName[2].replace("Plank", "");
+				//hellbark does not follow the same naming convention
+				if (woodType.contains("hell")) woodType = "hell_bark";
+				blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+				//bamboo needs a hack too
+				if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+			}
+		UniversalCoins.snw.sendToServer(new UCTextureMessage(xCoord, yCoord, zCoord, blockIcon));
 	}
 	
 	@Override

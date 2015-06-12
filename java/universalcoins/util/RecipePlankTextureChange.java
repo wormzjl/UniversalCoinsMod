@@ -5,6 +5,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import universalcoins.UniversalCoins;
@@ -55,27 +56,13 @@ public class RecipePlankTextureChange implements IRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting var1) {
-		//newStack = new ItemStack(inventorycrafting.getStackInSlot(itemIndex).getItem());
-		String blockIcon = plankStack.getIconIndex().getIconName();
-
-		// the iconIndex function does not work with BOP so we have to do a
-		// bit of a hack here
-		if (blockIcon.startsWith("biomesoplenty")) {
-			String[] iconInfo = blockIcon.split(":");
-			String[] blockName = plankStack.getUnlocalizedName().split("\\.", 3);
-			String woodType = blockName[2].replace("Plank", "");
-			// hellbark does not follow the same naming convention
-			if (woodType.contains("hell"))
-				woodType = "hell_bark";
-			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
-			// bamboo needs a hack too
-			if (blockIcon.contains("bamboo"))
-				blockIcon = blockIcon.replace("plank_bambooThatching",
-						"bamboothatching");
-			// I feel dirty now :(
-		}
+		NBTTagList itemList = new NBTTagList();
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("BlockIcon", blockIcon);
+		if (plankStack != null) {
+			tag.setByte("Texture", (byte) 0);
+			plankStack.writeToNBT(tag);
+		}
+		tag.setTag("Inventory", itemList);
 		this.newStack.setTagCompound(tag);
 		return newStack;
 	}
