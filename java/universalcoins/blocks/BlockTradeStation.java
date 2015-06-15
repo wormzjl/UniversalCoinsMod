@@ -58,7 +58,7 @@ public class BlockTradeStation extends BlockContainer {
 			if (playerTest == null || !tileTrade.isUseableByPlayer(playerTest)) {
 				tileTrade.inUse = false;
 			}
-			if (tileTrade.inUse) {
+			if (tileTrade.inUse && !player.getDisplayName().contentEquals(tileTrade.playerName)) {
 				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				return true;
 			} else {

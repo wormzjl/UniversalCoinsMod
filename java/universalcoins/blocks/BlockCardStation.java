@@ -54,7 +54,7 @@ public class BlockCardStation extends BlockContainer {
 			if (playerTest == null || !tileCardStation.isUseableByPlayer(playerTest)) {
 				tileCardStation.inUse = false;
 			}
-			if (tileCardStation.inUse && !player.getDisplayName().equals(tileCardStation.playerName)) {
+			if (tileCardStation.inUse && !player.getDisplayName().contentEquals(tileCardStation.playerName)) {
 				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				return true;
 			} else {

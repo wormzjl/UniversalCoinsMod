@@ -52,7 +52,7 @@ public class BlockVendor extends BlockContainer {
 			TileVendor tileVendor = (TileVendor) world.getTileEntity(x, y, z);
 			EntityPlayer playerTest = world.getPlayerEntityByName(tileVendor.playerName);
 			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)){tileVendor.inUse = false;};
-			if (tileVendor.inUse) {
+			if (tileVendor.inUse && !player.getDisplayName().contentEquals(tileVendor.playerName)) {
 				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				return true;
 			} else {

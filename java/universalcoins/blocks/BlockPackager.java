@@ -53,7 +53,7 @@ public class BlockPackager extends BlockContainer {
 			if (playerTest == null || !tilePackager.isUseableByPlayer(playerTest)) {
 				tilePackager.inUse = false;
 			}
-			 if (tilePackager.inUse) {
+			 if (tilePackager.inUse && !player.getDisplayName().contentEquals(tilePackager.playerName)) {
 				 if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				 return true;
 			 } else {
