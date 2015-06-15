@@ -53,13 +53,18 @@ public class BlockTradeStation extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileTradeStation) {
-			if (((TileTradeStation) tileEntity).inUse) {
+			TileTradeStation tileTrade = (TileTradeStation) world.getTileEntity(x, y, z);
+			EntityPlayer playerTest = world.getPlayerEntityByName(tileTrade.playerName);
+			if (playerTest == null || !tileTrade.isUseableByPlayer(playerTest)) {
+				tileTrade.inUse = false;
+			}
+			if (tileTrade.inUse) {
 				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				return true;
 			} else {
+				tileTrade.playerName = player.getDisplayName();
+				tileTrade.inUse = true;
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-				((TileTradeStation) tileEntity).playerName = player.getDisplayName();
-				((TileTradeStation) tileEntity).inUse = true;
 				return true;
 			}
 		}

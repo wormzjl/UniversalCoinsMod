@@ -15,7 +15,7 @@ public class ContainerBandit extends Container {
 	private TileBandit tEntity;
 	private int lastCoinSum, lastSpinFee, lastFourMatchPayout, lastFiveMatchPayout;
 	private boolean lastCardAvailable;
-	private String lastCustomName;
+	private String lastCustomName, lastPlayerName;
 	private boolean lastInUse = false;
 	private int[] lastReelPos = {0, 0, 0, 0};
 
@@ -108,6 +108,7 @@ public class ContainerBandit extends Container {
             if (this.lastCoinSum != tEntity.coinSum ||
             		this.lastCardAvailable != tEntity.cardAvailable||
                     this.lastInUse != tEntity.inUse||
+                    this.lastPlayerName != tEntity.playerName||
                     this.lastSpinFee != tEntity.spinFee||
                     this.lastFourMatchPayout != tEntity.fourMatchPayout||
                     this.lastFiveMatchPayout != tEntity.fiveMatchPayout||
@@ -121,6 +122,7 @@ public class ContainerBandit extends Container {
 	   		this.lastCoinSum = tEntity.coinSum;
 	   		this.lastCardAvailable = tEntity.cardAvailable;
 	   		this.lastInUse = tEntity.inUse;
+	   		this.lastPlayerName = tEntity.playerName;
 	   		this.lastSpinFee = tEntity.spinFee;
 	   		this.lastFourMatchPayout = tEntity.fourMatchPayout;
 	   		this.lastFiveMatchPayout = tEntity.fiveMatchPayout;

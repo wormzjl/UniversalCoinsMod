@@ -41,7 +41,7 @@ class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
         if(tileEntity instanceof TileTradeStation){
-                return new ContainerTradeStation(player.inventory, (TileTradeStation) tileEntity);
+        	return new ContainerTradeStation(player.inventory, (TileTradeStation) tileEntity);
         }
         if(tileEntity instanceof TileVendor){
         	if(player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {

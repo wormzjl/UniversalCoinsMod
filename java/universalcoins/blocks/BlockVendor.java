@@ -49,14 +49,16 @@ public class BlockVendor extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileVendor) {
-			TileVendor tentity = (TileVendor) tileEntity;
-			if (tentity.inUse) {
+			TileVendor tileVendor = (TileVendor) world.getTileEntity(x, y, z);
+			EntityPlayer playerTest = world.getPlayerEntityByName(tileVendor.playerName);
+			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)){tileVendor.inUse = false;};
+			if (tileVendor.inUse) {
 				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				return true;
 			} else {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-				tentity.playerName = player.getDisplayName();
-				tentity.inUse = true;
+				tileVendor.playerName = player.getDisplayName();
+				tileVendor.inUse = true;
 				return true;
 			}
 		}

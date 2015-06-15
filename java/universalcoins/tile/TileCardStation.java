@@ -44,6 +44,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			withdrawCoins = false;
 			depositCoins = false;
 			accountNumber = "none";
+			updateTE();
 	}
 
 	@Override

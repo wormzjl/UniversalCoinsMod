@@ -49,13 +49,16 @@ public class BlockBandit extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileBandit) {
-			 if (((TileBandit)tileEntity).inUse && player.getDisplayName() != ((TileBandit) tileEntity).playerName) {
+			TileBandit tileBandit = (TileBandit) world.getTileEntity(x, y, z);
+			EntityPlayer playerTest = world.getPlayerEntityByName(tileBandit.playerName);
+			if (playerTest == null || !tileBandit.isUseableByPlayer(playerTest)){tileBandit.inUse = false;};
+			 if (tileBandit.inUse) {
 				 if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				 return true;
 			 } else {
 				 player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-				 ((TileBandit) tileEntity).playerName = player.getDisplayName();
-				 ((TileBandit) tileEntity).inUse = true;
+				 tileBandit.playerName = player.getDisplayName();
+				 tileBandit.inUse = true;
 				 return true;
 			 }
 		}

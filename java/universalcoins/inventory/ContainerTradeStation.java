@@ -16,8 +16,7 @@ public class ContainerTradeStation extends Container {
 	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
 	private boolean lastBuyButtonActive, lastSellButtonActive, lastCoinButtonActive, 
-		lastSStackButtonActive, lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive, 
-		lastInUse;
+		lastSStackButtonActive, lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive;
 	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
@@ -118,8 +117,7 @@ public class ContainerTradeStation extends Container {
 				|| this.lastCoinButtonActive != this.tileEntity.coinButtonActive
 				|| this.lastSStackButtonActive != this.tileEntity.isSStackButtonActive
 				|| this.lastLStackButtonActive != this.tileEntity.isLStackButtonActive
-				|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive
-				|| this.lastInUse != this.tileEntity.inUse) {
+				|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive) {
             	tileEntity.updateTE();
             }
 
@@ -135,7 +133,6 @@ public class ContainerTradeStation extends Container {
 		this.lastLStackButtonActive = this.tileEntity.isSStackButtonActive;
 		this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
 		this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
-		this.lastInUse = this.tileEntity.inUse;
         }
 	}
 	

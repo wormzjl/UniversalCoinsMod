@@ -67,7 +67,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	
 	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
-			inUse = false;
+		inUse = false;
 	}
 	
 	private void activateBuySellButtons() {
@@ -501,7 +501,6 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		inUse = false;
 		return getStackInSlot(i);
 	}
 

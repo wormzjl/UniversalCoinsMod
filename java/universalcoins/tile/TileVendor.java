@@ -617,13 +617,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		return -1;
 	}
 
-	@Override
 	public String getInventoryName() {
-		if (super.blockType instanceof BlockVendorFrame) {
-			return StatCollector.translateToLocal("tile.blockVendorFrame.name");
-		} else {
-			return StatCollector.translateToLocal("tile.blockVendor.name");
-		}
+		return null;
 	}
 
 	@Override

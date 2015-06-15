@@ -105,6 +105,7 @@ public class TileBandit extends TileEntity implements IInventory {
 	public void inUseCleanup() {
 		if (worldObj.isRemote) return;
 			inUse = false;
+			updateTE();
 	}
 	
 	public String getInventoryName() {

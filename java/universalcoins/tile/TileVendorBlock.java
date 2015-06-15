@@ -1,6 +1,7 @@
 package universalcoins.tile;
 
 import universalcoins.UniversalCoins;
+import universalcoins.blocks.BlockVendorFrame;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,11 @@ import net.minecraftforge.common.util.Constants;
 public class TileVendorBlock extends TileVendor {
 
 	String signText[] = {"","","",""};
+	
+	@Override
+	public String getInventoryName() {
+		return StatCollector.translateToLocal("tile.blockVendor.name");
+	}
 	
 	public void updateSigns() {
 

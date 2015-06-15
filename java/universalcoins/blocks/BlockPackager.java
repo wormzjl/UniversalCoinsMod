@@ -48,13 +48,18 @@ public class BlockPackager extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TilePackager) {
-			 if (((TilePackager)tileEntity).inUse) {
+			TilePackager tilePackager = (TilePackager) world.getTileEntity(x, y, z);
+			EntityPlayer playerTest = world.getPlayerEntityByName(tilePackager.playerName);
+			if (playerTest == null || !tilePackager.isUseableByPlayer(playerTest)) {
+				tilePackager.inUse = false;
+			}
+			 if (tilePackager.inUse) {
 				 if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
 				 return true;
 			 } else {
 				 player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-				 ((TilePackager) tileEntity).playerName = player.getDisplayName();
-				 ((TilePackager) tileEntity).inUse = true;
+				 tilePackager.playerName = player.getDisplayName();
+				 tilePackager.inUse = true;
 				 return true;
 			 }
 		}
