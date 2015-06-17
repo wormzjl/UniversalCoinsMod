@@ -23,8 +23,8 @@ public class VendorGUI extends GuiContainer{
 	private static final int idLStackButton = 5;
 	public static final int idSBagButton = 6;
 	public static final int idLBagButton = 7;
-	public static final int idtcmButton = 8;
-	public static final int idtcpButton = 9;	
+	public static final int idtcmButton = 15;
+	public static final int idtcpButton = 16;	
 	private boolean textActive = false;
 	private int x;
 	private int y;
