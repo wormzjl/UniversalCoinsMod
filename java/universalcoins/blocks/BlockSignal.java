@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -58,7 +59,6 @@ public class BlockSignal extends BlockContainer {
 			}
 		}
 		else {
-			if (world.isRemote) return false;
 			//take coins and activate on click
 			ItemStack[] inventory = player.inventory.mainInventory;
 			TileSignal tentity = (TileSignal) world.getTileEntity(x, y, z);
@@ -72,6 +72,7 @@ public class BlockSignal extends BlockContainer {
 					}
 				}
 			}
+			if (world.isRemote) return false;
 			if (coinsFound < tentity.fee) {
 				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("signal.message.notenough")));
 			} else {
@@ -110,6 +111,8 @@ public class BlockSignal extends BlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 		if (world.isRemote) return;
+		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null ) {
 			((TileSignal)world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
