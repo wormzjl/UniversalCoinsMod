@@ -136,9 +136,9 @@ public class UCRecipeHelper {
 	
 	public static void addSignalRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockSignal), new Object[]{
-			"XIX",
-			"IRI",
-			"XIX",
+			"IXI",
+			"XRX",
+			"IXI",
 			'I', Items.iron_ingot,'R', Items.redstone
 		});
 	}

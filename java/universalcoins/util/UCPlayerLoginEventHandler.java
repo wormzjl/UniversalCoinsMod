@@ -11,7 +11,7 @@ public class UCPlayerLoginEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-		
+				
 		MinecraftServer server = MinecraftServer.getServer();
 		if (!server.isSinglePlayer()) {
 			//we need to update client with recipes that are enabled

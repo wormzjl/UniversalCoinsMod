@@ -38,8 +38,10 @@ import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
+import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -69,10 +71,10 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.15";
+	public static final String version = "1.7.2-1.6.16";
 	
 	public static Boolean autoModeEnabled;
-	public static Boolean recipesEnabled;
+	public static Boolean tradeStationRecipesEnabled;
 	public static Boolean vendorRecipesEnabled;
 	public static Boolean vendorFrameRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
@@ -111,7 +113,7 @@ public class UniversalCoins {
 		//recipes
 		Property recipes = config.get("Recipes", "Trade Station Recipes", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
-		recipesEnabled = recipes.getBoolean(true);
+		tradeStationRecipesEnabled = recipes.getBoolean(true);
 		Property vendorRecipes = config.get("Recipes", "Vending Block Recipes", true);
 		vendorRecipes.comment = "Set to false to disable crafting recipes for vending blocks.";
 		vendorRecipesEnabled = vendorRecipes.getBoolean(true);
@@ -196,6 +198,7 @@ public class UniversalCoins {
 		}
 		
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
+		FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
 						
 		//network packet handling
 	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
@@ -243,28 +246,10 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-	    UCItemPricer.initializeConfigs();
-	    UCItemPricer.loadConfigs();	
-	}
-	
-	@EventHandler
-    public void serverStart(FMLServerStartingEvent event) {
-		MinecraftServer server = MinecraftServer.getServer();
-		ICommandManager command = server.getCommandManager();
-		ServerCommandManager manager = (ServerCommandManager) command;
-		manager.registerCommand(new UCCommand());
-		manager.registerCommand(new UCBalance());
-		manager.registerCommand(new UCRebalance());
-		manager.registerCommand(new UCGive());
-		manager.registerCommand(new UCSend());
 		
-		//load recipes server side. client side are loaded by UCPlayerLoginEventHandler
+		//load all recipes, in multiplayer client will receive packet to disable to match server
 		UCRecipeHelper.addCoinRecipes();
-		if (recipesEnabled) {
+		if (tradeStationRecipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
 		}
 		if (vendorRecipesEnabled){
@@ -294,6 +279,24 @@ public class UniversalCoins {
 		}
 		UCRecipeHelper.addSignRecipes();
 		UCRecipeHelper.addPlankTextureRecipes();
+	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+	    UCItemPricer.initializeConfigs();
+	    UCItemPricer.loadConfigs();	
+	}
+	
+	@EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+		MinecraftServer server = MinecraftServer.getServer();
+		ICommandManager command = server.getCommandManager();
+		ServerCommandManager manager = (ServerCommandManager) command;
+		manager.registerCommand(new UCCommand());
+		manager.registerCommand(new UCBalance());
+		manager.registerCommand(new UCRebalance());
+		manager.registerCommand(new UCGive());
+		manager.registerCommand(new UCSend());
 	}
 
 }

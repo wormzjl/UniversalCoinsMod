@@ -1,19 +1,26 @@
 package universalcoins.net;
 
 import io.netty.buffer.ByteBuf;
+
+import java.util.Iterator;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import universalcoins.UniversalCoins;
-import universalcoins.util.UCRecipeHelper;
+import universalcoins.util.Vending;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
-private boolean recipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
+private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
 enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled, packagerRecipeEnabled;
 
     public UCRecipeMessage()
     {
-        this.recipesEnabled = UniversalCoins.recipesEnabled;
+        this.tradeStationRecipesEnabled = UniversalCoins.tradeStationRecipesEnabled;
         this.vendorRecipesEnabled = UniversalCoins.vendorRecipesEnabled;
         this.vendorFrameRecipesEnabled = UniversalCoins.vendorFrameRecipesEnabled;
         this.atmRecipeEnabled = UniversalCoins.atmRecipeEnabled;
@@ -27,7 +34,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
     @Override
     public void fromBytes(ByteBuf buf)
     {
-    	this.recipesEnabled = buf.readBoolean();
+    	this.tradeStationRecipesEnabled = buf.readBoolean();
         this.vendorRecipesEnabled = buf.readBoolean();
         this.vendorFrameRecipesEnabled = buf.readBoolean();
         this.atmRecipeEnabled = buf.readBoolean();
@@ -41,7 +48,7 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeBoolean(recipesEnabled);
+        buf.writeBoolean(tradeStationRecipesEnabled);
         buf.writeBoolean(vendorRecipesEnabled);
         buf.writeBoolean(vendorFrameRecipesEnabled);
         buf.writeBoolean(atmRecipeEnabled);
@@ -54,38 +61,51 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
 
 	@Override
 	public IMessage onMessage(UCRecipeMessage message, MessageContext ctx) {
-		UCRecipeHelper.addCoinRecipes();
-		if (message.recipesEnabled) {
-			UCRecipeHelper.addTradeStationRecipe();
+		if (!message.tradeStationRecipesEnabled) {
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockTradeStation));
+			removeRecipe(new ItemStack(UniversalCoins.proxy.itemSeller));
 		}
-		if (message.vendorRecipesEnabled){
-			UCRecipeHelper.addVendingBlockRecipes();
+		if (!message.vendorRecipesEnabled){
+			for(int i=0; i < Vending.supports.length; i++){
+				removeRecipe(new ItemStack(UniversalCoins.proxy.blockVendor,1,i));
+			}
 		}
-		if (message.vendorFrameRecipesEnabled){
-			UCRecipeHelper.addVendingFrameRecipes();
+		if (!message.vendorFrameRecipesEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame));
 		}
-		if (message.atmRecipeEnabled){
-			UCRecipeHelper.addCardStationRecipes();
+		if (!message.atmRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockCardStation));
 		}
-		if (message.enderCardRecipeEnabled){
-			UCRecipeHelper.addEnderCardRecipes();
-			UCRecipeHelper.addBlockSafeRecipe();
+		if (!message.enderCardRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard));
 		}
-		if (message.banditRecipeEnabled){
-			UCRecipeHelper.addBanditRecipes();
+		if (!message.banditRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockBandit));
 		}
-		if (message.signalRecipeEnabled){
-			UCRecipeHelper.addSignalRecipes();
+		if (!message.signalRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockSignal));
 		}
-		if (message.linkCardRecipeEnabled){
-			UCRecipeHelper.addLinkCardRecipes();
+		if (!message.linkCardRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.itemLinkCard));
 		}
-		if (message.packagerRecipeEnabled){
-			UCRecipeHelper.addPackagerRecipes();
+		if (!message.packagerRecipeEnabled){
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPackager));
 		}
-		UCRecipeHelper.addSignRecipes();
-		UCRecipeHelper.addPlankTextureRecipes();
 		
 		return null;
+	}
+	
+	private void removeRecipe(ItemStack stack) {
+		List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
+		Iterator<IRecipe> recipeIterator = recipeList.iterator();
+		
+		while (recipeIterator.hasNext()) {
+			ItemStack recipeStack = recipeIterator.next().getRecipeOutput();
+			if (recipeStack != null) {
+				if (recipeStack.areItemStacksEqual(recipeStack, stack)) {
+					recipeIterator.remove();
+				}
+			}			
+		}
 	}
 }
