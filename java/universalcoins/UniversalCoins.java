@@ -41,6 +41,8 @@ import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
+import universalcoins.worldgen.VillageGenBank;
+import universalcoins.worldgen.VillageGenShop;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -54,6 +56,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 /**
@@ -86,6 +89,7 @@ public class UniversalCoins {
 	public static Boolean packagerRecipeEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
+	public static Boolean worldGenEnabled;
 	public static Integer mineshaftCoinChance;
 	public static Boolean coinsInDungeon;
 	public static Integer dungeonCoinChance;	
@@ -180,7 +184,6 @@ public class UniversalCoins {
 		Property tsBuyEnabled = config.get("Trade Station", "Trade Station Buy enabled", true);
 		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
 		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
-		config.save();
 		
 		//packager
 		Property smallPackage = config.get("Packager", "Small Package Price", 10);
@@ -192,6 +195,13 @@ public class UniversalCoins {
 		Property largePackage = config.get("Packager", "Large Package Price", 40);
 		largePackage.comment = "Set the price of large package";
 		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
+		
+		//world gen
+		Property worldGenProperty = config.get("World Generation", "Village addons enabled", true);
+		worldGenProperty.comment = "Set to false to disable adding banks or shops to villages.";
+		worldGenEnabled = worldGenProperty.getBoolean(true);
+		
+		config.save();
 		
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
@@ -224,7 +234,7 @@ public class UniversalCoins {
 	}
 	
 	@EventHandler
-	public void load(FMLInitializationEvent event) {
+	public void init(FMLInitializationEvent event) {
 		proxy.registerBlocks();
 		proxy.registerItems();
 		proxy.registerRenderers();
@@ -279,6 +289,14 @@ public class UniversalCoins {
 		}
 		UCRecipeHelper.addSignRecipes();
 		UCRecipeHelper.addPlankTextureRecipes();
+		
+		//worldgen
+		if (worldGenEnabled) {
+			VillageGenBank villageHandler = new VillageGenBank();
+			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler);
+			VillageGenShop villageHandler2 = new VillageGenShop();
+			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
+		}	
 	}
 	
 	@EventHandler
