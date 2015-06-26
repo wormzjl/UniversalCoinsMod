@@ -17,7 +17,6 @@ import universalcoins.UniversalCoins;
 import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UCWorldData;
-import cpw.mods.fml.common.FMLLog;
 
 public class TileBandit extends TileEntity implements IInventory {
 	

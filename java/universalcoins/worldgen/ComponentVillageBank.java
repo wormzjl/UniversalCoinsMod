@@ -98,7 +98,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		//sign meta/rotation
 		//2=S ,3=N ,4=E ,5=W
 		//coordBaseMode
-		//0=S ,1=S ,2=N ,3=E
+		//0=S ,1=W ,2=N ,3=E
 		//returns meta value needed to rotate sign normally
 		if (coordBaseMode == 0) {
 			if (meta == 2) return 3;
@@ -108,9 +108,9 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			return 2;
 		}
 		if (coordBaseMode == 1) {
-			if (meta == 2) return 2;
-			if (meta == 3) return 4;
-			if (meta == 4) return 5;
+			if (meta == 2) return 4;
+			if (meta == 3) return 5;
+			if (meta == 4) return 2;
 			if (meta == 5) return 3;
 			return 4;
 		}

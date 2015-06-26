@@ -74,7 +74,7 @@ public class UniversalCoins {
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.16";
+	public static final String version = "1.7.2-1.6.17";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
@@ -197,9 +197,9 @@ public class UniversalCoins {
 		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
 		
 		//world gen
-		Property worldGenProperty = config.get("World Generation", "Village addons enabled", true);
+		Property worldGenProperty = config.get("World Generation", "Village addons enabled", false);
 		worldGenProperty.comment = "Set to false to disable adding banks or shops to villages.";
-		worldGenEnabled = worldGenProperty.getBoolean(true);
+		worldGenEnabled = worldGenProperty.getBoolean(false);
 		
 		config.save();
 		

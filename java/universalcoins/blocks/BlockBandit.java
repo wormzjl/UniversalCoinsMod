@@ -17,7 +17,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileBandit;
-import universalcoins.tile.TileTradeStation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

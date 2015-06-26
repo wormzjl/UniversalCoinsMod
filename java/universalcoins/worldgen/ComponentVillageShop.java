@@ -14,9 +14,7 @@ import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
-import cpw.mods.fml.common.FMLLog;
 
 public class ComponentVillageShop extends StructureVillagePieces.Village {
 
@@ -130,9 +128,9 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 			return 2;
 		}
 		if (coordBaseMode == 1) {
-			if (meta == 2) return 2;
-			if (meta == 3) return 4;
-			if (meta == 4) return 5;
+			if (meta == 2) return 4;
+			if (meta == 3) return 5;
+			if (meta == 4) return 2;
 			if (meta == 5) return 3;
 			return 4;
 		}
