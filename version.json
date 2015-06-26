@@ -2,9 +2,10 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.16",
+			"modVersion":"1.7.2-1.6.17",
 			"changeLog": [
-				"fixed issue with recipes not showing in NEI"
+				"fixed shift+click not working in vending blocks/frames",
+				"added shop and bank worldgen (disabled by default)"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -12,9 +13,10 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.16",
+			"modVersion":"1.7.10-1.6.17",
 			"changeLog": [
-				"fixed issue with recipes not showing in NEI"
+				"fixed shift+click not working in vending blocks/frames",
+				"added shop and bank worldgen (disabled by default)"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
