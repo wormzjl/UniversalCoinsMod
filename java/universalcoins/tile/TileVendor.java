@@ -12,11 +12,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.blocks.BlockVendorFrame;
 import universalcoins.gui.VendorBuyGUI;
 import universalcoins.gui.VendorGUI;
 import universalcoins.gui.VendorSellGUI;
@@ -54,7 +52,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 		UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
 		UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
-	public String blockOwner;
+	public String blockOwner = "";
 	public int coinSum = 0;
 	public int userCoinSum = 0;
 	public int itemPrice = 0;

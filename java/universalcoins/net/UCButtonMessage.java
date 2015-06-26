@@ -81,7 +81,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			tileEntity.writeToNBT(data);
 		}
 		if (tileEntity instanceof TileVendor) {
-			((TileVendor) tileEntity).onButtonPressed(message.buttonId, shiftPressed);
+			((TileVendor) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);
 		}
 		if (tileEntity instanceof TileCardStation) {
 			((TileCardStation) tileEntity).onButtonPressed(message.buttonId);
@@ -90,7 +90,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			((TileBandit) tileEntity).onButtonPressed(message.buttonId);
 		}
 		if (tileEntity instanceof TileSignal) {
-			((TileSignal) tileEntity).onButtonPressed(message.buttonId, shiftPressed);
+			((TileSignal) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);
 		}
 		if (tileEntity instanceof TilePackager) {
 			((TilePackager) tileEntity).onButtonPressed(message.buttonId);

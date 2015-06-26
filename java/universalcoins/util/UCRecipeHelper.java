@@ -72,7 +72,7 @@ public class UCRecipeHelper {
 	
 	public static void addVendingFrameRecipes() {
 		GameRegistry.addRecipe(new RecipeVendingFrame());
-		RecipeSorter.register("universalcoins:endercard", RecipeVendingFrame.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+		RecipeSorter.register("universalcoins:vendingframe", RecipeVendingFrame.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame),
 			"SGS",
 			"RPR",
