@@ -3,6 +3,7 @@ package universalcoins.tile;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,16 +17,16 @@ import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UCWorldData;
 
-public class TilePackager extends TileEntity implements IInventory {
-	
+public class TilePackager extends TileEntity implements IInventory, ISidedInventory {
+
 	private ItemStack[] inventory = new ItemStack[11];
-	public static final int[] itemPackageSlot = {0 ,1 ,2, 3, 4, 5, 6, 7};
+	public static final int[] itemPackageSlot = { 0, 1, 2, 3, 4, 5, 6, 7 };
 	public static final int itemCardSlot = 8;
 	public static final int itemCoinSlot = 9;
 	public static final int itemOutputSlot = 10;
-	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
+	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
 	public boolean cardAvailable = false;
@@ -33,14 +34,13 @@ public class TilePackager extends TileEntity implements IInventory {
 	public String playerName = "";
 	public boolean inUse = false;
 	public int packageSize = 0;
-	public int[] packageCost = {UniversalCoins.smallPackagePrice, 
-			UniversalCoins.medPackagePrice, UniversalCoins.largePackagePrice};
+	public int[] packageCost = { UniversalCoins.smallPackagePrice, UniversalCoins.medPackagePrice,
+			UniversalCoins.largePackagePrice };
 
-	
 	public TilePackager() {
 		super();
 	}
-	
+
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			if (inventory[itemOutputSlot] == null) {
@@ -76,7 +76,7 @@ public class TilePackager extends TileEntity implements IInventory {
 					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
 						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
 					} else {
-						//spawn in world
+						// spawn in world
 						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
 						worldObj.spawnEntityInWorld(entityItem);
 					}
@@ -91,7 +91,7 @@ public class TilePackager extends TileEntity implements IInventory {
 					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
 						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
 					} else {
-						//spawn in world
+						// spawn in world
 						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
 						worldObj.spawnEntityInWorld(entityItem);
 					}
@@ -103,17 +103,18 @@ public class TilePackager extends TileEntity implements IInventory {
 			packageSize = 2;
 		}
 	}
-	
+
 	public void inUseCleanup() {
-		if (worldObj.isRemote) return;
-			inUse = false;
-			updateTE();
+		if (worldObj.isRemote)
+			return;
+		inUse = false;
+		updateTE();
 	}
-	
+
 	public String getInventoryName() {
 		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockPackager.getLocalizedName();
 	}
-	
+
 	public void setInventoryName(String name) {
 		customName = name;
 	}
@@ -126,7 +127,7 @@ public class TilePackager extends TileEntity implements IInventory {
 	public boolean hasCustomInventoryName() {
 		return this.customName != null && this.customName.length() > 0;
 	}
-	
+
 	private int getCoinType(Item item) {
 		for (int i = 0; i < 5; i++) {
 			if (item == coins[i]) {
@@ -135,7 +136,7 @@ public class TilePackager extends TileEntity implements IInventory {
 		}
 		return -1;
 	}
-	
+
 	public void checkCard() {
 		if (inventory[itemCardSlot] != null && getAccountBalance() >= packageCost[packageSize]) {
 			cardAvailable = true;
@@ -147,31 +148,29 @@ public class TilePackager extends TileEntity implements IInventory {
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
-				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
-						zCoord + 0.5) < 64;
+				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
 	}
-	
+
 	public void sendPacket(int button, boolean shiftPressed) {
-		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord,
-				zCoord, button, shiftPressed));
+		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.func_148857_g());
 	}
-	
+
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
@@ -195,13 +194,12 @@ public class TilePackager extends TileEntity implements IInventory {
 		tagCompound.setInteger("medPrice", packageCost[1]);
 		tagCompound.setInteger("largePrice", packageCost[2]);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
-		
-		NBTTagList tagList = tagCompound.getTagList("Inventory",
-				Constants.NBT.TAG_COMPOUND);
+
+		NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
@@ -277,7 +275,7 @@ public class TilePackager extends TileEntity implements IInventory {
 		}
 		return stack;
 	}
-	
+
 	public void fillOutputSlot() {
 		inventory[itemOutputSlot] = null;
 		if (coinSum > 0) {
@@ -289,7 +287,7 @@ public class TilePackager extends TileEntity implements IInventory {
 			int itemValue = multiplier[logVal];
 			int debitAmount = 0;
 			debitAmount = Math.min(stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-			if(!worldObj.isRemote) {
+			if (!worldObj.isRemote) {
 				coinSum -= debitAmount * itemValue;
 			}
 		}
@@ -319,7 +317,7 @@ public class TilePackager extends TileEntity implements IInventory {
 			if (slot == itemCardSlot) {
 				checkCard();
 			}
-		}		
+		}
 	}
 
 	@Override
@@ -328,11 +326,11 @@ public class TilePackager extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {		
+	public void openInventory() {
 	}
 
 	@Override
-	public void closeInventory() {		
+	public void closeInventory() {
 	}
 
 	@Override
@@ -346,9 +344,10 @@ public class TilePackager extends TileEntity implements IInventory {
 			if (getWorldString(accountNumber) != "") {
 				return getWorldInt(accountNumber);
 			}
-		} return -1;
+		}
+		return -1;
 	}
-	
+
 	public void debitAccount(int amount) {
 		if (inventory[itemCardSlot] != null) {
 			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
@@ -359,7 +358,7 @@ public class TilePackager extends TileEntity implements IInventory {
 			}
 		}
 	}
-	
+
 	public void creditAccount(int amount) {
 		if (inventory[itemCardSlot] != null) {
 			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
@@ -370,24 +369,60 @@ public class TilePackager extends TileEntity implements IInventory {
 			}
 		}
 	}
-	
+
 	private void setWorldData(String tag, int data) {
 		UCWorldData wData = UCWorldData.get(super.worldObj);
 		NBTTagCompound wdTag = wData.getData();
 		wdTag.setInteger(tag, data);
 		wData.markDirty();
 	}
-	
+
 	private int getWorldInt(String tag) {
 		UCWorldData wData = UCWorldData.get(super.worldObj);
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.getInteger(tag);
 	}
-	
+
 	private String getWorldString(String tag) {
 		UCWorldData wData = UCWorldData.get(super.worldObj);
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.getString(tag);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		//return all slots so connections can go anywhere
+		if (packageSize == 0) return new int[] { 4, 5, 6, 7, 8, 9, 10 };
+		if (packageSize == 1) return new int[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		if (packageSize == 2) return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		return null;
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		// first check if items inserted are coins. put them in the coin input slot if they are.
+		if (var1 == itemCoinSlot
+				&& (var2.getItem() == (UniversalCoins.proxy.itemCoin)
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
+						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack)
+						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag) || var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
+			return true;
+			// put everything else in the item input slot
+		} else if (var1 < itemPackageSlot.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		// allow pulling items from output slot only
+		if (var1 == itemOutputSlot) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
