@@ -150,13 +150,21 @@ private static void loadPricelists() throws IOException {
 	    	  String tempString = "";
 	    	  String[] modName = configList[i].getName().split("\\.");
 	    	  while ((tempString = br.readLine()) != null) {
+	    		  if (tempString.startsWith("//") || tempString.startsWith("#")) {
+		    		  continue; //we have a comment. skip it
+		    	  }
 	    		  String[] tempData = tempString.split("=");
+	    		  if (tempData.length < 2) {
+	    			  //something is wrong with this line
+	    			  FMLLog.warning("Universal Coins: Error detected in pricelist: " + configList[i].getName() + " " + tempString + " is invalid input");
+	    			  continue;
+	    		  }
 	    		  int itemPrice = -1;
 	    		  try {
 	    			  itemPrice = Integer.valueOf(tempData[1]);
 	    		  } 
 	    		  catch (NumberFormatException e) {
-	    			  FMLLog.warning("Universal Coins: Invalid price for " + tempData[0] + " in pricelist.");
+	    			  FMLLog.warning("Universal Coins: Error detected in pricelist: " + configList[i].getName() + " " + tempString + " is invalid input");
 	    		  }
 	    		  ucPriceMap.put(tempData[0], itemPrice);
 	    		  ucModnameMap.put(tempData[0], modName[0]);

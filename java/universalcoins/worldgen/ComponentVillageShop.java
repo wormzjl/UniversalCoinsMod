@@ -21,18 +21,17 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 	private int averageGroundLevel = -1;
 
 	public ComponentVillageShop(Start startPiece, int p5, Random random, StructureBoundingBox box, int p4) {
-		super();
+		super(startPiece, p5);
 		this.coordBaseMode = p4;
 		this.boundingBox = box;
 		MapGenStructureIO.func_143031_a(ComponentVillageShop.class, "ViUS");
 	}
 
-	public static ComponentVillageShop buildComponent(Start startPiece, List pieces, Random random, int p1, int p2, int p3, int p4,
-			int p5) {
-		StructureBoundingBox box = StructureBoundingBox
-				.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 5, 7, p4);
-		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? 
-				new ComponentVillageShop(startPiece, p5, random, box, p4) : null;
+	public static ComponentVillageShop buildComponent(Start startPiece, List pieces, Random random, int p1, int p2,
+			int p3, int p4, int p5) {
+		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 5, 7, p4);
+		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? new ComponentVillageShop(
+				startPiece, p5, random, box, p4) : null;
 	}
 
 	@Override
@@ -43,60 +42,64 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
-			//this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.minY, 0);
-			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
+			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.minY, 0);
 		}
-		
+
 		// Clear area twice in case of sand or gravel
 		fillWithAir(world, sbb, 0, 0, 0, 5, 6, 7);
 		fillWithAir(world, sbb, 0, 0, 0, 5, 6, 7);
 		// start with block
 		fillWithBlocks(world, sbb, 0, 0, 0, 5, 0, 7, Blocks.double_stone_slab, Blocks.double_stone_slab, false);
-		//main wall
+		// main wall
 		fillWithBlocks(world, sbb, 0, 1, 0, 5, 1, 7, Blocks.planks, Blocks.planks, false);
-		//front
+		// front
 		fillWithBlocks(world, sbb, 0, 2, 0, 5, 3, 0, Blocks.fence, Blocks.fence, false);
-		//back
+		// back
 		fillWithBlocks(world, sbb, 0, 2, 7, 5, 3, 7, Blocks.fence, Blocks.fence, false);
-		//top
+		// top
 		fillWithBlocks(world, sbb, 0, 4, 0, 5, 4, 7, Blocks.planks, Blocks.planks, false);
 		fillWithBlocks(world, sbb, 1, 5, 1, 4, 5, 6, Blocks.planks, Blocks.planks, false);
-		//clear main
+		// clear main
 		fillWithAir(world, sbb, 1, 1, 1, 4, 4, 6);
-		//clear door
+		// clear door
 		fillWithAir(world, sbb, 2, 1, 0, 3, 2, 0);
-		//clear back
+		// clear back
 		fillWithAir(world, sbb, 1, 2, 7, 4, 2, 7);
-		//torches
+		// torches
 		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 1, 4, 1, boundingBox);
 		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 4, 4, 1, boundingBox);
 		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 1, 4, 6, boundingBox);
 		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 4, 4, 6, boundingBox);
-		//signs
-		fillWithMetadataBlocks(world, sbb, 1, 1, 1, 1, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(5), UniversalCoins.proxy.wall_ucsign, getSignMeta(5), false);
-		fillWithMetadataBlocks(world, sbb, 4, 1, 1, 4, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(4), UniversalCoins.proxy.wall_ucsign, getSignMeta(4), false);
-		//vending blocks
-		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor, false);
-		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor, false);
-	
-		//fill left vending blocks
-		ItemStack[] lItems = {new ItemStack(Items.apple),new ItemStack(Items.carrot),new ItemStack(Items.wheat),
-				new ItemStack(Items.potato),new ItemStack(Items.fish),new ItemStack(Items.chicken)};
-		int[] lPrices = {20,30,30,30,40,30};
-		for (int i = 0;i<6;i++){
+		// signs
+		fillWithMetadataBlocks(world, sbb, 1, 1, 1, 1, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(5),
+				UniversalCoins.proxy.wall_ucsign, getSignMeta(5), false);
+		fillWithMetadataBlocks(world, sbb, 4, 1, 1, 4, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(4),
+				UniversalCoins.proxy.wall_ucsign, getSignMeta(4), false);
+		// vending blocks
+		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.blockVendor,
+				UniversalCoins.proxy.blockVendor, false);
+		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor,
+				UniversalCoins.proxy.blockVendor, false);
+
+		// fill left vending blocks
+		ItemStack[] lItems = { new ItemStack(Items.apple), new ItemStack(Items.carrot), new ItemStack(Items.wheat),
+				new ItemStack(Items.potato), new ItemStack(Items.fish), new ItemStack(Items.chicken) };
+		int[] lPrices = { 20, 30, 30, 30, 40, 30 };
+		for (int i = 0; i < 6; i++) {
 			addVendorItems(world, 0, 2, i + 1, lItems[i], lPrices[i]);
 		}
-		//fill right vending blocks
-		ItemStack[] rItems = {new ItemStack(Items.arrow, 16),new ItemStack(Items.emerald),new ItemStack(Items.experience_bottle),
-				new ItemStack(Blocks.wool, 4),new ItemStack(Items.reeds, 8),new ItemStack(Items.potionitem, 1, 8197)};
-		int[] rPrices = {160,7200,300,320,240,1200};
-		for (int i = 0;i<6;i++){
+		// fill right vending blocks
+		ItemStack[] rItems = { new ItemStack(Items.arrow, 16), new ItemStack(Items.emerald),
+				new ItemStack(Items.experience_bottle), new ItemStack(Blocks.wool, 4), new ItemStack(Items.reeds, 8),
+				new ItemStack(Items.potionitem, 1, 8197) };
+		int[] rPrices = { 160, 7200, 300, 320, 240, 1200 };
+		for (int i = 0; i < 6; i++) {
 			addVendorItems(world, 5, 2, i + 1, rItems[i], rPrices[i]);
 		}
-		
+
 		return true;
 	}
-	
+
 	protected void addVendorItems(World world, int par4, int par5, int par6, ItemStack stack, int price) {
 		int i1 = this.getXWithOffset(par4, par6);
 		int j1 = this.getYWithOffset(par5);
@@ -115,65 +118,54 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		}
 	}
 
-	//villages 26,580 - 530,1110 - 800,150
 	private int getSignMeta(int meta) {
-		//sign meta/rotation  2=S ,3=N ,4=E ,5=W
-		//coordBaseMode  0=S ,1=W ,2=N ,3=E
-		//returns meta value needed to rotate sign normally
+		// sign meta/rotation 2=S ,3=N ,4=E ,5=W
+		// coordBaseMode 0=S ,1=W ,2=N ,3=E
+		// returns meta value needed to rotate sign normally
 		if (coordBaseMode == 0) {
-			if (meta == 2) return 3;
-			if (meta == 3) return 2;
-			if (meta == 4) return 4;
-			if (meta == 5) return 5;
+			if (meta == 2)
+				return 3;
+			if (meta == 3)
+				return 2;
+			if (meta == 4)
+				return 4;
+			if (meta == 5)
+				return 5;
 			return 2;
 		}
 		if (coordBaseMode == 1) {
-			if (meta == 2) return 4;
-			if (meta == 3) return 5;
-			if (meta == 4) return 2;
-			if (meta == 5) return 3;
+			if (meta == 2)
+				return 4;
+			if (meta == 3)
+				return 5;
+			if (meta == 4)
+				return 2;
+			if (meta == 5)
+				return 3;
 			return 4;
 		}
 		if (coordBaseMode == 2) {
-			if (meta == 2) return 2;
-			if (meta == 3) return 3;
-			if (meta == 4) return 4;
-			if (meta == 5) return 5;
+			if (meta == 2)
+				return 2;
+			if (meta == 3)
+				return 3;
+			if (meta == 4)
+				return 4;
+			if (meta == 5)
+				return 5;
 			return 3;
 		}
 		if (coordBaseMode == 3) {
-			if (meta == 2) return 5;
-			if (meta == 3) return 4;
-			if (meta == 4) return 2;
-			if (meta == 5) return 3;
+			if (meta == 2)
+				return 5;
+			if (meta == 3)
+				return 4;
+			if (meta == 4)
+				return 2;
+			if (meta == 5)
+				return 3;
 			return 5;
 		}
 		return 5;
-	}
-	private int getPathHeight(World world) {
-		int i1 = this.getXWithOffset(0, 0);
-		int j1 = this.getYWithOffset(0);
-		int k1 = this.getZWithOffset(0, 0);
-		if (coordBaseMode == 0) {
-			//FMLLog.info("in getPathHeight: " + world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1));
-			//FMLLog.info("coords: " + (i1 + 2) + " " + (k1 - 1));
-			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
-		}
-		if (coordBaseMode == 1) {
-			//FMLLog.info("in getPathHeight: " + world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 2));
-			//FMLLog.info("coords: " + (i1 + 1) + " " + (k1 - 2));
-			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
-		}
-		if (coordBaseMode == 2) {
-			//FMLLog.info("in getPathHeight: " + world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1));
-			//FMLLog.info("coords: " + (i1 - 2) + " " + (k1 + 1));
-			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
-		}
-		if (coordBaseMode == 3) {
-			//FMLLog.info("in getPathHeight: " + world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2));
-			//FMLLog.info("coords: " + (i1 - 1) + " " + (k1 + 2));
-			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
-		}
-		return 0;
 	}
 }

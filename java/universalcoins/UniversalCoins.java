@@ -67,7 +67,7 @@ import cpw.mods.fml.relauncher.Side;
  **/
 
 @Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version,
-acceptedMinecraftVersions = "[1.7.2]", dependencies = "required-after:Forge@[10.12.2.1121,)")
+acceptedMinecraftVersions = "[1.7.2,1.7.10]", dependencies = "required-after:Forge@[10.12.2.1121,)")
 
 public class UniversalCoins {
 	@Instance("universalcoins")
@@ -197,9 +197,9 @@ public class UniversalCoins {
 		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
 		
 		//world gen
-		Property worldGenProperty = config.get("World Generation", "Village addons enabled", false);
+		Property worldGenProperty = config.get("World Generation", "Village addons enabled", true);
 		worldGenProperty.comment = "Set to false to disable adding banks or shops to villages.";
-		worldGenEnabled = worldGenProperty.getBoolean(false);
+		worldGenEnabled = worldGenProperty.getBoolean(true);
 		
 		config.save();
 		

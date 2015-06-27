@@ -18,16 +18,15 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 	private int averageGroundLevel = -1;
 
 	public ComponentVillageBank(Start startPiece, int p5, Random random, StructureBoundingBox box, int p4) {
-		super();
+		super(startPiece, p5);
 		this.coordBaseMode = p4;
 		this.boundingBox = box;
 		MapGenStructureIO.func_143031_a(ComponentVillageBank.class, "ViUB");
 	}
 
-	public static ComponentVillageBank buildComponent(Start startPiece, List pieces, Random random, int p1, int p2, int p3, int p4,
-			int p5) {
-		StructureBoundingBox box = StructureBoundingBox
-				.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 6, 6, p4);
+	public static ComponentVillageBank buildComponent(Start startPiece, List pieces, Random random, int p1, int p2,
+			int p3, int p4, int p5) {
+		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 6, 6, p4);
 		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? new ComponentVillageBank(
 				startPiece, p5, random, box, p4) : null;
 	}
@@ -40,17 +39,19 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
-			this.boundingBox.offset(0, getPathHeight(world) - this.boundingBox.minY - 1, 0);
+			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.minY, 0);
 		}
-		
+
 		int meta = coordBaseMode + 2;
-		if (meta > 3) { meta = meta - 4; }
+		if (meta > 3) {
+			meta = meta - 4;
+		}
 
 		// Clear area twice in case of sand
 		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
 		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
 		// start with block
-		fillWithBlocks(world, sbb, 0, 0, 0, 4, 3, 5, Blocks.stone, Blocks.stone, false);
+		fillWithBlocks(world, sbb, 0, 0, 0, 4, 3, 5, Blocks.planks, Blocks.planks, false);
 		// windows
 		fillWithBlocks(world, sbb, 0, 2, 2, 4, 2, 3, Blocks.glass, Blocks.glass, false);
 		// roof
@@ -74,8 +75,8 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		// sign
 		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.wall_ucsign, getSignMeta(3), 1, 2, 0, boundingBox);
 		addSignText(world, boundingBox, 1, 2, 0);
-		
-		return false;
+
+		return true;
 	}
 
 	protected void addSignText(World world, StructureBoundingBox boundingBox, int par4, int par5, int par6) {
@@ -87,66 +88,63 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			TileUCSign tileentitysign = (TileUCSign) world.getTileEntity(i1, j1, k1);
 
 			if (tileentitysign != null) {
-				String signText[] = {"","","",""};
+				String signText[] = { "", "", "", "" };
 				signText[1] = "Universal Bank";
 				tileentitysign.signText = signText;
 			}
 		}
 	}
-	
+
 	private int getSignMeta(int meta) {
-		//sign meta/rotation
-		//2=S ,3=N ,4=E ,5=W
-		//coordBaseMode
-		//0=S ,1=W ,2=N ,3=E
-		//returns meta value needed to rotate sign normally
+		// sign meta/rotation
+		// 2=S ,3=N ,4=E ,5=W
+		// coordBaseMode
+		// 0=S ,1=W ,2=N ,3=E
+		// returns meta value needed to rotate sign normally
 		if (coordBaseMode == 0) {
-			if (meta == 2) return 3;
-			if (meta == 3) return 2;
-			if (meta == 4) return 4;
-			if (meta == 5) return 5;
+			if (meta == 2)
+				return 3;
+			if (meta == 3)
+				return 2;
+			if (meta == 4)
+				return 4;
+			if (meta == 5)
+				return 5;
 			return 2;
 		}
 		if (coordBaseMode == 1) {
-			if (meta == 2) return 4;
-			if (meta == 3) return 5;
-			if (meta == 4) return 2;
-			if (meta == 5) return 3;
+			if (meta == 2)
+				return 4;
+			if (meta == 3)
+				return 5;
+			if (meta == 4)
+				return 2;
+			if (meta == 5)
+				return 3;
 			return 4;
 		}
 		if (coordBaseMode == 2) {
-			if (meta == 2) return 2;
-			if (meta == 3) return 3;
-			if (meta == 4) return 4;
-			if (meta == 5) return 5;
+			if (meta == 2)
+				return 2;
+			if (meta == 3)
+				return 3;
+			if (meta == 4)
+				return 4;
+			if (meta == 5)
+				return 5;
 			return 3;
 		}
 		if (coordBaseMode == 3) {
-			if (meta == 2) return 5;
-			if (meta == 3) return 4;
-			if (meta == 4) return 2;
-			if (meta == 5) return 3;
+			if (meta == 2)
+				return 5;
+			if (meta == 3)
+				return 4;
+			if (meta == 4)
+				return 2;
+			if (meta == 5)
+				return 3;
 			return 5;
 		}
 		return 5;
-	}
-	
-	private int getPathHeight(World world) {
-		int i1 = this.getXWithOffset(0, 0);
-		int j1 = this.getYWithOffset(0);
-		int k1 = this.getZWithOffset(0, 0);
-		if (coordBaseMode == 0) {
-			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
-		}
-		if (coordBaseMode == 1) {
-			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
-		}
-		if (coordBaseMode == 2) {
-			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
-		}
-		if (coordBaseMode == 3) {
-			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
-		}
-		return 0;
 	}
 }
