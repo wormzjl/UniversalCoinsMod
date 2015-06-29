@@ -15,7 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 
 public class TileSafe extends TileEntity implements IInventory, ISidedInventory {
 	private ItemStack[] inventory = new ItemStack[2];
@@ -88,7 +88,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			int debitAmount = 0;
 			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
 			if(!worldObj.isRemote) {
-				debitAccount(debitAmount * itemValue);
+				UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, debitAmount * itemValue);
 				updateAccountBalance();
 			}
 			fillOutputSlot();
@@ -110,7 +110,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 				int depositAmount = 0;
 				depositAmount = Math.min(stack.stackSize,(Integer.MAX_VALUE - accountBalance) / itemValue);
 				if (!worldObj.isRemote) {
-					creditAccount(depositAmount * itemValue);
+					UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, depositAmount * itemValue);
 					updateAccountBalance();
 				}
 				inventory[slot].stackSize -= depositAmount;
@@ -122,6 +122,10 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		}
 	}
 	
+	public void updateAccountBalance() {
+		accountBalance = UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+	}
+
 	public void fillOutputSlot() {
 		if (accountBalance > 0) {
 			// use logarithm to find largest cointype for the balance
@@ -244,89 +248,12 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	}
 	
 	public void setSafeAccount(String playerName) {
-		accountNumber = getPlayerAccount(getPlayerUID(playerName));
+		accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(worldObj, getPlayerUID(playerName));
 	}
 	
 	private String getPlayerUID(String playerName) {
 		World world = super.getWorldObj();
 		EntityPlayer player = world.getPlayerEntityByName(playerName);
 		return player.getUniqueID().toString();
-	}
-	
-	private String getPlayerAccount(String playerUID) {
-		//creates new account if none found
-		//always returns an account number
-		String accountNumber = getWorldString(playerUID);
-		if (accountNumber == "") {
-			addPlayerAccount(playerUID);
-		}
-		return getWorldString(playerUID);
-	}
-	
-	private void addPlayerAccount(String playerUID) {
-		String accountNumber = "";
-		if (getWorldString(playerUID) == "") {
-			while (getWorldString(accountNumber) == "") {
-				accountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(accountNumber) == "") {
-					setWorldData(playerUID, accountNumber);
-					setWorldData(accountNumber, 0);
-				}
-			}
-		}
-	}
-	
-	private int generateAccountNumber() {
-		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
-	}
-	
-	public void updateAccountBalance() {
-		if (getWorldString(accountNumber) != "0") {
-			accountBalance = getWorldInt(accountNumber);
-		}
-	}
-	
-	private void creditAccount(int amount) {
-		if (getWorldString(accountNumber) != "0") {
-			int balance = getWorldInt(accountNumber);
-			balance += amount;
-			setWorldData(accountNumber, balance);
-		}
-	}
-	
-	private void debitAccount(int amount) {
-		if (blockOwner != "") {
-			if (getWorldString(accountNumber) != "0") {
-				int balance = getWorldInt(accountNumber);
-				balance -= amount;
-				setWorldData(accountNumber, balance);
-			}
-		}
-	}
-	
-	private void setWorldData(String tag, String data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setString(tag, data);
-		wData.markDirty();
-	}
-	
-	private void setWorldData(String tag, int data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
-	}
-	
-	private int getWorldInt(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
 	}
 }

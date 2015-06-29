@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 
 public class TilePackager extends TileEntity implements IInventory, ISidedInventory {
 
@@ -138,10 +138,13 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void checkCard() {
-		if (inventory[itemCardSlot] != null && getAccountBalance() >= packageCost[packageSize]) {
-			cardAvailable = true;
-		} else {
-			cardAvailable = false;
+		cardAvailable = false;
+		if (inventory[itemCardSlot] != null) {
+			String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
+			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(worldObj, account);
+			if (accountBalance > packageCost[packageSize]) {
+				cardAvailable = true;
+			}
 		}
 	}
 
@@ -336,57 +339,6 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	@Override
 	public boolean isItemValidForSlot(int var1, ItemStack var2) {
 		return false;
-	}
-
-	public int getAccountBalance() {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				return getWorldInt(accountNumber);
-			}
-		}
-		return -1;
-	}
-
-	public void debitAccount(int amount) {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance -= amount;
-				setWorldData(accountNumber, balance);
-			}
-		}
-	}
-
-	public void creditAccount(int amount) {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance += amount;
-				setWorldData(accountNumber, balance);
-			}
-		}
-	}
-
-	private void setWorldData(String tag, int data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
-	}
-
-	private int getWorldInt(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-
-	private String getWorldString(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
 	}
 
 	@Override

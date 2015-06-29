@@ -15,7 +15,7 @@ import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCTileCardStationMessage;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 
 public class TileCardStation extends TileEntity implements IInventory, ISidedInventory {
 	private ItemStack[] inventory = new ItemStack[2];
@@ -125,6 +125,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		}
 	}
 
+	
 	@Override
 	public String getInventoryName() {
 		return UniversalCoins.proxy.blockCardStation.getLocalizedName();
@@ -370,145 +371,40 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		}
 	}
 	
-	private int getAccountBalance(String accountNumber) {
-		if (getWorldString(accountNumber) != "") {
-			return getWorldInt(accountNumber);
-		} else return -1;	
+	private String getCustomAccount(String playerUID2) {
+		return UniversalAccounts.getInstance().getCustomAccount(worldObj, playerUID2);
 	}
-	
-	private void debitAccount(String accountNumber, int amount) {
-		if (getWorldString(accountNumber) != "") {
-			int balance = getWorldInt(accountNumber);
-			balance -= amount;
-			setWorldData(accountNumber, balance);
-		}
+
+	private String getPlayerAccount(String playerUID2) {
+		return UniversalAccounts.getInstance().getPlayerAccount(worldObj, playerUID2);
 	}
-	
-	private void creditAccount(String accountNumber, int amount) {
-		if (getWorldString(accountNumber) != "") {
-			int balance = getWorldInt(accountNumber);
-			balance += amount;
-			setWorldData(accountNumber, balance);
-		}
+
+	private void addPlayerAccount(String playerUID2) {
+		UniversalAccounts.getInstance().addPlayerAccount(worldObj, playerUID2);
 	}
-	
-	private String getPlayerAccount(String playerUID) {
-		//returns an empty string if no account found
-		return getWorldString(playerUID);
+
+	private int getAccountBalance(String accountNumber2) {
+		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber2);
 	}
-	
-	private void addPlayerAccount(String playerUID) {
-		if (getWorldString(playerUID) == "") {
-			while (getWorldString(accountNumber) == "") {
-				accountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(accountNumber) == "") {
-					setWorldData(playerUID, accountNumber);
-					setWorldData(accountNumber, 0);
-				}
-			}
-		} else {
-			//we have a problem we need to clear stale account data
-			
-		}
-	}
-	
-	private String getCustomAccount(String playerUID){
-		return getWorldString("¿" + playerUID);
-	}
-	
-	private boolean addCustomAccount(String customName) {
-		//custom accounts are added as a relation of playername to customname
-		//customnames are then associated with an account number
-		if (getWorldString("¿" + playerUID) == "" && getWorldString(customName) == "") {
-			while (getWorldString(customAccountNumber) == "") {
-				customAccountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(customAccountNumber) == "") {
-					setWorldData("¿" + playerUID, customName);
-					setWorldData(customName, customAccountNumber);
-					setWorldData(customAccountNumber, 0);
-					return true;
-				}
-			}
-		}
-		return false;
+
+	private void creditAccount(String accountNumber2, int i) {
+		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber2, i);
 	}
 	
 	private void transferCustomAccount() {
-		String oldName = getWorldString("¿" + playerUID);
-		String oldAccount = getWorldString(oldName);
-		int oldBalance = getAccountBalance(oldAccount);
-		delWorldData("¿" + playerUID);
-		delWorldData(oldName);
-		delWorldData(oldAccount);
-		if (getWorldString("¿" + playerUID) == "") {
-			customAccountNumber = "none";
-			while (getWorldString(customAccountNumber) == "") {
-				customAccountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(customAccountNumber) == "") {
-					setWorldData("¿" + playerUID, customAccountName);
-					setWorldData(customAccountName, customAccountNumber);
-					setWorldData(customAccountNumber, oldBalance);
-				}
-				if (getWorldString(oldAccount) != "") {
-					delWorldData(oldAccount);
-					delWorldData(oldName);
-				}
-			}
-		}
+		UniversalAccounts.getInstance().transferCustomAccount(worldObj, playerUID, customAccountName);
+	}
+
+	private void addCustomAccount(String customAccountName2) {
+		UniversalAccounts.getInstance().addCustomAccount(worldObj, customAccountName2, playerUID);
+	}
+
+	private void transferPlayerAccount(String playerUID2) {
+		UniversalAccounts.getInstance().transferPlayerAccount(worldObj, playerUID2);
 	}
 	
-	private void transferPlayerAccount(String playerUID) {
-		String oldAccount = getWorldString(playerUID);
-		int oldBalance = getAccountBalance(oldAccount);
-		delWorldData(playerUID);
-		if (getWorldString(playerUID) == "") {
-			accountNumber = "none";
-			while (getWorldString(accountNumber) == "") {
-				accountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(accountNumber) == "") {
-					setWorldData(playerUID, accountNumber);
-					setWorldData(accountNumber, oldBalance);
-				}
-			}
-		}
-		delWorldData(oldAccount);
-	}
-	
-	private int generateAccountNumber() {
-		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
-	}
-	
-	private void setWorldData(String tag, String data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setString(tag, data);
-		wData.markDirty();
-	}
-	
-	private void setWorldData(String tag, int data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
-	}
-	
-	private int getWorldInt(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
-	}
-	
-	private void delWorldData(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.removeTag(tag);
-		wData.markDirty();
+	private void debitAccount(String accountNumber2, int i) {
+		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber2, i);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,7 +44,7 @@ public class ItemUCCard extends Item {
 		if( itemstack.stackTagCompound == null ) {
 			createNBT(itemstack, world, player);
 		}
-		int accountCoins = getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
+		int accountCoins = UniversalAccounts.getInstance().getAccountBalance(world, itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 					"item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
@@ -57,58 +57,10 @@ public class ItemUCCard extends Item {
 	}
 	
 	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
-		String accountNumber = getOrCreatePlayerAccount(world, entityPlayer.getPersistentID().toString());
+		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(world, entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setString("Name", entityPlayer.getDisplayName());
 		stack.stackTagCompound.setString("Owner", entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound.setString("Account", accountNumber);
-	}
-	
-	private String getOrCreatePlayerAccount(World world, String playerUID) {
-		String accountNumber = getWorldString(world, playerUID);
-		if (accountNumber == "") {
-			while (getWorldString(world, accountNumber) == "") {
-				accountNumber = String.valueOf(generateAccountNumber());
-				if (getWorldString(world, accountNumber) == "") {
-					setWorldData(world, playerUID, accountNumber);
-					setWorldData(world, accountNumber, 0);
-				}
-			}
-		}
-		return accountNumber;
-	}
-	
-	private int getAccountBalance(World world, String accountNumber) {
-		return getWorldInt(world, accountNumber);
-	}
-	
-	private int generateAccountNumber() {
-		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
-	}
-
-	private int getWorldInt(World world, String tag) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(World world, String tag) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
-	}
-	
-	private void setWorldData(World world, String tag, String data) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setString(tag, data);
-		wData.markDirty();
-	}
-	
-	private void setWorldData(World world, String tag, int data) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
 	}
 }

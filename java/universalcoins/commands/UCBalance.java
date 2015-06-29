@@ -7,11 +7,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import universalcoins.UniversalCoins;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 
 public class UCBalance extends CommandBase {
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
@@ -41,10 +40,11 @@ public class UCBalance extends CommandBase {
 	public void processCommand(ICommandSender sender, String[] astring) {
 		if (sender instanceof EntityPlayerMP) {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
-			String playerAcct = getPlayerAccount((EntityPlayerMP) sender);
-			String customAcct = getCustomAccount((EntityPlayerMP) sender);
-			int accountBalance = getAccountBalance((EntityPlayerMP) sender, playerAcct);
-			int custAccountBalance = getAccountBalance((EntityPlayerMP) sender, customAcct);
+			String uuid = ((EntityPlayerMP) sender).getPersistentID().toString();
+			String playerAcct = UniversalAccounts.getInstance().getPlayerAccount(((EntityPlayerMP) sender).worldObj, uuid);
+			String customAcct = UniversalAccounts.getInstance().getCustomAccount(((EntityPlayerMP) sender).worldObj, uuid);
+			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(((EntityPlayerMP) sender).worldObj, playerAcct);
+			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(((EntityPlayerMP) sender).worldObj, customAcct);
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 					"command.balance.result.inventory") + formatter.format(playerCoins)));
@@ -70,33 +70,5 @@ public class UCBalance extends CommandBase {
 			}
 		}
 		return coinsFound;
-	}
-	
-	private String getCustomAccount(EntityPlayerMP player){
-		String accountName = getWorldString(player, "¿" + player.getUniqueID().toString());
-		return getWorldString(player, accountName);
-	}
-	
-	private String getPlayerAccount(EntityPlayerMP player) {
-		//returns an empty string if no account found
-		return getWorldString(player, player.getUniqueID().toString());
-	}
-	
-	private int getAccountBalance(EntityPlayerMP player, String accountNumber) {
-		if (getWorldString(player, accountNumber) != "") {
-			return getWorldInt(player, accountNumber);
-		} else return -1;	
-	}
-	
-	private int getWorldInt(EntityPlayerMP player, String tag) {
-		UCWorldData wData = UCWorldData.get(player.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(EntityPlayerMP player, String tag) {
-		UCWorldData wData = UCWorldData.get(player.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
 	}
 }

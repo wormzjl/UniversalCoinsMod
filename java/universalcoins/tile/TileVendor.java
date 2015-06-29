@@ -22,7 +22,7 @@ import universalcoins.items.ItemEnderCard;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCTextureMessage;
 import universalcoins.net.UCVendorServerMessage;
-import universalcoins.util.UCWorldData;
+import universalcoins.util.UniversalAccounts;
 
 public class TileVendor extends TileEntity implements IInventory, ISidedInventory {
 	
@@ -118,7 +118,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			sellButtonActive = true;
 		} else sellButtonActive = false;
 	}
-	
+
 	private void activateRetrieveButtons() {
 		coinButtonActive = false;
 		isSStackButtonActive = false;
@@ -326,6 +326,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		checkSellingInventory(); //we sold things. Make sure we still have some left
 	}
 	
+	
+
 	public void onBuyMaxPressed() {
 		boolean useCard = false;
 		int amount = 0;
@@ -367,7 +369,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 		onBuyPressed(amount);
 	}
-	
+
 	public void onSellPressed() {
 		onSellPressed(1);
 	}
@@ -914,15 +916,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 	}
 	
-	public int getUserAccountBalance() {
-		if (inventory[itemUserCardSlot] != null) {
-			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				return getWorldInt(accountNumber);
-			}
-		} return -1;
-	}
-	
 	public void setRemoteStorage(int[] storageLocation) {
 		remoteX = storageLocation[0];
 		remoteY = storageLocation[1];
@@ -949,80 +942,6 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				}
 			}
 		}
-	}
-	
-	public boolean debitUserAccount(int amount) {
-		if (inventory[itemUserCardSlot] != null) {
-			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance -= amount;
-				setWorldData(accountNumber, balance);
-				return true;
-			}
-		} return false;
-	}
-	
-	public void creditUserAccount(int amount) {
-		if (inventory[itemUserCardSlot] != null) {
-			String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance += amount;
-				setWorldData(accountNumber, balance);
-			}
-		}
-	}
-	
-	public int getOwnerAccountBalance() {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				return getWorldInt(accountNumber);
-			}
-		} return -1;
-	}
-	
-	public boolean debitOwnerAccount(int amount) {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance -= amount;
-				setWorldData(accountNumber, balance);
-				return true;
-			}
-		} return false;
-	}
-	
-	public void creditOwnerAccount(int amount) {
-		if (inventory[itemCardSlot] != null) {
-			String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-			if (getWorldString(accountNumber) != "") {
-				int balance = getWorldInt(accountNumber);
-				balance += amount;
-				setWorldData(accountNumber, balance);
-			}
-		}
-	}
-	
-	private void setWorldData(String tag, int data) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
-	}
-	
-	private int getWorldInt(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(String tag) {
-		UCWorldData wData = UCWorldData.get(super.worldObj);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
 	}
 	
 	private void loadRemoteChunk(int x, int y, int z) {
@@ -1061,4 +980,35 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 			if(textColor < 15) textColor++;
 		}
 	}
+	
+	private int getOwnerAccountBalance() {
+		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+	}
+	
+	private void creditOwnerAccount(int i) {
+		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, i);
+	}
+	
+	private void debitOwnerAccount(int i) {
+		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, i);
+	}
+
+	private void debitUserAccount(int i) {
+		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
+		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, i);
+	}
+	
+	private int getUserAccountBalance() {
+		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
+		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+	}
+	
+	private void creditUserAccount(int i) {
+		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
+		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, i);
+	}
+
 }
