@@ -39,7 +39,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
-			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.minY, 0);
+			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
 		}
 
 		int meta = coordBaseMode + 2;
@@ -146,5 +146,24 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			return 5;
 		}
 		return 5;
+	}
+	
+	private int getPathHeight(World world) {
+		int i1 = this.getXWithOffset(0, 0);
+		int j1 = this.getYWithOffset(0);
+		int k1 = this.getZWithOffset(0, 0);
+		if (coordBaseMode == 0) {
+			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
+		}
+		if (coordBaseMode == 1) {
+			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
+		}
+		if (coordBaseMode == 2) {
+			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
+		}
+		if (coordBaseMode == 3) {
+			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
+		}
+		return 0;
 	}
 }

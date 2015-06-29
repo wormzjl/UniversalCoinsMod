@@ -15,6 +15,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileVendor;
+import universalcoins.util.UCItemPricer;
 
 public class ComponentVillageShop extends StructureVillagePieces.Village {
 
@@ -42,7 +43,7 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
-			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.minY, 0);
+			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
 		}
 
 		// Clear area twice in case of sand or gravel
@@ -82,19 +83,20 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 				UniversalCoins.proxy.blockVendor, false);
 
 		// fill left vending blocks
-		ItemStack[] lItems = { new ItemStack(Items.apple), new ItemStack(Items.carrot), new ItemStack(Items.wheat),
-				new ItemStack(Items.potato), new ItemStack(Items.fish), new ItemStack(Items.chicken) };
-		int[] lPrices = { 20, 30, 30, 30, 40, 30 };
 		for (int i = 0; i < 6; i++) {
-			addVendorItems(world, 0, 2, i + 1, lItems[i], lPrices[i]);
+			int priceModifier = random.nextInt(UniversalCoins.shopMaxPrice - UniversalCoins.shopMinPrice)
+					+ UniversalCoins.shopMinPrice;
+			ItemStack stack = UCItemPricer.getInstance().getRandomPricedStack();
+			int price = UCItemPricer.getInstance().getItemPrice(stack);
+			addVendorItems(world, 0, 2, i + 1, stack, price * priceModifier / 100);
 		}
 		// fill right vending blocks
-		ItemStack[] rItems = { new ItemStack(Items.arrow, 16), new ItemStack(Items.emerald),
-				new ItemStack(Items.experience_bottle), new ItemStack(Blocks.wool, 4), new ItemStack(Items.reeds, 8),
-				new ItemStack(Items.potionitem, 1, 8197) };
-		int[] rPrices = { 160, 7200, 300, 320, 240, 1200 };
 		for (int i = 0; i < 6; i++) {
-			addVendorItems(world, 5, 2, i + 1, rItems[i], rPrices[i]);
+			int priceModifier = random.nextInt(UniversalCoins.shopMaxPrice - UniversalCoins.shopMinPrice)
+					+ UniversalCoins.shopMinPrice;
+			ItemStack stack = UCItemPricer.getInstance().getRandomPricedStack();
+			int price = UCItemPricer.getInstance().getItemPrice(stack);
+			addVendorItems(world, 5, 2, i + 1, stack, price * priceModifier / 100);
 		}
 
 		return true;
@@ -167,5 +169,24 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 			return 5;
 		}
 		return 5;
+	}
+	
+	private int getPathHeight(World world) {
+		int i1 = this.getXWithOffset(0, 0);
+		int j1 = this.getYWithOffset(0);
+		int k1 = this.getZWithOffset(0, 0);
+		if (coordBaseMode == 0) {
+			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
+		}
+		if (coordBaseMode == 1) {
+			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
+		}
+		if (coordBaseMode == 2) {
+			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
+		}
+		if (coordBaseMode == 3) {
+			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
+		}
+		return 0;
 	}
 }

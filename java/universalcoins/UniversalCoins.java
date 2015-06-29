@@ -67,14 +67,14 @@ import cpw.mods.fml.relauncher.Side;
  **/
 
 @Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version,
-acceptedMinecraftVersions = "[1.7.2,1.7.10]", dependencies = "required-after:Forge@[10.12.2.1121,)")
+acceptedMinecraftVersions = "@MC_VERSION@", dependencies = "@DEPENDENCIES@")
 
 public class UniversalCoins {
 	@Instance("universalcoins")
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.17";
+	public static final String version = "@VERSION@";
 	
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
@@ -89,7 +89,10 @@ public class UniversalCoins {
 	public static Boolean packagerRecipeEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
-	public static Boolean worldGenEnabled;
+	public static Boolean bankGenEnabled;
+	public static Boolean shopGenEnabled;
+	public static Integer shopMinPrice;
+	public static Integer shopMaxPrice;	
 	public static Integer mineshaftCoinChance;
 	public static Boolean coinsInDungeon;
 	public static Integer dungeonCoinChance;	
@@ -197,9 +200,19 @@ public class UniversalCoins {
 		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
 		
 		//world gen
-		Property worldGenProperty = config.get("World Generation", "Village addons enabled", true);
-		worldGenProperty.comment = "Set to false to disable adding banks or shops to villages.";
-		worldGenEnabled = worldGenProperty.getBoolean(true);
+		Property bankGenProperty = config.get("World Generation", "Village bank enabled", true);
+		bankGenProperty.comment = "Set to false to disable chance of adding bank to villages.";
+		bankGenEnabled = bankGenProperty.getBoolean(true);
+		Property shopGenProperty = config.get("World Generation", "Village shop enabled", true);
+		shopGenProperty.comment = "Set to false to disable chance of adding shop to villages.";
+		shopGenEnabled = shopGenProperty.getBoolean(true);
+		
+		Property shopMinPriceProperty = config.get("World Generation", "Minimum shop price", 80);
+		shopMinPriceProperty.comment = "Set the minimum price of items for sale in shops as a percent (min=1,max=100,default=80)";
+		shopMinPrice = Math.max(1,Math.min(shopMinPriceProperty.getInt(80),100));
+		Property shopMaxPriceProperty = config.get("World Generation", "Maximum shop price", 120);
+		shopMaxPriceProperty.comment = "Set the maximum price of items for sale in shops as a percent (min=80,max=300,default=120)";
+		shopMaxPrice = Math.max(80,Math.min(shopMaxPriceProperty.getInt(120),300));
 		
 		config.save();
 		
@@ -291,9 +304,11 @@ public class UniversalCoins {
 		UCRecipeHelper.addPlankTextureRecipes();
 		
 		//worldgen
-		if (worldGenEnabled) {
+		if (bankGenEnabled) {
 			VillageGenBank villageHandler = new VillageGenBank();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler);
+		}
+		if (shopGenEnabled) {
 			VillageGenShop villageHandler2 = new VillageGenShop();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
 		}	
@@ -301,8 +316,8 @@ public class UniversalCoins {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-	    UCItemPricer.initializeConfigs();
-	    UCItemPricer.loadConfigs();	
+	    UCItemPricer.getInstance().initializeConfigs();
+	    UCItemPricer.getInstance().loadConfigs();	
 	}
 	
 	@EventHandler
