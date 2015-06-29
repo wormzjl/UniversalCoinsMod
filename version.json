@@ -2,10 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.17",
+			"modVersion":"1.7.2-1.6.18",
 			"changeLog": [
-				"fixed shift+click not working in vending blocks/frames",
-				"added shop and bank worldgen (disabled by default)"
+				"random items and prices for shops",
+				"worldgen enabled by default",
+				"many more changes. see release notes"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -13,10 +14,11 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.17",
+			"modVersion":"1.7.10-1.6.18",
 			"changeLog": [
-				"fixed shift+click not working in vending blocks/frames",
-				"added shop and bank worldgen (disabled by default)"
+				"random items and prices for shops",
+				"worldgen enabled by default",
+				"many more changes. see release notes"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
