@@ -61,7 +61,13 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 					inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.itemPackage);
 					tagCompound.setTag("Inventory", itemList);
 					inventory[itemOutputSlot].setTagCompound(tagCompound);
-					coinSum -= packageCost[packageSize];
+					if (cardAvailable) {
+						String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
+						UniversalAccounts.getInstance().debitAccount(worldObj, account, packageCost[packageSize]);
+					} else {
+						coinSum -= packageCost[packageSize];
+
+					}
 				}
 
 			}

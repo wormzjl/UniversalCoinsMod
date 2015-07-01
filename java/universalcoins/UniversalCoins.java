@@ -66,16 +66,14 @@ import cpw.mods.fml.relauncher.Side;
  * 
  **/
 
-@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version,
-acceptedMinecraftVersions = "@MC_VERSION@", dependencies = "@DEPENDENCIES@")
-
+@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version, acceptedMinecraftVersions = "[1.7.2]")
 public class UniversalCoins {
 	@Instance("universalcoins")
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "@VERSION@";
-	
+	public static final String version = "1.7.2-1.6.18";
+
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
 	public static Boolean vendorRecipesEnabled;
@@ -92,10 +90,10 @@ public class UniversalCoins {
 	public static Boolean bankGenEnabled;
 	public static Boolean shopGenEnabled;
 	public static Integer shopMinPrice;
-	public static Integer shopMaxPrice;	
+	public static Integer shopMaxPrice;
 	public static Integer mineshaftCoinChance;
 	public static Boolean coinsInDungeon;
-	public static Integer dungeonCoinChance;	
+	public static Integer dungeonCoinChance;
 	public static Integer mobDropMax;
 	public static Integer mobDropChance;
 	public static Double itemSellRatio;
@@ -104,20 +102,20 @@ public class UniversalCoins {
 	public static Integer smallPackagePrice;
 	public static Integer medPackagePrice;
 	public static Integer largePackagePrice;
-	
+
 	public static SimpleNetworkWrapper snw;
-	
+
 	public static CreativeTabs tabUniversalCoins = new UCTab("tabUniversalCoins");
-	
-	@SidedProxy(clientSide="universalcoins.proxy.ClientProxy", serverSide="universalcoins.proxy.CommonProxy")
+
+	@SidedProxy(clientSide = "universalcoins.proxy.ClientProxy", serverSide = "universalcoins.proxy.CommonProxy")
 	public static CommonProxy proxy;
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		
-		//recipes
+
+		// recipes
 		Property recipes = config.get("Recipes", "Trade Station Recipes", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
 		tradeStationRecipesEnabled = recipes.getBoolean(true);
@@ -145,120 +143,124 @@ public class UniversalCoins {
 		Property packagerRecipe = config.get("Recipes", "Packager Recipe", true);
 		packagerRecipe.comment = "Set to false to disable crafting recipes for Packager.";
 		packagerRecipeEnabled = packagerRecipe.getBoolean(true);
-		
-		//loot
+
+		// loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
 		mobDrops.comment = "Set to false to disable mobs dropping coins on death.";
 		mobsDropCoins = mobDrops.getBoolean(true);
 		Property dropAmount = config.get("Loot", "Mob Drop Max", 39);
 		dropAmount.comment = "Max mob drop stacksize. Minimum 1. Maximum 64. Default 39.";
-		mobDropMax = Math.max(1,Math.min(dropAmount.getInt(39),64));
+		mobDropMax = Math.max(1, Math.min(dropAmount.getInt(39), 64));
 		Property dropChance = config.get("Loot", "Mob Drop Chance", 3);
 		dropChance.comment = "Chance of a mob dropping coins. Lower number means higher chance. Minimum 0 (always drop). Default 3 (1 in 4 chance).";
-		mobDropChance = Math.max(0,Math.min(dropChance.getInt(3),100));
+		mobDropChance = Math.max(0, Math.min(dropChance.getInt(3), 100));
 		Property mineshaftCoins = config.get("Loot", "Mineshaft CoinBag", true);
 		mineshaftCoins.comment = "Set to false to disable coinbag spawning in mineshaft chests.";
 		coinsInMineshaft = mineshaftCoins.getBoolean(true);
 		Property mineshaftCoinRate = config.get("Loot", "Mineshaft CoinBag Spawnrate", 20);
 		mineshaftCoinRate.comment = "Rate of coinbag spawning in mineshaft chests. Higher value equals more common. Default is 20.";
-		mineshaftCoinChance = Math.max(1,Math.min(mineshaftCoinRate.getInt(20),100));
+		mineshaftCoinChance = Math.max(1, Math.min(mineshaftCoinRate.getInt(20), 100));
 		Property dungeonCoins = config.get("Loot", "Dungeon CoinBag", true);
 		dungeonCoins.comment = "Set to false to disable coinbag spawning in dungeon chests.";
 		coinsInDungeon = dungeonCoins.getBoolean(true);
 		Property dungeonCoinRate = config.get("Loot", "Dungeon CoinBag Spawnrate", 20);
 		dungeonCoinRate.comment = "Rate of coinbag spawning in dungeon chests. Higher value equals more common. Default is 20.";
-		dungeonCoinChance = Math.max(1,Math.min(dungeonCoinRate.getInt(20),100));
-		
-		//slot machine
+		dungeonCoinChance = Math.max(1, Math.min(dungeonCoinRate.getInt(20), 100));
+
+		// slot machine
 		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 100);
 		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 100";
-		fourMatchPayout = Math.max(0,fourMatch.getInt(100));
+		fourMatchPayout = Math.max(0, fourMatch.getInt(100));
 		Property fiveMatch = config.get("Slot Machine", "Five of a kind payout", 10000);
 		fiveMatch.comment = "Set payout of slot machine when five of a kind is spun. Default: 10000";
-		fiveMatchPayout = Math.max(0,fiveMatch.getInt(10000));
-		
-		//trade station		
+		fiveMatchPayout = Math.max(0, fiveMatch.getInt(10000));
+
+		// trade station
 		Property autoMode = config.get("Trade Station", "Auto mode enabled", true);
 		autoMode.comment = "Set to false to disable the ability to automatically buy or sell items.";
 		autoModeEnabled = autoMode.getBoolean(true);
 		Property sellRatio = config.get("Trade Station", "Sell Ratio", 0.8);
 		sellRatio.comment = "Ratio of sell price to buy price. Set to less than 1.0 to give players a percentage of the full buy price when selling an item. (Range: 0.1 - 1.0)";
-		itemSellRatio = Math.max(0.1,Math.min(sellRatio.getDouble(0.8),1.0));
+		itemSellRatio = Math.max(0.1, Math.min(sellRatio.getDouble(0.8), 1.0));
 		Property tsBuyEnabled = config.get("Trade Station", "Trade Station Buy enabled", true);
 		tsBuyEnabled.comment = "Set to false to disable buying items from trade station.";
 		tradeStationBuyEnabled = tsBuyEnabled.getBoolean(true);
-		
-		//packager
+
+		// packager
 		Property smallPackage = config.get("Packager", "Small Package Price", 10);
 		smallPackage.comment = "Set the price of small package";
-		smallPackagePrice = Math.max(1,Math.min(smallPackage.getInt(10),1000));
+		smallPackagePrice = Math.max(1, Math.min(smallPackage.getInt(10), 1000));
 		Property medPackage = config.get("Packager", "Medium Package Price", 20);
 		medPackage.comment = "Set the price of medium package";
-		medPackagePrice = Math.max(1,Math.min(medPackage.getInt(20),1000));
+		medPackagePrice = Math.max(1, Math.min(medPackage.getInt(20), 1000));
 		Property largePackage = config.get("Packager", "Large Package Price", 40);
 		largePackage.comment = "Set the price of large package";
-		largePackagePrice = Math.max(1,Math.min(largePackage.getInt(40),1000));
-		
-		//world gen
+		largePackagePrice = Math.max(1, Math.min(largePackage.getInt(40), 1000));
+
+		// world gen
 		Property bankGenProperty = config.get("World Generation", "Village bank enabled", true);
 		bankGenProperty.comment = "Set to false to disable chance of adding bank to villages.";
 		bankGenEnabled = bankGenProperty.getBoolean(true);
 		Property shopGenProperty = config.get("World Generation", "Village shop enabled", true);
 		shopGenProperty.comment = "Set to false to disable chance of adding shop to villages.";
 		shopGenEnabled = shopGenProperty.getBoolean(true);
-		
+
 		Property shopMinPriceProperty = config.get("World Generation", "Minimum shop price", 80);
 		shopMinPriceProperty.comment = "Set the minimum price of items for sale in shops as a percent (min=1,max=100,default=80)";
-		shopMinPrice = Math.max(1,Math.min(shopMinPriceProperty.getInt(80),100));
+		shopMinPrice = Math.max(1, Math.min(shopMinPriceProperty.getInt(80), 100));
 		Property shopMaxPriceProperty = config.get("World Generation", "Maximum shop price", 120);
 		shopMaxPriceProperty.comment = "Set the maximum price of items for sale in shops as a percent (min=80,max=300,default=120)";
-		shopMaxPrice = Math.max(80,Math.min(shopMaxPriceProperty.getInt(120),300));
-		
+		shopMaxPrice = Math.max(80, Math.min(shopMaxPriceProperty.getInt(120), 300));
+
 		config.save();
-		
+
 		if (mobsDropCoins) {
 			MinecraftForge.EVENT_BUS.register(new UCMobDropEventHandler());
 		}
-		
+
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
 		FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
-						
-		//network packet handling
-	    snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid); 
-	    snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
-	    snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-	    snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
-	    snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
-	    snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4, Side.SERVER);
-	    snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5, Side.SERVER);
-	    snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
-	    snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 7, Side.SERVER);
-	    snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
-	    snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
-	    snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
 
-	    //update check using versionchecker
-	    FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck", 
-	    		"https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
+		// network packet handling
+		snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid);
+		snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
+		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
+		snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
+		snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
+		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4,
+				Side.SERVER);
+		snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5,
+				Side.SERVER);
+		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
+		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 7, Side.SERVER);
+		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
+		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
+		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
+
+		// update check using versionchecker
+		FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck",
+				"https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
 	}
-	
+
 	@EventHandler
 	public void postInitialise(FMLPostInitializationEvent event) {
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.registerBlocks();
 		proxy.registerItems();
 		proxy.registerRenderers();
-		
+
 		if (coinsInMineshaft) {
-			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));
+			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
+					new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));
 		}
 		if (coinsInDungeon) {
-			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, dungeonCoinChance));
+			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
+					new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, dungeonCoinChance));
 		}
-		
+
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
 		GameRegistry.registerTileEntity(TileVendorBlock.class, "TileVendorBlock");
 		GameRegistry.registerTileEntity(TileVendorFrame.class, "TileVendorFrame");
@@ -269,41 +271,41 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-		
-		//load all recipes, in multiplayer client will receive packet to disable to match server
+
+		// load all recipes, in multiplayer client will receive packet to disable to match server
 		UCRecipeHelper.addCoinRecipes();
 		if (tradeStationRecipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
 		}
-		if (vendorRecipesEnabled){
+		if (vendorRecipesEnabled) {
 			UCRecipeHelper.addVendingBlockRecipes();
 		}
-		if (vendorFrameRecipesEnabled){
+		if (vendorFrameRecipesEnabled) {
 			UCRecipeHelper.addVendingFrameRecipes();
 		}
-		if (atmRecipeEnabled){
+		if (atmRecipeEnabled) {
 			UCRecipeHelper.addCardStationRecipes();
 		}
-		if (enderCardRecipeEnabled){
+		if (enderCardRecipeEnabled) {
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
 		}
-		if (banditRecipeEnabled){
+		if (banditRecipeEnabled) {
 			UCRecipeHelper.addBanditRecipes();
 		}
-		if (signalRecipeEnabled){
+		if (signalRecipeEnabled) {
 			UCRecipeHelper.addSignalRecipes();
 		}
-		if (linkCardRecipeEnabled){
+		if (linkCardRecipeEnabled) {
 			UCRecipeHelper.addLinkCardRecipes();
 		}
-		if (packagerRecipeEnabled){
+		if (packagerRecipeEnabled) {
 			UCRecipeHelper.addPackagerRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 		UCRecipeHelper.addPlankTextureRecipes();
-		
-		//worldgen
+
+		// worldgen
 		if (bankGenEnabled) {
 			VillageGenBank villageHandler = new VillageGenBank();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler);
@@ -311,17 +313,17 @@ public class UniversalCoins {
 		if (shopGenEnabled) {
 			VillageGenShop villageHandler2 = new VillageGenShop();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
-		}	
+		}
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-	    UCItemPricer.getInstance().initializeConfigs();
-	    UCItemPricer.getInstance().loadConfigs();	
+		UCItemPricer.getInstance().initializeConfigs();
+		UCItemPricer.getInstance().loadConfigs();
 	}
-	
+
 	@EventHandler
-    public void serverStart(FMLServerStartingEvent event) {
+	public void serverStart(FMLServerStartingEvent event) {
 		MinecraftServer server = MinecraftServer.getServer();
 		ICommandManager command = server.getCommandManager();
 		ServerCommandManager manager = (ServerCommandManager) command;
