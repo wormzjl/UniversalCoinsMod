@@ -1,0 +1,1115 @@
+{
+  "book": [
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "[b]Universal Coins[/b]",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 23,
+            "yPos": 17,
+            "width": 115.0,
+            "height": 9.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": " Universal Coins Mod includes items and blocks to provide a trade and currency economy for Minecraft.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 26,
+            "yPos": 46,
+            "width": 162.0,
+            "height": 45.0
+          }
+        },
+        {
+          "type": "FeatureJump",
+          "properties": {
+            "jumpTo": "2",
+            "texture": "",
+            "xPos": 222,
+            "yPos": 25,
+            "width": 175.0,
+            "height": 19.0
+          }
+        },
+        {
+          "type": "FeatureJump",
+          "properties": {
+            "jumpTo": "6",
+            "texture": "",
+            "xPos": 222,
+            "yPos": 52,
+            "width": 175.0,
+            "height": 20.0
+          }
+        },
+        {
+          "type": "FeatureJump",
+          "properties": {
+            "jumpTo": "13",
+            "texture": "",
+            "xPos": 222,
+            "yPos": 80,
+            "width": 175.0,
+            "height": 47.0
+          }
+        },
+        {
+          "type": "FeatureJump",
+          "properties": {
+            "jumpTo": "14",
+            "texture": "",
+            "xPos": 223,
+            "yPos": 135,
+            "width": 174.0,
+            "height": 19.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Items\n\n\nBlocks\n\n\nMobs\n\n\nWorldGen\n\n\nCommands",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 228,
+            "yPos": 30,
+            "width": 65.0,
+            "height": 124.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "[b]Items[/b]",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF000080",
+            "xPos": 28,
+            "yPos": 21,
+            "width": 63.0,
+            "height": 8.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "[b]Coins[/b]\n\nThere are 5 tiers of coins. Each tier is equal to 9 of the lower, so 9 coins equals one coin stack. Coins can be earned by selling stuff in a Trade Station, from mob drops, or from treasure in dungeons and abandoned mineshafts. All two legged mobs have a chance of dropping coins. Endermen will drop coin stacks instead of coins.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 31,
+            "yPos": 56,
+            "width": 170.0,
+            "height": 122.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemCoin",
+            "xPos": 229,
+            "yPos": 19,
+            "width": 18.0,
+            "height": 18.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Coin - Value 1",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 256,
+            "yPos": 25,
+            "width": 92.0,
+            "height": 19.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemSmallCoinStack",
+            "xPos": 224,
+            "yPos": 48,
+            "width": 25.0,
+            "height": 25.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Small Coin Stack - Value 9",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 254,
+            "yPos": 58,
+            "width": 148.0,
+            "height": 21.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemLargeCoinStack",
+            "xPos": 229,
+            "yPos": 83,
+            "width": 19.0,
+            "height": 19.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Large Coin Stack - Value 81",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 256,
+            "yPos": 90,
+            "width": 170.0,
+            "height": 18.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemSmallCoinBag",
+            "xPos": 226,
+            "yPos": 116,
+            "width": 21.0,
+            "height": 21.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Coin Bag - Value 729",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 252,
+            "yPos": 126,
+            "width": 126.0,
+            "height": 13.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemLargeCoinBag",
+            "xPos": 226,
+            "yPos": 156,
+            "width": 23.0,
+            "height": 23.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Large Coin Bag - Value 6,561",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 252,
+            "yPos": 165,
+            "width": 164.0,
+            "height": 17.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Coin Recipes",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 24,
+            "yPos": 18,
+            "width": 98.0,
+            "height": 15.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0:universalcoins:item.itemCoin:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemSmallCoinStack",
+            "xPos": 25,
+            "yPos": 32,
+            "width": 79.0,
+            "height": 39.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemLargeCoinStack:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemSmallCoinStack",
+            "xPos": 112,
+            "yPos": 89,
+            "width": 83.0,
+            "height": 41.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemSmallCoinStack:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemCoin",
+            "xPos": 114,
+            "yPos": 31,
+            "width": 79.0,
+            "height": 39.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0:universalcoins:item.itemSmallCoinStack:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemLargeCoinStack",
+            "xPos": 23,
+            "yPos": 88,
+            "width": 83.0,
+            "height": 41.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemSmallCoinBag:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemLargeCoinStack",
+            "xPos": 111,
+            "yPos": 145,
+            "width": 88.0,
+            "height": 44.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0:universalcoins:item.itemLargeCoinStack:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemSmallCoinBag",
+            "xPos": 24,
+            "yPos": 147,
+            "width": 81.0,
+            "height": 40.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemLargeCoinBag:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemSmallCoinBag",
+            "xPos": 316,
+            "yPos": 26,
+            "width": 87.0,
+            "height": 43.5
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0:universalcoins:item.itemSmallCoinBag:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemLargeCoinBag",
+            "xPos": 228,
+            "yPos": 30,
+            "width": 82.0,
+            "height": 41.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Universal Card\n\n\nThis is the basic card for accessing a player\u0027s account. Right clicking will display the account balance.\n\nThe Universal Card is not craftable and can only be obtained from an ATM.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 28,
+            "yPos": 44,
+            "width": 168.0,
+            "height": 129.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemUCCard",
+            "xPos": 142,
+            "yPos": 21,
+            "width": 51.0,
+            "height": 51.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemEnderCard",
+            "xPos": 350,
+            "yPos": 8,
+            "width": 53.0,
+            "height": 53.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Ender Card\n\n\n\nThe Ender Card is an upgraded card that has a few special properties. It will automagically deposit any coins a player picks up if held anywhere in a player\u0027s inventory. Right clicking will deposit any coins held in inventory and display the account balance. Another feature is that this card allows coin free use of Vending Blocks, Vending Frames, and Trade Stations. Coins are debited and credited directly to the account.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 219,
+            "yPos": 14,
+            "width": 191.0,
+            "height": 167.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:ender_pearl:0:minecraft:ender_pearl:0:universalcoins:item.itemUCCard:0:minecraft:ender_pearl:0:minecraft:ender_pearl:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:item.itemEnderCard",
+            "xPos": 225,
+            "yPos": 161,
+            "width": 92.0,
+            "height": 46.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vendor Wrench\n\n\nThis is a special wrench for admins or OPs. It is not craftable. Opening the vending block or frame GUI with this wrench by right clicking. The wrench GUI allows a player to change owners or enable or disable the infinite sell mode. With the infinite mode enabled, inventory is not used. The vending block will still collect the buyer\u0027s coins unless this is disabled in the main config file.\nUsing the wrench on a Redstion Signal Block will open a GUI that will have the option to set cost and signal duration.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 24,
+            "yPos": 26,
+            "width": 178.0,
+            "height": 173.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemVendorWrench",
+            "xPos": 117,
+            "yPos": 16,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemLinkCard",
+            "xPos": 368,
+            "yPos": 14,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Remote Storage Linking Card\n\n\n\nThis card will link a vending block or frame to a remote chest. Shift click a normal Minecraft chest, single or double, to store its location, then shift click the vending block or frame to link the inventory. Multiple vending blocks or frames can link to a single chest.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 218,
+            "yPos": 16,
+            "width": 184.0,
+            "height": 112.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:paper:0:minecraft:paper:0:minecraft:ender_pearl:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemLinkCard",
+            "xPos": 258,
+            "yPos": 133,
+            "width": 102.0,
+            "height": 51.0
+          }
+        }
+      ],
+      "pageName": "car"
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "[b]Blocks[/b]",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF000080",
+            "xPos": 23,
+            "yPos": 17,
+            "width": 48.0,
+            "height": 10.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "ATM\n\nUsed for managing cards and accounts. A player can have two accounts. One will display the player\u0027s name on the card and use the player\u0027s UID as the identifier, the other can be customized to any name wanted. The account can be transferred to a new one if cards are stolen. The ATM has been updated to use an iris scanner in the top right of the GUI to identify the player if card is lost or stolen(It actually just uses the player\u0027s UID to look up the account). Cards are used only as an identifier.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 25,
+            "yPos": 35,
+            "width": 181.0,
+            "height": 196.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockCardStation",
+            "xPos": 168,
+            "yPos": 18,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "The actual account holding coins is saved in the world data. This means that if you throw your card in lava, you won\u0027t be throwing away your coins. You will however, have to go back to an ATM and get a new card.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 224,
+            "yPos": 19,
+            "width": 179.0,
+            "height": 66.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:universalcoins:item.itemSmallCoinBag:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockCardStation",
+            "xPos": 248,
+            "yPos": 104,
+            "width": 128.0,
+            "height": 64.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "The Trade Station allows a player to buy or sell most blocks and items with coins. Selling a block or item is done by sticking it in the upper left slot. The Buy and Sell buttons will activate if the item has a price set in the config files. By default, clicking sell will sell one item. Shift+Click on the sell button will sell the entire stack of the item. Selling damaged armor, tools, or weapons will return a portion of the item price displayed. Enchanted items cannot be sold. Buying a block or item is similar.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 28,
+            "yPos": 54,
+            "width": 175.0,
+            "height": 167.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Trade Station",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 27,
+            "yPos": 20,
+            "width": 95.0,
+            "height": 8.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockTradeStation",
+            "xPos": 172,
+            "yPos": 15,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Just click, or shift+click the buy button to get one item or one stack respectively. If an enchanted item is placed in the input slot, buying a new item will return a new item without any enchantments.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 224,
+            "yPos": 19,
+            "width": 178.0,
+            "height": 59.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:iron_ingot:0:minecraft:gold_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:universalcoins:item.itemSeller:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockTradeStation",
+            "xPos": 231,
+            "yPos": 78,
+            "width": 104.0,
+            "height": 52.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:leather:0:minecraft:gold_ingot:0:minecraft:ender_pearl:0:minecraft:paper:0:minecraft:paper:0:minecraft:paper:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:item.itemSeller",
+            "xPos": 230,
+            "yPos": 137,
+            "width": 108.0,
+            "height": 54.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Ender Safe",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 27,
+            "yPos": 20,
+            "width": 114.0,
+            "height": 11.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "This block was mainly added for the purpose of automation. Coins can be pumped into this block and will be deposited directly to a player\u0027s primary account. It has a GUI that can be accessed only by the block owner. The block owner is the player who places the block down in the world.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 25,
+            "yPos": 47,
+            "width": 177.0,
+            "height": 83.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockSafe",
+            "xPos": 171,
+            "yPos": 11,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:universalcoins:item.itemEnderCard:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockSafe",
+            "xPos": 53,
+            "yPos": 136,
+            "width": 128.0,
+            "height": 64.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "The Vending Block allows a player to buy or sell items of any kind with other players. The GUI that opens when the block is activated depends on whether the player is the block owner or not. Non-owners will get a GUI that can be used to buy or sell stuff depending on how the owner set up the block. A sign must be placed on the block below the vending block to display whether the block is buying or selling, what is being bought or sold, the price, how many if more than one, and any errors such as \"out of stock\", \"out of coins\", \"inventory full\".",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 224,
+            "yPos": 52,
+            "width": 180.0,
+            "height": 146.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vending Block",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 219,
+            "yPos": 23,
+            "width": 82.0,
+            "height": 8.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockVendor 0",
+            "xPos": 370,
+            "yPos": 19,
+            "width": 32.0,
+            "height": 32.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vending Block - continued",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 24,
+            "yPos": 18,
+            "width": 154.0,
+            "height": 13.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vending blocks of different types can be crafted with different materials. Replace the lower left and lower right item with the following to craft the different types: stone, cobblestone, planks, gravel, crafting table, sandstone, gold ingot, iron ingot, brick, mossy cobble, obsidian, diamond, emerald, lapis block.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 26,
+            "yPos": 36,
+            "width": 171.0,
+            "height": 88.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vending Frame",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 220,
+            "yPos": 16,
+            "width": 128.0,
+            "height": 11.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:glass:32767:minecraft:glass:32767:minecraft:glass:32767:minecraft:glass:32767:minecraft:redstone:0:minecraft:glass:32767:minecraft:lapis_block:32767:minecraft:gold_ingot:0:minecraft:lapis_block:32767",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockVendor 15",
+            "xPos": 57,
+            "yPos": 135,
+            "width": 128.0,
+            "height": 64.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "The Vending Frame functions exactly the same as the Vending Block. Only the appearance of this block differs. Items are not rotatable like they are in item frames. A sign is required above or below the frame to display the trade item quantity, description, and price. When crafting, the vending frame will keep the plank type of the plank it is crafted with. The texture can be changed to any type of plank by placing it in the crafting grid with the plank type you want to change to.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 221,
+            "yPos": 49,
+            "width": 179.0,
+            "height": 140.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockVendorFrame",
+            "xPos": 370,
+            "yPos": 18,
+            "width": 32.0,
+            "height": 32.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Vending Frame - continued",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 26,
+            "yPos": 22,
+            "width": 166.0,
+            "height": 17.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:stick:0:minecraft:gold_ingot:0:minecraft:stick:0:minecraft:redstone:0:plankWood:minecraft:redstone:0:minecraft:stick:0:minecraft:stick:0:minecraft:stick:0",
+            "recipeType": "ShapedOreRecipe",
+            "item": "universalcoins:blockVendorFrame",
+            "xPos": 37,
+            "yPos": 40,
+            "width": 137.0,
+            "height": 68.5
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Advanced Sign",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 222,
+            "yPos": 19,
+            "width": 151.0,
+            "height": 11.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:item.itemUCSign",
+            "xPos": 366,
+            "yPos": 19,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Advanced signs can be used to display details of the items for sale in vending blocks and frames. When placed on a block directly below a vending block, the sign will be updated with the name and price of the item for sale when the block owner clicks save from the vending GUI. Also, when placed above or below a vending frame on a wall they will update with the info after save is clicked. When placed on a normal minecraft chest, the sign will update with the quantity of the first four types of items or blocks found in the chest.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 220,
+            "yPos": 53,
+            "width": 179.0,
+            "height": 139.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Advance Sign - continued",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 24,
+            "yPos": 18,
+            "width": 176.0,
+            "height": 13.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "The signs support color codes for text by prefixing the line being edited with an ampersand(\u0026) and a hexadecimal digit(0-f). Entries of up to 40 characters are supported and the sign will scroll the line while displaying 15 characters of the entry. Signs have block break protection. Signs can be edited at any time by the player that places the sign by right clicking. Like Vending Frames, Advanced Signs can take on the texture of any type of plank. Simply place the sign in a crafting grid with the plank type you prefer.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 25,
+            "yPos": 34,
+            "width": 179.0,
+            "height": 159.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:sign:0",
+            "recipeType": "ShapelessRecipes",
+            "item": "universalcoins:item.itemUCSign",
+            "xPos": 242,
+            "yPos": 18,
+            "width": 116.0,
+            "height": 58.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Redstone Signal Generator",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 24,
+            "yPos": 17,
+            "width": 158.0,
+            "height": 12.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "This block generates a redstone signal for a predetermined amount of time. Both the cost and duration are configurable by the block owner. Players can activate the block by right clicking. The block will search the player\u0027s inventory for coins. Players must have enough coins to pay the fee to activate. Cards not accepted.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 26,
+            "yPos": 51,
+            "width": 176.0,
+            "height": 90.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockSignal",
+            "xPos": 171,
+            "yPos": 14,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:redstone:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockSignal",
+            "xPos": 76,
+            "yPos": 152,
+            "width": 97.0,
+            "height": 48.5
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Slot Machine",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 221,
+            "yPos": 16,
+            "width": 146.0,
+            "height": 11.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "A coin operated slot machine. One coin equals one spin. Prizes for four or five of a kind.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 225,
+            "yPos": 51,
+            "width": 170.0,
+            "height": 27.0
+          }
+        },
+        {
+          "type": "FeatureItem",
+          "properties": {
+            "item": "universalcoins:blockBandit",
+            "xPos": 370,
+            "yPos": 16,
+            "width": 32.0,
+            "height": 32.0
+          }
+        },
+        {
+          "type": "FeatureRecipe",
+          "properties": {
+            "ingredients": "minecraft:iron_ingot:0:minecraft:gold_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:redstone:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0:minecraft:iron_ingot:0",
+            "recipeType": "ShapedRecipes",
+            "item": "universalcoins:blockBandit",
+            "xPos": 249,
+            "yPos": 98,
+            "width": 128.0,
+            "height": 64.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Mobs",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF000080",
+            "xPos": 24,
+            "yPos": 18,
+            "width": 152.0,
+            "height": 16.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Universal Coins does not add any mobs, but does add mob drops. When a player kills a hostile mob, it will drop coins. The more health a mob has, the higher the value of coins dropped.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 26,
+            "yPos": 38,
+            "width": 175.0,
+            "height": 63.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Worldgen",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF000080",
+            "xPos": 221,
+            "yPos": 18,
+            "width": 117.0,
+            "height": 10.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "By default, there is a chance of a shop or bank generating in newly spawned villages. The bank will have an ATM that can be used to open an account to deposit all your coins and use a debit card for purchases. The shops will be randomly filled with any items that have a price set. Prices will vary between a minimum and maximum price set in the main config file.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 222,
+            "yPos": 37,
+            "width": 178.0,
+            "height": 108.0
+          }
+        }
+      ],
+      "pageName": ""
+    },
+    {
+      "features": [
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "Commands",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF000080",
+            "xPos": 23,
+            "yPos": 17,
+            "width": 136.0,
+            "height": 11.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "/balance - This command displays coin balance in inventory. Also, if you have a Universal Card or Ender Card it will display those account balances too.\n\n/pay (alias: /send) - This command will send coins from your inventory to another player\u0027s inventory. It will only work if the other player is online. If the receiving player is short of inventory space, coins will be returned.\n\n/rebalance - This command will take all the coins in your inventory and consolidate them into the largest ",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 25,
+            "yPos": 40,
+            "width": 177.0,
+            "height": 162.0
+          }
+        },
+        {
+          "type": "FeatureText",
+          "properties": {
+            "text": "coin types possible. Most of the time, this saves inventory space.\n\n/givecoins (alias: /pay)- This command is an op command that will give a player a specified amount of coins.\n\n/universalcoins (alias: /uc) - This command is an op command for managing item prices. It allows for changing, saving, or reloading prices without rebooting the server.",
+            "wrap": 0,
+            "size": 1.0,
+            "color": "FF555555",
+            "xPos": 222,
+            "yPos": 23,
+            "width": 178.0,
+            "height": 135.0
+          }
+        }
+      ],
+      "pageName": ""
+    }
+  ],
+  "uniqueName": "Universal_Coins",
+  "color": 755384,
+  "showBackground": true,
+  "showArrows": true,
+  "showNumber": true,
+  "iconPass1": "",
+  "iconPass2": "",
+  "iconColorisePass1": false,
+  "iconColorisePass2": false,
+  "iconColorPass1": 0,
+  "iconColorPass2": 0,
+  "language": "en_US",
+  "displayName": "Universal Coins Guide",
+  "displayInCreative": true
+}
