@@ -2,11 +2,9 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.18",
+			"modVersion":"1.7.2-1.6.19",
 			"changeLog": [
-				"random items and prices for shops",
-				"worldgen enabled by default",
-				"many more changes. see release notes"
+				"fixed cards not working in packager"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
