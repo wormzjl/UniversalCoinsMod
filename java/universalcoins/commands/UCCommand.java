@@ -55,6 +55,7 @@ public class UCCommand extends CommandBase {
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.reload.help")));
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.reset.help")));
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.save.help")));
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.update.help")));
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.usage.hint")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reload.name"))) {
 			UCItemPricer.getInstance().loadConfigs();
@@ -125,8 +126,11 @@ public class UCCommand extends CommandBase {
 			UCItemPricer.getInstance().resetDefaults();
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.reset.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.save.name"))) {
-			UCItemPricer.getInstance().updatePriceLists();
+			UCItemPricer.getInstance().savePriceLists();
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.save.confirm")));
+		}  else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.update.name"))) {
+			UCItemPricer.getInstance().updatePriceLists();
+			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.update.confirm")));
 		}
 	}
 

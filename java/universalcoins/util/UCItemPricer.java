@@ -20,9 +20,16 @@ import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.FMLLog;
 
 public class UCItemPricer {
@@ -42,26 +49,25 @@ public class UCItemPricer {
 
 	}
 
-	public void initializeConfigs() {
+	public void loadConfigs() {
 		if (!new File(configPath).exists()) {
-			// FMLLog.info("Universal Coins: Building Pricelists");
-			buildInitialPricelistHashMap();
+			//FMLLog.info("Universal Coins: Loading default prices");
+			buildPricelistHashMap();
 			try {
 				loadDefaults();
 			} catch (IOException e) {
 				FMLLog.warning("Universal Coins: Failed to load default configs");
 				e.printStackTrace();
 			}
+			autoPriceItems();
 			writePriceLists();
-		}
-	}
-
-	public void loadConfigs() {
-		try {
-			UCItemPricer.getInstance().loadPricelists();
-		} catch (IOException e) {
-			FMLLog.warning("Universal Coins: Failed to load config files");
-			e.printStackTrace();
+		} else {
+			try {
+				loadPricelists();
+			} catch (IOException e) {
+				FMLLog.warning("Universal Coins: Failed to load config files");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -76,7 +82,7 @@ public class UCItemPricer {
 				return;
 			}
 			String priceString = convertStreamToString(priceResource);
-			updateInitialPricelistHashMap(priceString);
+			processDefaultConfigs(priceString);
 		}
 	}
 
@@ -89,7 +95,7 @@ public class UCItemPricer {
 		return result;
 	}
 
-	private void updateInitialPricelistHashMap(String priceString) {
+	private void processDefaultConfigs(String priceString) {
 		StringTokenizer tokenizer = new StringTokenizer(priceString, "\n\r", false);
 		while (tokenizer.hasMoreElements()) {
 			String token = tokenizer.nextToken();
@@ -104,7 +110,7 @@ public class UCItemPricer {
 		}
 	}
 
-	private void buildInitialPricelistHashMap() {
+	private void buildPricelistHashMap() {
 		ArrayList<ItemStack> itemsDiscovered = new ArrayList<ItemStack>();
 
 		for (String item : (Iterable<String>) Item.itemRegistry.getKeys()) {
@@ -134,7 +140,10 @@ public class UCItemPricer {
 			// parse oredictionary
 			for (String ore : OreDictionary.getOreNames()) {
 				ucModnameMap.put(ore, "oredictionary");
-				ucPriceMap.put(ore, -1);
+				if (!ucPriceMap.containsKey(ore)) {
+					//TODO check ore to see if any of the types has a price, use it if true
+					ucPriceMap.put(ore, -1);
+				}
 			}
 
 			// iterate through the items and update the hashmaps
@@ -142,7 +151,9 @@ public class UCItemPricer {
 				// update ucModnameMap with items found
 				ucModnameMap.put(itemstack.getUnlocalizedName(), modName);
 				// update ucPriceMap with initial values
-				ucPriceMap.put(itemstack.getUnlocalizedName(), -1);
+				if (!ucPriceMap.containsKey(itemstack.getUnlocalizedName())) {
+					ucPriceMap.put(itemstack.getUnlocalizedName(), -1);
+				}
 			}
 			// clear this variable so we can use it next round
 			itemsDiscovered.clear();
@@ -156,7 +167,7 @@ public class UCItemPricer {
 		// load those files into hashmap(UCPriceMap)
 		for (int i = 0; i < configList.length; i++) {
 			if (configList[i].isFile()) {
-				// FMLLog.info("Universal Coins: Loading Pricelist " + configList[i]);
+				//FMLLog.info("Universal Coins: Loading Pricelist: " + configList[i]);
 				BufferedReader br = new BufferedReader(new FileReader(configList[i]));
 				String tempString = "";
 				String[] modName = configList[i].getName().split("\\.");
@@ -225,7 +236,12 @@ public class UCItemPricer {
 			return -1;
 		}
 		Integer ItemPrice = -1;
-		String itemName = itemStack.getUnlocalizedName();
+		String itemName = null;
+		try {
+			itemName = itemStack.getUnlocalizedName();
+		} catch (Exception e) {
+			// fail silently
+		}
 		if (ucPriceMap.get(itemName) != null) {
 			ItemPrice = ucPriceMap.get(itemName);
 		}
@@ -271,12 +287,15 @@ public class UCItemPricer {
 			return false;
 		}
 		String itemName = itemStack.getUnlocalizedName();
-		if (ucPriceMap.containsKey(itemName)) {
-			// FMLLog.info("UC: Pricemap contains item. Updating price");
-			ucPriceMap.put(itemName, price);
-			return true;
-		}
-		return false;
+		// get modName to add to mapping
+		String itemRegistryKey = Item.itemRegistry.getNameForObject(itemStack.getItem());
+		String[] tempModName = itemRegistryKey.split("\\W", 3);
+		// pass the first value as modname
+		String modName = tempModName[0];
+		ucModnameMap.put(itemName, modName);
+		// update price
+		ucPriceMap.put(itemName, price);
+		return true;
 	}
 
 	public boolean setItemPrice(String string, int price) {
@@ -293,6 +312,27 @@ public class UCItemPricer {
 	public void updatePriceLists() {
 		// delete old configs
 		File folder = new File(configPath);
+		//cleanup
+		if (folder.exists()) {
+			File[] files = folder.listFiles();
+			if (null != files) {
+				for (int i = 0; i < files.length; i++) {
+					files[i].delete();
+				}
+			}
+		}
+		//update mod itemlist
+		buildPricelistHashMap();
+		//update prices
+		autoPriceItems();
+		// write new configs
+		writePriceLists();
+	}
+	
+	public void savePriceLists() {
+		// delete old configs
+		File folder = new File(configPath);
+		//cleanup
 		if (folder.exists()) {
 			File[] files = folder.listFiles();
 			if (null != files) {
@@ -316,7 +356,7 @@ public class UCItemPricer {
 	public ItemStack getRandomPricedStack() {
 		List keys = new ArrayList(ucPriceMap.keySet());
 		ItemStack stack = null;
-		while (stack == null){
+		while (stack == null) {
 			int rnd = random.nextInt(keys.size());
 			String test = (String) keys.get(rnd);
 			int price = 0;
@@ -325,12 +365,112 @@ public class UCItemPricer {
 			}
 			if (price > 0) {
 				test = test.substring(5);
-				Item item = (Item)Item.itemRegistry.getObject(test);
+				Item item = (Item) Item.itemRegistry.getObject(test);
 				if (item != null) {
 					stack = new ItemStack(item);
 				}
 			}
 		}
 		return stack;
+	}
+	
+	private void autoPriceItems() {
+		List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+		for (IRecipe irecipe : allrecipes) {
+			int itemCost = 0;
+			boolean validRecipe = true;
+			ItemStack output = irecipe.getRecipeOutput();
+			if (UCItemPricer.getInstance().getItemPrice(output) != -1) {
+				//skip items that are already priced
+				continue;
+			}
+			List recipeItems = getRecipeInputs(irecipe);
+			for (int i = 0; i < recipeItems.size(); i++) {
+				ItemStack stack = (ItemStack) recipeItems.get(i);
+				if (UCItemPricer.getInstance().getItemPrice(stack) != -1) {
+					itemCost += UCItemPricer.getInstance().getItemPrice(stack);
+				} else {
+					validRecipe = false;
+				}
+			}
+			if (validRecipe && itemCost > 0) {
+				if (output.stackSize > 1) {
+					itemCost = itemCost / output.stackSize;
+				}
+				try {
+					UCItemPricer.getInstance().setItemPrice(output, itemCost);
+				} catch (Exception e) {
+					// fail silently
+				}					
+			}
+		}
+	}
+	
+	public static List<ItemStack> getRecipeInputs(IRecipe recipe) {
+		ArrayList<ItemStack> recipeInputs = new ArrayList<ItemStack>();
+		if (recipe instanceof ShapedRecipes) {
+			ShapedRecipes shapedRecipe = (ShapedRecipes) recipe;
+			for (int i = 0; i < shapedRecipe.recipeItems.length; i++) {
+				if (shapedRecipe.recipeItems[i] instanceof ItemStack) {
+					ItemStack itemStack = shapedRecipe.recipeItems[i].copy();
+					if (itemStack.stackSize > 1) {
+						itemStack.stackSize = 1;
+					}
+					recipeInputs.add(itemStack);
+				}
+			}
+		} else if (recipe instanceof ShapelessRecipes) {
+			ShapelessRecipes shapelessRecipe = (ShapelessRecipes) recipe;
+			for (Object object : shapelessRecipe.recipeItems) {
+				if (object instanceof ItemStack) {
+					ItemStack itemStack = ((ItemStack) object).copy();
+					if (itemStack.stackSize > 1) {
+						itemStack.stackSize = 1;
+					}
+					recipeInputs.add(itemStack);
+				}
+			}
+		} else if (recipe instanceof ShapedOreRecipe) {
+			ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe) recipe;
+			for (int i = 0; i < shapedOreRecipe.getInput().length; i++) {
+				if (shapedOreRecipe.getInput()[i] instanceof ArrayList) {
+					Object oreStack = shapedOreRecipe.getInput()[i];
+					ItemStack output = null;
+					if (oreStack instanceof Item) {
+						output = new ItemStack((Item) oreStack);
+					} else if (oreStack instanceof Block) {
+						output = new ItemStack((Block) oreStack);
+					} else if (oreStack instanceof ItemStack) {
+						output = (ItemStack) oreStack;
+					}
+					if (output != null && output instanceof ItemStack) {
+						recipeInputs.add(output);
+					}
+				} else if (shapedOreRecipe.getInput()[i] instanceof ItemStack) {
+					ItemStack itemStack = ((ItemStack) shapedOreRecipe.getInput()[i]).copy();
+					if (itemStack.stackSize > 1) {
+						itemStack.stackSize = 1;
+					}
+					recipeInputs.add(itemStack);
+				}
+			}
+		} else if (recipe instanceof ShapelessOreRecipe) {
+			ShapelessOreRecipe shapelessOreRecipe = (ShapelessOreRecipe) recipe;
+			for (Object object : shapelessOreRecipe.getInput()) {
+				if (object instanceof ArrayList) {
+					ArrayList test = (ArrayList) object;
+					if (test.size() > 0) {
+						recipeInputs.add((ItemStack) test.get(0));
+					}
+				} else if (object instanceof ItemStack) {
+					ItemStack itemStack = ((ItemStack) object).copy();
+					if (itemStack.stackSize > 1) {
+						itemStack.stackSize = 1;
+					}
+					recipeInputs.add(itemStack);
+				}
+			}
+		}
+		return recipeInputs;
 	}
 }

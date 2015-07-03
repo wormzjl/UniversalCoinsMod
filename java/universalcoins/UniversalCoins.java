@@ -1,6 +1,5 @@
 package universalcoins;
 
-import joshie.enchiridion.api.EnchiridionAPI;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -45,7 +44,6 @@ import universalcoins.util.UCRecipeHelper;
 import universalcoins.worldgen.VillageGenBank;
 import universalcoins.worldgen.VillageGenShop;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -68,13 +66,13 @@ import cpw.mods.fml.relauncher.Side;
  * 
  **/
 
-@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version, acceptedMinecraftVersions = "[1.7.10]")
+@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version, acceptedMinecraftVersions = "[1.7.2]")
 public class UniversalCoins {
 	@Instance("universalcoins")
 	public static UniversalCoins instance;
 	public static final String modid = "universalcoins";
 	public static final String name = "Universal Coins";
-	public static final String version = "1.7.10-1.6.19";
+	public static final String version = "1.7.2-1.6.19";
 
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
@@ -320,13 +318,11 @@ public class UniversalCoins {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		UCItemPricer.getInstance().initializeConfigs();
 		UCItemPricer.getInstance().loadConfigs();
 
-		if (Loader.isModLoaded("Enchiridion")) {
-			EnchiridionAPI.instance.registerModBooks("universalcoins");
-			//EnchiridionAPI.instance.registerBookData(new ItemStack(UniversalCoins.proxy.itemSeller), "Universal_Coins");
-		}
+		//if (Loader.isModLoaded("Enchiridion")) {
+		//	EnchiridionAPI.instance.registerModBooks("universalcoins");
+		//}
 	}
 
 	@EventHandler
