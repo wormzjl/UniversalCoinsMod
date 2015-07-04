@@ -4,7 +4,7 @@
 			"mcVersion":"Minecraft 1.7.2",
 			"modVersion":"1.7.2-1.6.20",
 			"changeLog": [
-				"added /uc update command to parse crafting recipes and attempt to automatically set prices based on prices of crafting ingredients."
+				"added /uc update command to parse crafting recipes and attempt to automatically set prices based on prices of crafting ingredients.",
 				"modified initial pricelist load function to auto price if it can."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
@@ -15,7 +15,7 @@
 			"mcVersion":"Minecraft 1.7.10",
 			"modVersion":"1.7.10-1.6.20",
 			"changeLog": [
-				"added /uc update command to parse crafting recipes and attempt to automatically set prices based on prices of crafting ingredients."
+				"added /uc update command to parse crafting recipes and attempt to automatically set prices based on prices of crafting ingredients.",
 				"modified initial pricelist load function to auto price if it can."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
