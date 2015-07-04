@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -51,7 +50,7 @@ public class UCItemPricer {
 
 	public void loadConfigs() {
 		if (!new File(configPath).exists()) {
-			//FMLLog.info("Universal Coins: Loading default prices");
+			// FMLLog.info("Universal Coins: Loading default prices");
 			buildPricelistHashMap();
 			try {
 				loadDefaults();
@@ -141,7 +140,7 @@ public class UCItemPricer {
 			for (String ore : OreDictionary.getOreNames()) {
 				ucModnameMap.put(ore, "oredictionary");
 				if (!ucPriceMap.containsKey(ore)) {
-					//TODO check ore to see if any of the types has a price, use it if true
+					// TODO check ore to see if any of the types has a price, use it if true
 					ucPriceMap.put(ore, -1);
 				}
 			}
@@ -167,7 +166,7 @@ public class UCItemPricer {
 		// load those files into hashmap(UCPriceMap)
 		for (int i = 0; i < configList.length; i++) {
 			if (configList[i].isFile()) {
-				//FMLLog.info("Universal Coins: Loading Pricelist: " + configList[i]);
+				// FMLLog.info("Universal Coins: Loading Pricelist: " + configList[i]);
 				BufferedReader br = new BufferedReader(new FileReader(configList[i]));
 				String tempString = "";
 				String[] modName = configList[i].getName().split("\\.");
@@ -312,7 +311,7 @@ public class UCItemPricer {
 	public void updatePriceLists() {
 		// delete old configs
 		File folder = new File(configPath);
-		//cleanup
+		// cleanup
 		if (folder.exists()) {
 			File[] files = folder.listFiles();
 			if (null != files) {
@@ -321,18 +320,18 @@ public class UCItemPricer {
 				}
 			}
 		}
-		//update mod itemlist
+		// update mod itemlist
 		buildPricelistHashMap();
-		//update prices
+		// update prices
 		autoPriceItems();
 		// write new configs
 		writePriceLists();
 	}
-	
+
 	public void savePriceLists() {
 		// delete old configs
 		File folder = new File(configPath);
-		//cleanup
+		// cleanup
 		if (folder.exists()) {
 			File[] files = folder.listFiles();
 			if (null != files) {
@@ -373,7 +372,7 @@ public class UCItemPricer {
 		}
 		return stack;
 	}
-	
+
 	private void autoPriceItems() {
 		List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
 		for (IRecipe irecipe : allrecipes) {
@@ -381,7 +380,7 @@ public class UCItemPricer {
 			boolean validRecipe = true;
 			ItemStack output = irecipe.getRecipeOutput();
 			if (UCItemPricer.getInstance().getItemPrice(output) != -1) {
-				//skip items that are already priced
+				// skip items that are already priced
 				continue;
 			}
 			List recipeItems = getRecipeInputs(irecipe);
@@ -401,11 +400,11 @@ public class UCItemPricer {
 					UCItemPricer.getInstance().setItemPrice(output, itemCost);
 				} catch (Exception e) {
 					// fail silently
-				}					
+				}
 			}
 		}
 	}
-	
+
 	public static List<ItemStack> getRecipeInputs(IRecipe recipe) {
 		ArrayList<ItemStack> recipeInputs = new ArrayList<ItemStack>();
 		if (recipe instanceof ShapedRecipes) {
@@ -432,19 +431,21 @@ public class UCItemPricer {
 			}
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe) recipe;
+			//FMLLog.info("Shaped orerecipe found: " + shapedOreRecipe.getRecipeOutput().getDisplayName());
 			for (int i = 0; i < shapedOreRecipe.getInput().length; i++) {
 				if (shapedOreRecipe.getInput()[i] instanceof ArrayList) {
-					Object oreStack = shapedOreRecipe.getInput()[i];
-					ItemStack output = null;
-					if (oreStack instanceof Item) {
-						output = new ItemStack((Item) oreStack);
-					} else if (oreStack instanceof Block) {
-						output = new ItemStack((Block) oreStack);
-					} else if (oreStack instanceof ItemStack) {
-						output = (ItemStack) oreStack;
-					}
-					if (output != null && output instanceof ItemStack) {
-						recipeInputs.add(output);
+					ArrayList test = (ArrayList) shapedOreRecipe.getInput()[i];
+					if (test.size() > 0) {
+						boolean arrayListHasPricedItem = false;
+						for (int j = 0; j < test.size(); j++) {
+							if (UCItemPricer.getInstance().getItemPrice((ItemStack) test.get(j)) > 0) {
+								recipeInputs.add((ItemStack) test.get(j));
+								arrayListHasPricedItem = true;
+								break;
+							}
+						}
+						//everything is invalid, just add one
+						if (!arrayListHasPricedItem) recipeInputs.add((ItemStack) test.get(0));
 					}
 				} else if (shapedOreRecipe.getInput()[i] instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) shapedOreRecipe.getInput()[i]).copy();
@@ -459,9 +460,16 @@ public class UCItemPricer {
 			for (Object object : shapelessOreRecipe.getInput()) {
 				if (object instanceof ArrayList) {
 					ArrayList test = (ArrayList) object;
-					if (test.size() > 0) {
-						recipeInputs.add((ItemStack) test.get(0));
+					boolean arrayListHasPricedItem = false;
+					for (int j = 0; j < test.size(); j++) {
+						if (UCItemPricer.getInstance().getItemPrice((ItemStack) test.get(j)) > 0) {
+							recipeInputs.add((ItemStack) test.get(j));
+							arrayListHasPricedItem = true;
+							break;
+						}
 					}
+					//everything is invalid, just add one
+					if (!arrayListHasPricedItem) recipeInputs.add((ItemStack) test.get(0));
 				} else if (object instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) object).copy();
 					if (itemStack.stackSize > 1) {

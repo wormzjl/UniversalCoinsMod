@@ -150,6 +150,11 @@ public class BlockVendor extends BlockContainer {
 
 		return side < 2 ? iconTop : iconSide;
 	}
+	
+	@Override
+	public String getLocalizedName() {
+        return StatCollector.translateToLocal(this.getUnlocalizedName() + ".name");
+    }
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {

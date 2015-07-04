@@ -2,7 +2,22 @@
 # Main
 #####
 tile.blockTradeStation.name=Universal Trade Station
-tile.blockVendor.name=Vending Block
+tile.blockVendor.stone.name=Stone Vending Block
+tile.blockVendor.cobblestone.name=Cobblestone Vending Block
+tile.blockVendor.stonebrick.name=Stone Brick Vending Block
+tile.blockVendor.wood.name=Wood Vending Block
+tile.blockVendor.crafting_table.name=Crafting Table Vending Block
+tile.blockVendor.gravel.name=Gravel Vending Block
+tile.blockVendor.jukebox.name=Jukebox Vending Block
+tile.blockVendor.sandstone.name=Sandstone Vending Block
+tile.blockVendor.gold.name=Gold Vending Block
+tile.blockVendor.iron.name=Iron Vending Block
+tile.blockVendor.brick.name=Brick Vending Block
+tile.blockVendor.mossy_cobblestone.name=Mossy Cobblestone Vending Block
+tile.blockVendor.obsidian.name=Obsidian Vending Block
+tile.blockVendor.diamond.name=Diamond Vending Block
+tile.blockVendor.emerald.name=Emerald Vending Block
+tile.blockVendor.lapis.name=Lapis Vending Block
 tile.blockVendorFrame.name=Vending Frame
 tile.blockCardStation.name=Universal Bank ATM
 tile.blockBase.name=Base Block
