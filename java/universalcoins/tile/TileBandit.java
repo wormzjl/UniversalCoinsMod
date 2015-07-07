@@ -47,7 +47,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		if (buttonId == 0) {
 			if (cardAvailable) {
 				String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
-				UniversalAccounts.getInstance().debitAccount(worldObj, account, spinFee);
+				UniversalAccounts.getInstance().debitAccount(account, spinFee);
 			} else {
 				coinSum -= spinFee;
 			}
@@ -57,7 +57,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		if (buttonId == 1) {
 			if (cardAvailable && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard) {
 				String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
-				UniversalAccounts.getInstance().creditAccount(worldObj, account, coinSum);
+				UniversalAccounts.getInstance().creditAccount(account, coinSum);
 				coinSum = 0;
 			} else {
 				fillOutputSlot();
@@ -139,7 +139,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		cardAvailable = false;
 		if (inventory[itemCardSlot] != null) {
 			String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
-			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(worldObj, account);
+			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
 			if (accountBalance > spinFee) {
 				cardAvailable = true;
 			}

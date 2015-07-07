@@ -41,10 +41,10 @@ public class UCBalance extends CommandBase {
 		if (sender instanceof EntityPlayerMP) {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
 			String uuid = ((EntityPlayerMP) sender).getPersistentID().toString();
-			String playerAcct = UniversalAccounts.getInstance().getPlayerAccount(((EntityPlayerMP) sender).worldObj, uuid);
-			String customAcct = UniversalAccounts.getInstance().getCustomAccount(((EntityPlayerMP) sender).worldObj, uuid);
-			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(((EntityPlayerMP) sender).worldObj, playerAcct);
-			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(((EntityPlayerMP) sender).worldObj, customAcct);
+			String playerAcct = UniversalAccounts.getInstance().getPlayerAccount(uuid);
+			String customAcct = UniversalAccounts.getInstance().getCustomAccount(uuid);
+			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
+			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(customAcct);
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 					"command.balance.result.inventory") + formatter.format(playerCoins)));

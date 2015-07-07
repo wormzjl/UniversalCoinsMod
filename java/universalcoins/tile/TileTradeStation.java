@@ -583,16 +583,16 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	private int getAccountBalance() {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
 	private void creditAccount(int i) {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
 	private void debitAccount(int i) {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 }

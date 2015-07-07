@@ -983,32 +983,32 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	
 	private int getOwnerAccountBalance() {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 	
 	private void creditOwnerAccount(int i) {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 	
 	private void debitOwnerAccount(int i) {
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 
 	private void debitUserAccount(int i) {
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 	
 	private int getUserAccountBalance() {
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber);
+		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 	
 	private void creditUserAccount(int i) {
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber, i);
+		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
 }

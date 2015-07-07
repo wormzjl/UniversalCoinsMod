@@ -372,39 +372,39 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	}
 	
 	private String getCustomAccount(String playerUID2) {
-		return UniversalAccounts.getInstance().getCustomAccount(worldObj, playerUID2);
+		return UniversalAccounts.getInstance().getCustomAccount(playerUID2);
 	}
 
 	private String getPlayerAccount(String playerUID2) {
-		return UniversalAccounts.getInstance().getPlayerAccount(worldObj, playerUID2);
+		return UniversalAccounts.getInstance().getPlayerAccount(playerUID2);
 	}
 
 	private void addPlayerAccount(String playerUID2) {
-		UniversalAccounts.getInstance().addPlayerAccount(worldObj, playerUID2);
+		UniversalAccounts.getInstance().addPlayerAccount(playerUID2);
 	}
 
 	private int getAccountBalance(String accountNumber2) {
-		return UniversalAccounts.getInstance().getAccountBalance(worldObj, accountNumber2);
+		return UniversalAccounts.getInstance().getAccountBalance(accountNumber2);
 	}
 
 	private void creditAccount(String accountNumber2, int i) {
-		UniversalAccounts.getInstance().creditAccount(worldObj, accountNumber2, i);
+		UniversalAccounts.getInstance().creditAccount(accountNumber2, i);
 	}
 	
 	private void transferCustomAccount() {
-		UniversalAccounts.getInstance().transferCustomAccount(worldObj, playerUID, customAccountName);
+		UniversalAccounts.getInstance().transferCustomAccount(playerUID, customAccountName);
 	}
 
 	private void addCustomAccount(String customAccountName2) {
-		UniversalAccounts.getInstance().addCustomAccount(worldObj, customAccountName2, playerUID);
+		UniversalAccounts.getInstance().addCustomAccount(customAccountName2, playerUID);
 	}
 
 	private void transferPlayerAccount(String playerUID2) {
-		UniversalAccounts.getInstance().transferPlayerAccount(worldObj, playerUID2);
+		UniversalAccounts.getInstance().transferPlayerAccount(playerUID2);
 	}
 	
 	private void debitAccount(String accountNumber2, int i) {
-		UniversalAccounts.getInstance().debitAccount(worldObj, accountNumber2, i);
+		UniversalAccounts.getInstance().debitAccount(accountNumber2, i);
 	}
 
 	@Override

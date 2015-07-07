@@ -35,14 +35,14 @@ public class UCPlayerPickupEventHandler {
 				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.itemEnderCard) {
 					if (!inventory[i].hasTagCompound()) return; //card has not been initialized. Nothing we can do here
 					accountNumber = inventory[i].stackTagCompound.getString("Account");
-					int accountBalance = getAccountBalance(accountNumber);
+					int accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 					if (accountBalance == -1) return; //get out of here if the card is invalid
 					if (event.item.getEntityItem().stackSize == 0) return; //no need to notify on zero size stack
 					int coinType = getCoinType(event.item.getEntityItem().getItem());
 					if (coinType == -1) return; //something went wrong
 					int coinValue = multiplier[coinType];
 					int depositAmount = Math.min(event.item.getEntityItem().stackSize, (Integer.MAX_VALUE - accountBalance ) / coinValue);
-					creditAccount(accountNumber, depositAmount * coinValue);
+					UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * coinValue);
 					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
 							"item.itemEnderCard.message.deposit") + " " + formatter.format(depositAmount * coinValue)
 							+ " " + StatCollector.translateToLocal("item.itemCoin.name")));
@@ -66,38 +66,5 @@ public class UCPlayerPickupEventHandler {
 			}
 		}
 		return -1;
-	}
-	
-	private int getAccountBalance(String accountNumber) {
-		if (getWorldString(accountNumber) != "") {
-			return getWorldInt(accountNumber);
-		} else return -1;	
-	}
-	
-	private void creditAccount(String accountNumber, int amount) {
-		if (getWorldString(accountNumber) != "") {
-			int balance = getWorldInt(accountNumber);
-			balance += amount;
-			setWorldData(accountNumber, balance);
-		}
-	}
-	
-	private int getWorldInt(String tag) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getInteger(tag);
-	}
-	
-	private String getWorldString(String tag) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		return wdTag.getString(tag);
-	}
-	
-	private void setWorldData(String tag, int data) {
-		UCWorldData wData = UCWorldData.get(world);
-		NBTTagCompound wdTag = wData.getData();
-		wdTag.setInteger(tag, data);
-		wData.markDirty();
 	}
 }
