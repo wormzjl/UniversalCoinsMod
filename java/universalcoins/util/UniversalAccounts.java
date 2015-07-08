@@ -23,20 +23,28 @@ public class UniversalAccounts {
 			return -1;
 	}
 
-	public void debitAccount(String accountNumber, int amount) {
+	public boolean debitAccount(String accountNumber, int amount) {
 		if (hasKey(accountNumber)) {
 			int balance = getWorldInt(accountNumber);
-			balance -= amount;
-			setWorldData(accountNumber, balance);
+			if (amount <= balance) {
+				balance -= amount;
+				setWorldData(accountNumber, balance);
+				return true;
+			}
 		}
+		return false;
 	}
 
-	public void creditAccount(String accountNumber, int amount) {
+	public boolean creditAccount(String accountNumber, int amount) {
 		if (hasKey(accountNumber)) {
 			int balance = getWorldInt(accountNumber);
-			balance += amount;
-			setWorldData(accountNumber, balance);
+			if (balance + amount < Integer.MAX_VALUE) {
+				balance += amount;
+				setWorldData(accountNumber, balance);
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public String getPlayerAccount(String playerUID) {
@@ -58,7 +66,7 @@ public class UniversalAccounts {
 		return accountNumber;
 	}
 
-	public void addPlayerAccount(String playerUID) {
+	public boolean addPlayerAccount(String playerUID) {
 		if (getWorldString(playerUID) == "") {
 			String accountNumber = "";
 			while (getWorldString(accountNumber) == "") {
@@ -66,12 +74,11 @@ public class UniversalAccounts {
 				if (getWorldString(accountNumber) == "") {
 					setWorldData(playerUID, accountNumber);
 					setWorldData(accountNumber, 0);
+					return true;
 				}
 			}
-		} else {
-			// we have a problem we need to clear stale account data
-
 		}
+		return false;
 	}
 
 	public String getCustomAccount(String playerUID) {
@@ -140,7 +147,7 @@ public class UniversalAccounts {
 	private int generateAccountNumber() {
 		return (int) (Math.floor(Math.random() * 99999999) + 11111111);
 	}
-	
+
 	World world = MinecraftServer.getServer().worldServers[0];
 
 	private boolean hasKey(String tag) {
@@ -181,5 +188,5 @@ public class UniversalAccounts {
 		wdTag.removeTag(tag);
 		wData.markDirty();
 	}
-	
+
 }
