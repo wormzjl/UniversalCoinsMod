@@ -21,18 +21,17 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	private ItemStack[] inventory = new ItemStack[2];
 	public static final int itemInputSlot = 0;
 	public static final int itemOutputSlot = 1;
-	private static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
+	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "nobody";
 	public String accountNumber = "0";
 	public int accountBalance = 0;
 
-
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] {0};
+		return new int[] { 0 };
 	}
 
 	@Override
@@ -80,14 +79,14 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		coinsTaken(stack);
 		return stack;
 	}
-	
+
 	public void coinsTaken(ItemStack stack) {
 		int coinType = getCoinType(stack.getItem());
 		if (coinType != -1) {
 			int itemValue = multiplier[coinType];
 			int debitAmount = 0;
 			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
-			if(!worldObj.isRemote) {
+			if (!worldObj.isRemote) {
 				UniversalAccounts.getInstance().debitAccount(accountNumber, debitAmount * itemValue);
 				updateAccountBalance();
 			}
@@ -108,7 +107,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			if (coinType != -1) {
 				int itemValue = multiplier[coinType];
 				int depositAmount = 0;
-				depositAmount = Math.min(stack.stackSize,(Integer.MAX_VALUE - accountBalance) / itemValue);
+				depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
 				if (!worldObj.isRemote) {
 					UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * itemValue);
 					updateAccountBalance();
@@ -121,7 +120,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			}
 		}
 	}
-	
+
 	public void updateAccountBalance() {
 		accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
@@ -133,7 +132,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			int stackSize = Math.min((int) (accountBalance / Math.pow(9, logVal)), 64);
 			// add a stack to the slot
 			inventory[itemOutputSlot] = new ItemStack(coins[logVal], stackSize);
-		} 
+		}
 	}
 
 	@Override
@@ -154,8 +153,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
-				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
-						zCoord + 0.5) < 64;
+				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
 	}
 
 	@Override
@@ -163,9 +161,9 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	}
 
 	@Override
-	public void closeInventory() {	
+	public void closeInventory() {
 	}
-	
+
 	private int getCoinType(Item item) {
 		for (int i = 0; i < 5; i++) {
 			if (item == coins[i]) {
@@ -177,10 +175,10 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		//we only have a coin input slot
+		// we only have a coin input slot
 		return true;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
@@ -199,13 +197,12 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		tagCompound.setString("AccountNumber", accountNumber);
 		tagCompound.setInteger("Balance", accountBalance);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
-		
-		NBTTagList tagList = tagCompound.getTagList("Inventory",
-				Constants.NBT.TAG_COMPOUND);
+
+		NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
@@ -229,28 +226,29 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			accountBalance = 0;
 		}
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
-	NBTTagCompound nbt = new NBTTagCompound();
-	writeToNBT(nbt);
-	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-	readFromNBT(pkt.func_148857_g());
-	if (accountBalance == 0) inventory[itemOutputSlot] = null;
+		readFromNBT(pkt.func_148857_g());
+		if (accountBalance == 0)
+			inventory[itemOutputSlot] = null;
 	}
-    
+
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	public void setSafeAccount(String playerName) {
 		accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(getPlayerUID(playerName));
 	}
-	
+
 	private String getPlayerUID(String playerName) {
 		World world = super.getWorldObj();
 		EntityPlayer player = world.getPlayerEntityByName(playerName);

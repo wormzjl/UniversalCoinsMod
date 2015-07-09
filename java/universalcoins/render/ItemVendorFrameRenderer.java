@@ -25,8 +25,7 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
 	}
 
 	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item,
-			ItemRendererHelper helper) {
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
 		return true;
 	}
 
@@ -56,7 +55,7 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
 		if (item.hasTagCompound()) {
 			NBTTagCompound tag = item.getTagCompound();
 			blockIcon = tag.getString("BlockIcon");
-			//if itemStack has blockIcon, use it
+			// if itemStack has blockIcon, use it
 			if (blockIcon == "") {
 				NBTTagList tagList = tag.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 				byte slot = tag.getByte("Texture");
@@ -69,19 +68,21 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
 		((VendorFrameRenderer) render).blockIcon = blockIcon;
 		this.render.renderTileEntityAt(this.dummytile, 0.0D, 0.0D, 0.0D, 0.0F);
 	}
-	
+
 	private String getBlockIcon(ItemStack stack) {
 		String blockIcon = stack.getIconIndex().getIconName();
-		//the iconIndex function does not work with BOP so we have to do a bit of a hack here
-		if (blockIcon.startsWith("biomesoplenty")){
+		// the iconIndex function does not work with BOP so we have to do a bit of a hack here
+		if (blockIcon.startsWith("biomesoplenty")) {
 			String[] iconInfo = blockIcon.split(":");
 			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
 			String woodType = blockName[2].replace("Plank", "");
-			//hellbark does not follow the same naming convention
-			if (woodType.contains("hell")) woodType = "hell_bark";
+			// hellbark does not follow the same naming convention
+			if (woodType.contains("hell"))
+				woodType = "hell_bark";
 			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
-			//bamboo needs a hack too
-			if (blockIcon.contains("bamboo")) blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+			// bamboo needs a hack too
+			if (blockIcon.contains("bamboo"))
+				blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
 		}
 		return blockIcon;
 	}

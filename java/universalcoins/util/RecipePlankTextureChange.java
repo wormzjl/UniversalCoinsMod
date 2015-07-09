@@ -21,15 +21,16 @@ public class RecipePlankTextureChange implements IRecipe {
 		boolean hasItem = false;
 		boolean hasPlank = false;
 		for (int j = 0; j < inventorycrafting.getSizeInventory(); j++) {
-			if (inventorycrafting.getStackInSlot(j) != null && !hasPlank && 
-					isWoodPlank(inventorycrafting.getStackInSlot(j))) {
-					hasPlank = true;
-					plankStack = inventorycrafting.getStackInSlot(j);
-					continue;
+			if (inventorycrafting.getStackInSlot(j) != null && !hasPlank
+					&& isWoodPlank(inventorycrafting.getStackInSlot(j))) {
+				hasPlank = true;
+				plankStack = inventorycrafting.getStackInSlot(j);
+				continue;
 			}
-			if (inventorycrafting.getStackInSlot(j) != null && !hasItem && 
-					(inventorycrafting.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCSign ||
-					Block.getBlockFromItem(inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
+			if (inventorycrafting.getStackInSlot(j) != null
+					&& !hasItem
+					&& (inventorycrafting.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCSign || Block
+							.getBlockFromItem(inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
 				hasItem = true;
 				newStack = inventorycrafting.getStackInSlot(j).copy();
 				continue;
@@ -38,7 +39,7 @@ public class RecipePlankTextureChange implements IRecipe {
 				return false;
 			}
 		}
-		
+
 		if (!hasPlank || !hasItem)
 			return false;
 		else

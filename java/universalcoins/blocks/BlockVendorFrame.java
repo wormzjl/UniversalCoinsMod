@@ -24,21 +24,21 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVendorFrame extends BlockContainer {
-		
+
 	public BlockVendorFrame() {
 		super(new Material(MapColor.woodColor));
 		setHardness(1.0f);
-		setBlockTextureName("minecraft:planks_oak"); //fixes missing texture on block break
+		setBlockTextureName("minecraft:planks_oak"); // fixes missing texture on block break
 		setResistance(6000.0F);
 		setBlockBounds(0, 0, 0, 0, 0, 0);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
-	
+
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
 		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1, 0);
 		TileEntity tentity = world.getTileEntity(x, y, z);
 		if (tentity instanceof TileVendorFrame) {
-			TileVendorFrame te = (TileVendorFrame) tentity;			
+			TileVendorFrame te = (TileVendorFrame) tentity;
 			NBTTagList itemList = new NBTTagList();
 			NBTTagCompound tagCompound = new NBTTagCompound();
 			for (int i = 0; i < te.getSizeInventory(); i++) {
@@ -49,14 +49,15 @@ public class BlockVendorFrame extends BlockContainer {
 					invStack.writeToNBT(tag);
 					itemList.appendTag(tag);
 				}
-			}tagCompound.setTag("Inventory", itemList);
+			}
+			tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("CoinSum", te.coinSum);
 			tagCompound.setInteger("UserCoinSum", te.userCoinSum);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("BlockOwner", te.blockOwner);
 			tagCompound.setBoolean("Infinite", te.infiniteMode);
 			tagCompound.setString("BlockIcon", te.blockIcon);
-			
+
 			stack.setTagCompound(tagCompound);
 			return stack;
 		} else
@@ -65,67 +66,72 @@ public class BlockVendorFrame extends BlockContainer {
 
 	@Override
 	public boolean isOpaqueCube() {
-	   return false;
+		return false;
 	}
-	
+
 	public boolean renderAsNormalBlock() {
-        return false;
-    }
-	
+		return false;
+	}
+
 	public int getRenderType() {
-        return -1;
-    }
-	
+		return -1;
+	}
+
 	/**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
-     */
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-    }
+	 * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+	 * cleared to be reused)
+	 */
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+		this.setBlockBoundsBasedOnState(world, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+	}
 
-    /**
-     * Updates the blocks bounds based on its current state. Args: world, x, y, z
-     */
-    public void setBlockBoundsBasedOnState(IBlockAccess block, int x, int y, int z) {
-        this.getBlockBoundsFromMeta(block.getBlockMetadata(x, y, z));
-    }
+	/**
+	 * Updates the blocks bounds based on its current state. Args: world, x, y, z
+	 */
+	public void setBlockBoundsBasedOnState(IBlockAccess block, int x, int y, int z) {
+		this.getBlockBoundsFromMeta(block.getBlockMetadata(x, y, z));
+	}
 
-    /**
-     * Returns the bounding box of the wired rectangular prism to render.
-     */
-    @SideOnly(Side.CLIENT)
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
-    }
+	/**
+	 * Returns the bounding box of the wired rectangular prism to render.
+	 */
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
+		this.setBlockBoundsBasedOnState(world, x, y, z);
+		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+	}
 
-    public void getBlockBoundsFromMeta(int meta) {
-        if (meta == 0) {
-            this.setBlockBounds(0.12f, 0.12f, 0f, 0.88f, 0.88f, 0.07f);
-        }
-        if (meta == 1) {
-            this.setBlockBounds(0.93f, 0.12f, 0.12f, 1.0f, 0.88f, 0.88f);
-        }
-        if (meta == 2) {
-            this.setBlockBounds(0.12f, 0.12f, 0.93f, 0.88f, 0.88f, 1.00f);
-        }
-        if (meta == 3) {
-            this.setBlockBounds(0.07f, 0.12f, 0.12f, 0f, 0.88f, 0.88f);
-        }
-    }
-	
+	public void getBlockBoundsFromMeta(int meta) {
+		if (meta == 0) {
+			this.setBlockBounds(0.12f, 0.12f, 0f, 0.88f, 0.88f, 0.07f);
+		}
+		if (meta == 1) {
+			this.setBlockBounds(0.93f, 0.12f, 0.12f, 1.0f, 0.88f, 0.88f);
+		}
+		if (meta == 2) {
+			this.setBlockBounds(0.12f, 0.12f, 0.93f, 0.88f, 0.88f, 1.00f);
+		}
+		if (meta == 3) {
+			this.setBlockBounds(0.07f, 0.12f, 0.12f, 0f, 0.88f, 0.88f);
+		}
+	}
+
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
+			float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileVendor) {
 			TileVendor tileVendor = (TileVendor) world.getTileEntity(x, y, z);
 			EntityPlayer playerTest = world.getPlayerEntityByName(tileVendor.playerName);
-			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)){tileVendor.inUse = false;};
+			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)) {
+				tileVendor.inUse = false;
+			}
+			;
 			if (tileVendor.inUse && !player.getDisplayName().contentEquals(tileVendor.playerName)) {
-				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				if (!world.isRemote) {
+					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
+				}
 				return true;
 			} else {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
@@ -136,23 +142,21 @@ public class BlockVendorFrame extends BlockContainer {
 		}
 		return false;
 	}
-		
+
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z,
-			EntityLivingBase entity, ItemStack stack) {
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 		// set block meta so we can use it later for rotation
-		int rotation = MathHelper
-				.floor_double((double) ((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		int rotation = MathHelper.floor_double((double) ((entity.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileVendorFrame) {
 				TileVendorFrame tentity = (TileVendorFrame) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
-				if (tagCompound.getString("BlockIcon")  == "") {
+				if (tagCompound.getString("BlockIcon") == "") {
 					NBTTagList textureList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 					byte slot = tagCompound.getByte("Texture");
-					ItemStack textureStack  = ItemStack.loadItemStackFromNBT(tagCompound);
+					ItemStack textureStack = ItemStack.loadItemStackFromNBT(tagCompound);
 					tentity.sendTextureUpdateMessage(textureStack);
 				}
 				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
@@ -176,15 +180,14 @@ public class BlockVendorFrame extends BlockContainer {
 		} else {
 			// Vending Frame pulled from NEI or creative. Cheaters :P
 			((TileVendorFrame) world.getTileEntity(x, y, z)).blockIcon = "planks_birch";
-			((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner = entity
-					.getCommandSenderName();
+			((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
 		}
 
 	}
-	
+
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-		String ownerName = ((TileVendorFrame)world.getTileEntity(x, y, z)).blockOwner;
+		String ownerName = ((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.capabilities.isCreativeMode) {
 			super.removedByPlayer(world, player, x, y, z);
 			return false;

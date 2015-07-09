@@ -15,12 +15,9 @@ import universalcoins.UniversalCoins;
 
 public class UCRebalance extends CommandBase {
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	private static final Item[] coins = new Item[] {
-			UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack,
-			UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag,
-			UniversalCoins.proxy.itemLargeCoinBag };
+	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
+			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 
 	@Override
 	public String getCommandName() {
@@ -31,11 +28,11 @@ public class UCRebalance extends CommandBase {
 	public String getCommandUsage(ICommandSender var1) {
 		return StatCollector.translateToLocal("command.rebalance.help");
 	}
-	
+
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
-        return true;
-    }
+		return true;
+	}
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring) {
@@ -64,8 +61,8 @@ public class UCRebalance extends CommandBase {
 						float rz = rand.nextFloat() * 0.8F + 0.1F;
 						int logVal = Math.min((int) (Math.log(leftOvers) / Math.log(9)), 4);
 						int stackSize = Math.min((int) (leftOvers / Math.pow(9, logVal)), 64);
-						EntityItem entityItem = new EntityItem( world, sender.getPlayerCoordinates().posX + rx, 
-								sender.getPlayerCoordinates().posY + ry, sender.getPlayerCoordinates().posZ + rz, 
+						EntityItem entityItem = new EntityItem(world, sender.getPlayerCoordinates().posX + rx,
+								sender.getPlayerCoordinates().posY + ry, sender.getPlayerCoordinates().posZ + rz,
 								new ItemStack(coins[logVal], stackSize));
 						world.spawnEntityInWorld(entityItem);
 						leftOvers -= Math.pow(9, logVal) * stackSize;
@@ -98,7 +95,8 @@ public class UCRebalance extends CommandBase {
 					ItemStack stack = recipient.inventory.getStackInSlot(i);
 					for (int j = 0; j < coins.length; j++) {
 						if (stack != null && stack.getItem() == coins[j]) {
-							int amountToAdd = (int) Math.min( coinsLeft / Math.pow(9, j), stack.getMaxStackSize() - stack.stackSize);
+							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j), stack.getMaxStackSize()
+									- stack.stackSize);
 							stack.stackSize += amountToAdd;
 							recipient.inventory.setInventorySlotContents(i, stack);
 							coinsLeft -= (amountToAdd * Math.pow(9, j));

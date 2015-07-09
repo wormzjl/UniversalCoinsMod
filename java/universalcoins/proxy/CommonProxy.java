@@ -42,7 +42,7 @@ public class CommonProxy {
 	public static Item itemUCSign;
 	public static Item itemLinkCard;
 	public static Item itemPackage;
-	
+
 	public static Block blockTradeStation;
 	public static Block blockVendor;
 	public static Block blockVendorFrame;
@@ -54,8 +54,7 @@ public class CommonProxy {
 	public static Block blockBandit;
 	public static Block blockSignal;
 	public static Block blockPackager;
-	
-	
+
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
 		blockVendor = new BlockVendor(Vending.supports).setBlockName("blockVendor");
@@ -68,7 +67,7 @@ public class CommonProxy {
 		blockBandit = new BlockBandit().setBlockName("blockBandit");
 		blockSignal = new BlockSignal().setBlockName("blockSignal");
 		blockPackager = new BlockPackager().setBlockName("blockPackager");
-		
+
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
 		GameRegistry.registerBlock(blockVendorFrame, "blockVendorFrame").getUnlocalizedName();
@@ -81,7 +80,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(blockSignal, "blockSignal").getUnlocalizedName();
 		GameRegistry.registerBlock(blockPackager, "blockPackager").getUnlocalizedName();
 	}
-	
+
 	public void registerItems() {
 		itemCoin = new ItemCoin().setUnlocalizedName("itemCoin");
 		itemSmallCoinStack = new ItemSmallCoinStack().setUnlocalizedName("itemSmallCoinStack");
@@ -95,7 +94,7 @@ public class CommonProxy {
 		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
 		itemLinkCard = new ItemLinkCard().setUnlocalizedName("itemLinkCard");
 		itemPackage = new ItemPackage().setUnlocalizedName("itemPackage");
-		
+
 		GameRegistry.registerItem(itemCoin, itemCoin.getUnlocalizedName());
 		GameRegistry.registerItem(itemSmallCoinStack, itemSmallCoinStack.getUnlocalizedName());
 		GameRegistry.registerItem(itemLargeCoinStack, itemLargeCoinStack.getUnlocalizedName());
@@ -111,7 +110,7 @@ public class CommonProxy {
 	}
 
 	public void registerRenderers() {
-		//blank since we don't do anything on the server
+		// blank since we don't do anything on the server
 	}
 
 }

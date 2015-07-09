@@ -51,7 +51,7 @@ public class TileEntityVendorRenderer extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
 		try {
-			//render trade item
+			// render trade item
 			renderer.doRender(entity, 0, 0, 0, 0, f);
 		} catch (Throwable e) {
 		}

@@ -15,49 +15,47 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
-private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled, 
-enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled, packagerRecipeEnabled;
+	private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled,
+			enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled,
+			packagerRecipeEnabled;
 
-    public UCRecipeMessage()
-    {
-        this.tradeStationRecipesEnabled = UniversalCoins.tradeStationRecipesEnabled;
-        this.vendorRecipesEnabled = UniversalCoins.vendorRecipesEnabled;
-        this.vendorFrameRecipesEnabled = UniversalCoins.vendorFrameRecipesEnabled;
-        this.atmRecipeEnabled = UniversalCoins.atmRecipeEnabled;
-        this.enderCardRecipeEnabled = UniversalCoins.enderCardRecipeEnabled;
-        this.banditRecipeEnabled = UniversalCoins.banditRecipeEnabled;
-        this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
-        this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
-        this.packagerRecipeEnabled = UniversalCoins.packagerRecipeEnabled;
-    }
+	public UCRecipeMessage() {
+		this.tradeStationRecipesEnabled = UniversalCoins.tradeStationRecipesEnabled;
+		this.vendorRecipesEnabled = UniversalCoins.vendorRecipesEnabled;
+		this.vendorFrameRecipesEnabled = UniversalCoins.vendorFrameRecipesEnabled;
+		this.atmRecipeEnabled = UniversalCoins.atmRecipeEnabled;
+		this.enderCardRecipeEnabled = UniversalCoins.enderCardRecipeEnabled;
+		this.banditRecipeEnabled = UniversalCoins.banditRecipeEnabled;
+		this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
+		this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
+		this.packagerRecipeEnabled = UniversalCoins.packagerRecipeEnabled;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-    	this.tradeStationRecipesEnabled = buf.readBoolean();
-        this.vendorRecipesEnabled = buf.readBoolean();
-        this.vendorFrameRecipesEnabled = buf.readBoolean();
-        this.atmRecipeEnabled = buf.readBoolean();
-        this.enderCardRecipeEnabled = buf.readBoolean();
-        this.banditRecipeEnabled = buf.readBoolean();
-        this.signalRecipeEnabled = buf.readBoolean();
-        this.linkCardRecipeEnabled = buf.readBoolean();
-        this.packagerRecipeEnabled = buf.readBoolean();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.tradeStationRecipesEnabled = buf.readBoolean();
+		this.vendorRecipesEnabled = buf.readBoolean();
+		this.vendorFrameRecipesEnabled = buf.readBoolean();
+		this.atmRecipeEnabled = buf.readBoolean();
+		this.enderCardRecipeEnabled = buf.readBoolean();
+		this.banditRecipeEnabled = buf.readBoolean();
+		this.signalRecipeEnabled = buf.readBoolean();
+		this.linkCardRecipeEnabled = buf.readBoolean();
+		this.packagerRecipeEnabled = buf.readBoolean();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-        buf.writeBoolean(tradeStationRecipesEnabled);
-        buf.writeBoolean(vendorRecipesEnabled);
-        buf.writeBoolean(vendorFrameRecipesEnabled);
-        buf.writeBoolean(atmRecipeEnabled);
-        buf.writeBoolean(enderCardRecipeEnabled);
-        buf.writeBoolean(banditRecipeEnabled);
-        buf.writeBoolean(signalRecipeEnabled);
-        buf.writeBoolean(linkCardRecipeEnabled);
-        buf.writeBoolean(packagerRecipeEnabled);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeBoolean(tradeStationRecipesEnabled);
+		buf.writeBoolean(vendorRecipesEnabled);
+		buf.writeBoolean(vendorFrameRecipesEnabled);
+		buf.writeBoolean(atmRecipeEnabled);
+		buf.writeBoolean(enderCardRecipeEnabled);
+		buf.writeBoolean(banditRecipeEnabled);
+		buf.writeBoolean(signalRecipeEnabled);
+		buf.writeBoolean(linkCardRecipeEnabled);
+		buf.writeBoolean(packagerRecipeEnabled);
+	}
 
 	@Override
 	public IMessage onMessage(UCRecipeMessage message, MessageContext ctx) {
@@ -65,47 +63,47 @@ enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipe
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockTradeStation));
 			removeRecipe(new ItemStack(UniversalCoins.proxy.itemSeller));
 		}
-		if (!message.vendorRecipesEnabled){
-			for(int i=0; i < Vending.supports.length; i++){
-				removeRecipe(new ItemStack(UniversalCoins.proxy.blockVendor,1,i));
+		if (!message.vendorRecipesEnabled) {
+			for (int i = 0; i < Vending.supports.length; i++) {
+				removeRecipe(new ItemStack(UniversalCoins.proxy.blockVendor, 1, i));
 			}
 		}
-		if (!message.vendorFrameRecipesEnabled){
+		if (!message.vendorFrameRecipesEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame));
 		}
-		if (!message.atmRecipeEnabled){
+		if (!message.atmRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockCardStation));
 		}
-		if (!message.enderCardRecipeEnabled){
+		if (!message.enderCardRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard));
 		}
-		if (!message.banditRecipeEnabled){
+		if (!message.banditRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockBandit));
 		}
-		if (!message.signalRecipeEnabled){
+		if (!message.signalRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockSignal));
 		}
-		if (!message.linkCardRecipeEnabled){
+		if (!message.linkCardRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.itemLinkCard));
 		}
-		if (!message.packagerRecipeEnabled){
+		if (!message.packagerRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPackager));
 		}
-		
+
 		return null;
 	}
-	
+
 	private void removeRecipe(ItemStack stack) {
 		List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
 		Iterator<IRecipe> recipeIterator = recipeList.iterator();
-		
+
 		while (recipeIterator.hasNext()) {
 			ItemStack recipeStack = recipeIterator.next().getRecipeOutput();
 			if (recipeStack != null) {
 				if (recipeStack.areItemStacksEqual(recipeStack, stack)) {
 					recipeIterator.remove();
 				}
-			}			
+			}
 		}
 	}
 }

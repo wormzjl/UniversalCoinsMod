@@ -19,34 +19,35 @@ import universalcoins.UniversalCoins;
 import universalcoins.tile.TileCardStation;
 
 public class BlockCardStation extends BlockContainer {
-	
+
 	IIcon blockIcon;
-	
+
 	public BlockCardStation() {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setBlockTextureName("universalcoins:blockTradeStation1"); //fixes missing texture on block break
+		setBlockTextureName("universalcoins:blockTradeStation1"); // fixes missing texture on block break
 		setResistance(30.0F);
 	}
-	
+
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
-        return false;
-    }
-	
+		return false;
+	}
+
 	@Override
 	public boolean isOpaqueCube() {
-	   return false;
+		return false;
 	}
-	
+
 	@Override
-    public int getRenderType() {
-		    return 0;
-    }
-	
+	public int getRenderType() {
+		return 0;
+	}
+
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
+			float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileCardStation) {
 			TileCardStation tileCardStation = (TileCardStation) world.getTileEntity(x, y, z);
@@ -55,23 +56,26 @@ public class BlockCardStation extends BlockContainer {
 				tileCardStation.inUse = false;
 			}
 			if (tileCardStation.inUse && !player.getDisplayName().contentEquals(tileCardStation.playerName)) {
-				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				if (!world.isRemote) {
+					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
+				}
 				return true;
 			} else {
-	        	player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-	        	tileCardStation.playerName = player.getDisplayName();
-	        	tileCardStation.playerUID = player.getUniqueID().toString();
-	        	tileCardStation.inUse = true;
-	        	return true;
-	        }
+				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				tileCardStation.playerName = player.getDisplayName();
+				tileCardStation.playerUID = player.getUniqueID().toString();
+				tileCardStation.inUse = true;
+				return true;
+			}
 		}
 		return false;
 	}
-		
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		if (world.isRemote) return;
-		int rotation = MathHelper.floor_double((double)((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
+		if (world.isRemote)
+			return;
+		int rotation = MathHelper.floor_double((double) ((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 	}
 
@@ -79,12 +83,13 @@ public class BlockCardStation extends BlockContainer {
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileCardStation();
 	}
-	
+
 	@Override
 	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
-        world.setBlockToAir(x, y, z);
-        onBlockDestroyedByExplosion(world, x, y, z, explosion);
-        EntityItem entityItem = new EntityItem( world, x, y, z, new ItemStack(UniversalCoins.proxy.blockSafe, 1));
-		if (!world.isRemote) world.spawnEntityInWorld(entityItem);
-    }
+		world.setBlockToAir(x, y, z);
+		onBlockDestroyedByExplosion(world, x, y, z, explosion);
+		EntityItem entityItem = new EntityItem(world, x, y, z, new ItemStack(UniversalCoins.proxy.blockSafe, 1));
+		if (!world.isRemote)
+			world.spawnEntityInWorld(entityItem);
+	}
 }

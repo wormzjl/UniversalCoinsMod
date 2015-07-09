@@ -17,10 +17,11 @@ public class ItemCoin extends Item {
 		super();
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister){
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5));
+	public void registerIcons(IIconRegister par1IconRegister) {
+		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":"
+				+ this.getUnlocalizedName().substring(5));
 	}
 
 	@Override

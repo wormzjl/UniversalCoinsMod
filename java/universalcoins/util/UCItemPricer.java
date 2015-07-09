@@ -431,7 +431,7 @@ public class UCItemPricer {
 			}
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe) recipe;
-			//FMLLog.info("Shaped orerecipe found: " + shapedOreRecipe.getRecipeOutput().getDisplayName());
+			// FMLLog.info("Shaped orerecipe found: " + shapedOreRecipe.getRecipeOutput().getDisplayName());
 			for (int i = 0; i < shapedOreRecipe.getInput().length; i++) {
 				if (shapedOreRecipe.getInput()[i] instanceof ArrayList) {
 					ArrayList test = (ArrayList) shapedOreRecipe.getInput()[i];
@@ -444,8 +444,9 @@ public class UCItemPricer {
 								break;
 							}
 						}
-						//everything is invalid, just add one
-						if (!arrayListHasPricedItem) recipeInputs.add((ItemStack) test.get(0));
+						// everything is invalid, just add one
+						if (!arrayListHasPricedItem)
+							recipeInputs.add((ItemStack) test.get(0));
 					}
 				} else if (shapedOreRecipe.getInput()[i] instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) shapedOreRecipe.getInput()[i]).copy();
@@ -468,8 +469,9 @@ public class UCItemPricer {
 							break;
 						}
 					}
-					//everything is invalid, just add one
-					if (!arrayListHasPricedItem) recipeInputs.add((ItemStack) test.get(0));
+					// everything is invalid, just add one
+					if (!arrayListHasPricedItem)
+						recipeInputs.add((ItemStack) test.get(0));
 				} else if (object instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) object).copy();
 					if (itemStack.stackSize > 1) {

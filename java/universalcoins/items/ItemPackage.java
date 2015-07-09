@@ -21,48 +21,47 @@ public class ItemPackage extends Item {
 		super();
 		this.maxStackSize = 1;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister){
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5));
+	public void registerIcons(IIconRegister par1IconRegister) {
+		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":"
+				+ this.getUnlocalizedName().substring(5));
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		if( stack.stackTagCompound != null ) {
-			NBTTagList tagList = stack.stackTagCompound.getTagList("Inventory",
-					Constants.NBT.TAG_COMPOUND);
+		if (stack.stackTagCompound != null) {
+			NBTTagList tagList = stack.stackTagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {
 				NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
-				//byte slot = tag.getByte("Slot");
-					int itemCount = ItemStack.loadItemStackFromNBT(tag).stackSize;
-					String itemName = ItemStack.loadItemStackFromNBT(tag).getDisplayName();
-					list.add(itemCount + " " + itemName);
+				// byte slot = tag.getByte("Slot");
+				int itemCount = ItemStack.loadItemStackFromNBT(tag).stackSize;
+				String itemName = ItemStack.loadItemStackFromNBT(tag).getDisplayName();
+				list.add(itemCount + " " + itemName);
 			}
 		}
 	}
-	
+
 	@Override
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
-		if( itemstack.stackTagCompound != null ) {
-			//TODO unpack items and destroy package
-			NBTTagList tagList = itemstack.stackTagCompound.getTagList("Inventory",
-					Constants.NBT.TAG_COMPOUND);
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+			float px, float py, float pz) {
+		if (itemstack.stackTagCompound != null) {
+			// TODO unpack items and destroy package
+			NBTTagList tagList = itemstack.stackTagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 			for (int i = 0; i < tagList.tagCount(); i++) {
 				NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 				if (player.inventory.getFirstEmptyStack() != -1) {
 					player.inventory.addItemStackToInventory(ItemStack.loadItemStackFromNBT(tag));
 				} else {
-					//spawn in world
+					// spawn in world
 					EntityItem entityItem = new EntityItem(world, x, y, z, ItemStack.loadItemStackFromNBT(tag));
 					world.spawnEntityInWorld(entityItem);
 				}
 			}
-			//destroy package
+			// destroy package
 			player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 		}
-			
-			
+
 		return false;
 	}
 

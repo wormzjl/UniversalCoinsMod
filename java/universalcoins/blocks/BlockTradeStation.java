@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTradeStation extends BlockContainer {
-	
+
 	private IIcon[] icons;
 
 	public BlockTradeStation() {
@@ -33,24 +33,24 @@ public class BlockTradeStation extends BlockContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister register){
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[2];
-		
-		for (int i = 0; i < icons.length; i++){
-			icons[i] = register.registerIcon(UniversalCoins.modid + ":" +
-													  		this.getUnlocalizedName().substring(5) + i);
+
+		for (int i = 0; i < icons.length; i++) {
+			icons[i] = register.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5) + i);
 		}
 	}
-	
-	public IIcon getIcon(int par1, int par2){
-		if (par1 == 0 || par1 == 1){
+
+	public IIcon getIcon(int par1, int par2) {
+		if (par1 == 0 || par1 == 1) {
 			return icons[1];
 		}
 		return icons[0];
 	}
-	
+
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
+			float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileTradeStation) {
 			TileTradeStation tileTrade = (TileTradeStation) world.getTileEntity(x, y, z);
@@ -59,7 +59,9 @@ public class BlockTradeStation extends BlockContainer {
 				tileTrade.inUse = false;
 			}
 			if (tileTrade.inUse && !player.getDisplayName().contentEquals(tileTrade.playerName)) {
-				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				if (!world.isRemote) {
+					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
+				}
 				return true;
 			} else {
 				tileTrade.playerName = player.getDisplayName();
@@ -70,7 +72,7 @@ public class BlockTradeStation extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
 		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1);
 		TileEntity tentity = world.getTileEntity(x, y, z);
@@ -98,10 +100,11 @@ public class BlockTradeStation extends BlockContainer {
 		} else
 			return stack;
 	}
-		
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		if (world.isRemote) return;
+		if (world.isRemote)
+			return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileTradeStation) {
@@ -126,10 +129,10 @@ public class BlockTradeStation extends BlockContainer {
 			}
 			world.markBlockForUpdate(x, y, z);
 		} else if (stack.hasDisplayName()) {
-            ((TileTradeStation)world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
-        }
+			((TileTradeStation) world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
+		}
 	}
-	
+
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);

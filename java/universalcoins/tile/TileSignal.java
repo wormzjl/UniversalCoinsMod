@@ -16,12 +16,12 @@ import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 
 public class TileSignal extends TileEntity implements IInventory {
-	
+
 	private ItemStack[] inventory = new ItemStack[1];
 	public static final int itemOutputSlot = 0;
-	public static final int[] multiplier = new int[] {1, 9, 81, 729, 6561};
+	public static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	public static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack, 
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "";
 	public int coinSum = 0;
@@ -32,14 +32,14 @@ public class TileSignal extends TileEntity implements IInventory {
 	public int lastSecondsLeft = 0;
 	public String customName = "";
 	public boolean canProvidePower = false;
-	
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 		if (!worldObj.isRemote) {
 			if (counter >= 0) {
 				counter--;
-				secondsLeft = counter/20;
+				secondsLeft = counter / 20;
 				if (secondsLeft != lastSecondsLeft) {
 					lastSecondsLeft = secondsLeft;
 					updateTE();
@@ -80,7 +80,7 @@ public class TileSignal extends TileEntity implements IInventory {
 			}
 		}
 		if (buttonId == 3) {
-			if (shift){
+			if (shift) {
 				if (fee - 10 > 0) {
 					fee -= 10;
 				}
@@ -102,14 +102,14 @@ public class TileSignal extends TileEntity implements IInventory {
 			}
 		}
 	}
-	
+
 	public void activateSignal() {
 		canProvidePower = true;
 		counter += duration * 20;
 		coinSum += fee;
 		updateNeighbors();
 	}
-	
+
 	private void updateNeighbors() {
 		Block block = worldObj.getBlock(xCoord, yCoord, zCoord);
 		worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, block);
@@ -117,10 +117,9 @@ public class TileSignal extends TileEntity implements IInventory {
 
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this
-				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5,
-						zCoord + 0.5) < 64;
+				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
 	}
-	
+
 	private int getCoinType(Item item) {
 		for (int i = 0; i < 5; i++) {
 			if (item == coins[i]) {
@@ -133,7 +132,7 @@ public class TileSignal extends TileEntity implements IInventory {
 	public String getInventoryName() {
 		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockSignal.getLocalizedName();
 	}
-	
+
 	public void setInventoryName(String name) {
 		customName = name;
 	}
@@ -146,28 +145,27 @@ public class TileSignal extends TileEntity implements IInventory {
 	public boolean hasCustomInventoryName() {
 		return this.customName != null && this.customName.length() > 0;
 	}
-	
+
 	public void sendPacket(int button, boolean shiftPressed) {
-		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord,
-				zCoord, button, shiftPressed));
+		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
-	
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeToNBT(nbt);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
 	}
-	
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		readFromNBT(pkt.func_148857_g());
 	}
-	
+
 	public void updateTE() {
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
@@ -190,13 +188,12 @@ public class TileSignal extends TileEntity implements IInventory {
 		tagCompound.setString("customName", customName);
 		tagCompound.setBoolean("canProvidePower", canProvidePower);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
-		
-		NBTTagList tagList = tagCompound.getTagList("Inventory",
-				Constants.NBT.TAG_COMPOUND);
+
+		NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
@@ -270,21 +267,21 @@ public class TileSignal extends TileEntity implements IInventory {
 		coinsTaken(stack);
 		return stack;
 	}
-	
+
 	public void coinsTaken(ItemStack stack) {
 		int coinType = getCoinType(stack.getItem());
 		if (coinType != -1) {
 			int itemValue = multiplier[coinType];
 			int debitAmount = 0;
 			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-			if(!worldObj.isRemote) {
+			if (!worldObj.isRemote) {
 				coinSum -= debitAmount * itemValue;
-				//debitAccount(debitAmount * itemValue);
-				//updateAccountBalance();
+				// debitAccount(debitAmount * itemValue);
+				// updateAccountBalance();
 			}
 		}
 	}
-	
+
 	public void fillOutputSlot() {
 		inventory[itemOutputSlot] = null;
 		if (coinSum > 0) {
@@ -311,11 +308,11 @@ public class TileSignal extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {		
+	public void openInventory() {
 	}
 
 	@Override
-	public void closeInventory() {		
+	public void closeInventory() {
 	}
 
 	@Override

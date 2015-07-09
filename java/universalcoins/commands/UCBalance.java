@@ -14,12 +14,9 @@ import universalcoins.util.UniversalAccounts;
 
 public class UCBalance extends CommandBase {
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	private static final Item[] coins = new Item[] {
-			UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack,
-			UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag,
-			UniversalCoins.proxy.itemLargeCoinBag };
+	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
+			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
+			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 
 	@Override
 	public String getCommandName() {
@@ -30,11 +27,11 @@ public class UCBalance extends CommandBase {
 	public String getCommandUsage(ICommandSender var1) {
 		return StatCollector.translateToLocal("command.balance.help");
 	}
-	
+
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
-        return true;
-    }
+		return true;
+	}
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] astring) {
@@ -46,17 +43,18 @@ public class UCBalance extends CommandBase {
 			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
 			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(customAcct);
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-			sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-					"command.balance.result.inventory") + formatter.format(playerCoins)));
+			sender.addChatMessage(new ChatComponentText(StatCollector
+					.translateToLocal("command.balance.result.inventory") + formatter.format(playerCoins)));
 			if (accountBalance != -1) {
-				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-						"command.balance.result.account") + formatter.format(accountBalance)));
+				sender.addChatMessage(new ChatComponentText(StatCollector
+						.translateToLocal("command.balance.result.account") + formatter.format(accountBalance)));
 			}
 			if (custAccountBalance != -1) {
-				sender.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-						"command.balance.result.customaccount") + formatter.format(custAccountBalance)));
+				sender.addChatMessage(new ChatComponentText(StatCollector
+						.translateToLocal("command.balance.result.customaccount")
+						+ formatter.format(custAccountBalance)));
 			}
-		}		
+		}
 	}
 
 	private int getPlayerCoins(EntityPlayerMP player) {

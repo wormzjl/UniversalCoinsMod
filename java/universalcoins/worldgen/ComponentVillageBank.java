@@ -147,7 +147,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		}
 		return 5;
 	}
-	
+
 	private int getPathHeight(World world) {
 		int i1 = this.getXWithOffset(0, 0);
 		int j1 = this.getYWithOffset(0);

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 
 public class BlockBase extends Block {
-	
+
 	private IIcon[] icons;
 
 	public BlockBase() {
@@ -21,12 +21,13 @@ public class BlockBase extends Block {
 		setResistance(30.0F);
 		setBlockTextureName("universalcoins:blockBase");
 	}
-	
+
 	@Override
 	public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
-        world.setBlockToAir(x, y, z);
-        onBlockDestroyedByExplosion(world, x, y, z, explosion);
-        EntityItem entityItem = new EntityItem( world, x, y, z, new ItemStack(this, 1));
-		if (!world.isRemote) world.spawnEntityInWorld(entityItem);
-    }
+		world.setBlockToAir(x, y, z);
+		onBlockDestroyedByExplosion(world, x, y, z, explosion);
+		EntityItem entityItem = new EntityItem(world, x, y, z, new ItemStack(this, 1));
+		if (!world.isRemote)
+			world.spawnEntityInWorld(entityItem);
+	}
 }

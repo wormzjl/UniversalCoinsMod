@@ -17,47 +17,52 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemUCCard extends Item {
-	
+
 	public ItemUCCard() {
 		super();
 		this.maxStackSize = 1;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister){
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5));
+	public void registerIcons(IIconRegister par1IconRegister) {
+		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":"
+				+ this.getUnlocalizedName().substring(5));
 	}
-	
+
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {		
-		if( stack.stackTagCompound != null ) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+		if (stack.stackTagCompound != null) {
 			list.add(stack.stackTagCompound.getString("Name"));
 			list.add(stack.stackTagCompound.getString("Account"));
 		} else {
 			list.add(StatCollector.translateToLocal("item.itemUCCard.warning"));
 		}
 	}
-	
+
 	@Override
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float px, float py, float pz){
-		if (world.isRemote) return true;
-		if( itemstack.stackTagCompound == null ) {
+	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+			float px, float py, float pz) {
+		if (world.isRemote)
+			return true;
+		if (itemstack.stackTagCompound == null) {
 			createNBT(itemstack, world, player);
 		}
-		int accountCoins = UniversalAccounts.getInstance().getAccountBalance(itemstack.stackTagCompound.getString("Account"));
+		int accountCoins = UniversalAccounts.getInstance().getAccountBalance(
+				itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
-					"item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
-        return true;
-    }
-	
+		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.itemUCCard.balance") + " "
+				+ formatter.format(accountCoins)));
+		return true;
+	}
+
 	@Override
 	public void onCreated(ItemStack stack, World world, EntityPlayer entityPlayer) {
 		createNBT(stack, world, entityPlayer);
 	}
-	
+
 	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
-		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(entityPlayer.getPersistentID().toString());
+		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(
+				entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setString("Name", entityPlayer.getDisplayName());
 		stack.stackTagCompound.setString("Owner", entityPlayer.getPersistentID().toString());

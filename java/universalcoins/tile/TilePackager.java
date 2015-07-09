@@ -349,10 +349,13 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1) {
-		//return all slots so connections can go anywhere
-		if (packageSize == 0) return new int[] { 4, 5, 6, 7, 8, 9, 10 };
-		if (packageSize == 1) return new int[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-		if (packageSize == 2) return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		// return all slots so connections can go anywhere
+		if (packageSize == 0)
+			return new int[] { 4, 5, 6, 7, 8, 9, 10 };
+		if (packageSize == 1)
+			return new int[] { 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		if (packageSize == 2)
+			return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 		return null;
 	}
 

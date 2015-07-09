@@ -27,20 +27,23 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderers() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileVendor.class, new TileEntityVendorRenderer());
 		RenderingRegistry.registerBlockHandler(new BlockVendorRenderer(RenderingRegistry.getNextAvailableRenderId()));
-		
+
 		TileEntitySpecialRenderer render = new TileEntityCardStationRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCardStation.class, render);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockCardStation), new ItemCardStationRenderer(render, new TileCardStation()));
-        
-        TileEntitySpecialRenderer render2 = new VendorFrameRenderer();
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockCardStation),
+				new ItemCardStationRenderer(render, new TileCardStation()));
+
+		TileEntitySpecialRenderer render2 = new VendorFrameRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileVendorFrame.class, render2);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockVendorFrame), new ItemVendorFrameRenderer(render2, new TileVendorFrame()));
-        
-        TileEntitySpecialRenderer render3 = new TileEntityUCSignRenderer();
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockVendorFrame),
+				new ItemVendorFrameRenderer(render2, new TileVendorFrame()));
+
+		TileEntitySpecialRenderer render3 = new TileEntityUCSignRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileUCSign.class, render3);
-		
+
 		TileEntitySpecialRenderer render4 = new TileEntitySignalRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSignal.class, render4);
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockSignal), new ItemSignalRenderer(render4, new TileSignal()));
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockSignal),
+				new ItemSignalRenderer(render4, new TileSignal()));
 	}
 }

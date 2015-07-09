@@ -10,32 +10,34 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class UCTextureMessage  implements IMessage, IMessageHandler<UCTextureMessage, IMessage> {
+public class UCTextureMessage implements IMessage, IMessageHandler<UCTextureMessage, IMessage> {
 	private int x, y, z;
 	private String blockIcon;
 
-    public UCTextureMessage() {}
+	public UCTextureMessage() {
+	}
 
-    public UCTextureMessage(int x, int y, int z, String blockIcon) { 
-    	this.x = x;
-    	this.y = y;
-    	this.z = z;
-        this.blockIcon = blockIcon;
-    }
+	public UCTextureMessage(int x, int y, int z, String blockIcon) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.blockIcon = blockIcon;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) { 
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
-        ByteBufUtils.writeUTF8String(buf, blockIcon);    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
+		ByteBufUtils.writeUTF8String(buf, blockIcon);
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) { 
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
-        this.blockIcon = ByteBufUtils.readUTF8String(buf);
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.x = buf.readInt();
+		this.y = buf.readInt();
+		this.z = buf.readInt();
+		this.blockIcon = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override

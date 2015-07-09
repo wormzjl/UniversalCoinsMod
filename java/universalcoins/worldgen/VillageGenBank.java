@@ -13,8 +13,8 @@ public class VillageGenBank implements IVillageCreationHandler {
 
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
-		return new StructureVillagePieces.PieceWeight(ComponentVillageBank.class, 
-				4, MathHelper.getRandomIntegerInRange(random, 0, 1));
+		return new StructureVillagePieces.PieceWeight(ComponentVillageBank.class, 4,
+				MathHelper.getRandomIntegerInRange(random, 0, 1));
 	}
 
 	@Override
@@ -23,8 +23,8 @@ public class VillageGenBank implements IVillageCreationHandler {
 	}
 
 	@Override
-	public Object buildComponent(PieceWeight villagePiece, Start startPiece,
-			List pieces, Random random, int p1, int p2, int p3, int p4, int p5) {
+	public Object buildComponent(PieceWeight villagePiece, Start startPiece, List pieces, Random random, int p1,
+			int p2, int p3, int p4, int p5) {
 		return ComponentVillageBank.buildComponent(startPiece, pieces, random, p1, p2, p3, p4, p5);
 	}
 

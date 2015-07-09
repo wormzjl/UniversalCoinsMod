@@ -1,6 +1,5 @@
 package universalcoins.blocks;
 
-
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -35,25 +34,31 @@ public class BlockVendor extends BlockContainer {
 	IIcon iconTop, iconSide;
 
 	public BlockVendor(Block[] supports) {
-		super(Material.glass);	
+		super(Material.glass);
 
 		supportBlocks = supports;
 		setStepSound(soundTypeGlass);
-		setCreativeTab(UniversalCoins.tabUniversalCoins);	
+		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		setHardness(0.3F);
 		setResistance(6000.0F);
 		setBlockBounds(0.0625f, 0.125f, 0.0625f, 0.9375f, 0.9375f, 0.9375f);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
+			float par8, float par9) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileVendor) {
 			TileVendor tileVendor = (TileVendor) world.getTileEntity(x, y, z);
 			EntityPlayer playerTest = world.getPlayerEntityByName(tileVendor.playerName);
-			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)){tileVendor.inUse = false;};
+			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)) {
+				tileVendor.inUse = false;
+			}
+			;
 			if (tileVendor.inUse && !player.getDisplayName().contentEquals(tileVendor.playerName)) {
-				if (!world.isRemote) { player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse"))); }
+				if (!world.isRemote) {
+					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
+				}
 				return true;
 			} else {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
@@ -64,7 +69,7 @@ public class BlockVendor extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
 		ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1, 0);
 		TileEntity tentity = world.getTileEntity(x, y, z);
@@ -95,7 +100,8 @@ public class BlockVendor extends BlockContainer {
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		if (world.isRemote) return;
+		if (world.isRemote)
+			return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileVendorBlock) {
@@ -119,18 +125,18 @@ public class BlockVendor extends BlockContainer {
 				tentity.infiniteMode = tagCompound.getBoolean("Infinite");
 			}
 			world.markBlockForUpdate(x, y, z);
-			
+
 		} else {
-			//item has no owner so we'll set one and get out of here
-			((TileVendorBlock)world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
+			// item has no owner so we'll set one and get out of here
+			((TileVendorBlock) world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
 		}
 		int meta = stack.getItemDamage();
-		world.setBlockMetadataWithNotify(x, y, z, meta, 2);		
+		world.setBlockMetadataWithNotify(x, y, z, meta, 2);
 	}
-	
+
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-		String ownerName = ((TileVendorBlock)world.getTileEntity(x, y, z)).blockOwner;
+		String ownerName = ((TileVendorBlock) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.capabilities.isCreativeMode) {
 			super.removedByPlayer(world, player, x, y, z);
 			return false;
@@ -146,15 +152,15 @@ public class BlockVendor extends BlockContainer {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta){
+	public IIcon getIcon(int side, int meta) {
 
 		return side < 2 ? iconTop : iconSide;
 	}
-	
+
 	@Override
 	public String getLocalizedName() {
-        return StatCollector.translateToLocal(this.getUnlocalizedName() + ".name");
-    }
+		return StatCollector.translateToLocal(this.getUnlocalizedName() + ".name");
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
@@ -165,7 +171,7 @@ public class BlockVendor extends BlockContainer {
 	public boolean isOpaqueCube() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
@@ -187,12 +193,12 @@ public class BlockVendor extends BlockContainer {
 	public int getRenderType() {
 		return BlockVendorRenderer.id;
 	}
-	
+
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
-        return true;
-    }
-	
+		return true;
+	}
+
 	@Override
 	public void getSubBlocks(Item block, CreativeTabs creativeTabs, List list) {
 		for (int i = 0; i < supportBlocks.length; ++i) {

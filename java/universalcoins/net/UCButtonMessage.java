@@ -19,32 +19,33 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 	private int x, y, z, buttonId;
 	private boolean shiftPressed;
 
-    public UCButtonMessage() {}
+	public UCButtonMessage() {
+	}
 
-    public UCButtonMessage(int x, int y, int z, int button, boolean shift) { 
-    	this.x = x;
-    	this.y = y;
-    	this.z = z;
-        this.buttonId = button;
-        this.shiftPressed = shift;
-    }
+	public UCButtonMessage(int x, int y, int z, int button, boolean shift) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.buttonId = button;
+		this.shiftPressed = shift;
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) { 
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
-        buf.writeInt(buttonId);
-        buf.writeBoolean(shiftPressed);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
+		buf.writeInt(buttonId);
+		buf.writeBoolean(shiftPressed);
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) { 
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
-        this.buttonId = buf.readInt();
-        this.shiftPressed = buf.readBoolean();
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.x = buf.readInt();
+		this.y = buf.readInt();
+		this.z = buf.readInt();
+		this.buttonId = buf.readInt();
+		this.shiftPressed = buf.readBoolean();
 	}
 
 	@Override
@@ -70,8 +71,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 			} else if (message.buttonId == TradeStationGUI.idCoinModeButton) {
 				((TileTradeStation) tileEntity).onCoinModeButtonPressed();
 			} else if (message.buttonId <= TradeStationGUI.idLBagButton) {
-				((TileTradeStation) tileEntity).onRetrieveButtonsPressed(
-						message.buttonId, message.shiftPressed);
+				((TileTradeStation) tileEntity).onRetrieveButtonsPressed(message.buttonId, message.shiftPressed);
 			}
 
 			NBTTagCompound data = new NBTTagCompound();

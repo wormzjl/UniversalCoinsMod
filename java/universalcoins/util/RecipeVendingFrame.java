@@ -12,26 +12,28 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalcoins.UniversalCoins;
 
 public class RecipeVendingFrame implements IRecipe {
-	
+
 	private ItemStack newStack;
-	private Object[] recipeItems = {Items.stick, Items.gold_ingot, Items.stick, 
-			Items.redstone , Blocks.planks, Items.redstone,
-			Items.stick, Items.stick, Items.stick};
-	
+	private Object[] recipeItems = { Items.stick, Items.gold_ingot, Items.stick, Items.redstone, Blocks.planks,
+			Items.redstone, Items.stick, Items.stick, Items.stick };
+
 	@Override
 	public boolean matches(InventoryCrafting var1, World var2) {
 		this.newStack = null;
 		for (int j = 0; j < var1.getSizeInventory(); j++) {
-			if (var1.getStackInSlot(j) == null && recipeItems[j] != null) return false;
+			if (var1.getStackInSlot(j) == null && recipeItems[j] != null)
+				return false;
 			if (var1.getStackInSlot(j) != null) {
 				if (j == 4) {
-					if (!isWoodPlank(var1.getStackInSlot(j))) return false;
+					if (!isWoodPlank(var1.getStackInSlot(j)))
+						return false;
 				} else {
-					if (var1.getStackInSlot(j).getItem() != recipeItems[j]) return false;
+					if (var1.getStackInSlot(j).getItem() != recipeItems[j])
+						return false;
 				}
 			}
 		}
-		newStack = new ItemStack(UniversalCoins.proxy.blockVendorFrame);		
+		newStack = new ItemStack(UniversalCoins.proxy.blockVendorFrame);
 		ItemStack textureStack = var1.getStackInSlot(4);
 		NBTTagList itemList = new NBTTagList();
 		NBTTagCompound tag = new NBTTagCompound();
@@ -58,8 +60,8 @@ public class RecipeVendingFrame implements IRecipe {
 	public ItemStack getRecipeOutput() {
 		return newStack;
 	}
-	
-	private boolean isWoodPlank (ItemStack stack) {
+
+	private boolean isWoodPlank(ItemStack stack) {
 		for (ItemStack oreStack : OreDictionary.getOres("plankWood")) {
 			if (OreDictionary.itemMatches(oreStack, stack, false)) {
 				return true;
