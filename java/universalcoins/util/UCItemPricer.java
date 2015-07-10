@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -23,6 +24,7 @@ import java.util.StringTokenizer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
@@ -58,7 +60,8 @@ public class UCItemPricer {
 				FMLLog.warning("Universal Coins: Failed to load default configs");
 				e.printStackTrace();
 			}
-			autoPriceItems();
+			autoPriceCraftedItems();
+			autoPriceSmeltedItems();
 			writePriceLists();
 		} else {
 			try {
@@ -72,7 +75,10 @@ public class UCItemPricer {
 
 	private void loadDefaults() throws IOException {
 		String[] configList = { "defaultConfigs/minecraft.cfg", "defaultConfigs/BuildCraft.cfg",
-				"defaultConfigs/universalcoins.cfg", "defaultConfigs/oredictionary.cfg", };
+				"defaultConfigs/universalcoins.cfg", "defaultConfigs/ThermalExpansion.cfg",
+				"defaultConfigs/SolarFlux.cfg", "defaultConfigs/eplus.cfg", "defaultConfigs/betterstorage.cfg",
+				"defaultConfigs/Backpack.cfg", "defaultConfigs/ThermalFoundation.cfg", "defaultConfigs/cfm.cfg",
+				"defaultConfigs/BiblioCraft.cfg", "defaultConfigs/FLabsBF.cfg", "defaultConfigs/oredictionary.cfg", };
 		InputStream priceResource;
 		// load those files into hashmap(ucPriceMap)
 		for (int i = 0; i < configList.length; i++) {
@@ -140,8 +146,16 @@ public class UCItemPricer {
 			for (String ore : OreDictionary.getOreNames()) {
 				ucModnameMap.put(ore, "oredictionary");
 				if (!ucPriceMap.containsKey(ore)) {
-					// TODO check ore to see if any of the types has a price, use it if true
-					ucPriceMap.put(ore, -1);
+					// check ore to see if any of the types has a price, use it if true
+					ArrayList test = OreDictionary.getOres(ore);
+					int itemValue = -1;
+					for (int j = 0; j < test.size(); j++) {
+						int subItemValue = UCItemPricer.getInstance().getItemPrice((ItemStack) test.get(j));
+						if (subItemValue > 0) {
+							itemValue = subItemValue;
+						}
+					}
+					ucPriceMap.put(ore, itemValue);
 				}
 			}
 
@@ -323,7 +337,7 @@ public class UCItemPricer {
 		// update mod itemlist
 		buildPricelistHashMap();
 		// update prices
-		autoPriceItems();
+		autoPriceCraftedItems();
 		// write new configs
 		writePriceLists();
 	}
@@ -373,14 +387,17 @@ public class UCItemPricer {
 		return stack;
 	}
 
-	private void autoPriceItems() {
-		List<IRecipe> allrecipes = CraftingManager.getInstance().getRecipeList();
+	private void autoPriceCraftedItems() {
+		List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
+
 		for (IRecipe irecipe : allrecipes) {
 			int itemCost = 0;
 			boolean validRecipe = true;
 			ItemStack output = irecipe.getRecipeOutput();
+			if (output == null) {
+				continue;
+			}
 			if (UCItemPricer.getInstance().getItemPrice(output) != -1) {
-				// skip items that are already priced
 				continue;
 			}
 			List recipeItems = getRecipeInputs(irecipe);
@@ -399,7 +416,7 @@ public class UCItemPricer {
 				try {
 					UCItemPricer.getInstance().setItemPrice(output, itemCost);
 				} catch (Exception e) {
-					// fail silently
+					FMLLog.warning("Universal Coins Autopricer: Failed to set item price.");
 				}
 			}
 		}
@@ -431,7 +448,6 @@ public class UCItemPricer {
 			}
 		} else if (recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe) recipe;
-			// FMLLog.info("Shaped orerecipe found: " + shapedOreRecipe.getRecipeOutput().getDisplayName());
 			for (int i = 0; i < shapedOreRecipe.getInput().length; i++) {
 				if (shapedOreRecipe.getInput()[i] instanceof ArrayList) {
 					ArrayList test = (ArrayList) shapedOreRecipe.getInput()[i];
@@ -445,8 +461,9 @@ public class UCItemPricer {
 							}
 						}
 						// everything is invalid, just add one
-						if (!arrayListHasPricedItem)
+						if (!arrayListHasPricedItem) {
 							recipeInputs.add((ItemStack) test.get(0));
+						}
 					}
 				} else if (shapedOreRecipe.getInput()[i] instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) shapedOreRecipe.getInput()[i]).copy();
@@ -470,7 +487,7 @@ public class UCItemPricer {
 						}
 					}
 					// everything is invalid, just add one
-					if (!arrayListHasPricedItem)
+					if (!arrayListHasPricedItem && test.size() > 0)
 						recipeInputs.add((ItemStack) test.get(0));
 				} else if (object instanceof ItemStack) {
 					ItemStack itemStack = ((ItemStack) object).copy();
@@ -482,5 +499,20 @@ public class UCItemPricer {
 			}
 		}
 		return recipeInputs;
+	}
+
+	private void autoPriceSmeltedItems() {
+		Map<ItemStack, ItemStack> recipes = (Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList();
+		for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
+			ItemStack input = recipe.getKey();
+			ItemStack output = recipe.getValue();
+			if (ucPriceMap.get(input.getUnlocalizedName()) != null) {
+				int inputValue = ucPriceMap.get(input.getUnlocalizedName());
+				int outputValue = ucPriceMap.get(output.getUnlocalizedName());
+				if (inputValue != -1 && outputValue == -1) {
+					ucPriceMap.put(output.getUnlocalizedName(), inputValue + 2);
+				}
+			}
+		}
 	}
 }
