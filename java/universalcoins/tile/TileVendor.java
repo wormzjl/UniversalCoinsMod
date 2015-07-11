@@ -102,7 +102,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	private void activateBuyButton() {
 		if ((userCoinSum >= itemPrice && coinSum + itemPrice < Integer.MAX_VALUE && (!ooStockWarning || infiniteMode))
-				|| (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice && (!ooStockWarning || infiniteMode))) {
+				|| (getUserAccountBalance() > itemPrice && (!ooStockWarning || infiniteMode))) {
 			if (inventory[itemOutputSlot] != null) {
 				if (inventory[itemOutputSlot].getMaxStackSize() == inventory[itemOutputSlot].stackSize) {
 					buyButtonActive = false;
@@ -115,7 +115,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	private void activateSellButton() {
-		if (inventory[itemSellSlot] != null
+		if (inventory[itemSellSlot] != null && inventory[itemTradeSlot] != null
 				&& inventory[itemTradeSlot].getItem() == inventory[itemSellSlot].getItem()
 				&& (hasInventorySpace() && (getOwnerAccountBalance() >= itemPrice || coinSum >= itemPrice) || infiniteMode)) {
 			sellButtonActive = true;
@@ -988,6 +988,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	private int getOwnerAccountBalance() {
+		if (inventory[itemCardSlot] == null) return 0;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
@@ -1008,6 +1009,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	private int getUserAccountBalance() {
+		if (inventory[itemUserCardSlot] == null) return 0;
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}

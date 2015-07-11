@@ -64,7 +64,7 @@ public class BlockSafe extends BlockContainer {
 		if (tileEntity != null && tileEntity instanceof TileSafe) {
 			TileSafe tentity = (TileSafe) tileEntity;
 			tentity.blockOwner = player.getCommandSenderName();
-			tentity.setSafeAccount(player.getCommandSenderName());
+			tentity.setSafeAccount((EntityPlayer) player);
 		}
 		int l = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 

@@ -12,7 +12,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.util.UniversalAccounts;
@@ -245,13 +244,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public void setSafeAccount(String playerName) {
-		accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(getPlayerUID(playerName));
-	}
-
-	private String getPlayerUID(String playerName) {
-		World world = super.getWorldObj();
-		EntityPlayer player = world.getPlayerEntityByName(playerName);
-		return player.getUniqueID().toString();
+	public void setSafeAccount(EntityPlayer player) {
+		accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(player.getUniqueID().toString());
 	}
 }
