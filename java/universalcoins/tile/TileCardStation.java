@@ -367,8 +367,10 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			int stackSize = Math.min((int) (coinWithdrawalAmount / Math.pow(9, logVal)), 64);
 			inventory[itemCoinSlot] = (new ItemStack(coins[logVal], stackSize));
 			coinWithdrawalAmount -= (stackSize * Math.pow(9, logVal));
-			debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
-			accountBalance = getAccountBalance(accountNumber);
+			if (!worldObj.isRemote) {
+				debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
+				accountBalance = getAccountBalance(accountNumber);
+			}
 		}
 		if (coinWithdrawalAmount <= 0) {
 			withdrawCoins = false;

@@ -144,14 +144,15 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void checkCard() {
-		cardAvailable = false;
-		if (inventory[itemCardSlot] != null) {
-			String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
+		if (inventory[itemCardSlot] != null && !worldObj.isRemote) {
+			String account = inventory[itemCardSlot].getTagCompound().getString("Account");
 			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
-			if (accountBalance > packageCost[packageSize]) {
+			if (accountBalance >= packageCost[packageSize]) {
 				cardAvailable = true;
+				return;
 			}
 		}
+		cardAvailable = false;
 	}
 
 	@Override
