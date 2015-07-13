@@ -2,14 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.22",
+			"modVersion":"1.7.2-1.6.25",
 			"changeLog": [
-				"-fixed ATM giving invalid card on new account",
-				"-code cleanup (formatting, imports)",
-				"-improved auto-pricing",
-				"-fixed a couple null-pointer issues",
-				"-added smelting result pricing",
-				"-added a few more default pricelists"
+				"-mob drops now based on health, more health = more coins",
+				"-fixed rendering issue with vending blocks when block placed above",
+				"-changed itempricer function getRandomPricedItem to hopefully fix village gen crashes."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -17,14 +14,11 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.22",
+			"modVersion":"1.7.10-1.6.25",
 			"changeLog": [
-				"-fixed ATM giving invalid card on new account",
-				"-code cleanup (formatting, imports)",
-				"-improved auto-pricing",
-				"-fixed a couple null-pointer issues",
-				"-added smelting result pricing",
-				"-added a few more default pricelists"
+				"-mob drops now based on health, more health = more coins",
+				"-fixed rendering issue with vending blocks when block placed above",
+				"-changed itempricer function getRandomPricedItem to hopefully fix village gen crashes."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
