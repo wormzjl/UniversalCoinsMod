@@ -79,14 +79,15 @@ public class UCCommand extends CommandBase {
 					stackName = astring[1];
 				}
 				if (price == -1) {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.uccommand.warning.pricenotset") + " " + stackName));
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.uccommand.warning.pricenotset") + " " + stackName));
 				} else
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.uccommand.warning.pricefound") + " " + stackName + ": " + price));
+					sender.addChatMessage(new ChatComponentText("§a"
+							+ StatCollector.translateToLocal("command.uccommand.warning.pricefound") + " " + stackName
+							+ ": " + price));
 			} else
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.uccommand.warning.noitem")));
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.uccommand.warning.noitem")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.set.name"))) {
 			// set item price
 			if (astring.length > 2) {
@@ -95,8 +96,8 @@ public class UCCommand extends CommandBase {
 				try {
 					price = Integer.parseInt(astring[2]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.uccommand.option.set.price.invalid")));
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.uccommand.option.set.price.invalid")));
 					return;
 				}
 				if (astring[1].matches(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"))) {
@@ -120,28 +121,28 @@ public class UCCommand extends CommandBase {
 						firstChange = false;
 					}
 				} else {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.uccommand.option.set.price.fail.one")));
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.uccommand.option.set.price.fail.one")));
 				}
 			} else
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.uccommand.option.set.price.error")));
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.uccommand.option.set.price.error")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reload"))) {
 			UCItemPricer.getInstance().loadConfigs();
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.uccommand.option.reload.confirm")));
+			sender.addChatMessage(new ChatComponentText("§a"
+					+ StatCollector.translateToLocal("command.uccommand.option.reload.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reset.name"))) {
 			UCItemPricer.getInstance().resetDefaults();
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.uccommand.option.reset.confirm")));
+			sender.addChatMessage(new ChatComponentText("§a"
+					+ StatCollector.translateToLocal("command.uccommand.option.reset.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.save.name"))) {
 			UCItemPricer.getInstance().savePriceLists();
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.uccommand.option.save.confirm")));
+			sender.addChatMessage(new ChatComponentText("§a"
+					+ StatCollector.translateToLocal("command.uccommand.option.save.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.update.name"))) {
 			UCItemPricer.getInstance().updatePriceLists();
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.uccommand.option.update.confirm")));
+			sender.addChatMessage(new ChatComponentText("§a"
+					+ StatCollector.translateToLocal("command.uccommand.option.update.confirm")));
 		}
 	}
 
@@ -190,5 +191,33 @@ public class UCCommand extends CommandBase {
 			}
 		}
 		return coinsFound;
+	}
+
+	@Override
+	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+		// TODO fix this
+		if (args.length == 1) {
+			List<String> options = new ArrayList<String>();
+			options.add(StatCollector.translateToLocal("command.uccommand.option.help.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.get.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.set.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.reload.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.reset.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.save.name"));
+			options.add(StatCollector.translateToLocal("command.uccommand.option.update.name"));
+			return getListOfStringsFromIterableMatchingLastWord(args, options);
+		}
+		if (args.length == 2) {
+			if (args[0].matches(StatCollector.translateToLocal("command.uccommand.option.get.name"))
+					|| args[0].matches(StatCollector.translateToLocal("command.uccommand.option.set.name"))) {
+				List<String> options = new ArrayList<String>();
+				options.add(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"));
+				for (String item : UCItemPricer.getInstance().getUcPriceMap().keySet()) {
+					options.add(item);
+				}
+				return getListOfStringsFromIterableMatchingLastWord(args, options);
+			}
+		}
+		return null;
 	}
 }

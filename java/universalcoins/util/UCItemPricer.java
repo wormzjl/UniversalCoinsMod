@@ -376,7 +376,7 @@ public class UCItemPricer {
 				price = ucPriceMap.get(test);
 			}
 			if (price > 0) {
-				if (test.startsWith("tile.") || test.startsWith("item.")){
+				if (test.startsWith("tile.") || test.startsWith("item.")) {
 					test = test.substring(5);
 				}
 				Item item = (Item) Item.itemRegistry.getObject(test);
@@ -515,5 +515,9 @@ public class UCItemPricer {
 				}
 			}
 		}
+	}
+
+	public static Map<String, Integer> getUcPriceMap() {
+		return ucPriceMap;
 	}
 }

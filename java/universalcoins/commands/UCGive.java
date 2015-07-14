@@ -1,5 +1,8 @@
 package universalcoins.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,16 +41,14 @@ public class UCGive extends CommandBase {
 			}
 			int coinsToSend = 0;
 			if (recipient == null) {
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.givecoins.error.notfound")));
-				return;
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.givecoins.error.notfound")));
 			}
 			try {
 				coinsToSend = Integer.parseInt(astring[1]);
 			} catch (NumberFormatException e) {
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.givecoins.error.badentry")));
-				return;
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.givecoins.error.badentry")));
 			}
 			int change = givePlayerCoins(recipient, coinsToSend);
 			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + (coinsToSend - change) + " "
@@ -56,8 +57,8 @@ public class UCGive extends CommandBase {
 					+ StatCollector.translateToLocal("command.givecoins.result") + " " + (coinsToSend - change) + " "
 					+ StatCollector.translateToLocal("item.itemCoin.name")));
 		} else
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.givecoins.error.noname")));
+			sender.addChatMessage(new ChatComponentText("§c"
+					+ StatCollector.translateToLocal("command.givecoins.error.noname")));
 	}
 
 	private int givePlayerCoins(EntityPlayer recipient, int coinsLeft) {
@@ -86,5 +87,17 @@ public class UCGive extends CommandBase {
 			}
 		}
 		return 0;
+	}
+
+	@Override
+	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+		if (args.length == 1) {
+			List<String> players = new ArrayList<String>();
+			for (EntityPlayer p : (List<EntityPlayer>) sender.getEntityWorld().playerEntities) {
+				players.add(p.getCommandSenderName());
+			}
+			return getListOfStringsFromIterableMatchingLastWord(args, players);
+		}
+		return null;
 	}
 }

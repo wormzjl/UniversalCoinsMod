@@ -59,23 +59,20 @@ public class UCSend extends CommandBase {
 					}
 				}
 				if (recipient == null) {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.send.error.notfound")));
-					return;
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.send.error.notfound")));
 				}
 				int requestedSendAmount = 0;
 				try {
 					requestedSendAmount = Integer.parseInt(astring[1]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.send.error.badentry")));
-					return;
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.send.error.badentry")));
 				}
 				// get sender account, check balance, get coins
 				if (getPlayerCoins((EntityPlayerMP) sender) < requestedSendAmount) {
-					sender.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("command.send.error.insufficient")));
-					return;
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.send.error.insufficient")));
 				}
 				// get coins from player inventory
 				int coinsFromSender = 0;
@@ -120,8 +117,8 @@ public class UCSend extends CommandBase {
 					}
 				}
 			} else
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.send.error.incomplete")));
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.send.error.incomplete")));
 		}
 	}
 
@@ -173,5 +170,17 @@ public class UCSend extends CommandBase {
 			}
 		}
 		return coinsFound;
+	}
+
+	@Override
+	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+		if (args.length == 1) {
+			List<String> players = new ArrayList<String>();
+			for (EntityPlayer p : (List<EntityPlayer>) sender.getEntityWorld().playerEntities) {
+				players.add(p.getCommandSenderName());
+			}
+			return getListOfStringsFromIterableMatchingLastWord(args, players);
+		}
+		return null;
 	}
 }
