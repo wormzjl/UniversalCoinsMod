@@ -254,11 +254,11 @@ public class UniversalCoins {
 
 		if (coinsInMineshaft) {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-					new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, mineshaftCoinChance));
+					new WeightedRandomChestContent(new ItemStack(proxy.itemSmallCoinBag), 2, 64, mineshaftCoinChance));
 		}
 		if (coinsInDungeon) {
 			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-					new WeightedRandomChestContent(new ItemStack(proxy.itemLargeCoinBag), 2, 64, dungeonCoinChance));
+					new WeightedRandomChestContent(new ItemStack(proxy.itemSmallCoinBag), 2, 64, dungeonCoinChance));
 		}
 
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
@@ -345,5 +345,4 @@ public class UniversalCoins {
 		manager.registerCommand(new UCGive());
 		manager.registerCommand(new UCSend());
 	}
-
 }
