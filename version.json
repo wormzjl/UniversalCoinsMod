@@ -2,11 +2,13 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.25",
+			"modVersion":"1.7.2-1.6.26",
 			"changeLog": [
-				"-mob drops now based on health, more health = more coins",
-				"-fixed rendering issue with vending blocks when block placed above",
-				"-changed itempricer function getRandomPricedItem to hopefully fix village gen crashes."
+				"changed village gen boolean to integer value to better control probability of shop or bank generating",
+				"added foundations to shop and bank. no more floating buildings",
+				"added looting modifier to mob drops. looting I = 2x drops, looting II = 3x drops, and looting III = 4x drops",
+				"added tab completion to givecoins, send, and uc commands",
+				"reduced minshaft and dungeon loot (changed from large coin bags to small coin bags)"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -14,11 +16,13 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.25",
+			"modVersion":"1.7.10-1.6.26",
 			"changeLog": [
-				"-mob drops now based on health, more health = more coins",
-				"-fixed rendering issue with vending blocks when block placed above",
-				"-changed itempricer function getRandomPricedItem to hopefully fix village gen crashes."
+				"changed village gen boolean to integer value to better control probability of shop or bank generating",
+				"added foundations to shop and bank. no more floating buildings",
+				"added looting modifier to mob drops. looting I = 2x drops, looting II = 3x drops, and looting III = 4x drops",
+				"added tab completion to givecoins, send, and uc commands",
+				"reduced minshaft and dungeon loot (changed from large coin bags to small coin bags)"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
