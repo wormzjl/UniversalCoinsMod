@@ -3,6 +3,7 @@ package universalcoins.worldgen;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -39,6 +40,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
+			// change bounding box position so that door entrance is level with pathway
 			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
 		}
 
@@ -46,6 +48,9 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		if (meta > 3) {
 			meta = meta - 4;
 		}
+
+		// fill under building with cobblestone
+		buildFoundation(world, sbb);
 
 		// Clear area twice in case of sand
 		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
@@ -166,4 +171,27 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		}
 		return 0;
 	}
+
+	private void buildFoundation(World world, StructureBoundingBox sbb) {
+		for (int i = sbb.minX; i <= sbb.maxX; i++) {
+			for (int j = sbb.minZ; j <= sbb.maxZ; j++) {
+				int scanPos = sbb.minY;
+				if (isReplaceableBlock(world, i, scanPos, j)) {
+					world.setBlock(i, scanPos, j, Blocks.cobblestone);
+				} else {
+					continue;
+				}
+			}
+		}
+	}
+
+	private boolean isReplaceableBlock(World world, int x, int y, int z) {
+		if (world.getBlock(x, y, z).getMaterial() == Material.air
+				|| world.getBlock(x, y, z).getMaterial() == Material.water
+				|| world.getBlock(x, y, z).getMaterial() == Material.grass) {
+			return true;
+		}
+		return false;
+	}
+
 }

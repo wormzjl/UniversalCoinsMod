@@ -87,8 +87,8 @@ public class UniversalCoins {
 	public static Boolean packagerRecipeEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean coinsInMineshaft;
-	public static Boolean bankGenEnabled;
-	public static Boolean shopGenEnabled;
+	public static Integer bankGenWeight;
+	public static Integer shopGenWeight;
 	public static Integer shopMinPrice;
 	public static Integer shopMaxPrice;
 	public static Integer mineshaftCoinChance;
@@ -149,8 +149,8 @@ public class UniversalCoins {
 		mobDrops.comment = "Set to false to disable mobs dropping coins on death.";
 		mobsDropCoins = mobDrops.getBoolean(true);
 		Property dropAmount = config.get("Loot", "Mob Drop Max", 39);
-		dropAmount.comment = "Max mob drop stacksize. Minimum 1. Maximum 64. Default 39.";
-		mobDropMax = Math.max(1, Math.min(dropAmount.getInt(39), 64));
+		dropAmount.comment = "Max mob drop stacksize. Minimum 1. Maximum 200. Default 39.";
+		mobDropMax = Math.max(1, Math.min(dropAmount.getInt(39), 200));
 		Property dropChance = config.get("Loot", "Mob Drop Chance", 3);
 		dropChance.comment = "Chance of a mob dropping coins. Lower number means higher chance. Minimum 0 (always drop). Default 3 (1 in 4 chance).";
 		mobDropChance = Math.max(0, Math.min(dropChance.getInt(3), 100));
@@ -198,18 +198,18 @@ public class UniversalCoins {
 		largePackagePrice = Math.max(1, Math.min(largePackage.getInt(40), 1000));
 
 		// world gen
-		Property bankGenProperty = config.get("World Generation", "Village bank enabled", true);
-		bankGenProperty.comment = "Set to false to disable chance of adding bank to villages.";
-		bankGenEnabled = bankGenProperty.getBoolean(true);
-		Property shopGenProperty = config.get("World Generation", "Village shop enabled", true);
-		shopGenProperty.comment = "Set to false to disable chance of adding shop to villages.";
-		shopGenEnabled = shopGenProperty.getBoolean(true);
+		Property bankGenProperty = config.get("world generation", "Village bank weight", 6);
+		bankGenProperty.comment = "Probability of adding bank to villages. min 0, max 20, default 6.";
+		bankGenWeight = Math.max(0, Math.min(bankGenProperty.getInt(6), 20));
+		Property shopGenProperty = config.get("world generation", "Village shop weight", 6);
+		shopGenProperty.comment = "Probably of adding shop to villages. min 0, max 20, default 6.";
+		shopGenWeight = Math.max(0, Math.min(shopGenProperty.getInt(6), 20));
 
-		Property shopMinPriceProperty = config.get("World Generation", "Minimum shop price", 80);
-		shopMinPriceProperty.comment = "Set the minimum price of items for sale in shops as a percent (min=1,max=100,default=80)";
+		Property shopMinPriceProperty = config.get("world generation", "Minimum shop price", 80);
+		shopMinPriceProperty.comment = "Set the minimum price of items for sale in shops as a percent (min 1,max 100,default 80)";
 		shopMinPrice = Math.max(1, Math.min(shopMinPriceProperty.getInt(80), 100));
-		Property shopMaxPriceProperty = config.get("World Generation", "Maximum shop price", 120);
-		shopMaxPriceProperty.comment = "Set the maximum price of items for sale in shops as a percent (min=80,max=300,default=120)";
+		Property shopMaxPriceProperty = config.get("world generation", "Maximum shop price", 120);
+		shopMaxPriceProperty.comment = "Set the maximum price of items for sale in shops as a percent (min 80,max 300,default 120)";
 		shopMaxPrice = Math.max(80, Math.min(shopMaxPriceProperty.getInt(120), 300));
 
 		config.save();
@@ -306,11 +306,11 @@ public class UniversalCoins {
 		UCRecipeHelper.addPlankTextureRecipes();
 
 		// worldgen
-		if (bankGenEnabled) {
+		if (bankGenWeight > 0) {
 			VillageGenBank villageHandler = new VillageGenBank();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler);
 		}
-		if (shopGenEnabled) {
+		if (shopGenWeight > 0) {
 			VillageGenShop villageHandler2 = new VillageGenShop();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
 		}

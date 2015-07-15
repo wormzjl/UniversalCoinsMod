@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import universalcoins.UniversalCoins;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class UCMobDropEventHandler {
@@ -32,7 +33,7 @@ public class UCMobDropEventHandler {
 			float health = ((EntityLivingBase) event.entity).getMaxHealth();
 			if (health == 0)
 				health = 10;
-			int dropped = (int) (randomDropValue * Math.pow((health / 20), 4));
+			int dropped = (int) (randomDropValue * Math.pow((health / 20), 4) * (event.lootingLevel + 1));
 
 			// drop coins
 			if ((event.entity instanceof EntityMob) && !event.entity.worldObj.isRemote && chance == 0) {
