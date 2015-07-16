@@ -69,22 +69,14 @@ public class UCSend extends CommandBase {
 					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.send.error.badentry")));
 				}
+				// get coins from player inventory
+				int coinsFromSender = getPlayerCoins((EntityPlayerMP) sender, requestedSendAmount);
 				// get sender account, check balance, get coins
-				if (getPlayerCoins((EntityPlayerMP) sender) < requestedSendAmount) {
+				if (coinsFromSender < requestedSendAmount) {
 					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.send.error.insufficient")));
-				}
-				// get coins from player inventory
-				int coinsFromSender = 0;
-				EntityPlayerMP player = (EntityPlayerMP) sender;
-				for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-					ItemStack stack = player.inventory.getStackInSlot(i);
-					for (int j = 0; j < coins.length; j++) {
-						if (stack != null && stack.getItem() == coins[j] && coinsFromSender < requestedSendAmount) {
-							coinsFromSender += stack.stackSize * multiplier[j];
-							player.inventory.setInventorySlotContents(i, null);
-						}
-					}
+					givePlayerCoins((EntityPlayerMP) sender, coinsFromSender);
+					return;
 				}
 				// subtract coins to send from player coins
 				coinsFromSender -= requestedSendAmount;
@@ -98,7 +90,7 @@ public class UCSend extends CommandBase {
 				// add change back to sender coins
 				coinsFromSender += coinChange;
 				// give sender back change
-				int leftOvers = givePlayerCoins(player, coinsFromSender);
+				int leftOvers = givePlayerCoins((EntityPlayerMP) sender, coinsFromSender);
 				// if we have coins that won't fit in inventory, dump them to the world
 				if (leftOvers > 0) {
 					World world = ((EntityPlayerMP) sender).worldObj;
@@ -159,13 +151,14 @@ public class UCSend extends CommandBase {
 		return 0;
 	}
 
-	private int getPlayerCoins(EntityPlayerMP player) {
+	private int getPlayerCoins(EntityPlayerMP player, int requestedSendAmount) {
 		int coinsFound = 0;
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
 			for (int j = 0; j < coins.length; j++) {
-				if (stack != null && stack.getItem() == coins[j]) {
+				if (stack != null && stack.getItem() == coins[j] && coinsFound < requestedSendAmount) {
 					coinsFound += stack.stackSize * multiplier[j];
+					player.inventory.setInventorySlotContents(i, null);
 				}
 			}
 		}
