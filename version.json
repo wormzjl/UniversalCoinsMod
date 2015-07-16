@@ -2,13 +2,9 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.26",
+			"modVersion":"1.7.2-1.6.27",
 			"changeLog": [
-				"changed village gen boolean to integer value to better control probability of shop or bank generating",
-				"added foundations to shop and bank. no more floating buildings",
-				"added looting modifier to mob drops. looting I = 2x drops, looting II = 3x drops, and looting III = 4x drops",
-				"added tab completion to givecoins, send, and uc commands",
-				"reduced minshaft and dungeon loot (changed from large coin bags to small coin bags)"
+				"fixed issue with send (alias pay) command sending requested amount even when player doesn't have enough coins"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -16,13 +12,9 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.26",
+			"modVersion":"1.7.10-1.6.27",
 			"changeLog": [
-				"changed village gen boolean to integer value to better control probability of shop or bank generating",
-				"added foundations to shop and bank. no more floating buildings",
-				"added looting modifier to mob drops. looting I = 2x drops, looting II = 3x drops, and looting III = 4x drops",
-				"added tab completion to givecoins, send, and uc commands",
-				"reduced minshaft and dungeon loot (changed from large coin bags to small coin bags)"
+				"fixed issue with send (alias pay) command sending requested amount even when player doesn't have enough coins"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
