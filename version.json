@@ -2,9 +2,9 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.27",
+			"modVersion":"1.7.2-1.6.28",
 			"changeLog": [
-				"fixed issue with send (alias pay) command sending requested amount even when player doesn't have enough coins"
+				"fixed client crash when using card in slot machine in multiplayer"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -12,9 +12,9 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.27",
+			"modVersion":"1.7.10-1.6.28",
 			"changeLog": [
-				"fixed issue with send (alias pay) command sending requested amount even when player doesn't have enough coins"
+				"fixed client crash when using card in slot machine in multiplayer"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
