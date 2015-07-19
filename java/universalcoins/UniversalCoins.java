@@ -314,6 +314,7 @@ public class UniversalCoins {
 			VillageGenShop villageHandler2 = new VillageGenShop();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
 		}
+		//proxy.registerAchievements();
 	}
 
 	@EventHandler

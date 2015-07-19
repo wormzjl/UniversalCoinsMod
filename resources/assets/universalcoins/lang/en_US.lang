@@ -41,6 +41,14 @@ item.itemPackage.name=Package
 itemGroup.tabUniversalCoins=Universal Coins
 
 #####
+# Achievements
+#####
+achievement.AchievementCoins=My first coin
+achievement.AchievementCoins.desc=Pick up some coins.
+achievement.AchievementThousands=Now were getting somewhere
+achievement.AchievementThousands.desc=Balance of 1,000 coins.
+
+#####
 # General
 #####
 general.button.buy=Buy

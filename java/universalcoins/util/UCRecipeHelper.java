@@ -55,8 +55,6 @@ public class UCRecipeHelper {
 		GameRegistry.addRecipe(new RecipeVendingFrame());
 		RecipeSorter.register("universalcoins:vendingframe", RecipeVendingFrame.class, RecipeSorter.Category.SHAPED,
 				"after:minecraft:shaped");
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(UniversalCoins.proxy.blockVendorFrame), "SGS", "RPR",
-				"SSS", 'S', Items.stick, 'P', "plankWood", 'G', Items.gold_ingot, 'R', Items.redstone));
 	}
 
 	public static void addSignRecipes() {
@@ -79,13 +77,9 @@ public class UCRecipeHelper {
 	}
 
 	public static void addEnderCardRecipes() {
-		// we register our custom recipe and then register the normal way
-		// the custom takes priority for crafting while the normal allows nei and craftguide to display the recipe
 		GameRegistry.addRecipe(new RecipeEnderCard());
 		RecipeSorter.register("universalcoins:endercard", RecipeEnderCard.class, RecipeSorter.Category.SHAPED,
 				"after:minecraft:shaped");
-		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.itemEnderCard), new Object[] { "XEX", "ECE",
-				"XEX", 'E', Items.ender_pearl, 'C', UniversalCoins.proxy.itemUCCard });
 	}
 
 	public static void addBanditRecipes() {

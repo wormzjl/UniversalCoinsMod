@@ -1,5 +1,6 @@
 package universalcoins.tile;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -95,8 +96,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				buyButtonActive = (UniversalCoins.tradeStationBuyEnabled
 						&& (inventory[itemOutputSlot] == null || (inventory[itemOutputSlot]).getItem() == inventory[itemInputSlot]
 								.getItem()
-								&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize()) && (coinSum >= itemPrice || (inventory[itemCardSlot] != null
-						&& !worldObj.isRemote && getAccountBalance() > itemPrice)));
+								&& inventory[itemOutputSlot].stackSize < inventory[itemInputSlot].getMaxStackSize()) && (coinSum >= itemPrice 
+								|| getAccountBalance() > itemPrice));
 			}
 		}
 	}
@@ -156,10 +157,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
 		}
-		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
-				&& getAccountBalance() + (itemPrice * amount * UniversalCoins.itemSellRatio) < Integer.MAX_VALUE) {
-			creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio));
-		} else {
+		// try card first, increase coinsum if it fails
+		if (!creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio))) {
 			coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
 		}
 	}
@@ -195,25 +194,18 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	public void onBuyPressed(int amount) {
-		boolean useCard = false;
+		//boolean useCard = false;
 		if (inventory[itemInputSlot] == null || !UniversalCoins.tradeStationBuyEnabled) {
 			buyButtonActive = false;
 			return;
 		}
 		itemPrice = UCItemPricer.getInstance().getItemPrice(inventory[itemInputSlot]);
-		// use the card if we have it
-		if (inventory[itemCardSlot] != null && getAccountBalance() > itemPrice * amount) {
-			useCard = true;
-		}
-		if (itemPrice == -1 || (coinSum < itemPrice * amount && !useCard)) {
-			// not enough coins, do we have a card?
+		if (itemPrice == -1 || (coinSum < itemPrice * amount && getAccountBalance() < itemPrice * amount)) {
 			buyButtonActive = false;
 			return;
 		}
 		if (inventory[itemOutputSlot] == null && inventory[itemInputSlot].getMaxStackSize() >= amount) {
-			if (useCard && inventory[itemCardSlot] != null) {
-				debitAccount(itemPrice * amount);
-			} else {
+			if (!debitAccount(itemPrice * amount)) {
 				coinSum -= itemPrice * amount;
 			}
 			if (inventory[itemInputSlot].isItemDamaged() || inventory[itemInputSlot].isItemEnchanted()) {
@@ -224,9 +216,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot].getItemDamage()
 				&& inventory[itemOutputSlot].stackSize + amount <= inventory[itemInputSlot].getMaxStackSize()) {
-			if (useCard && inventory[itemCardSlot] != null) {
-				debitAccount(itemPrice * amount);
-			} else {
+			if (!debitAccount(itemPrice * amount)) {
 				coinSum -= itemPrice * amount;
 			}
 			inventory[itemOutputSlot].stackSize += amount;
@@ -582,23 +572,35 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	}
 
 	private int getAccountBalance() {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound()) {
 			return 0;
+		}
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+		if (accountNumber == "") {
+			return 0;
+		}
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
-	private void creditAccount(int i) {
-		if (worldObj.isRemote)
-			return;
+	private boolean creditAccount(int i) {
+		if (worldObj.isRemote || inventory[itemCardSlot] == null
+				|| inventory[itemCardSlot].getItem() != UniversalCoins.proxy.itemEnderCard
+				|| !inventory[itemCardSlot].hasTagCompound())
+			return false;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
+		if (accountNumber == "") {
+			return false;
+		}
+		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
-	private void debitAccount(int i) {
-		if (worldObj.isRemote)
-			return;
+	private boolean debitAccount(int i) {
+		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
+			return false;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
+		if (accountNumber == "") {
+			return false;
+		}
+		return UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 }

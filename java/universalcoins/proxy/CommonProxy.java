@@ -2,6 +2,7 @@ package universalcoins.proxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import universalcoins.Achievements;
 import universalcoins.blocks.BlockBandit;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
@@ -111,6 +112,12 @@ public class CommonProxy {
 
 	public void registerRenderers() {
 		// blank since we don't do anything on the server
+	}
+	
+	public void registerAchievements() {
+		Achievements.init();
+		Achievements.achCoins.registerStat(); 
+		Achievements.achThousands.registerStat(); 
 	}
 
 }

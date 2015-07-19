@@ -1,10 +1,13 @@
 package universalcoins.worldgen;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -40,17 +43,14 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		if (this.averageGroundLevel < 0) {
 			this.averageGroundLevel = this.getAverageGroundLevel(world, sbb);
 
-			if (this.averageGroundLevel < 0)
+			if (this.averageGroundLevel < 0) {
 				return true;
+			}
 
-			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
+			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.maxY + 5 - 1, 0);
 		}
 
-		// fill under building with cobblestone
-		buildFoundation(world, sbb);
-
-		// Clear area twice in case of sand or gravel
-		fillWithAir(world, sbb, 0, 0, 0, 5, 6, 7);
+		// Clear area
 		fillWithAir(world, sbb, 0, 0, 0, 5, 6, 7);
 		// start with block
 		fillWithBlocks(world, sbb, 0, 0, 0, 5, 0, 7, Blocks.double_stone_slab, Blocks.double_stone_slab, false);
@@ -85,21 +85,49 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor,
 				UniversalCoins.proxy.blockVendor, false);
 
+		// list of items
+		List<Item> saleItems = new ArrayList();
+
 		// fill left vending blocks
 		for (int i = 0; i < 6; i++) {
 			int priceModifier = random.nextInt(UniversalCoins.shopMaxPrice - UniversalCoins.shopMinPrice)
 					+ UniversalCoins.shopMinPrice;
 			ItemStack stack = UCItemPricer.getInstance().getRandomPricedStack();
+			while (saleItems.contains(stack.getItem())) {
+				stack = UCItemPricer.getInstance().getRandomPricedStack();
+			}
 			int price = UCItemPricer.getInstance().getItemPrice(stack);
 			addVendorItems(world, 0, 2, i + 1, stack, price * priceModifier / 100);
+			saleItems.add(stack.getItem());
 		}
 		// fill right vending blocks
 		for (int i = 0; i < 6; i++) {
 			int priceModifier = random.nextInt(UniversalCoins.shopMaxPrice - UniversalCoins.shopMinPrice)
 					+ UniversalCoins.shopMinPrice;
 			ItemStack stack = UCItemPricer.getInstance().getRandomPricedStack();
+			while (saleItems.contains(stack.getItem())) {
+				stack = UCItemPricer.getInstance().getRandomPricedStack();
+			}
 			int price = UCItemPricer.getInstance().getItemPrice(stack);
 			addVendorItems(world, 5, 2, i + 1, stack, price * priceModifier / 100);
+			saleItems.add(stack.getItem());
+		}
+
+		// add stairs if needed
+		if (this.getBlockAtCurrentPosition(world, 2, 0, -1, sbb).getMaterial() == Material.air
+				&& this.getBlockAtCurrentPosition(world, 2, -1, -1, sbb).getMaterial() != Material.air) {
+			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
+					this.getMetadataWithOffset(Blocks.stone_stairs, 3), 2, 0, -1, sbb);
+			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
+					this.getMetadataWithOffset(Blocks.stone_stairs, 3), 3, 0, -1, sbb);
+		}
+
+		// build foundation
+		for (int k = 0; k < 8; ++k) { // length
+			for (int l = 0; l < 6; ++l) {// width
+				this.clearCurrentPositionBlocksUpwards(world, l, 6, k, sbb);// set 6 to sbb height +1
+				this.func_151554_b(world, Blocks.cobblestone, 0, l, -1, k, sbb);
+			}
 		}
 
 		return true;
@@ -172,46 +200,5 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 			return 5;
 		}
 		return 5;
-	}
-
-	private int getPathHeight(World world) {
-		int i1 = this.getXWithOffset(0, 0);
-		int j1 = this.getYWithOffset(0);
-		int k1 = this.getZWithOffset(0, 0);
-		if (coordBaseMode == 0) {
-			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
-		}
-		if (coordBaseMode == 1) {
-			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
-		}
-		if (coordBaseMode == 2) {
-			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
-		}
-		if (coordBaseMode == 3) {
-			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
-		}
-		return 0;
-	}
-
-	private void buildFoundation(World world, StructureBoundingBox sbb) {
-		for (int i = sbb.minX; i <= sbb.maxX; i++) {
-			for (int j = sbb.minZ; j <= sbb.maxZ; j++) {
-				int scanPos = sbb.minY;
-				if (isReplaceableBlock(world, i, scanPos, j)) {
-					world.setBlock(i, scanPos, j, Blocks.cobblestone);
-				} else {
-					continue;
-				}
-			}
-		}
-	}
-
-	private boolean isReplaceableBlock(World world, int x, int y, int z) {
-		if (world.getBlock(x, y, z).getMaterial() == Material.air
-				|| world.getBlock(x, y, z).getMaterial() == Material.water
-				|| world.getBlock(x, y, z).getMaterial() == Material.grass) {
-			return true;
-		}
-		return false;
 	}
 }

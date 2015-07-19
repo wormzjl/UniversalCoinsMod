@@ -27,7 +27,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 
 	public static ComponentVillageBank buildComponent(Start startPiece, List pieces, Random random, int p1, int p2,
 			int p3, int p4, int p5) {
-		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 6, 6, p4);
+		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 5, 6, p4);
 		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? new ComponentVillageBank(
 				startPiece, p5, random, box, p4) : null;
 	}
@@ -40,8 +40,8 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			if (this.averageGroundLevel < 0)
 				return true;
 
-			// change bounding box position so that door entrance is level with pathway
-			this.boundingBox.offset(0, this.getPathHeight(world) - this.boundingBox.minY - 1, 0);
+			this.boundingBox.offset(0, this.averageGroundLevel - this.boundingBox.maxY + 5 - 1, 0);
+
 		}
 
 		int meta = coordBaseMode + 2;
@@ -49,11 +49,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 			meta = meta - 4;
 		}
 
-		// fill under building with cobblestone
-		buildFoundation(world, sbb);
-
-		// Clear area twice in case of sand
-		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
+		// Clear area
 		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
 		// start with block
 		fillWithBlocks(world, sbb, 0, 0, 0, 4, 3, 5, Blocks.planks, Blocks.planks, false);
@@ -80,6 +76,21 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		// sign
 		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.wall_ucsign, getSignMeta(3), 1, 2, 0, boundingBox);
 		addSignText(world, boundingBox, 1, 2, 0);
+
+		// add stairs if needed
+		if (this.getBlockAtCurrentPosition(world, 2, 0, -1, sbb).getMaterial() == Material.air
+				&& this.getBlockAtCurrentPosition(world, 2, -1, -1, sbb).getMaterial() != Material.air) {
+			this.placeBlockAtCurrentPosition(world, Blocks.oak_stairs,
+					this.getMetadataWithOffset(Blocks.oak_stairs, 3), 2, 0, -1, sbb);
+		}
+
+		// build foundation
+		for (int k = 0; k < 6; ++k) { // length
+			for (int l = 0; l < 5; ++l) {// width
+				this.clearCurrentPositionBlocksUpwards(world, l, 7, k, sbb);
+				this.func_151554_b(world, Blocks.cobblestone, 0, l, -1, k, sbb);
+			}
+		}
 
 		return true;
 	}
@@ -152,46 +163,4 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		}
 		return 5;
 	}
-
-	private int getPathHeight(World world) {
-		int i1 = this.getXWithOffset(0, 0);
-		int j1 = this.getYWithOffset(0);
-		int k1 = this.getZWithOffset(0, 0);
-		if (coordBaseMode == 0) {
-			return world.getTopSolidOrLiquidBlock(i1 + 2, k1 - 1);
-		}
-		if (coordBaseMode == 1) {
-			return world.getTopSolidOrLiquidBlock(i1 + 1, k1 - 2);
-		}
-		if (coordBaseMode == 2) {
-			return world.getTopSolidOrLiquidBlock(i1 - 2, k1 + 1);
-		}
-		if (coordBaseMode == 3) {
-			return world.getTopSolidOrLiquidBlock(i1 - 1, k1 + 2);
-		}
-		return 0;
-	}
-
-	private void buildFoundation(World world, StructureBoundingBox sbb) {
-		for (int i = sbb.minX; i <= sbb.maxX; i++) {
-			for (int j = sbb.minZ; j <= sbb.maxZ; j++) {
-				int scanPos = sbb.minY;
-				if (isReplaceableBlock(world, i, scanPos, j)) {
-					world.setBlock(i, scanPos, j, Blocks.cobblestone);
-				} else {
-					continue;
-				}
-			}
-		}
-	}
-
-	private boolean isReplaceableBlock(World world, int x, int y, int z) {
-		if (world.getBlock(x, y, z).getMaterial() == Material.air
-				|| world.getBlock(x, y, z).getMaterial() == Material.water
-				|| world.getBlock(x, y, z).getMaterial() == Material.grass) {
-			return true;
-		}
-		return false;
-	}
-
 }

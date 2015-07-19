@@ -9,6 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import universalcoins.Achievements;
 import universalcoins.UniversalCoins;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -25,6 +26,7 @@ public class UCPlayerPickupEventHandler {
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinStack
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemSmallCoinBag
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinBag) {
+			event.entityPlayer.addStat(Achievements.achCoins, 1);
 			world = event.entityPlayer.worldObj;
 			EntityPlayer player = event.entityPlayer;
 			ItemStack[] inventory = player.inventory.mainInventory;

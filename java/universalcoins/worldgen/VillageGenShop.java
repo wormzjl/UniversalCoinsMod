@@ -15,7 +15,7 @@ public class VillageGenShop implements IVillageCreationHandler {
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
 		return new StructureVillagePieces.PieceWeight(ComponentVillageShop.class, UniversalCoins.shopGenWeight,
-				random.nextInt(2));
+				1);
 	}
 
 	@Override
