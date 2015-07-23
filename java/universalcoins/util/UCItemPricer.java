@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -31,7 +32,6 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import cpw.mods.fml.common.FMLLog;
 
 public class UCItemPricer {
 
@@ -39,7 +39,7 @@ public class UCItemPricer {
 
 	private static Map<String, Integer> ucPriceMap = new HashMap<String, Integer>(0);
 	private static Map<String, String> ucModnameMap = new HashMap<String, String>(0);
-	private static String configPath = "config/universalcoins/";
+	private static String configDir = "." + File.separatorChar + "config" + File.separatorChar + "universalcoins" + File.separatorChar;
 	private Random random = new Random();
 
 	public static UCItemPricer getInstance() {
@@ -51,8 +51,8 @@ public class UCItemPricer {
 	}
 
 	public void loadConfigs() {
-		if (!new File(configPath).exists()) {
-			// FMLLog.info("Universal Coins: Loading default prices");
+		if (!new File(configDir).exists()) {
+			FMLLog.info("Universal Coins: Loading default prices");
 			buildPricelistHashMap();
 			try {
 				loadDefaults();
@@ -175,7 +175,7 @@ public class UCItemPricer {
 
 	private void loadPricelists() throws IOException {
 		// search config file folder for files
-		File folder = new File(configPath);
+		File folder = new File(configDir);
 		File[] configList = folder.listFiles();
 		// load those files into hashmap(UCPriceMap)
 		for (int i = 0; i < configList.length; i++) {
@@ -218,13 +218,13 @@ public class UCItemPricer {
 			Map.Entry me = (Map.Entry) i.next();
 			String keyname = (String) me.getKey();
 			String modname = ucModnameMap.get(keyname) + ".cfg";
-			Path pathToFile = Paths.get(configPath + modname);
+			Path pathToFile = Paths.get(configDir + modname);
 			try {
 				Files.createDirectories(pathToFile.getParent());
 			} catch (IOException e) {
 				FMLLog.warning("Universal Coins: Failed to create config file folders");
 			}
-			File modconfigfile = new File(configPath + modname);
+			File modconfigfile = new File(configDir + modname);
 			if (!modconfigfile.exists()) {
 				try {
 					modconfigfile.createNewFile();
@@ -324,7 +324,7 @@ public class UCItemPricer {
 
 	public void updatePriceLists() {
 		// delete old configs
-		File folder = new File(configPath);
+		File folder = new File(configDir);
 		// cleanup
 		if (folder.exists()) {
 			File[] files = folder.listFiles();
@@ -344,7 +344,7 @@ public class UCItemPricer {
 
 	public void savePriceLists() {
 		// delete old configs
-		File folder = new File(configPath);
+		File folder = new File(configDir);
 		// cleanup
 		if (folder.exists()) {
 			File[] files = folder.listFiles();

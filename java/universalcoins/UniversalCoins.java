@@ -44,6 +44,8 @@ import universalcoins.util.UCRecipeHelper;
 import universalcoins.worldgen.VillageGenBank;
 import universalcoins.worldgen.VillageGenShop;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -243,10 +245,6 @@ public class UniversalCoins {
 	}
 
 	@EventHandler
-	public void postInitialise(FMLPostInitializationEvent event) {
-	}
-
-	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.registerBlocks();
 		proxy.registerItems();
@@ -315,6 +313,14 @@ public class UniversalCoins {
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
 		}
 		//proxy.registerAchievements();
+
+		if (Loader.isModLoaded("craftguide")) {
+			try {
+				Class.forName("universalcoins.integration.craftguide.CGRecipeEnderCard").newInstance();
+			} catch (ReflectiveOperationException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@EventHandler
