@@ -2,9 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.28",
+			"modVersion":"1.7.2-1.6.29",
 			"changeLog": [
-				"fixed client crash when using card in slot machine in multiplayer"
+				"fixed issue with backpack purchase in trade station giving player a duplicate backpack instead of a new one. Affects any item with NBT data.",
+				"changed config dir in UCItemPricer to use minecraftHome dir the same way NEI does to fix issues with custom minecraft launchers putting configs in wrong dir",
+				"village shops and banks modified to include cobblestone foundation and/or steps the same as native village buildings."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -12,9 +14,11 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.28",
+			"modVersion":"1.7.10-1.6.29",
 			"changeLog": [
-				"fixed client crash when using card in slot machine in multiplayer"
+				"fixed issue with backpack purchase in trade station giving player a duplicate backpack instead of a new one. Affects any item with NBT data.",
+				"changed config dir in UCItemPricer to use minecraftHome dir the same way NEI does to fix issues with custom minecraft launchers putting configs in wrong dir",
+				"village shops and banks modified to include cobblestone foundation and/or steps the same as native village buildings."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
