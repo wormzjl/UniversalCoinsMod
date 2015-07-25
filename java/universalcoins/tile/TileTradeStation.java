@@ -208,11 +208,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			if (!debitAccount(itemPrice * amount)) {
 				coinSum -= itemPrice * amount;
 			}
-			if (inventory[itemInputSlot].isItemDamaged() || inventory[itemInputSlot].isItemEnchanted()) {
-				inventory[itemOutputSlot] = new ItemStack(inventory[itemInputSlot].getItem(), 1);
-			} else
-				inventory[itemOutputSlot] = inventory[itemInputSlot].copy();
-			inventory[itemOutputSlot].stackSize = amount;
+			inventory[itemOutputSlot] = new ItemStack(inventory[itemInputSlot].getItem(), amount, inventory[itemInputSlot].getItemDamage());
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot].getItemDamage()
 				&& inventory[itemOutputSlot].stackSize + amount <= inventory[itemInputSlot].getMaxStackSize()) {

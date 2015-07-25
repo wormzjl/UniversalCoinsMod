@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -39,7 +40,7 @@ public class UCItemPricer {
 
 	private static Map<String, Integer> ucPriceMap = new HashMap<String, Integer>(0);
 	private static Map<String, String> ucModnameMap = new HashMap<String, String>(0);
-	private static String configDir = "." + File.separatorChar + "config" + File.separatorChar + "universalcoins" + File.separatorChar;
+	private static String configDir = FMLInjectionData.data()[6] + "/config/universalcoins/";
 	private Random random = new Random();
 
 	public static UCItemPricer getInstance() {
