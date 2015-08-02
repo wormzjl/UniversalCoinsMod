@@ -37,7 +37,7 @@ public class BlockTradeStation extends BlockContainer {
 		icons = new IIcon[2];
 
 		for (int i = 0; i < icons.length; i++) {
-			icons[i] = register.registerIcon(UniversalCoins.modid + ":" + this.getUnlocalizedName().substring(5) + i);
+			icons[i] = register.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5) + i);
 		}
 	}
 

@@ -41,14 +41,19 @@ public class UCGive extends CommandBase {
 			}
 			int coinsToSend = 0;
 			if (recipient == null) {
-				sender.addChatMessage(new ChatComponentText("Â§c"
+				sender.addChatMessage(new ChatComponentText("§c"
 						+ StatCollector.translateToLocal("command.givecoins.error.notfound")));
 			}
 			try {
 				coinsToSend = Integer.parseInt(astring[1]);
 			} catch (NumberFormatException e) {
-				sender.addChatMessage(new ChatComponentText("Â§c"
+				sender.addChatMessage(new ChatComponentText("§c"
 						+ StatCollector.translateToLocal("command.givecoins.error.badentry")));
+			}
+			if (coinsToSend <= 0) {
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.send.error.badentry")));
+				return;
 			}
 			int change = givePlayerCoins(recipient, coinsToSend);
 			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + (coinsToSend - change) + " "
@@ -57,7 +62,7 @@ public class UCGive extends CommandBase {
 					+ StatCollector.translateToLocal("command.givecoins.result") + " " + (coinsToSend - change) + " "
 					+ StatCollector.translateToLocal("item.itemCoin.name")));
 		} else
-			sender.addChatMessage(new ChatComponentText("Â§c"
+			sender.addChatMessage(new ChatComponentText("§c"
 					+ StatCollector.translateToLocal("command.givecoins.error.noname")));
 	}
 

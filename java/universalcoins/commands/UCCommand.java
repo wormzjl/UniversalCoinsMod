@@ -79,14 +79,14 @@ public class UCCommand extends CommandBase {
 					stackName = astring[1];
 				}
 				if (price == -1) {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.uccommand.warning.pricenotset") + " " + stackName));
 				} else
-					sender.addChatMessage(new ChatComponentText("Â§a"
+					sender.addChatMessage(new ChatComponentText("§a"
 							+ StatCollector.translateToLocal("command.uccommand.warning.pricefound") + " " + stackName
 							+ ": " + price));
 			} else
-				sender.addChatMessage(new ChatComponentText("Â§c"
+				sender.addChatMessage(new ChatComponentText("§c"
 						+ StatCollector.translateToLocal("command.uccommand.warning.noitem")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.set.name"))) {
 			// set item price
@@ -96,7 +96,7 @@ public class UCCommand extends CommandBase {
 				try {
 					price = Integer.parseInt(astring[2]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.uccommand.option.set.price.invalid")));
 					return;
 				}
@@ -121,27 +121,27 @@ public class UCCommand extends CommandBase {
 						firstChange = false;
 					}
 				} else {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.uccommand.option.set.price.fail.one")));
 				}
 			} else
-				sender.addChatMessage(new ChatComponentText("Â§c"
+				sender.addChatMessage(new ChatComponentText("§c"
 						+ StatCollector.translateToLocal("command.uccommand.option.set.price.error")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reload"))) {
 			UCItemPricer.getInstance().loadConfigs();
-			sender.addChatMessage(new ChatComponentText("Â§a"
+			sender.addChatMessage(new ChatComponentText("§a"
 					+ StatCollector.translateToLocal("command.uccommand.option.reload.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reset.name"))) {
 			UCItemPricer.getInstance().resetDefaults();
-			sender.addChatMessage(new ChatComponentText("Â§a"
+			sender.addChatMessage(new ChatComponentText("§a"
 					+ StatCollector.translateToLocal("command.uccommand.option.reset.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.save.name"))) {
 			UCItemPricer.getInstance().savePriceLists();
-			sender.addChatMessage(new ChatComponentText("Â§a"
+			sender.addChatMessage(new ChatComponentText("§a"
 					+ StatCollector.translateToLocal("command.uccommand.option.save.confirm")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.update.name"))) {
 			UCItemPricer.getInstance().updatePriceLists();
-			sender.addChatMessage(new ChatComponentText("Â§a"
+			sender.addChatMessage(new ChatComponentText("§a"
 					+ StatCollector.translateToLocal("command.uccommand.option.update.confirm")));
 		}
 	}

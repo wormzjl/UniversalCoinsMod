@@ -59,21 +59,26 @@ public class UCSend extends CommandBase {
 					}
 				}
 				if (recipient == null) {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.send.error.notfound")));
 				}
 				int requestedSendAmount = 0;
 				try {
 					requestedSendAmount = Integer.parseInt(astring[1]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.send.error.badentry")));
+				}
+				if (requestedSendAmount <= 0) {
+					sender.addChatMessage(new ChatComponentText("§c"
+							+ StatCollector.translateToLocal("command.send.error.badentry")));
+					return;
 				}
 				// get coins from player inventory
 				int coinsFromSender = getPlayerCoins((EntityPlayerMP) sender, requestedSendAmount);
 				// get sender account, check balance, get coins
 				if (coinsFromSender < requestedSendAmount) {
-					sender.addChatMessage(new ChatComponentText("Â§c"
+					sender.addChatMessage(new ChatComponentText("§c"
 							+ StatCollector.translateToLocal("command.send.error.insufficient")));
 					givePlayerCoins((EntityPlayerMP) sender, coinsFromSender);
 					return;
@@ -109,7 +114,7 @@ public class UCSend extends CommandBase {
 					}
 				}
 			} else
-				sender.addChatMessage(new ChatComponentText("Â§c"
+				sender.addChatMessage(new ChatComponentText("§c"
 						+ StatCollector.translateToLocal("command.send.error.incomplete")));
 		}
 	}

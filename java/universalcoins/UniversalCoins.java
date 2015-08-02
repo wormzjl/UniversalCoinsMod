@@ -68,13 +68,14 @@ import cpw.mods.fml.relauncher.Side;
  * 
  **/
 
-@Mod(modid = UniversalCoins.modid, name = UniversalCoins.name, version = UniversalCoins.version, acceptedMinecraftVersions = "[1.7.2]")
+@Mod(modid = UniversalCoins.MODID, name = UniversalCoins.NAME, version = UniversalCoins.VERSION, acceptedMinecraftVersions = "@MC_VERSION@")
 public class UniversalCoins {
-	@Instance("universalcoins")
+	public static final String MODID = "universalcoins";
+	public static final String NAME = "Universal Coins";
+	public static final String VERSION = "@VERSION@";
+	
+	@Instance(MODID)
 	public static UniversalCoins instance;
-	public static final String modid = "universalcoins";
-	public static final String name = "Universal Coins";
-	public static final String version = "1.7.2-1.6.24";
 
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
@@ -224,7 +225,7 @@ public class UniversalCoins {
 		FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
 
 		// network packet handling
-		snw = NetworkRegistry.INSTANCE.newSimpleChannel(modid);
+		snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 		snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
@@ -240,7 +241,7 @@ public class UniversalCoins {
 		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
 
 		// update check using versionchecker
-		FMLInterModComms.sendRuntimeMessage(modid, "VersionChecker", "addVersionCheck",
+		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",
 				"https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
 	}
 

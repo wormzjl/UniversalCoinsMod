@@ -20,7 +20,7 @@ public class ItemLargeCoinBag extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.modid + ":"
+		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.MODID + ":"
 				+ this.getUnlocalizedName().substring(5));
 	}
 
