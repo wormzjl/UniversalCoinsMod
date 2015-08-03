@@ -2,11 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.29",
+			"modVersion":"1.7.2-1.6.30",
 			"changeLog": [
-				"fixed issue with backpack purchase in trade station giving player a duplicate backpack instead of a new one. Affects any item with NBT data.",
-				"changed config dir in UCItemPricer to use minecraftHome dir the same way NEI does to fix issues with custom minecraft launchers putting configs in wrong dir",
-				"village shops and banks modified to include cobblestone foundation and/or steps the same as native village buildings."
+				"added support for Craftguide. All recipes now displayed.",
+				"fixed issue with send(pay) and give commands that allowed a player to enter a negative value to give themselves or others coins",
+				"fixed issue with accounts exceeding Integer.MAX_VALUE and going negative"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -14,11 +14,11 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.29",
+			"modVersion":"1.7.10-1.6.30",
 			"changeLog": [
-				"fixed issue with backpack purchase in trade station giving player a duplicate backpack instead of a new one. Affects any item with NBT data.",
-				"changed config dir in UCItemPricer to use minecraftHome dir the same way NEI does to fix issues with custom minecraft launchers putting configs in wrong dir",
-				"village shops and banks modified to include cobblestone foundation and/or steps the same as native village buildings."
+				"added support for Craftguide. All recipes now displayed.",
+				"fixed issue with send(pay) and give commands that allowed a player to enter a negative value to give themselves or others coins",
+				"fixed issue with accounts exceeding Integer.MAX_VALUE and going negative"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
