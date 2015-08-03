@@ -10,7 +10,7 @@ import universalcoins.UniversalCoins;
 
 public class RecipeEnderCard implements IRecipe {
 
-	private ItemStack newStack;
+	private ItemStack newStack = new ItemStack(UniversalCoins.proxy.itemEnderCard);
 	private Item[] recipeItems = { null, Items.ender_pearl, null, Items.ender_pearl, UniversalCoins.proxy.itemUCCard,
 			Items.ender_pearl, null, Items.ender_pearl, null };
 
@@ -25,7 +25,6 @@ public class RecipeEnderCard implements IRecipe {
 				return false;
 			}
 		}
-		newStack = new ItemStack(UniversalCoins.proxy.itemEnderCard);
 		this.newStack.setTagCompound(var1.getStackInSlot(4).getTagCompound());
 		return true;
 	}

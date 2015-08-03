@@ -12,7 +12,7 @@ import uristqwerty.CraftGuide.api.RecipeTemplate;
 import uristqwerty.CraftGuide.api.Slot;
 import uristqwerty.CraftGuide.api.SlotType;
 
-public class CGRecipeEnderCard extends CraftGuideAPIObject implements RecipeProvider {
+public class CGRecipeVendingFrame extends CraftGuideAPIObject implements RecipeProvider {
 	private final int SLOT_SIZE = 16;
 	private final Slot[] CRAFTING_SLOTS = new ItemSlot[] { new ItemSlot(3, 3, SLOT_SIZE, SLOT_SIZE).drawOwnBackground(),
 			new ItemSlot(21, 3, SLOT_SIZE, SLOT_SIZE).drawOwnBackground(),
@@ -32,9 +32,10 @@ public class CGRecipeEnderCard extends CraftGuideAPIObject implements RecipeProv
 		RecipeTemplate template = generator.createRecipeTemplate(CRAFTING_SLOTS, craftingTable);
 
 		generator.addRecipe(template,
-				new Object[] { null, new ItemStack(Items.ender_pearl), null, new ItemStack(Items.ender_pearl),
-						new ItemStack(UniversalCoins.proxy.itemUCCard), new ItemStack(Items.ender_pearl), null,
-						new ItemStack(Items.ender_pearl), null, new ItemStack(UniversalCoins.proxy.itemEnderCard) });
+				new Object[] { new ItemStack(Items.stick), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick),
+						new ItemStack(Items.redstone), new ItemStack(Blocks.planks), new ItemStack(Items.redstone),
+						new ItemStack(Items.stick), new ItemStack(Items.stick), new ItemStack(Items.stick),
+						new ItemStack(UniversalCoins.proxy.blockVendorFrame)});
 	}
 
 }

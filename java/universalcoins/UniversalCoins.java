@@ -1,5 +1,22 @@
 package universalcoins;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,23 +60,6 @@ import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import universalcoins.worldgen.VillageGenBank;
 import universalcoins.worldgen.VillageGenShop;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
@@ -313,13 +313,16 @@ public class UniversalCoins {
 			VillageGenShop villageHandler2 = new VillageGenShop();
 			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
 		}
-		//proxy.registerAchievements();
+		proxy.registerAchievements();
 
 		if (Loader.isModLoaded("craftguide")) {
 			try {
 				Class.forName("universalcoins.integration.craftguide.CGRecipeEnderCard").newInstance();
+				Class.forName("universalcoins.integration.craftguide.CGRecipeVendingFrame").newInstance();
+				Class.forName("universalcoins.integration.craftguide.CGRecipeVendingFrameTextureChange").newInstance();
+				Class.forName("universalcoins.integration.craftguide.CGRecipeUCSignTextureChange").newInstance();
 			} catch (ReflectiveOperationException e) {
-				e.printStackTrace();
+				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
 			}
 		}
 	}
