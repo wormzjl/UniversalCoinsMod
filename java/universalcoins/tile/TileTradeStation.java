@@ -153,13 +153,19 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					* (inventory[itemInputSlot].getMaxDamage() - inventory[itemInputSlot].getItemDamage())
 					/ inventory[itemInputSlot].getMaxDamage();
 		}
-		inventory[itemInputSlot].stackSize -= amount;
+		boolean playerCredited = false;
+		if (inventory[itemCardSlot] != null) {
+			playerCredited = creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio));
+		}
+		if (!playerCredited && coinSum + itemPrice * amount * UniversalCoins.itemSellRatio <= Integer.MAX_VALUE) {
+			coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
+			playerCredited = true;
+		}
+		if (playerCredited) {
+			inventory[itemInputSlot].stackSize -= amount;
+		}
 		if (inventory[itemInputSlot].stackSize <= 0) {
 			inventory[itemInputSlot] = null;
-		}
-		// try card first, increase coinsum if it fails
-		if (!creditAccount((int) (itemPrice * amount * UniversalCoins.itemSellRatio))) {
-			coinSum += itemPrice * amount * UniversalCoins.itemSellRatio;
 		}
 	}
 

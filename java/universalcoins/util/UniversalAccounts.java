@@ -1,5 +1,6 @@
 package universalcoins.util;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -38,7 +39,7 @@ public class UniversalAccounts {
 	public boolean creditAccount(String accountNumber, int amount) {
 		if (hasKey(accountNumber)) {
 			int balance = getWorldInt(accountNumber);
-			if (balance + amount < Integer.MAX_VALUE) {
+			if ((double) balance + (double)amount <= Integer.MAX_VALUE) {
 				balance += amount;
 				setWorldData(accountNumber, balance);
 				return true;
