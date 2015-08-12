@@ -36,7 +36,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class UCItemPricer {
 
-	private static UCItemPricer instance = new UCItemPricer();
+	private static final UCItemPricer instance = new UCItemPricer();
 
 	private static Map<String, Integer> ucPriceMap = new HashMap<String, Integer>(0);
 	private static Map<String, String> ucModnameMap = new HashMap<String, String>(0);

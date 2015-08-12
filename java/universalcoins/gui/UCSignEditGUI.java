@@ -40,10 +40,12 @@ public class UCSignEditGUI extends GuiScreen {
 	}
 
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
-		tileSign.blockOwner = this.mc.thePlayer.getCommandSenderName();
-		tileSign.sendServerUpdateMessage();
-		this.tileSign.setEditable(true);
+		if (mc.thePlayer != null) {
+			Keyboard.enableRepeatEvents(false);
+			tileSign.blockOwner = this.mc.thePlayer.getCommandSenderName();
+			tileSign.sendServerUpdateMessage();
+			this.tileSign.setEditable(true);
+		}
 	}
 
 	/**
