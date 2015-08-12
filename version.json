@@ -2,11 +2,10 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.30",
+			"modVersion":"1.7.2-1.6.32",
 			"changeLog": [
-				"added support for Craftguide. All recipes now displayed.",
-				"fixed issue with send(pay) and give commands that allowed a player to enter a negative value to give themselves or others coins",
-				"fixed issue with accounts exceeding Integer.MAX_VALUE and going negative"
+				"Changed how UniversalAccounts class handles world variable. Fixes crash on account access when clonecraft present.",
+				"Changed sign edit gui to fix crash on startup when clonecraft present"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -14,11 +13,10 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.30",
+			"modVersion":"1.7.10-1.6.32",
 			"changeLog": [
-				"added support for Craftguide. All recipes now displayed.",
-				"fixed issue with send(pay) and give commands that allowed a player to enter a negative value to give themselves or others coins",
-				"fixed issue with accounts exceeding Integer.MAX_VALUE and going negative"
+				"Changed how UniversalAccounts class handles world variable. Fixes crash on account access when clonecraft present.",
+				"Changed sign edit gui to fix crash on startup when clonecraft present"
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
