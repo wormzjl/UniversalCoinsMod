@@ -49,7 +49,9 @@ public class BlockSafe extends BlockContainer {
 		if (tileEntity != null && tileEntity instanceof TileSafe) {
 			TileSafe tentity = (TileSafe) tileEntity;
 			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
-				tentity.updateAccountBalance();
+				if (!world.isRemote) {
+					tentity.updateAccountBalance();
+				}
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			}
 		}
