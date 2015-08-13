@@ -2,10 +2,9 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.32",
+			"modVersion":"1.7.2-1.6.33",
 			"changeLog": [
-				"Changed how UniversalAccounts class handles world variable. Fixes crash on account access when clonecraft present.",
-				"Changed sign edit gui to fix crash on startup when clonecraft present"
+				"Fixed client crash when opening endersafe in multiplayer."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -13,10 +12,9 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.32",
+			"modVersion":"1.7.10-1.6.33",
 			"changeLog": [
-				"Changed how UniversalAccounts class handles world variable. Fixes crash on account access when clonecraft present.",
-				"Changed sign edit gui to fix crash on startup when clonecraft present"
+				"Fixed client crash when opening endersafe in multiplayer."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
