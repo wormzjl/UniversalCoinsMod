@@ -44,10 +44,16 @@ itemGroup.tabUniversalCoins=Universal Coins
 #####
 # Achievements
 #####
-achievement.AchievementCoins=My first coin
-achievement.AchievementCoins.desc=Pick up some coins.
-achievement.AchievementThousands=Now were getting somewhere
-achievement.AchievementThousands.desc=Balance of 1,000 coins.
+achievement.AchievementCoin=Money!
+achievement.AchievementCoin.desc=Pick up some coins.
+achievement.AchievementThousand=Now were getting somewhere
+achievement.AchievementThousand.desc=Balance of 1,000 coins.
+achievement.AchievementMillion=Over a million
+achievement.AchievementMillion.desc=Balance of 1,000,000 coins.
+achievement.AchievementBillion=Over a billion
+achievement.AchievementBillion.desc=Balance of 1,000,000,000 coins.
+achievement.AchievementMaxed=Account maxed
+achievement.AchievementMaxed.desc=Balance of 2,147,483,647 coins.
 
 #####
 # General

@@ -3,6 +3,7 @@ package universalcoins.util;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import universalcoins.Achievements;
 
 public class UniversalAccounts {
 

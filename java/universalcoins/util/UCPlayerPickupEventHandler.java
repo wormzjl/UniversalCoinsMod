@@ -26,7 +26,7 @@ public class UCPlayerPickupEventHandler {
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinStack
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemSmallCoinBag
 				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinBag) {
-			event.entityPlayer.addStat(Achievements.achCoins, 1);
+			event.entityPlayer.addStat(Achievements.achCoin, 1);
 			world = event.entityPlayer.worldObj;
 			EntityPlayer player = event.entityPlayer;
 			ItemStack[] inventory = player.inventory.mainInventory;

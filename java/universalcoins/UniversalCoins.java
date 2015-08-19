@@ -20,6 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -33,6 +35,7 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
+import universalcoins.items.ItemUCGuide;
 import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
@@ -74,7 +77,7 @@ public class UniversalCoins {
 	public static final String MODID = "universalcoins";
 	public static final String NAME = "Universal Coins";
 	public static final String VERSION = "@VERSION@";
-
+	
 	@Instance(MODID)
 	public static UniversalCoins instance;
 
@@ -326,13 +329,14 @@ public class UniversalCoins {
 				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
 			}
 		}
-
-		// Register guide with enchiridion2
+		
+		// notify enchiridion2 to search mods assets folder for book xml
+		FMLInterModComms.sendMessage("Enchiridion2", "registerBookMod", this.MODID);
+		
+		//this links an itemstack with book xml found in assets/MODID/books dir
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("book", "Universal_Coins");
-		boolean test = FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem",
-				new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
-		if (!test) FMLLog.warning("Failed to register Universal Coins Guide.");
+        tag.setString("book", "Universal_Coins");
+        FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem", new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
 	}
 
 	@EventHandler

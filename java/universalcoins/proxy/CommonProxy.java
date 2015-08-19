@@ -29,6 +29,7 @@ import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
 import universalcoins.tile.TileUCSign;
 import universalcoins.util.Vending;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
@@ -107,11 +108,15 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemUCCard, itemUCCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemEnderCard, itemEnderCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
-		GameRegistry.registerItem(itemUCGuide, itemUCGuide.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinkCard, itemLinkCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemPackage, itemPackage.getUnlocalizedName());
+		
+		//only register guide if enchiridion2 is loaded
+		if (Loader.isModLoaded("Enchiridion2")) {
+			GameRegistry.registerItem(itemUCGuide, itemUCGuide.getUnlocalizedName());
+		}
 	}
 
 	public void registerRenderers() {
@@ -120,8 +125,11 @@ public class CommonProxy {
 	
 	public void registerAchievements() {
 		Achievements.init();
-		Achievements.achCoins.registerStat(); 
-		Achievements.achThousands.registerStat(); 
+		Achievements.achCoin.registerStat(); 
+		Achievements.achThousand.registerStat(); 
+		Achievements.achMillion.registerStat(); 
+		Achievements.achBillion.registerStat(); 
+		Achievements.achMaxed.registerStat(); 
 	}
 
 }
