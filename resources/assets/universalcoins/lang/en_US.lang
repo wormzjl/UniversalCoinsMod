@@ -33,6 +33,7 @@ item.itemLargeCoinBag.name=Large Coin Bag
 item.itemUCCard.name=Universal Card
 item.itemEnderCard.name=Ender Card
 item.itemSeller.name=Selling Catalog
+item.itemGuide.name=Universal Coins Guide
 item.itemVendorWrench.name=Vendor Wrench
 item.itemVendorFrame.name=Vending Frame
 item.itemUCSign.name=Advanced Sign

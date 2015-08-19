@@ -21,6 +21,7 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -73,7 +74,7 @@ public class UniversalCoins {
 	public static final String MODID = "universalcoins";
 	public static final String NAME = "Universal Coins";
 	public static final String VERSION = "@VERSION@";
-	
+
 	@Instance(MODID)
 	public static UniversalCoins instance;
 
@@ -325,6 +326,13 @@ public class UniversalCoins {
 				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
 			}
 		}
+
+		// Register guide with enchiridion2
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("book", "Universal_Coins");
+		boolean test = FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem",
+				new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
+		if (!test) FMLLog.warning("Failed to register Universal Coins Guide.");
 	}
 
 	@EventHandler
@@ -339,10 +347,6 @@ public class UniversalCoins {
 
 		Thread t = new Thread(r);
 		t.start();
-
-		// if (Loader.isModLoaded("Enchiridion")) {
-		// EnchiridionAPI.instance.registerModBooks("universalcoins");
-		// }
 	}
 
 	@EventHandler

@@ -24,6 +24,7 @@ import universalcoins.items.ItemSeller;
 import universalcoins.items.ItemSmallCoinBag;
 import universalcoins.items.ItemSmallCoinStack;
 import universalcoins.items.ItemUCCard;
+import universalcoins.items.ItemUCGuide;
 import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
 import universalcoins.tile.TileUCSign;
@@ -37,6 +38,7 @@ public class CommonProxy {
 	public static Item itemSmallCoinBag;
 	public static Item itemLargeCoinBag;
 	public static Item itemSeller;
+	public static Item itemUCGuide;
 	public static Item itemUCCard;
 	public static Item itemEnderCard;
 	public static Item itemVendorWrench;
@@ -91,6 +93,7 @@ public class CommonProxy {
 		itemUCCard = new ItemUCCard().setUnlocalizedName("itemUCCard");
 		itemEnderCard = new ItemEnderCard().setUnlocalizedName("itemEnderCard");
 		itemSeller = new ItemSeller().setUnlocalizedName("itemSeller");
+		itemUCGuide = new ItemUCGuide().setUnlocalizedName("itemGuide");
 		itemVendorWrench = new ItemVendorWrench().setUnlocalizedName("itemVendorWrench");
 		itemUCSign = new ItemUCSign().setUnlocalizedName("itemUCSign");
 		itemLinkCard = new ItemLinkCard().setUnlocalizedName("itemLinkCard");
@@ -104,6 +107,7 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemUCCard, itemUCCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemEnderCard, itemEnderCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemSeller, itemSeller.getUnlocalizedName());
+		GameRegistry.registerItem(itemUCGuide, itemUCGuide.getUnlocalizedName());
 		GameRegistry.registerItem(itemVendorWrench, itemVendorWrench.getUnlocalizedName());
 		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinkCard, itemLinkCard.getUnlocalizedName());
