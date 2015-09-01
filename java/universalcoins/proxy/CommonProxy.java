@@ -7,6 +7,7 @@ import universalcoins.blocks.BlockBandit;
 import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockPackager;
+import universalcoins.blocks.BlockPowerBase;
 import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockSignal;
 import universalcoins.blocks.BlockTradeStation;
@@ -58,6 +59,7 @@ public class CommonProxy {
 	public static Block blockBandit;
 	public static Block blockSignal;
 	public static Block blockPackager;
+	public static Block blockPowerBase;
 
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
@@ -71,6 +73,7 @@ public class CommonProxy {
 		blockBandit = new BlockBandit().setBlockName("blockBandit");
 		blockSignal = new BlockSignal().setBlockName("blockSignal");
 		blockPackager = new BlockPackager().setBlockName("blockPackager");
+		blockPowerBase = new BlockPowerBase().setBlockName("blockPowerBase");
 
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
@@ -83,6 +86,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(blockBandit, "blockBandit").getUnlocalizedName();
 		GameRegistry.registerBlock(blockSignal, "blockSignal").getUnlocalizedName();
 		GameRegistry.registerBlock(blockPackager, "blockPackager").getUnlocalizedName();
+		GameRegistry.registerBlock(blockPowerBase, "blockPowerBase").getUnlocalizedName();
 	}
 
 	public void registerItems() {

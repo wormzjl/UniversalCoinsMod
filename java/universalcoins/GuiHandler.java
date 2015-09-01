@@ -1,5 +1,6 @@
 package universalcoins;
 
+import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -7,6 +8,7 @@ import universalcoins.gui.BanditConfigGUI;
 import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.PackagerGUI;
+import universalcoins.gui.PowerBaseGUI;
 import universalcoins.gui.SafeGUI;
 import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
@@ -18,6 +20,7 @@ import universalcoins.gui.VendorWrenchGUI;
 import universalcoins.inventory.ContainerBandit;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.inventory.ContainerPackager;
+import universalcoins.inventory.ContainerPowerBase;
 import universalcoins.inventory.ContainerSafe;
 import universalcoins.inventory.ContainerSignal;
 import universalcoins.inventory.ContainerTradeStation;
@@ -28,12 +31,12 @@ import universalcoins.inventory.ContainerVendorWrench;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TilePackager;
+import universalcoins.tile.TilePowerBase;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 class GuiHandler implements IGuiHandler {
 
@@ -73,6 +76,9 @@ class GuiHandler implements IGuiHandler {
 		}
 		if (tileEntity instanceof TilePackager) {
 			return new ContainerPackager(player.inventory, (TilePackager) tileEntity);
+		}
+		if (tileEntity instanceof TilePowerBase) {
+			return new ContainerPowerBase(player.inventory, (TilePowerBase) tileEntity);
 		}
 		return null;
 	}
@@ -116,6 +122,9 @@ class GuiHandler implements IGuiHandler {
 		}
 		if (tileEntity instanceof TilePackager) {
 			return new PackagerGUI(player.inventory, (TilePackager) tileEntity);
+		}
+		if (tileEntity instanceof TilePowerBase) {
+			return new PowerBaseGUI(player.inventory, (TilePowerBase) tileEntity);
 		}
 		return null;
 	}

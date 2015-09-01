@@ -20,8 +20,6 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -35,7 +33,6 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
-import universalcoins.items.ItemUCGuide;
 import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
@@ -51,6 +48,7 @@ import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TilePackager;
+import universalcoins.tile.TilePowerBase;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
@@ -93,6 +91,7 @@ public class UniversalCoins {
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean packagerRecipeEnabled;
 	public static Boolean mobsDropCoins;
+	public static Boolean rfUtilityEnabled;
 	public static Boolean coinsInMineshaft;
 	public static Integer bankGenWeight;
 	public static Integer shopGenWeight;
@@ -109,6 +108,8 @@ public class UniversalCoins {
 	public static Integer smallPackagePrice;
 	public static Integer medPackagePrice;
 	public static Integer largePackagePrice;
+	public static Integer rfWholesaleRate;
+	public static Integer rfRetailRate;
 
 	public static SimpleNetworkWrapper snw;
 
@@ -203,6 +204,17 @@ public class UniversalCoins {
 		Property largePackage = config.get("Packager", "Large Package Price", 40);
 		largePackage.comment = "Set the price of large package";
 		largePackagePrice = Math.max(1, Math.min(largePackage.getInt(40), 1000));
+		
+		// rf utility (power company stuff)
+		Property rfUtilEnabled = config.get("RF Utility", "RF Blocks enabled", true);
+		rfUtilEnabled.comment = "Set to false to disable the RF base and reciever blocks.";
+		rfUtilityEnabled = rfUtilEnabled.getBoolean(true);
+		Property rfWholesale = config.get("RF Utility", "Wholesale rate", 5);
+		rfWholesale.comment = "Set payment per kRF of power generated. Default: 5";
+		rfWholesaleRate = Math.max(0, rfWholesale.getInt(5));
+		Property rfRetail = config.get("RF Utility", "Retail rate", 8);
+		rfRetail.comment = "Set payment per kRF of power generated. Default: 8";
+		rfRetailRate = Math.max(0, rfRetail.getInt(8));
 
 		// world gen
 		Property bankGenProperty = config.get("world generation", "Village bank weight", 6);
@@ -273,6 +285,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileBandit.class, "TileBandit");
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
+		GameRegistry.registerTileEntity(TilePowerBase.class, "TilePowerBase");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		// load all recipes, in multiplayer client will receive packet to disable to match server
