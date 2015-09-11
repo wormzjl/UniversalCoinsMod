@@ -65,6 +65,15 @@ public class BlockUCSign extends BlockSign {
 		}
 		return false;
 	}
+	
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		String ownerName = ((TileUCSign) world.getTileEntity(x, y, z)).blockOwner;
+		if (player.getDisplayName().equals(ownerName)) {
+			this.setHardness(1.0F);
+		} else {
+			this.setHardness(-1.0F);
+		}
+	}
 
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
 		ItemStack stack = new ItemStack(UniversalCoins.proxy.itemUCSign);

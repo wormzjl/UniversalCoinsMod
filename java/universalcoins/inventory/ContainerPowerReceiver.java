@@ -8,29 +8,19 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TilePowerReceiver;
 
-public class ContainerCardStation extends Container {
-	private String lastPlayerName;
-	private String lastPlayerUID;
-	private boolean lastInUse;
-	private boolean lastDepositCoins;
-	private boolean lastWithdrawCoins;
-	private boolean lastAccountError;
-	private int lastCoinWithdrawalAmount;
-	private String lastCardOwner;
-	private String lastAccountNumber;
-	private int lastAccountBalance;
-	private String lastGroupAccountName;
-	private String lastGroupAccountNumber;
-	private TileCardStation tEntity;
+public class ContainerPowerReceiver extends Container {
+	private String lastOwner;
+	private int lastCoinSum, lastrfLevel;
+	private TilePowerReceiver tEntity;
 
-	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tileEntity) {
+	public ContainerPowerReceiver(InventoryPlayer inventoryPlayer, TilePowerReceiver tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 152, 60));
-		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 152, 40));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 22, 37));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 37));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -44,12 +34,12 @@ public class ContainerCardStation extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 119 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 70 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 128));
 		}
 	}
 
@@ -108,29 +98,14 @@ public class ContainerCardStation extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i) {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
-			if (this.lastPlayerName != tEntity.playerName || this.lastPlayerUID != tEntity.playerUID
-					|| this.lastInUse != tEntity.inUse || this.lastDepositCoins != tEntity.depositCoins
-					|| this.lastWithdrawCoins != tEntity.withdrawCoins || this.lastAccountError != tEntity.accountError
-					|| this.lastCoinWithdrawalAmount != tEntity.coinWithdrawalAmount
-					|| this.lastCardOwner != tEntity.cardOwner || this.lastAccountNumber != tEntity.accountNumber
-					|| this.lastAccountBalance != tEntity.accountBalance
-					|| this.lastGroupAccountName != tEntity.customAccountName
-					|| this.lastGroupAccountNumber != tEntity.customAccountNumber) {
+			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum || 
+					this.lastrfLevel != tEntity.rfLevel) {
 				tEntity.updateTE();
 			}
 
-			this.lastPlayerName = tEntity.playerName;
-			this.lastPlayerUID = tEntity.playerUID;
-			this.lastInUse = tEntity.inUse;
-			this.lastDepositCoins = tEntity.depositCoins;
-			this.lastWithdrawCoins = tEntity.withdrawCoins;
-			this.lastAccountError = tEntity.accountError;
-			this.lastCoinWithdrawalAmount = tEntity.coinWithdrawalAmount;
-			this.lastCardOwner = tEntity.cardOwner;
-			this.lastAccountNumber = tEntity.accountNumber;
-			this.lastAccountBalance = tEntity.accountBalance;
-			this.lastGroupAccountName = tEntity.customAccountName;
-			this.lastGroupAccountNumber = tEntity.customAccountNumber;
+			this.lastOwner = tEntity.blockOwner;
+			this.lastCoinSum = tEntity.coinSum;
+			this.lastrfLevel = tEntity.rfLevel;
 		}
 	}
 
@@ -141,7 +116,4 @@ public class ContainerCardStation extends Container {
 		}
 	}
 
-	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
-		this.tEntity.inUseCleanup();
-	}
 }

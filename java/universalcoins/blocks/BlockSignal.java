@@ -2,6 +2,8 @@ package universalcoins.blocks;
 
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -16,9 +18,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import org.lwjgl.input.Keyboard;
-
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileSignal;
 

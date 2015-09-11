@@ -1,5 +1,7 @@
 package universalcoins.proxy;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -18,8 +20,6 @@ import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy {
 

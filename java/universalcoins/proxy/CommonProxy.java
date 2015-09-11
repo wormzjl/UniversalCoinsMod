@@ -1,5 +1,7 @@
 package universalcoins.proxy;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import universalcoins.Achievements;
@@ -8,6 +10,7 @@ import universalcoins.blocks.BlockBase;
 import universalcoins.blocks.BlockCardStation;
 import universalcoins.blocks.BlockPackager;
 import universalcoins.blocks.BlockPowerBase;
+import universalcoins.blocks.BlockPowerReceiver;
 import universalcoins.blocks.BlockSafe;
 import universalcoins.blocks.BlockSignal;
 import universalcoins.blocks.BlockTradeStation;
@@ -30,8 +33,6 @@ import universalcoins.items.ItemUCSign;
 import universalcoins.items.ItemVendorWrench;
 import universalcoins.tile.TileUCSign;
 import universalcoins.util.Vending;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
 	public static Item itemCoin;
@@ -60,6 +61,7 @@ public class CommonProxy {
 	public static Block blockSignal;
 	public static Block blockPackager;
 	public static Block blockPowerBase;
+	public static Block blockPowerReceiver;
 
 	public void registerBlocks() {
 		blockTradeStation = new BlockTradeStation().setBlockName("blockTradeStation");
@@ -74,6 +76,7 @@ public class CommonProxy {
 		blockSignal = new BlockSignal().setBlockName("blockSignal");
 		blockPackager = new BlockPackager().setBlockName("blockPackager");
 		blockPowerBase = new BlockPowerBase().setBlockName("blockPowerBase");
+		blockPowerReceiver = new BlockPowerReceiver().setBlockName("blockPowerReceiver");
 
 		GameRegistry.registerBlock(blockTradeStation, "blockTradeStation").getUnlocalizedName();
 		GameRegistry.registerBlock(blockVendor, ItemBlockVendor.class, "blockVendor");
@@ -87,6 +90,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(blockSignal, "blockSignal").getUnlocalizedName();
 		GameRegistry.registerBlock(blockPackager, "blockPackager").getUnlocalizedName();
 		GameRegistry.registerBlock(blockPowerBase, "blockPowerBase").getUnlocalizedName();
+		GameRegistry.registerBlock(blockPowerReceiver, "blockPowerReceiver").getUnlocalizedName();
 	}
 
 	public void registerItems() {

@@ -3,12 +3,11 @@ package universalcoins.worldgen;
 import java.util.List;
 import java.util.Random;
 
-import universalcoins.UniversalCoins;
-import net.minecraft.util.MathHelper;
+import cpw.mods.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
-import cpw.mods.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
+import universalcoins.UniversalCoins;
 
 public class VillageGenBank implements IVillageCreationHandler {
 

@@ -19,8 +19,8 @@ public class ContainerPowerBase extends Container {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCardSlot, 22, 30));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 30));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 22, 37));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 37));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

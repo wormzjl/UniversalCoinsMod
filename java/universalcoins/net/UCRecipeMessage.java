@@ -1,18 +1,17 @@
 package universalcoins.net;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.Iterator;
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import universalcoins.UniversalCoins;
 import universalcoins.util.Vending;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
 	private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled,

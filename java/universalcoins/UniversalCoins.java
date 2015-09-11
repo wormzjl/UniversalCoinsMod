@@ -49,6 +49,7 @@ import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TilePackager;
 import universalcoins.tile.TilePowerBase;
+import universalcoins.tile.TilePowerReceiver;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
@@ -286,6 +287,7 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
 		GameRegistry.registerTileEntity(TilePowerBase.class, "TilePowerBase");
+		GameRegistry.registerTileEntity(TilePowerReceiver.class, "TilePowerReceiver");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		// load all recipes, in multiplayer client will receive packet to disable to match server

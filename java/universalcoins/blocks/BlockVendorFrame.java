@@ -1,5 +1,7 @@
 package universalcoins.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -20,8 +22,6 @@ import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVendorFrame extends BlockContainer {
 
@@ -199,6 +199,15 @@ public class BlockVendorFrame extends BlockContainer {
 			super.removedByPlayer(world, player, x, y, z);
 		}
 		return false;
+	}
+	
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		String ownerName = ((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner;
+		if (player.getDisplayName().equals(ownerName)) {
+			this.setHardness(1.0F);
+		} else {
+			this.setHardness(-1.0F);
+		}
 	}
 
 	@Override

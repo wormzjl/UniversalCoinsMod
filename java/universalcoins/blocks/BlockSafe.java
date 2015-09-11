@@ -1,5 +1,7 @@
 package universalcoins.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -15,8 +17,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileSafe;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockSafe extends BlockContainer {
 
@@ -97,6 +97,15 @@ public class BlockSafe extends BlockContainer {
 			super.removedByPlayer(world, player, x, y, z);
 		}
 		return false;
+	}
+	
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
+		String ownerName = ((TileSafe) world.getTileEntity(x, y, z)).blockOwner;
+		if (player.getDisplayName().equals(ownerName)) {
+			this.setHardness(3.0F);
+		} else {
+			this.setHardness(-1.0F);
+		}
 	}
 
 	@Override

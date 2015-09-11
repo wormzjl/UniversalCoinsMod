@@ -1,6 +1,5 @@
 package universalcoins.items;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;

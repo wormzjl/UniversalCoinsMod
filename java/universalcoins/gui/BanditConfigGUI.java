@@ -2,15 +2,14 @@ package universalcoins.gui;
 
 import java.text.DecimalFormat;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import universalcoins.tile.TileBandit;
 
 public class BanditConfigGUI extends GuiScreen {

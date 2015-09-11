@@ -8,17 +8,17 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import universalcoins.inventory.ContainerPowerBase;
-import universalcoins.tile.TilePowerBase;
+import universalcoins.inventory.ContainerPowerReceiver;
+import universalcoins.tile.TilePowerReceiver;
 
-public class PowerBaseGUI extends GuiContainer {
-	private TilePowerBase tEntity;
+public class PowerReceiverGUI extends GuiContainer {
+	private TilePowerReceiver tEntity;
 	private GuiButton coinButton;
 	public static final int idCoinButton = 0;
 	DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 
-	public PowerBaseGUI(InventoryPlayer inventoryPlayer, TilePowerBase tileEntity) {
-		super(new ContainerPowerBase(inventoryPlayer, tileEntity));
+	public PowerReceiverGUI(InventoryPlayer inventoryPlayer, TilePowerReceiver tileEntity) {
+		super(new ContainerPowerReceiver(inventoryPlayer, tileEntity));
 		tEntity = tileEntity;
 
 		xSize = 176;

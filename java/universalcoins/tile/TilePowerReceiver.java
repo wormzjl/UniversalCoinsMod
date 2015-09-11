@@ -17,7 +17,7 @@ import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UniversalAccounts;
 
-public class TilePowerBase extends TileEntity implements IInventory, IEnergyReceiver {
+public class TilePowerReceiver extends TileEntity implements IInventory, IEnergyReceiver {
 
 	private ItemStack[] inventory = new ItemStack[2];
 	public static final int itemCardSlot = 0;

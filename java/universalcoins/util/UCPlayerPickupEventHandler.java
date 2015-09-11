@@ -2,6 +2,7 @@ package universalcoins.util;
 
 import java.text.DecimalFormat;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import universalcoins.Achievements;
 import universalcoins.UniversalCoins;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class UCPlayerPickupEventHandler {
 

@@ -1,5 +1,7 @@
 package universalcoins.render;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,8 +9,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.common.util.Constants;
-
-import org.lwjgl.opengl.GL11;
 
 public class ItemVendorFrameRenderer implements IItemRenderer {
 	TileEntitySpecialRenderer render;

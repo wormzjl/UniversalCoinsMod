@@ -1,12 +1,12 @@
 package universalcoins.net;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.tile.TileBandit;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCBanditServerMessage implements IMessage, IMessageHandler<UCBanditServerMessage, IMessage> {
 	private int x, y, z, spinFee, fourMatch, fiveMatch;

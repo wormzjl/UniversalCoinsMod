@@ -1,5 +1,8 @@
 package universalcoins.net;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -8,12 +11,11 @@ import universalcoins.gui.TradeStationGUI;
 import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TilePackager;
+import universalcoins.tile.TilePowerBase;
+import universalcoins.tile.TilePowerReceiver;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessage, IMessage> {
 	private int x, y, z, buttonId;
@@ -91,6 +93,12 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 		}
 		if (tileEntity instanceof TilePackager) {
 			((TilePackager) tileEntity).onButtonPressed(message.buttonId);
+		}
+		if (tileEntity instanceof TilePowerBase) {
+			((TilePowerBase) tileEntity).onButtonPressed(message.buttonId);
+		}
+		if (tileEntity instanceof TilePowerReceiver) {
+			((TilePowerReceiver) tileEntity).onButtonPressed(message.buttonId);
 		}
 		return null;
 	}

@@ -1,14 +1,13 @@
 package universalcoins.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
-import org.lwjgl.opengl.GL11;
-
 import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerTradeStation;
 import universalcoins.tile.TileTradeStation;
