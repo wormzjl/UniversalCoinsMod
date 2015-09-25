@@ -16,7 +16,7 @@ import universalcoins.util.Vending;
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
 	private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled,
 			enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled,
-			packagerRecipeEnabled;
+			packagerRecipeEnabled, powerEconomyRecipeEnabled;
 
 	public UCRecipeMessage() {
 		this.tradeStationRecipesEnabled = UniversalCoins.tradeStationRecipesEnabled;
@@ -28,6 +28,7 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
 		this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
 		this.packagerRecipeEnabled = UniversalCoins.packagerRecipeEnabled;
+		this.powerEconomyRecipeEnabled = UniversalCoins.powerEconomyRecipeEnabled;
 	}
 
 	@Override
@@ -41,6 +42,7 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		this.signalRecipeEnabled = buf.readBoolean();
 		this.linkCardRecipeEnabled = buf.readBoolean();
 		this.packagerRecipeEnabled = buf.readBoolean();
+		this.powerEconomyRecipeEnabled = buf.readBoolean();
 	}
 
 	@Override
@@ -54,6 +56,7 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		buf.writeBoolean(signalRecipeEnabled);
 		buf.writeBoolean(linkCardRecipeEnabled);
 		buf.writeBoolean(packagerRecipeEnabled);
+		buf.writeBoolean(powerEconomyRecipeEnabled);
 	}
 
 	@Override
@@ -87,6 +90,10 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		}
 		if (!message.packagerRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPackager));
+		}
+		if (!message.powerEconomyRecipeEnabled) {
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPowerBase));
+			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPowerReceiver));
 		}
 
 		return null;

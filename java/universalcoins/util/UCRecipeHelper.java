@@ -106,4 +106,11 @@ public class UCRecipeHelper {
 		RecipeSorter.register("universalcoins:plankchange", RecipePlankTextureChange.class,
 				RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
+	
+	public static void addPowerEconomyRecipes() {
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockPowerBase), new Object[] { "III", "MRM",
+				"III", 'I', Items.iron_ingot, 'R', Blocks.redstone_block, 'M', Items.redstone });
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockPowerReceiver), new Object[] { "III", "MRM",
+				"III", 'I', Items.iron_ingot, 'R', Blocks.redstone_block, 'M', new ItemStack(Items.dye,1 ,4) });
+	}
 }

@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UniversalAccounts;
+import universalcoins.util.UniversalPower;
 
 public class TilePowerBase extends TileEntity implements IInventory, IEnergyReceiver {
 
@@ -129,11 +130,12 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		if (!simulate) {
 			rfLevel += maxReceive;
-			while (rfLevel >= 1000) {
-				rfLevel -= 1000;
+			if (rfLevel >= 10000) {
+				rfLevel -= 10000;
 				if (coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
 					coinSum += UniversalCoins.rfWholesaleRate;
-					krfSold++;
+					krfSold += 10;
+					UniversalPower.getInstance().receiveEnergy(10);
 				}
 			}
 		}

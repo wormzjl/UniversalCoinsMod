@@ -53,7 +53,7 @@ public class UCItemPricer {
 
 	public void loadConfigs() {
 		if (!new File(configDir).exists()) {
-			FMLLog.info("Universal Coins: Loading default prices");
+			//FMLLog.info("Universal Coins: Loading default prices");
 			buildPricelistHashMap();
 			try {
 				loadDefaults();
@@ -508,7 +508,7 @@ public class UCItemPricer {
 		for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
 			ItemStack input = recipe.getKey();
 			ItemStack output = recipe.getValue();
-			if (ucPriceMap.get(input.getUnlocalizedName()) != null) {
+			if (ucPriceMap.get(input.getUnlocalizedName()) != null && ucPriceMap.get(output.getUnlocalizedName()) != null) {
 				int inputValue = ucPriceMap.get(input.getUnlocalizedName());
 				int outputValue = ucPriceMap.get(output.getUnlocalizedName());
 				if (inputValue != -1 && outputValue == -1) {

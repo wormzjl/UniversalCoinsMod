@@ -36,7 +36,7 @@ public class PowerReceiverGUI extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/powerBase.png");
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/powerReceiver.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
@@ -50,14 +50,14 @@ public class PowerReceiverGUI extends GuiContainer {
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 58, 4210752);
 		
 		// display rf sold
-		String formattedkrf = formatter.format(tEntity.krfSold);
-		int rfLength = fontRendererObj.getStringWidth(formattedkrf + " kRF");
-		fontRendererObj.drawString(formattedkrf + " kRF", 131 - rfLength, 21, 4210752);
+		String formattedrf = formatter.format(tEntity.rfLevel);
+		int rfLength = fontRendererObj.getStringWidth(formattedrf + " RF");
+		fontRendererObj.drawString(formattedrf + " RF", 142 - rfLength, 21, 4210752);
 
 		// display coin balance
 		String formattedBalance = formatter.format(tEntity.coinSum);
 		int balLength = fontRendererObj.getStringWidth(formattedBalance);
-		fontRendererObj.drawString(formattedBalance, 131 - balLength, 43, 4210752);
+		fontRendererObj.drawString(formattedBalance, 142 - balLength, 43, 4210752);
 	}
 	
 	protected void actionPerformed(GuiButton button) {

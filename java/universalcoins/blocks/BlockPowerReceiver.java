@@ -1,5 +1,6 @@
 package universalcoins.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -12,7 +13,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TilePowerBase;
 import universalcoins.tile.TilePowerReceiver;
 
 public class BlockPowerReceiver extends BlockContainer {
@@ -29,8 +29,8 @@ public class BlockPowerReceiver extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
 			float par8, float par9) {
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te != null && te instanceof TilePowerBase) {
-			TilePowerBase tentity = (TilePowerBase) te;
+		if (te != null && te instanceof TilePowerReceiver) {
+			TilePowerReceiver tentity = (TilePowerReceiver) te;
 			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			}
@@ -55,12 +55,19 @@ public class BlockPowerReceiver extends BlockContainer {
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null) {
-			((TilePowerReceiver) world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+			((TilePowerReceiver) te).blockOwner = player.getCommandSenderName();
+			((TilePowerReceiver) te).resetPowerDirection();
 		}
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TilePowerReceiver();
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
+    		TilePowerReceiver tileEntity = (TilePowerReceiver) world.getTileEntity(x, y, z);
+    		tileEntity.resetPowerDirection();
 	}
 }

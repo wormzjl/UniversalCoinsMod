@@ -9,6 +9,7 @@ import universalcoins.gui.BanditGUI;
 import universalcoins.gui.CardStationGUI;
 import universalcoins.gui.PackagerGUI;
 import universalcoins.gui.PowerBaseGUI;
+import universalcoins.gui.PowerReceiverGUI;
 import universalcoins.gui.SafeGUI;
 import universalcoins.gui.SignalGUI;
 import universalcoins.gui.TradeStationGUI;
@@ -21,6 +22,7 @@ import universalcoins.inventory.ContainerBandit;
 import universalcoins.inventory.ContainerCardStation;
 import universalcoins.inventory.ContainerPackager;
 import universalcoins.inventory.ContainerPowerBase;
+import universalcoins.inventory.ContainerPowerReceiver;
 import universalcoins.inventory.ContainerSafe;
 import universalcoins.inventory.ContainerSignal;
 import universalcoins.inventory.ContainerTradeStation;
@@ -32,6 +34,7 @@ import universalcoins.tile.TileBandit;
 import universalcoins.tile.TileCardStation;
 import universalcoins.tile.TilePackager;
 import universalcoins.tile.TilePowerBase;
+import universalcoins.tile.TilePowerReceiver;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
@@ -80,6 +83,9 @@ class GuiHandler implements IGuiHandler {
 		if (tileEntity instanceof TilePowerBase) {
 			return new ContainerPowerBase(player.inventory, (TilePowerBase) tileEntity);
 		}
+		if (tileEntity instanceof TilePowerReceiver) {
+			return new ContainerPowerReceiver(player.inventory, (TilePowerReceiver) tileEntity);
+		}
 		return null;
 	}
 
@@ -125,6 +131,9 @@ class GuiHandler implements IGuiHandler {
 		}
 		if (tileEntity instanceof TilePowerBase) {
 			return new PowerBaseGUI(player.inventory, (TilePowerBase) tileEntity);
+		}
+		if (tileEntity instanceof TilePowerReceiver) {
+			return new PowerReceiverGUI(player.inventory, (TilePowerReceiver) tileEntity);
 		}
 		return null;
 	}

@@ -1,6 +1,8 @@
 package universalcoins.tile;
 
+import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -16,20 +18,31 @@ import net.minecraftforge.common.util.ForgeDirection;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UniversalAccounts;
+import universalcoins.util.UniversalPower;
 
-public class TilePowerReceiver extends TileEntity implements IInventory, IEnergyReceiver {
+public class TilePowerReceiver extends TileEntity implements IInventory, IEnergyProvider {
 
-	private ItemStack[] inventory = new ItemStack[2];
+	private ItemStack[] inventory = new ItemStack[3];
 	public static final int itemCardSlot = 0;
-	public static final int itemOutputSlot = 1;
+	public static final int itemCoinSlot = 1;
+	public static final int itemOutputSlot = 2;
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
 	public int rfLevel = 0;
-	public int krfSold = 0;
 	public String blockOwner = "nobody";
+	public ForgeDirection orientation = null;
+
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if (!worldObj.isRemote) {
+			buyPower();
+			sendPower();
+		}
+	}
 
 	@Override
 	public int getSizeInventory() {
@@ -73,6 +86,20 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 				if (creditAccount(coinSum)) {
 					coinSum = 0;
 				}
+			}
+			if (slot == itemCoinSlot) {
+				int coinType = getCoinType(stack.getItem());
+				if (coinType != -1) {
+					int itemValue = multiplier[coinType];
+					int depositAmount = 0;
+					depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
+					coinSum += depositAmount * itemValue;
+					inventory[slot].stackSize -= depositAmount;
+					if (inventory[slot].stackSize == 0) {
+						inventory[slot] = null;
+					}
+				}
+
 			}
 		}
 	}
@@ -126,22 +153,6 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		if (!simulate) {
-			rfLevel += maxReceive;
-			while (rfLevel >= 1000) {
-				rfLevel -= 1000;
-				if (coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
-					coinSum += UniversalCoins.rfWholesaleRate;
-					krfSold++;
-				}
-			}
-		}
-
-		return maxReceive;
-	}
-
-	@Override
 	public int getEnergyStored(ForgeDirection from) {
 		return rfLevel;
 	}
@@ -173,7 +184,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		}
 		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
-	
+
 	public void sendPacket(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
@@ -210,8 +221,10 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("coinSum", coinSum);
 		tagCompound.setInteger("rfLevel", rfLevel);
-		tagCompound.setInteger("krfSold", krfSold);
 		tagCompound.setString("blockOwner", blockOwner);
+		if (orientation != null) {
+			tagCompound.setInteger("orientation", orientation.ordinal());		
+		}
 	}
 
 	@Override
@@ -237,23 +250,23 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			rfLevel = 0;
 		}
 		try {
-			krfSold = tagCompound.getInteger("krfSold");
-		} catch (Throwable ex2) {
-			krfSold = 0;
-		}
-		try {
 			blockOwner = tagCompound.getString("blockOwner");
 		} catch (Throwable ex2) {
 			blockOwner = "nobody";
 		}
+		try {
+			orientation.getOrientation(tagCompound.getInteger("orientation"));
+		} catch (Throwable ex2) {
+			orientation = null;
+		}
 	}
-	
+
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			fillOutputSlot();
 		}
 	}
-	
+
 	public void fillOutputSlot() {
 		inventory[itemOutputSlot] = null;
 		if (coinSum > 0) {
@@ -270,5 +283,50 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			}
 		}
 	}
-	
+
+	@Override
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+		if (!simulate) {
+			rfLevel -= maxExtract;
+			if (coinSum - UniversalCoins.rfRetailRate >= 0) {
+				coinSum -= UniversalCoins.rfRetailRate;
+			}
+		}
+		return Math.min(rfLevel, 1000);
+	}
+
+	protected void buyPower() {
+		if (coinSum - UniversalCoins.rfRetailRate >= 0) {
+			if (UniversalPower.getInstance().extractEnergy(10) > 0) {
+				coinSum -= UniversalCoins.rfRetailRate;
+				rfLevel += 10000;
+			}
+		}
+	}
+
+	protected void sendPower() {
+		if (orientation == null) {
+			return;
+		}
+		TileEntity tile = worldObj.getTileEntity(xCoord + orientation.offsetX, yCoord + orientation.offsetY,
+				zCoord + orientation.offsetZ);
+		if (tile != null && tile instanceof IEnergyReceiver) {
+			IEnergyReceiver handler = (IEnergyReceiver) tile;
+			int maxRF = handler.receiveEnergy(orientation.getOpposite(), Math.min(1000, rfLevel), true);
+			rfLevel -= handler.receiveEnergy(orientation.getOpposite(), maxRF, false);
+
+		} else {
+			orientation = null;
+		}
+	}
+
+	public void resetPowerDirection() {
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY,
+					zCoord + direction.offsetZ);
+			if (tile instanceof IEnergyReceiver) {
+				orientation = direction;
+			}
+		}
+	}
 }

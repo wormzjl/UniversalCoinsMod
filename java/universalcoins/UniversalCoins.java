@@ -91,6 +91,7 @@ public class UniversalCoins {
 	public static Boolean linkCardRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean packagerRecipeEnabled;
+	public static Boolean powerEconomyRecipeEnabled;
 	public static Boolean mobsDropCoins;
 	public static Boolean rfUtilityEnabled;
 	public static Boolean coinsInMineshaft;
@@ -152,6 +153,9 @@ public class UniversalCoins {
 		Property packagerRecipe = config.get("Recipes", "Packager Recipe", true);
 		packagerRecipe.comment = "Set to false to disable crafting recipes for Packager.";
 		packagerRecipeEnabled = packagerRecipe.getBoolean(true);
+		Property powerRecipe = config.get("Recipes", "Power Economy Recipe", true);
+		powerRecipe.comment = "Set to false to disable crafting recipes for Power Base and Receiver.";
+		powerEconomyRecipeEnabled = powerRecipe.getBoolean(true);
 
 		// loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
@@ -210,12 +214,12 @@ public class UniversalCoins {
 		Property rfUtilEnabled = config.get("RF Utility", "RF Blocks enabled", true);
 		rfUtilEnabled.comment = "Set to false to disable the RF base and reciever blocks.";
 		rfUtilityEnabled = rfUtilEnabled.getBoolean(true);
-		Property rfWholesale = config.get("RF Utility", "Wholesale rate", 5);
-		rfWholesale.comment = "Set payment per kRF of power generated. Default: 5";
-		rfWholesaleRate = Math.max(0, rfWholesale.getInt(5));
-		Property rfRetail = config.get("RF Utility", "Retail rate", 8);
-		rfRetail.comment = "Set payment per kRF of power generated. Default: 8";
-		rfRetailRate = Math.max(0, rfRetail.getInt(8));
+		Property rfWholesale = config.get("RF Utility", "Wholesale rate", 12);
+		rfWholesale.comment = "Set payment per 10 kRF of power sold. Default: 12";
+		rfWholesaleRate = Math.max(0, rfWholesale.getInt(12));
+		Property rfRetail = config.get("RF Utility", "Retail rate", 15);
+		rfRetail.comment = "Set payment per 10 kRF of power bought. Default: 15";
+		rfRetailRate = Math.max(0, rfRetail.getInt(15));
 
 		// world gen
 		Property bankGenProperty = config.get("world generation", "Village bank weight", 6);
@@ -319,6 +323,9 @@ public class UniversalCoins {
 		}
 		if (packagerRecipeEnabled) {
 			UCRecipeHelper.addPackagerRecipes();
+		}
+		if (powerEconomyRecipeEnabled) {
+			UCRecipeHelper.addPowerEconomyRecipes();
 		}
 		UCRecipeHelper.addSignRecipes();
 		UCRecipeHelper.addPlankTextureRecipes();

@@ -19,8 +19,9 @@ public class ContainerPowerReceiver extends Container {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 22, 37));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 37));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 37));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 37));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 37));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -53,8 +54,8 @@ public class ContainerPowerReceiver extends Container {
 			stack = stackInSlot.copy();
 
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 2) {
-				if (!this.mergeItemStack(stackInSlot, 2, 38, true)) {
+			if (slot < 3) {
+				if (!this.mergeItemStack(stackInSlot, 3, 39, true)) {
 					return null;
 				}
 			}
@@ -62,7 +63,7 @@ public class ContainerPowerReceiver extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 0; i < 2; i++) {
+				for (int i = 0; i < 3; i++) {
 					if (((Slot) inventorySlots.get(i)).isItemValid(stackInSlot)
 							&& this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
