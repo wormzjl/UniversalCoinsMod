@@ -33,8 +33,8 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 	public static ComponentVillageShop buildComponent(Start startPiece, List pieces, Random random, int p1, int p2,
 			int p3, int p4, int p5) {
 		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 5, 7, p4);
-		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? new ComponentVillageShop(
-				startPiece, p5, random, box, p4) : null;
+		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null
+				? new ComponentVillageShop(startPiece, p5, random, box, p4) : null;
 	}
 
 	@Override
@@ -79,10 +79,10 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		fillWithMetadataBlocks(world, sbb, 4, 1, 1, 4, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(4),
 				UniversalCoins.proxy.wall_ucsign, getSignMeta(4), false);
 		// vending blocks
-		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.blockVendor,
-				UniversalCoins.proxy.blockVendor, false);
-		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor,
-				UniversalCoins.proxy.blockVendor, false);
+		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor,
+				false);
+		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor,
+				false);
 
 		// list of items
 		List<Item> saleItems = new ArrayList();
@@ -124,7 +124,12 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		// build foundation
 		for (int k = 0; k < 8; ++k) { // length
 			for (int l = 0; l < 6; ++l) {// width
-				this.clearCurrentPositionBlocksUpwards(world, l, 6, k, sbb);// set 6 to sbb height +1
+				this.clearCurrentPositionBlocksUpwards(world, l, 6, k, sbb);// set
+																			// 6
+																			// to
+																			// sbb
+																			// height
+																			// +1
 				this.func_151554_b(world, Blocks.cobblestone, 0, l, -1, k, sbb);
 			}
 		}

@@ -69,7 +69,8 @@ public class ContainerVendor extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 1; i < 14; i++) { // we start at 1 to avoid shift clicking into trade slot
+				for (int i = 1; i < 14; i++) { // we start at 1 to avoid shift
+												// clicking into trade slot
 					if (((Slot) inventorySlots.get(i)).isItemValid(stackInSlot)
 							&& this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;
@@ -105,8 +106,7 @@ public class ContainerVendor extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i) {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
-			if (this.lastOoStock != this.tileEntity.ooStockWarning
-					|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
+			if (this.lastOoStock != this.tileEntity.ooStockWarning || this.lastOoCoins != this.tileEntity.ooCoinsWarning
 					|| this.lastInvFull != this.tileEntity.inventoryFullWarning
 					|| this.lastCoinSum != this.tileEntity.coinSum
 					|| this.lastUserCoinSum != this.tileEntity.userCoinSum

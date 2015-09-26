@@ -3,8 +3,6 @@ package universalcoins.util;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import universalcoins.UniversalCoins;
 
 public class UniversalPower {
 
@@ -23,9 +21,9 @@ public class UniversalPower {
 			return getWorldLong("power");
 		} else
 			setWorldLong("power", 0);
-			return 0;
+		return 0;
 	}
-	
+
 	public long extractEnergy(int maxSend) {
 		long powerLevel = getWorldLong("power");
 		if (powerLevel > maxSend) {
@@ -37,7 +35,7 @@ public class UniversalPower {
 			return powerLevel;
 		}
 	}
-	
+
 	public long receiveEnergy(int maxReceive) {
 		long powerLevel = getWorldLong("power");
 		if (Long.MAX_VALUE - maxReceive >= powerLevel) {
@@ -53,7 +51,7 @@ public class UniversalPower {
 	private World getWorld() {
 		return MinecraftServer.getServer().worldServers[0];
 	}
-	
+
 	private boolean hasKey(String tag) {
 		UCWorldData wData = UCWorldData.sync(getWorld());
 		NBTTagCompound wdTag = wData.getData();

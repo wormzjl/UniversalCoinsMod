@@ -120,8 +120,8 @@ public class CommonProxy {
 		GameRegistry.registerItem(itemUCSign, itemUCSign.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinkCard, itemLinkCard.getUnlocalizedName());
 		GameRegistry.registerItem(itemPackage, itemPackage.getUnlocalizedName());
-		
-		//only register guide if enchiridion2 is loaded
+
+		// only register guide if enchiridion2 is loaded
 		if (Loader.isModLoaded("Enchiridion2")) {
 			GameRegistry.registerItem(itemUCGuide, itemUCGuide.getUnlocalizedName());
 		}
@@ -130,14 +130,14 @@ public class CommonProxy {
 	public void registerRenderers() {
 		// blank since we don't do anything on the server
 	}
-	
+
 	public void registerAchievements() {
 		Achievements.init();
-		Achievements.achCoin.registerStat(); 
-		Achievements.achThousand.registerStat(); 
-		Achievements.achMillion.registerStat(); 
-		Achievements.achBillion.registerStat(); 
-		Achievements.achMaxed.registerStat(); 
+		Achievements.achCoin.registerStat();
+		Achievements.achThousand.registerStat();
+		Achievements.achMillion.registerStat();
+		Achievements.achBillion.registerStat();
+		Achievements.achMaxed.registerStat();
 	}
 
 }

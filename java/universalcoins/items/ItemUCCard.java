@@ -25,8 +25,8 @@ public class ItemUCCard extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.MODID + ":"
-				+ this.getUnlocalizedName().substring(5));
+		this.itemIcon = par1IconRegister
+				.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5));
 	}
 
 	@Override
@@ -47,11 +47,11 @@ public class ItemUCCard extends Item {
 		if (itemstack.stackTagCompound == null) {
 			createNBT(itemstack, world, player);
 		}
-		int accountCoins = UniversalAccounts.getInstance().getAccountBalance(
-				itemstack.stackTagCompound.getString("Account"));
+		int accountCoins = UniversalAccounts.getInstance()
+				.getAccountBalance(itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.itemUCCard.balance") + " "
-				+ formatter.format(accountCoins)));
+		player.addChatMessage(new ChatComponentText(
+				StatCollector.translateToLocal("item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
 		return true;
 	}
 
@@ -61,8 +61,8 @@ public class ItemUCCard extends Item {
 	}
 
 	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
-		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(
-				entityPlayer.getPersistentID().toString());
+		String accountNumber = UniversalAccounts.getInstance()
+				.getOrCreatePlayerAccount(entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setString("Name", entityPlayer.getDisplayName());
 		stack.stackTagCompound.setString("Owner", entityPlayer.getPersistentID().toString());

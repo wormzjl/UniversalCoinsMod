@@ -65,7 +65,7 @@ public class BlockUCSign extends BlockSign {
 		}
 		return false;
 	}
-	
+
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		String ownerName = ((TileUCSign) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.getDisplayName().equals(ownerName)) {

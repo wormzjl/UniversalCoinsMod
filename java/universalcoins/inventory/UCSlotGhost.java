@@ -21,7 +21,8 @@ public class UCSlotGhost extends Slot {
 	public boolean isItemValid(ItemStack stack) {
 		// copy itemstack held
 		if (stack != null) {
-			this.putStack(null); // we have to set the stack to null if something is there else we crash
+			this.putStack(null); // we have to set the stack to null if
+									// something is there else we crash
 			this.putStack(stack.copy());
 		} else {
 			this.putStack(null);

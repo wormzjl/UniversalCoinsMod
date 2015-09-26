@@ -362,12 +362,13 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	@Override
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
-		// first check if items inserted are coins. put them in the coin input slot if they are.
-		if (var1 == itemCoinSlot
-				&& (var2.getItem() == (UniversalCoins.proxy.itemCoin)
-						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
-						|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack)
-						|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag) || var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
+		// first check if items inserted are coins. put them in the coin input
+		// slot if they are.
+		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.itemCoin)
+				|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
+				|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack)
+				|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag)
+				|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
 			return true;
 			// put everything else in the item input slot
 		} else if (var1 < itemPackageSlot.length) {

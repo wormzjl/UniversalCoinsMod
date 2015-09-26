@@ -174,8 +174,8 @@ public class TileBandit extends TileEntity implements IInventory {
 	}
 
 	public void sendServerUpdateMessage() {
-		UniversalCoins.snw.sendToServer(new UCBanditServerMessage(xCoord, yCoord, zCoord, spinFee, fourMatchPayout,
-				fiveMatchPayout));
+		UniversalCoins.snw.sendToServer(
+				new UCBanditServerMessage(xCoord, yCoord, zCoord, spinFee, fourMatchPayout, fiveMatchPayout));
 	}
 
 	@Override

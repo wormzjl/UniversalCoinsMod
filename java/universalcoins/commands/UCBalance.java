@@ -44,18 +44,20 @@ public class UCBalance extends CommandBase {
 			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
 			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(customAcct);
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
-			sender.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("command.balance.result.inventory") + formatter.format(playerCoins)));
+			sender.addChatMessage(
+					new ChatComponentText(StatCollector.translateToLocal("command.balance.result.inventory")
+							+ formatter.format(playerCoins)));
 			if (accountBalance != -1) {
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.balance.result.account") + formatter.format(accountBalance)));
+				sender.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("command.balance.result.account")
+								+ formatter.format(accountBalance)));
 			}
 			if (custAccountBalance != -1) {
-				sender.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("command.balance.result.customaccount")
-						+ formatter.format(custAccountBalance)));
+				sender.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("command.balance.result.customaccount")
+								+ formatter.format(custAccountBalance)));
 			}
-			//achievement stuff
+			// achievement stuff
 			if (playerCoins > 1000 || accountBalance > 1000) {
 				((EntityPlayerMP) sender).addStat(Achievements.achThousand, 1);
 			}

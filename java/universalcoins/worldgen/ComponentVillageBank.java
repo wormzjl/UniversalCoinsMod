@@ -28,8 +28,8 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 	public static ComponentVillageBank buildComponent(Start startPiece, List pieces, Random random, int p1, int p2,
 			int p3, int p4, int p5) {
 		StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 5, 6, p4);
-		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null ? new ComponentVillageBank(
-				startPiece, p5, random, box, p4) : null;
+		return canVillageGoDeeper(box) && StructureComponent.findIntersecting(pieces, box) == null
+				? new ComponentVillageBank(startPiece, p5, random, box, p4) : null;
 	}
 
 	@Override
@@ -80,8 +80,8 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		// add stairs if needed
 		if (this.getBlockAtCurrentPosition(world, 2, 0, -1, sbb).getMaterial() == Material.air
 				&& this.getBlockAtCurrentPosition(world, 2, -1, -1, sbb).getMaterial() != Material.air) {
-			this.placeBlockAtCurrentPosition(world, Blocks.oak_stairs,
-					this.getMetadataWithOffset(Blocks.oak_stairs, 3), 2, 0, -1, sbb);
+			this.placeBlockAtCurrentPosition(world, Blocks.oak_stairs, this.getMetadataWithOffset(Blocks.oak_stairs, 3),
+					2, 0, -1, sbb);
 		}
 
 		// build foundation

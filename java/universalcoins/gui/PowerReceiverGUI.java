@@ -33,7 +33,7 @@ public class PowerReceiverGUI extends GuiContainer {
 		buttonList.clear();
 		buttonList.add(coinButton);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/powerReceiver.png");
@@ -48,7 +48,7 @@ public class PowerReceiverGUI extends GuiContainer {
 		fontRendererObj.drawString(tEntity.getInventoryName(), 6, 5, 4210752);
 
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 58, 4210752);
-		
+
 		// display rf sold
 		String formattedrf = formatter.format(tEntity.rfLevel);
 		int rfLength = fontRendererObj.getStringWidth(formattedrf + " RF");
@@ -59,7 +59,7 @@ public class PowerReceiverGUI extends GuiContainer {
 		int balLength = fontRendererObj.getStringWidth(formattedBalance);
 		fontRendererObj.drawString(formattedBalance, 142 - balLength, 43, 4210752);
 	}
-	
+
 	protected void actionPerformed(GuiButton button) {
 		tEntity.sendPacket(button.id, isShiftKeyDown());
 	}

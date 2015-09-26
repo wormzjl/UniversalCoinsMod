@@ -95,8 +95,8 @@ public class UCRebalance extends CommandBase {
 					ItemStack stack = recipient.inventory.getStackInSlot(i);
 					for (int j = 0; j < coins.length; j++) {
 						if (stack != null && stack.getItem() == coins[j]) {
-							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j), stack.getMaxStackSize()
-									- stack.stackSize);
+							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j),
+									stack.getMaxStackSize() - stack.stackSize);
 							stack.stackSize += amountToAdd;
 							recipient.inventory.setInventorySlotContents(i, stack);
 							coinsLeft -= (amountToAdd * Math.pow(9, j));

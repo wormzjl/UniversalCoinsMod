@@ -53,7 +53,7 @@ public class UCItemPricer {
 
 	public void loadConfigs() {
 		if (!new File(configDir).exists()) {
-			//FMLLog.info("Universal Coins: Loading default prices");
+			// FMLLog.info("Universal Coins: Loading default prices");
 			buildPricelistHashMap();
 			try {
 				loadDefaults();
@@ -106,9 +106,11 @@ public class UCItemPricer {
 		while (tokenizer.hasMoreElements()) {
 			String token = tokenizer.nextToken();
 			String[] tempData = token.split("=");
-			// FMLLog.info("Universal Coins: Updating UCPricelist: " + tempData[0] + "=" +
+			// FMLLog.info("Universal Coins: Updating UCPricelist: " +
+			// tempData[0] + "=" +
 			// Integer.valueOf(tempData[1]));
-			// We'll update the prices of all the items and not add all the default prices to the config folder if the
+			// We'll update the prices of all the items and not add all the
+			// default prices to the config folder if the
 			// mods are not present
 			if (ucPriceMap.get(tempData[0]) != null && tempData.length == 2) {
 				ucPriceMap.put(tempData[0], Integer.valueOf(tempData[1]));
@@ -147,7 +149,8 @@ public class UCItemPricer {
 			for (String ore : OreDictionary.getOreNames()) {
 				ucModnameMap.put(ore, "oredictionary");
 				if (!ucPriceMap.containsKey(ore)) {
-					// check ore to see if any of the types has a price, use it if true
+					// check ore to see if any of the types has a price, use it
+					// if true
 					ArrayList test = OreDictionary.getOres(ore);
 					int itemValue = -1;
 					for (int j = 0; j < test.size(); j++) {
@@ -181,7 +184,8 @@ public class UCItemPricer {
 		// load those files into hashmap(UCPriceMap)
 		for (int i = 0; i < configList.length; i++) {
 			if (configList[i].isFile()) {
-				// FMLLog.info("Universal Coins: Loading Pricelist: " + configList[i]);
+				// FMLLog.info("Universal Coins: Loading Pricelist: " +
+				// configList[i]);
 				BufferedReader br = new BufferedReader(new FileReader(configList[i]));
 				String tempString = "";
 				String[] modName = configList[i].getName().split("\\.");
@@ -508,7 +512,8 @@ public class UCItemPricer {
 		for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
 			ItemStack input = recipe.getKey();
 			ItemStack output = recipe.getValue();
-			if (ucPriceMap.get(input.getUnlocalizedName()) != null && ucPriceMap.get(output.getUnlocalizedName()) != null) {
+			if (ucPriceMap.get(input.getUnlocalizedName()) != null
+					&& ucPriceMap.get(output.getUnlocalizedName()) != null) {
 				int inputValue = ucPriceMap.get(input.getUnlocalizedName());
 				int outputValue = ucPriceMap.get(output.getUnlocalizedName());
 				if (inputValue != -1 && outputValue == -1) {

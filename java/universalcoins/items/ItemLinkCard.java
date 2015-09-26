@@ -27,8 +27,8 @@ public class ItemLinkCard extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.MODID + ":"
-				+ this.getUnlocalizedName().substring(5));
+		this.itemIcon = par1IconRegister
+				.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5));
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public class ItemLinkCard extends Item {
 			int k = movingobjectposition.blockZ;
 			if (world.getTileEntity(i, j, k) instanceof TileEntityChest) {
 				// notify player we have a chest
-				player.addChatMessage(new ChatComponentText(StatCollector
-						.translateToLocal("item.linkCard.message.stored") + i + " " + j + " " + k));
+				player.addChatMessage(new ChatComponentText(
+						StatCollector.translateToLocal("item.linkCard.message.stored") + i + " " + j + " " + k));
 				itemstack.stackTagCompound = new NBTTagCompound();
 				itemstack.stackTagCompound.setIntArray("storageLocation", new int[] { i, j, k });
 			}
@@ -63,8 +63,8 @@ public class ItemLinkCard extends Item {
 				TileVendor te = (TileVendor) world.getTileEntity(i, j, k);
 				if (itemstack.hasTagCompound()) {
 					int[] storageLocation = itemstack.stackTagCompound.getIntArray("storageLocation");
-					player.addChatMessage(new ChatComponentText(StatCollector
-							.translateToLocal("item.linkCard.message.set")));
+					player.addChatMessage(
+							new ChatComponentText(StatCollector.translateToLocal("item.linkCard.message.set")));
 					te.setRemoteStorage(storageLocation);
 					player.inventory.decrStackSize(player.inventory.currentItem, 1);
 				}

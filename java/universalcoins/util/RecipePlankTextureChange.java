@@ -27,10 +27,10 @@ public class RecipePlankTextureChange implements IRecipe {
 				plankStack = inventorycrafting.getStackInSlot(j);
 				continue;
 			}
-			if (inventorycrafting.getStackInSlot(j) != null
-					&& !hasItem
-					&& (inventorycrafting.getStackInSlot(j).getItem() == UniversalCoins.proxy.itemUCSign || Block
-							.getBlockFromItem(inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
+			if (inventorycrafting.getStackInSlot(j) != null && !hasItem && (inventorycrafting.getStackInSlot(j)
+					.getItem() == UniversalCoins.proxy.itemUCSign
+					|| Block.getBlockFromItem(
+							inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
 				hasItem = true;
 				newStack = inventorycrafting.getStackInSlot(j).copy();
 				continue;

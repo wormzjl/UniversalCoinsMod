@@ -132,7 +132,15 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 			rfLevel += maxReceive;
 			if (rfLevel >= 10000) {
 				rfLevel -= 10000;
-				if (coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
+				boolean playerCredited = false;
+				if (inventory[itemCardSlot] != null) {
+					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate);
+					if (playerCredited) {
+						krfSold += 10;
+						UniversalPower.getInstance().receiveEnergy(10);
+					}
+				}
+				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
 					coinSum += UniversalCoins.rfWholesaleRate;
 					krfSold += 10;
 					UniversalPower.getInstance().receiveEnergy(10);
@@ -175,7 +183,7 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 		}
 		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
-	
+
 	public void sendPacket(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
@@ -249,13 +257,13 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 			blockOwner = "nobody";
 		}
 	}
-	
+
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
 			fillOutputSlot();
 		}
 	}
-	
+
 	public void fillOutputSlot() {
 		inventory[itemOutputSlot] = null;
 		if (coinSum > 0) {
@@ -272,5 +280,5 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 			}
 		}
 	}
-	
+
 }

@@ -98,7 +98,7 @@ public class BlockSafe extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		String ownerName = ((TileSafe) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.getDisplayName().equals(ownerName)) {

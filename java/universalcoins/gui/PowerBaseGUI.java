@@ -33,7 +33,7 @@ public class PowerBaseGUI extends GuiContainer {
 		buttonList.clear();
 		buttonList.add(coinButton);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
 		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/powerBase.png");
@@ -48,7 +48,7 @@ public class PowerBaseGUI extends GuiContainer {
 		fontRendererObj.drawString(tEntity.getInventoryName(), 6, 5, 4210752);
 
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 58, 4210752);
-		
+
 		// display rf sold
 		String formattedkrf = formatter.format(tEntity.krfSold);
 		int rfLength = fontRendererObj.getStringWidth(formattedkrf + " kRF");
@@ -59,7 +59,7 @@ public class PowerBaseGUI extends GuiContainer {
 		int balLength = fontRendererObj.getStringWidth(formattedBalance);
 		fontRendererObj.drawString(formattedBalance, 131 - balLength, 43, 4210752);
 	}
-	
+
 	protected void actionPerformed(GuiButton button) {
 		tEntity.sendPacket(button.id, isShiftKeyDown());
 	}

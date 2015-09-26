@@ -28,7 +28,8 @@ public class BlockVendorFrame extends BlockContainer {
 	public BlockVendorFrame() {
 		super(new Material(MapColor.woodColor));
 		setHardness(1.0f);
-		setBlockTextureName("minecraft:planks_oak"); // fixes missing texture on block break
+		setBlockTextureName("minecraft:planks_oak"); // fixes missing texture on
+														// block break
 		setResistance(6000.0F);
 		setBlockBounds(0, 0, 0, 0, 0, 0);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
@@ -78,8 +79,8 @@ public class BlockVendorFrame extends BlockContainer {
 	}
 
 	/**
-	 * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-	 * cleared to be reused)
+	 * Returns a bounding box from the pool of bounding boxes (this means this
+	 * box can change after the pool has been cleared to be reused)
 	 */
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		this.setBlockBoundsBasedOnState(world, x, y, z);
@@ -87,7 +88,8 @@ public class BlockVendorFrame extends BlockContainer {
 	}
 
 	/**
-	 * Updates the blocks bounds based on its current state. Args: world, x, y, z
+	 * Updates the blocks bounds based on its current state. Args: world, x, y,
+	 * z
 	 */
 	public void setBlockBoundsBasedOnState(IBlockAccess block, int x, int y, int z) {
 		this.getBlockBoundsFromMeta(block.getBlockMetadata(x, y, z));
@@ -200,7 +202,7 @@ public class BlockVendorFrame extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		String ownerName = ((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.getDisplayName().equals(ownerName)) {

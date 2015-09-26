@@ -151,8 +151,8 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	}
 
 	public void sendServerUpdatePacket(int withdrawalAmount) {
-		UniversalCoins.snw.sendToServer(new UCCardStationServerWithdrawalMessage(xCoord, yCoord, zCoord,
-				withdrawalAmount));
+		UniversalCoins.snw
+				.sendToServer(new UCCardStationServerWithdrawalMessage(xCoord, yCoord, zCoord, withdrawalAmount));
 	}
 
 	public void sendServerUpdatePacket(String customName) {
@@ -286,7 +286,8 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			}
 		}
 		if (functionId == 3) {
-			// set to true if player presses deposit button, reset on any other button press
+			// set to true if player presses deposit button, reset on any other
+			// button press
 			depositCoins = true;
 			withdrawCoins = false;
 			// set account number if not already set and we have a card present
@@ -322,7 +323,8 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			if (getPlayerAccount(customAccountName) != ""
 					&& !getCustomAccount(playerUID).contentEquals(customAccountName)) {
 				accountError = true;
-				// we need to reset this so that that function 7 is called again on next attempt at getting an account
+				// we need to reset this so that that function 7 is called again
+				// on next attempt at getting an account
 				customAccountName = "none";
 				return;
 			} else if (getCustomAccount(playerUID) == "") {

@@ -2,7 +2,6 @@ package universalcoins.tile;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -185,6 +184,16 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
+	private boolean debitAccount(int i) {
+		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
+			return false;
+		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
+		if (accountNumber == "") {
+			return false;
+		}
+		return UniversalAccounts.getInstance().debitAccount(accountNumber, i);
+	}
+
 	public void sendPacket(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
@@ -223,7 +232,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		tagCompound.setInteger("rfLevel", rfLevel);
 		tagCompound.setString("blockOwner", blockOwner);
 		if (orientation != null) {
-			tagCompound.setInteger("orientation", orientation.ordinal());		
+			tagCompound.setInteger("orientation", orientation.ordinal());
 		}
 	}
 
@@ -255,7 +264,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			blockOwner = "nobody";
 		}
 		try {
-			orientation.getOrientation(tagCompound.getInteger("orientation"));
+			orientation = orientation.getOrientation(tagCompound.getInteger("orientation"));
 		} catch (Throwable ex2) {
 			orientation = null;
 		}
@@ -296,7 +305,10 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 	}
 
 	protected void buyPower() {
-		if (coinSum - UniversalCoins.rfRetailRate >= 0) {
+		if (rfLevel == 0 && UniversalPower.getInstance().extractEnergy(10) > 0
+				&& debitAccount(UniversalCoins.rfRetailRate)) {
+			rfLevel += 10000;
+		} else if (coinSum - UniversalCoins.rfRetailRate >= 0) {
 			if (UniversalPower.getInstance().extractEnergy(10) > 0) {
 				coinSum -= UniversalCoins.rfRetailRate;
 				rfLevel += 10000;

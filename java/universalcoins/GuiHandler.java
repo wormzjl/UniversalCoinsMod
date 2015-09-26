@@ -50,7 +50,8 @@ class GuiHandler implements IGuiHandler {
 			return new ContainerTradeStation(player.inventory, (TileTradeStation) tileEntity);
 		}
 		if (tileEntity instanceof TileVendor) {
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+			if (player.getHeldItem() != null
+					&& player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
 				return new ContainerVendorWrench(player.inventory, (TileVendor) tileEntity);
 			}
 			if (((TileVendor) tileEntity).blockOwner == null
@@ -68,7 +69,8 @@ class GuiHandler implements IGuiHandler {
 			return new ContainerSafe(player.inventory, (TileSafe) tileEntity);
 		}
 		if (tileEntity instanceof TileBandit) {
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+			if (player.getHeldItem() != null
+					&& player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
 				return null;
 			} else {
 				return new ContainerBandit(player.inventory, (TileBandit) tileEntity);
@@ -96,7 +98,8 @@ class GuiHandler implements IGuiHandler {
 			return new TradeStationGUI(player.inventory, (TileTradeStation) tileEntity);
 		}
 		if (tileEntity instanceof TileVendor) {
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+			if (player.getHeldItem() != null
+					&& player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
 				return new VendorWrenchGUI(player.inventory, (TileVendor) tileEntity);
 			}
 			if (((TileVendor) tileEntity).blockOwner == null
@@ -114,7 +117,8 @@ class GuiHandler implements IGuiHandler {
 			return new SafeGUI(player.inventory, (TileSafe) tileEntity);
 		}
 		if (tileEntity instanceof TileBandit) {
-			if (player.getHeldItem() != null && player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
+			if (player.getHeldItem() != null
+					&& player.getHeldItem().getItem() == UniversalCoins.proxy.itemVendorWrench) {
 				return new BanditConfigGUI((TileBandit) tileEntity);
 			} else {
 				return new BanditGUI(player.inventory, (TileBandit) tileEntity);

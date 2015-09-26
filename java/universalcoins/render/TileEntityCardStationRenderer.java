@@ -16,7 +16,8 @@ public class TileEntityCardStationRenderer extends TileEntitySpecialRenderer {
 
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
 
-		ResourceLocation textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/blockCardStation.png"));
+		ResourceLocation textures = (new ResourceLocation(UniversalCoins.MODID,
+				"textures/blocks/blockCardStation.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 
 		// adjust block rotation based on block meta

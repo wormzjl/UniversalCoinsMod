@@ -65,7 +65,8 @@ import universalcoins.worldgen.VillageGenBank;
 import universalcoins.worldgen.VillageGenShop;
 
 /**
- * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading economy, jobs, whatever.
+ * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading
+ * economy, jobs, whatever.
  * 
  * @author notabadminer, ted_996, AUTOMATIC_MAIDEN
  * 
@@ -76,7 +77,7 @@ public class UniversalCoins {
 	public static final String MODID = "universalcoins";
 	public static final String NAME = "Universal Coins";
 	public static final String VERSION = "@VERSION@";
-	
+
 	@Instance(MODID)
 	public static UniversalCoins instance;
 
@@ -209,7 +210,7 @@ public class UniversalCoins {
 		Property largePackage = config.get("Packager", "Large Package Price", 40);
 		largePackage.comment = "Set the price of large package";
 		largePackagePrice = Math.max(1, Math.min(largePackage.getInt(40), 1000));
-		
+
 		// rf utility (power company stuff)
 		Property rfUtilEnabled = config.get("RF Utility", "RF Blocks enabled", true);
 		rfUtilEnabled.comment = "Set to false to disable the RF base and reciever blocks.";
@@ -294,7 +295,8 @@ public class UniversalCoins {
 		GameRegistry.registerTileEntity(TilePowerReceiver.class, "TilePowerReceiver");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
-		// load all recipes, in multiplayer client will receive packet to disable to match server
+		// load all recipes, in multiplayer client will receive packet to
+		// disable to match server
 		UCRecipeHelper.addCoinRecipes();
 		if (tradeStationRecipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
@@ -351,14 +353,15 @@ public class UniversalCoins {
 				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
 			}
 		}
-		
+
 		// notify enchiridion2 to search mods assets folder for book xml
 		FMLInterModComms.sendMessage("Enchiridion2", "registerBookMod", this.MODID);
-		
-		//this links an itemstack with book xml found in assets/MODID/books dir
+
+		// this links an itemstack with book xml found in assets/MODID/books dir
 		NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("book", "Universal_Coins");
-        FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem", new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
+		tag.setString("book", "Universal_Coins");
+		FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem",
+				new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
 	}
 
 	@EventHandler

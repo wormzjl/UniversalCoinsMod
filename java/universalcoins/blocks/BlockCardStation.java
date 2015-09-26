@@ -26,7 +26,11 @@ public class BlockCardStation extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setBlockTextureName("universalcoins:blockTradeStation1"); // fixes missing texture on block break
+		setBlockTextureName("universalcoins:blockTradeStation1"); // fixes
+																	// missing
+																	// texture
+																	// on block
+																	// break
 		setResistance(30.0F);
 	}
 

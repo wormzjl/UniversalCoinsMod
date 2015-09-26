@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.tile.TileCardStation;
 
-public class UCCardStationServerWithdrawalMessage implements IMessage,
-		IMessageHandler<UCCardStationServerWithdrawalMessage, IMessage> {
+public class UCCardStationServerWithdrawalMessage
+		implements IMessage, IMessageHandler<UCCardStationServerWithdrawalMessage, IMessage> {
 	private int x, y, z, withdrawalAmount;
 
 	public UCCardStationServerWithdrawalMessage() {

@@ -59,27 +59,27 @@ public class UCSend extends CommandBase {
 					}
 				}
 				if (recipient == null) {
-					sender.addChatMessage(new ChatComponentText("§c"
-							+ StatCollector.translateToLocal("command.send.error.notfound")));
+					sender.addChatMessage(new ChatComponentText(
+							"§c" + StatCollector.translateToLocal("command.send.error.notfound")));
 				}
 				int requestedSendAmount = 0;
 				try {
 					requestedSendAmount = Integer.parseInt(astring[1]);
 				} catch (NumberFormatException e) {
-					sender.addChatMessage(new ChatComponentText("§c"
-							+ StatCollector.translateToLocal("command.send.error.badentry")));
+					sender.addChatMessage(new ChatComponentText(
+							"§c" + StatCollector.translateToLocal("command.send.error.badentry")));
 				}
 				if (requestedSendAmount <= 0) {
-					sender.addChatMessage(new ChatComponentText("§c"
-							+ StatCollector.translateToLocal("command.send.error.badentry")));
+					sender.addChatMessage(new ChatComponentText(
+							"§c" + StatCollector.translateToLocal("command.send.error.badentry")));
 					return;
 				}
 				// get coins from player inventory
 				int coinsFromSender = getPlayerCoins((EntityPlayerMP) sender, requestedSendAmount);
 				// get sender account, check balance, get coins
 				if (coinsFromSender < requestedSendAmount) {
-					sender.addChatMessage(new ChatComponentText("§c"
-							+ StatCollector.translateToLocal("command.send.error.insufficient")));
+					sender.addChatMessage(new ChatComponentText(
+							"§c" + StatCollector.translateToLocal("command.send.error.insufficient")));
 					givePlayerCoins((EntityPlayerMP) sender, coinsFromSender);
 					return;
 				}
@@ -96,7 +96,8 @@ public class UCSend extends CommandBase {
 				coinsFromSender += coinChange;
 				// give sender back change
 				int leftOvers = givePlayerCoins((EntityPlayerMP) sender, coinsFromSender);
-				// if we have coins that won't fit in inventory, dump them to the world
+				// if we have coins that won't fit in inventory, dump them to
+				// the world
 				if (leftOvers > 0) {
 					World world = ((EntityPlayerMP) sender).worldObj;
 					Random rand = new Random();
@@ -114,8 +115,8 @@ public class UCSend extends CommandBase {
 					}
 				}
 			} else
-				sender.addChatMessage(new ChatComponentText("§c"
-						+ StatCollector.translateToLocal("command.send.error.incomplete")));
+				sender.addChatMessage(
+						new ChatComponentText("§c" + StatCollector.translateToLocal("command.send.error.incomplete")));
 		}
 	}
 
@@ -142,8 +143,8 @@ public class UCSend extends CommandBase {
 					ItemStack stack = recipient.inventory.getStackInSlot(i);
 					for (int j = 0; j < coins.length; j++) {
 						if (stack != null && stack.getItem() == coins[j]) {
-							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j), stack.getMaxStackSize()
-									- stack.stackSize);
+							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j),
+									stack.getMaxStackSize() - stack.stackSize);
 							stack.stackSize += amountToAdd;
 							recipient.inventory.setInventorySlotContents(i, stack);
 							coinsLeft -= (amountToAdd * Math.pow(9, j));

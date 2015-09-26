@@ -58,15 +58,16 @@ public class TileUCSign extends TileEntitySign {
 	public Packet getDescriptionPacket() {
 		String[] astring = new String[4];
 		System.arraycopy(this.signText, 0, astring, 0, 4);
-		return UniversalCoins.snw.getPacketFrom(new UCTileSignMessage(this.xCoord, this.yCoord, this.zCoord, astring,
-				blockOwner, blockIcon));
+		return UniversalCoins.snw.getPacketFrom(
+				new UCTileSignMessage(this.xCoord, this.yCoord, this.zCoord, astring, blockOwner, blockIcon));
 	}
 
 	public void sendTextureUpdateMessage(ItemStack stack) {
 		if (!worldObj.isRemote)
 			return;
 		String blockIcon = stack.getIconIndex().getIconName();
-		// the iconIndex function does not work with BOP so we have to do a bit of a hack here
+		// the iconIndex function does not work with BOP so we have to do a bit
+		// of a hack here
 		if (blockIcon.startsWith("biomesoplenty")) {
 			String[] iconInfo = blockIcon.split(":");
 			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);

@@ -98,8 +98,8 @@ public class ContainerPowerBase extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i) {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
-			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum || 
-					this.lastrfLevel != tEntity.rfLevel) {
+			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum
+					|| this.lastrfLevel != tEntity.rfLevel) {
 				tEntity.updateTE();
 			}
 

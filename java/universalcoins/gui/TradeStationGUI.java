@@ -70,8 +70,8 @@ public class TradeStationGUI extends GuiContainer {
 
 		// display only if auto buy/sell enabled?
 		if (tileEntity.autoModeButtonActive) {
-			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2,
-					28, 12, StatCollector.translateToLocal("tradestation.gui.button.mode"));
+			autoModeButton = new GuiSlimButton(idAutoModeButton, 6 + (width - xSize) / 2, 84 + (height - ySize) / 2, 28,
+					12, StatCollector.translateToLocal("tradestation.gui.button.mode"));
 			buttonList.add(autoModeButton);
 		}
 	}
@@ -88,8 +88,15 @@ public class TradeStationGUI extends GuiContainer {
 		int stringWidth = fontRendererObj.getStringWidth(priceInLocal);
 		fontRendererObj.drawString(priceInLocal, 48 - stringWidth, 57, 4210752);
 		if (tileEntity.itemPrice > 0) {
-			if (sellButton.func_146115_a() || !UniversalCoins.tradeStationBuyEnabled) { // player hovering over sell
-																						// button or buy button disabled
+			if (sellButton.func_146115_a() || !UniversalCoins.tradeStationBuyEnabled) { // player
+																						// hovering
+																						// over
+																						// sell
+																						// button
+																						// or
+																						// buy
+																						// button
+																						// disabled
 				int sellPrice = (int) (tileEntity.itemPrice * UniversalCoins.itemSellRatio);
 				fontRendererObj.drawString(String.valueOf(sellPrice), 48, 57, 4210752);
 			} else {
@@ -101,8 +108,8 @@ public class TradeStationGUI extends GuiContainer {
 		}
 		// display only if auto buy/sell enabled
 		if (tileEntity.autoModeButtonActive) {
-			fontRendererObj
-					.drawString(StatCollector.translateToLocal("tradestation.gui.label.autobuy"), 6, 74, 4210752);
+			fontRendererObj.drawString(StatCollector.translateToLocal("tradestation.gui.label.autobuy"), 6, 74,
+					4210752);
 			fontRendererObj.drawString(autoLabels[tileEntity.autoMode], 38, 87, 4210752);
 		}
 	}

@@ -71,7 +71,8 @@ public class ItemVendorFrameRenderer implements IItemRenderer {
 
 	private String getBlockIcon(ItemStack stack) {
 		String blockIcon = stack.getIconIndex().getIconName();
-		// the iconIndex function does not work with BOP so we have to do a bit of a hack here
+		// the iconIndex function does not work with BOP so we have to do a bit
+		// of a hack here
 		if (blockIcon.startsWith("biomesoplenty")) {
 			String[] iconInfo = blockIcon.split(":");
 			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);

@@ -74,10 +74,13 @@ public class BlockSignal extends BlockContainer {
 			if (world.isRemote)
 				return false;
 			if (coinsFound < tentity.fee) {
-				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("signal.message.notenough")));
+				player.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("signal.message.notenough")));
 			} else {
-				// we have enough coins to cover the fee so we pay it and return the change
-				player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("signal.message.activated")));
+				// we have enough coins to cover the fee so we pay it and return
+				// the change
+				player.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("signal.message.activated")));
 				coinsFound -= tentity.fee;
 				tentity.activateSignal();
 			}

@@ -132,7 +132,8 @@ public class CardStationGUI extends GuiContainer {
 		}
 		if (menuState == 9) {
 			// display text field for custom name entry
-			if (textField.getText() == "0") { // textfield has not been initialized. do it now
+			if (textField.getText() == "0") { // textfield has not been
+												// initialized. do it now
 				textField.setMaxStringLength(20);
 				textField.setText(tEntity.customAccountName);
 			}
@@ -167,7 +168,8 @@ public class CardStationGUI extends GuiContainer {
 		}
 		if (menuState == 19) {
 			if (tEntity.accountError) {
-				tEntity.sendButtonMessage(10, false);// send function code 10 (reset accountError)
+				tEntity.sendButtonMessage(10, false);// send function code 10
+														// (reset accountError)
 				menuState = 18;
 			}
 			if (tEntity.getStackInSlot(tEntity.itemCardSlot) != null) {
@@ -212,7 +214,8 @@ public class CardStationGUI extends GuiContainer {
 				functionID = 5;
 				menuState = 1;
 			}
-			barProgress = 0; // always set scan progress to zero so scan will take place next time
+			barProgress = 0; // always set scan progress to zero so scan will
+								// take place next time
 			break;
 		case 1:
 			// authentication
@@ -521,11 +524,13 @@ public class CardStationGUI extends GuiContainer {
 		// function3 - deposit
 		// function4 - withdraw
 		// function5 - get account info
-		// function6 - destroy invalid card - called from drawGuiContainerBackgroundLayer
+		// function6 - destroy invalid card - called from
+		// drawGuiContainerBackgroundLayer
 		// function7 - new custom account
 		// function8 - new custom card
 		// function9 - transfer custom account
-		// we use function IDs as we don't have specific functions for each button
+		// we use function IDs as we don't have specific functions for each
+		// button
 		tEntity.sendButtonMessage(functionID, isShiftKeyDown());
 	}
 

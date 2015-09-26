@@ -30,8 +30,8 @@ public class ItemEnderCard extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.MODID + ":"
-				+ this.getUnlocalizedName().substring(5));
+		this.itemIcon = par1IconRegister
+				.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5));
 	}
 
 	@Override
@@ -52,19 +52,18 @@ public class ItemEnderCard extends Item {
 		if (itemstack.stackTagCompound == null) {
 			createNBT(itemstack, world, player);
 		}
-		int accountBalance = UniversalAccounts.getInstance().getAccountBalance(
-				itemstack.stackTagCompound.getString("Account"));
+		int accountBalance = UniversalAccounts.getInstance()
+				.getAccountBalance(itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		ItemStack[] inventory = player.inventory.mainInventory;
 		String accountNumber = itemstack.stackTagCompound.getString("Account");
 		int coinsDeposited = 0;
 		for (int i = 0; i < inventory.length; i++) {
-			if (inventory[i] != null
-					&& (inventory[i].getItem() == UniversalCoins.proxy.itemCoin
-							|| inventory[i].getItem() == UniversalCoins.proxy.itemSmallCoinStack
-							|| inventory[i].getItem() == UniversalCoins.proxy.itemLargeCoinStack
-							|| inventory[i].getItem() == UniversalCoins.proxy.itemSmallCoinBag || inventory[i]
-							.getItem() == UniversalCoins.proxy.itemLargeCoinBag)) {
+			if (inventory[i] != null && (inventory[i].getItem() == UniversalCoins.proxy.itemCoin
+					|| inventory[i].getItem() == UniversalCoins.proxy.itemSmallCoinStack
+					|| inventory[i].getItem() == UniversalCoins.proxy.itemLargeCoinStack
+					|| inventory[i].getItem() == UniversalCoins.proxy.itemSmallCoinBag
+					|| inventory[i].getItem() == UniversalCoins.proxy.itemLargeCoinBag)) {
 				if (accountBalance == -1)
 					return true; // get out of here if the card is invalid
 				int coinType = getCoinType(inventory[i].getItem());
@@ -82,11 +81,10 @@ public class ItemEnderCard extends Item {
 			}
 		}
 		if (coinsDeposited > 0) {
-			player.addChatMessage(new ChatComponentText(StatCollector
-					.translateToLocal("item.itemEnderCard.message.deposit")
-					+ " "
-					+ formatter.format(coinsDeposited)
-					+ " " + StatCollector.translateToLocal("item.itemCoin.name")));
+			player.addChatMessage(
+					new ChatComponentText(StatCollector.translateToLocal("item.itemEnderCard.message.deposit") + " "
+							+ formatter.format(coinsDeposited) + " "
+							+ StatCollector.translateToLocal("item.itemCoin.name")));
 		}
 		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.itemEnderCard.balance") + " "
 				+ formatter.format(UniversalAccounts.getInstance().getAccountBalance(accountNumber))));
@@ -94,8 +92,8 @@ public class ItemEnderCard extends Item {
 	}
 
 	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
-		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(
-				entityPlayer.getPersistentID().toString());
+		String accountNumber = UniversalAccounts.getInstance()
+				.getOrCreatePlayerAccount(entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound = new NBTTagCompound();
 		stack.stackTagCompound.setString("Name", entityPlayer.getDisplayName());
 		stack.stackTagCompound.setString("Owner", entityPlayer.getPersistentID().toString());

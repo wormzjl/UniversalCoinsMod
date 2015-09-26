@@ -64,7 +64,8 @@ public class UCSignEditGUI extends GuiScreen {
 	}
 
 	/**
-	 * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+	 * Fired when a key is typed. This is the equivalent of
+	 * KeyListener.keyTyped(KeyEvent e).
 	 */
 	protected void keyTyped(char par1, int par2) {
 		if (par2 == 200) {
@@ -112,16 +113,16 @@ public class UCSignEditGUI extends GuiScreen {
 		// draw active line indicator
 		if (tileSign.lineBeingEdited != -1) {
 			if (tileSign.signText[tileSign.lineBeingEdited].length() > 15) {
-				fontRendererObj.drawString("> ", (this.width - 90) / 2 - 8, this.height / 2
-						+ lineOffset[tileSign.lineBeingEdited], 0x000000);
-				fontRendererObj.drawString(" <", (this.width + 90) / 2, this.height / 2
-						+ lineOffset[tileSign.lineBeingEdited], 0x000000);
+				fontRendererObj.drawString("> ", (this.width - 90) / 2 - 8,
+						this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+				fontRendererObj.drawString(" <", (this.width + 90) / 2,
+						this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
 			} else {
 				int stringLength = fontRendererObj.getStringWidth(tileSign.signText[tileSign.lineBeingEdited]);
-				fontRendererObj.drawString("> ", (this.width - stringLength) / 2 - 8, this.height / 2
-						+ lineOffset[tileSign.lineBeingEdited], 0x000000);
-				fontRendererObj.drawString(" <", (this.width + stringLength) / 2, this.height / 2
-						+ lineOffset[tileSign.lineBeingEdited], 0x000000);
+				fontRendererObj.drawString("> ", (this.width - stringLength) / 2 - 8,
+						this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
+				fontRendererObj.drawString(" <", (this.width + stringLength) / 2,
+						this.height / 2 + lineOffset[tileSign.lineBeingEdited], 0x000000);
 			}
 		}
 		// draw sign text

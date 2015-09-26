@@ -20,8 +20,8 @@ public class ItemSmallCoinBag extends Item {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister) {
-		this.itemIcon = par1IconRegister.registerIcon(UniversalCoins.MODID + ":"
-				+ this.getUnlocalizedName().substring(5));
+		this.itemIcon = par1IconRegister
+				.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5));
 	}
 
 	@Override

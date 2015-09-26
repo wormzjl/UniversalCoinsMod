@@ -18,7 +18,8 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 	private int counter = 0;
 	private boolean showStick = false;
 
-	public void renderTileEntityAt(TileUCSign tileEntity, double xCoord, double yCoord, double zCoord, float p_147512_8_) {
+	public void renderTileEntityAt(TileUCSign tileEntity, double xCoord, double yCoord, double zCoord,
+			float p_147512_8_) {
 		ResourceLocation blockTexture = new ResourceLocation("textures/blocks/planks_birch.png");
 		Block block = tileEntity.getBlockType();
 		GL11.glPushMatrix();
@@ -26,7 +27,8 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 		float f3;
 
 		if (tileEntity.blockIcon != null && tileEntity.blockIcon != "") {
-			String[] tempIconName = tileEntity.blockIcon.split(":", 3); // split string
+			String[] tempIconName = tileEntity.blockIcon.split(":", 3); // split
+																		// string
 			if (tempIconName.length == 1) {
 				// if minecraft, set resourcelocation using last part
 				blockTexture = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));
@@ -165,14 +167,15 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 
 			if (i == tileEntity.lineBeingEdited) {
 				s = "> " + s + " <";
-				fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2,
-						i * 10 - tileEntity.signText.length * 5, colors[colorCode]);
+				fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - tileEntity.signText.length * 5,
+						colors[colorCode]);
 			} else {
 				if (s.length() <= 16) {
-					fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, i * 10 - tileEntity.signText.length
-							* 5, colors[colorCode]);
+					fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2,
+							i * 10 - tileEntity.signText.length * 5, colors[colorCode]);
 				} else {
-					// display a subset of string while scrolling through entire string
+					// display a subset of string while scrolling through entire
+					// string
 					String subset = "";
 					if (counter / 10 < s.length() - 8) {
 						subset = s.substring(Math.min(counter / 10, s.length() - 15),
@@ -180,8 +183,8 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 					} else {
 						subset = s.substring(0, 15);
 					}
-					fontrenderer.drawString(subset, -fontrenderer.getStringWidth(subset) / 2, i * 10
-							- tileEntity.signText.length * 5, colors[colorCode]);
+					fontrenderer.drawString(subset, -fontrenderer.getStringWidth(subset) / 2,
+							i * 10 - tileEntity.signText.length * 5, colors[colorCode]);
 					counter++;
 					if (counter / 10 > s.length() + 8)
 						counter = 0;

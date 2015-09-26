@@ -39,8 +39,8 @@ public class BanditConfigGUI extends GuiScreen {
 		costEdit = new GuiSlimButton(0, x + 13, y + 52, 12, 12, StatCollector.translateToLocal(""));
 		fourMatchEdit = new GuiSlimButton(1, x + 25, y + 52, 12, 12, StatCollector.translateToLocal(""));
 		fiveMatchEdit = new GuiSlimButton(2, x + 37, y + 52, 12, 12, StatCollector.translateToLocal(""));
-		editButton = new GuiSlimButton(3, x + 87, y + 52, 73, 12, StatCollector.translateToLocal(StatCollector
-				.translateToLocal("general.button.edit")));
+		editButton = new GuiSlimButton(3, x + 87, y + 52, 73, 12,
+				StatCollector.translateToLocal(StatCollector.translateToLocal("general.button.edit")));
 		this.buttonList.clear();
 		buttonList.add(costEdit);
 		buttonList.add(fourMatchEdit);
@@ -147,7 +147,7 @@ public class BanditConfigGUI extends GuiScreen {
 	}
 
 	private void updatePayoutPercentage() {
-		payoutPercentage = String.format("%.2f", ((450 * (double) fourMatch + 10 * (double) fiveMatch)
-				/ (100000 * spinFee) * 100));
+		payoutPercentage = String.format("%.2f",
+				((450 * (double) fourMatch + 10 * (double) fiveMatch) / (100000 * spinFee) * 100));
 	}
 }

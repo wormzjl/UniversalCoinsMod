@@ -41,18 +41,18 @@ public class UCGive extends CommandBase {
 			}
 			int coinsToSend = 0;
 			if (recipient == null) {
-				sender.addChatMessage(new ChatComponentText("§c"
-						+ StatCollector.translateToLocal("command.givecoins.error.notfound")));
+				sender.addChatMessage(new ChatComponentText(
+						"§c" + StatCollector.translateToLocal("command.givecoins.error.notfound")));
 			}
 			try {
 				coinsToSend = Integer.parseInt(astring[1]);
 			} catch (NumberFormatException e) {
-				sender.addChatMessage(new ChatComponentText("§c"
-						+ StatCollector.translateToLocal("command.givecoins.error.badentry")));
+				sender.addChatMessage(new ChatComponentText(
+						"§c" + StatCollector.translateToLocal("command.givecoins.error.badentry")));
 			}
 			if (coinsToSend <= 0) {
-				sender.addChatMessage(new ChatComponentText("§c"
-						+ StatCollector.translateToLocal("command.send.error.badentry")));
+				sender.addChatMessage(
+						new ChatComponentText("§c" + StatCollector.translateToLocal("command.send.error.badentry")));
 				return;
 			}
 			int change = givePlayerCoins(recipient, coinsToSend);
@@ -62,8 +62,8 @@ public class UCGive extends CommandBase {
 					+ StatCollector.translateToLocal("command.givecoins.result") + " " + (coinsToSend - change) + " "
 					+ StatCollector.translateToLocal("item.itemCoin.name")));
 		} else
-			sender.addChatMessage(new ChatComponentText("§c"
-					+ StatCollector.translateToLocal("command.givecoins.error.noname")));
+			sender.addChatMessage(
+					new ChatComponentText("§c" + StatCollector.translateToLocal("command.givecoins.error.noname")));
 	}
 
 	private int givePlayerCoins(EntityPlayer recipient, int coinsLeft) {
@@ -80,8 +80,8 @@ public class UCGive extends CommandBase {
 					ItemStack stack = recipient.inventory.getStackInSlot(i);
 					for (int j = 0; j < coins.length; j++) {
 						if (stack != null && stack.getItem() == coins[j]) {
-							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j), stack.getMaxStackSize()
-									- stack.stackSize);
+							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j),
+									stack.getMaxStackSize() - stack.stackSize);
 							stack.stackSize += amountToAdd;
 							recipient.inventory.setInventorySlotContents(i, stack);
 							coinsLeft -= (amountToAdd * Math.pow(9, j));

@@ -9,8 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.tile.TileCardStation;
 
-public class UCCardStationServerCustomNameMessage implements IMessage,
-		IMessageHandler<UCCardStationServerCustomNameMessage, IMessage> {
+public class UCCardStationServerCustomNameMessage
+		implements IMessage, IMessageHandler<UCCardStationServerCustomNameMessage, IMessage> {
 	private int x, y, z;
 	private String groupName;
 

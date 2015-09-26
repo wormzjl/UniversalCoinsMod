@@ -45,8 +45,8 @@ public class GuiCoinButton extends GuiButton {
 				l = 16777120;
 			}
 
-			this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition
-					+ (this.height - 8) / 2, l);
+			this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2,
+					this.yPosition + (this.height - 8) / 2, l);
 		}
 	}
 

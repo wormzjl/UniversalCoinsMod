@@ -21,8 +21,8 @@ public class TileVendorBlock extends TileVendor {
 	public void updateSigns() {
 
 		if (inventory[itemTradeSlot] != null) {
-			signText[0] = sellMode ? "&" + Integer.toHexString(textColor) + "Selling" : "&"
-					+ Integer.toHexString(textColor) + "Buying";
+			signText[0] = sellMode ? "&" + Integer.toHexString(textColor) + "Selling"
+					: "&" + Integer.toHexString(textColor) + "Buying";
 			// add out of stock notification if not infinite and no stock found
 			if (!infiniteMode && sellMode && ooStockWarning) {
 				signText[0] = "&" + Integer.toHexString(textColor)

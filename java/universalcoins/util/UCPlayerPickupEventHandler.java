@@ -34,7 +34,8 @@ public class UCPlayerPickupEventHandler {
 			for (int i = 0; i < inventory.length; i++) {
 				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.itemEnderCard) {
 					if (!inventory[i].hasTagCompound())
-						return; // card has not been initialized. Nothing we can do here
+						return; // card has not been initialized. Nothing we can
+								// do here
 					accountNumber = inventory[i].stackTagCompound.getString("Account");
 					int accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 					if (accountBalance == -1)
@@ -49,12 +50,10 @@ public class UCPlayerPickupEventHandler {
 							(Integer.MAX_VALUE - accountBalance) / coinValue);
 					if (depositAmount > 0) {
 						UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * coinValue);
-						player.addChatMessage(new ChatComponentText(StatCollector
-								.translateToLocal("item.itemEnderCard.message.deposit")
-								+ " "
-								+ formatter.format(depositAmount * coinValue)
-								+ " "
-								+ StatCollector.translateToLocal("item.itemCoin.name")));
+						player.addChatMessage(new ChatComponentText(
+								StatCollector.translateToLocal("item.itemEnderCard.message.deposit") + " "
+										+ formatter.format(depositAmount * coinValue) + " "
+										+ StatCollector.translateToLocal("item.itemCoin.name")));
 						event.item.getEntityItem().stackSize -= depositAmount;
 					}
 					if (event.item.getEntityItem().stackSize == 0) {
