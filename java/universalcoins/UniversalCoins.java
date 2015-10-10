@@ -105,6 +105,7 @@ public class UniversalCoins {
 	public static Integer dungeonCoinChance;
 	public static Integer mobDropMax;
 	public static Integer mobDropChance;
+	public static Integer enderDragonMultiplier;
 	public static Double itemSellRatio;
 	public static Integer fourMatchPayout;
 	public static Integer fiveMatchPayout;
@@ -165,6 +166,9 @@ public class UniversalCoins {
 		Property dropChance = config.get("Loot", "Mob Drop Chance", 3);
 		dropChance.comment = "Chance of a mob dropping coins. Lower number means higher chance. Minimum 0 (always drop). Default 3 (1 in 4 chance).";
 		mobDropChance = Math.max(0, Math.min(dropChance.getInt(3), 100));
+		Property dragonMultiplier = config.get("Loot", "Ender Dragon Multiplier", 1000);
+		dragonMultiplier.comment = "Drop multiplier for ender dragon kills. Minimum 1. Default 1,000. Max 100,000";
+		enderDragonMultiplier = Math.max(1, Math.min(dragonMultiplier.getInt(1000), 100000));
 		Property mineshaftCoins = config.get("Loot", "Mineshaft CoinBag", true);
 		mineshaftCoins.comment = "Set to false to disable coinbag spawning in mineshaft chests.";
 		coinsInMineshaft = mineshaftCoins.getBoolean(true);

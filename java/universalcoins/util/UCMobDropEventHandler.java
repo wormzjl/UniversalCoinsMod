@@ -35,6 +35,11 @@ public class UCMobDropEventHandler {
 			if (health == 0)
 				health = 10;
 			int dropped = (int) (randomDropValue * health / 20 * (event.lootingLevel + 1));
+			
+			//multiply drop if ender dragon
+			if (event.entity instanceof EntityDragon) {
+				dropped = dropped * UniversalCoins.enderDragonMultiplier;
+			}
 
 			// drop coins
 			if ((event.entity instanceof EntityMob || event.entity instanceof EntityDragon
