@@ -60,8 +60,8 @@ public class ContainerVendor extends Container {
 			stack = stackInSlot.copy();
 
 			// merges the item into player inventory since its in the tileEntity
-			if (slot < 14) {
-				if (!this.mergeItemStack(stackInSlot, 14, 49, true)) {
+			if (slot < 13) {
+				if (!this.mergeItemStack(stackInSlot, 13, 49, true)) {
 					return null;
 				}
 			}
@@ -69,7 +69,7 @@ public class ContainerVendor extends Container {
 			// inventory
 			else {
 				boolean foundSlot = false;
-				for (int i = 1; i < 14; i++) { // we start at 1 to avoid shift
+				for (int i = 1; i < 13; i++) { // we start at 1 to avoid shift
 												// clicking into trade slot
 					if (((Slot) inventorySlots.get(i)).isItemValid(stackInSlot)
 							&& this.mergeItemStack(stackInSlot, i, i + 1, false)) {
