@@ -39,11 +39,18 @@ public class UCMobDropEventHandler {
 			//multiply drop if ender dragon
 			if (event.entity instanceof EntityDragon) {
 				dropped = dropped * UniversalCoins.enderDragonMultiplier;
+				while (dropped > 0) {
+					int logVal = Math.min((int) (Math.log(dropped) / Math.log(9)), 4);
+					int stackSize = Math.min((int) (dropped / Math.pow(9, logVal)), 64);
+					ItemStack test = new ItemStack(coins[logVal], stackSize);
+					event.entity.entityDropItem(test, 0.0F);
+					dropped -= Math.pow(9, logVal) * stackSize;
+				}
 			}
 
 			// drop coins
-			if ((event.entity instanceof EntityMob || event.entity instanceof EntityDragon
-					|| event.entity instanceof EntityWither) && !event.entity.worldObj.isRemote && chance == 0) {
+			if ((event.entity instanceof EntityMob || event.entity instanceof EntityWither) 
+					&& !event.entity.worldObj.isRemote && chance == 0) {
 				while (dropped > 0) {
 					int logVal = Math.min((int) (Math.log(dropped) / Math.log(9)), 4);
 					int stackSize = Math.min((int) (dropped / Math.pow(9, logVal)), 64);
