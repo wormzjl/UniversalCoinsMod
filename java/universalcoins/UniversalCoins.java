@@ -92,9 +92,9 @@ public class UniversalCoins {
 	public static Boolean linkCardRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
 	public static Boolean packagerRecipeEnabled;
-	public static Boolean powerEconomyRecipeEnabled;
 	public static Boolean mobsDropCoins;
-	public static Boolean rfUtilityEnabled;
+	public static Boolean powerBaseRecipeEnabled;
+	public static Boolean powerReceiverRecipeEnabled;
 	public static Boolean coinsInMineshaft;
 	public static Integer bankGenWeight;
 	public static Integer shopGenWeight;
@@ -154,9 +154,6 @@ public class UniversalCoins {
 		Property packagerRecipe = config.get("Recipes", "Packager Recipe", true);
 		packagerRecipe.comment = "Set to false to disable crafting recipes for Packager.";
 		packagerRecipeEnabled = packagerRecipe.getBoolean(true);
-		Property powerRecipe = config.get("Recipes", "Power Economy Recipe", true);
-		powerRecipe.comment = "Set to false to disable crafting recipes for Power Base and Receiver.";
-		powerEconomyRecipeEnabled = powerRecipe.getBoolean(true);
 
 		// loot
 		Property mobDrops = config.get("Loot", "Mob Drops", true);
@@ -212,9 +209,12 @@ public class UniversalCoins {
 		largePackagePrice = Math.max(1, Math.min(largePackage.getInt(40), 1000));
 
 		// rf utility (power company stuff)
-		Property rfUtilEnabled = config.get("RF Utility", "RF Blocks enabled", true);
-		rfUtilEnabled.comment = "Set to false to disable the RF base and reciever blocks.";
-		rfUtilityEnabled = rfUtilEnabled.getBoolean(true);
+		Property rfBaseEnabled = config.get("RF Utility", "Power Base enabled", true);
+		rfBaseEnabled.comment = "Set to false to disable the power base block.";
+		powerBaseRecipeEnabled = rfBaseEnabled.getBoolean(true);
+		Property rfReceiverEnabled = config.get("RF Utility", "RF Blocks enabled", true);
+		rfReceiverEnabled.comment = "Set to false to disable the power receiver block.";
+		powerReceiverRecipeEnabled = rfReceiverEnabled.getBoolean(true);
 		Property rfWholesale = config.get("RF Utility", "Wholesale rate", 12);
 		rfWholesale.comment = "Set payment per 10 kRF of power sold. Default: 12";
 		rfWholesaleRate = Math.max(0, rfWholesale.getInt(12));
@@ -326,8 +326,11 @@ public class UniversalCoins {
 		if (packagerRecipeEnabled) {
 			UCRecipeHelper.addPackagerRecipes();
 		}
-		if (powerEconomyRecipeEnabled) {
-			UCRecipeHelper.addPowerEconomyRecipes();
+		if (powerBaseRecipeEnabled) {
+			UCRecipeHelper.addPowerBaseRecipe();
+		}
+		if (powerReceiverRecipeEnabled) {
+			UCRecipeHelper.addPowerReceiverRecipe();
 		}
 		UCRecipeHelper.addSignRecipes();
 		UCRecipeHelper.addPlankTextureRecipes();

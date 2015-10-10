@@ -2,6 +2,7 @@
 # Main
 #####
 tile.blockTradeStation.name=Universal Trade Station
+tile.blockVendor.name=Vending Block
 tile.blockVendor.stone.name=Stone Vending Block
 tile.blockVendor.cobblestone.name=Cobblestone Vending Block
 tile.blockVendor.stonebrick.name=Stone Brick Vending Block

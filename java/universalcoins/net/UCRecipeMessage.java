@@ -16,7 +16,7 @@ import universalcoins.util.Vending;
 public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessage, IMessage> {
 	private boolean tradeStationRecipesEnabled, vendorRecipesEnabled, vendorFrameRecipesEnabled, atmRecipeEnabled,
 			enderCardRecipeEnabled, banditRecipeEnabled, signalRecipeEnabled, linkCardRecipeEnabled,
-			packagerRecipeEnabled, powerEconomyRecipeEnabled;
+			packagerRecipeEnabled, powerBaseRecipeEnabled, powerReceiverRecipeEnabled;
 
 	public UCRecipeMessage() {
 		this.tradeStationRecipesEnabled = UniversalCoins.tradeStationRecipesEnabled;
@@ -28,7 +28,8 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		this.signalRecipeEnabled = UniversalCoins.signalRecipeEnabled;
 		this.linkCardRecipeEnabled = UniversalCoins.linkCardRecipeEnabled;
 		this.packagerRecipeEnabled = UniversalCoins.packagerRecipeEnabled;
-		this.powerEconomyRecipeEnabled = UniversalCoins.powerEconomyRecipeEnabled;
+		this.powerBaseRecipeEnabled = UniversalCoins.powerBaseRecipeEnabled;
+		this.powerReceiverRecipeEnabled = UniversalCoins.powerReceiverRecipeEnabled;
 	}
 
 	@Override
@@ -42,7 +43,8 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		this.signalRecipeEnabled = buf.readBoolean();
 		this.linkCardRecipeEnabled = buf.readBoolean();
 		this.packagerRecipeEnabled = buf.readBoolean();
-		this.powerEconomyRecipeEnabled = buf.readBoolean();
+		this.powerBaseRecipeEnabled = buf.readBoolean();
+		this.powerReceiverRecipeEnabled = buf.readBoolean();
 	}
 
 	@Override
@@ -56,7 +58,8 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		buf.writeBoolean(signalRecipeEnabled);
 		buf.writeBoolean(linkCardRecipeEnabled);
 		buf.writeBoolean(packagerRecipeEnabled);
-		buf.writeBoolean(powerEconomyRecipeEnabled);
+		buf.writeBoolean(powerBaseRecipeEnabled);
+		buf.writeBoolean(powerReceiverRecipeEnabled);
 	}
 
 	@Override
@@ -91,8 +94,10 @@ public class UCRecipeMessage implements IMessage, IMessageHandler<UCRecipeMessag
 		if (!message.packagerRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPackager));
 		}
-		if (!message.powerEconomyRecipeEnabled) {
+		if (!message.powerBaseRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPowerBase));
+		}
+		if (!message.powerReceiverRecipeEnabled) {
 			removeRecipe(new ItemStack(UniversalCoins.proxy.blockPowerReceiver));
 		}
 

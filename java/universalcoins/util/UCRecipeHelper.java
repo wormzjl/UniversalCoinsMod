@@ -107,9 +107,11 @@ public class UCRecipeHelper {
 				RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
 
-	public static void addPowerEconomyRecipes() {
+	public static void addPowerBaseRecipe() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockPowerBase), new Object[] { "III", "MRM",
 				"III", 'I', Items.iron_ingot, 'R', Blocks.redstone_block, 'M', Items.redstone });
+	}
+	public static void addPowerReceiverRecipe() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.blockPowerReceiver), new Object[] { "III",
 				"MRM", "III", 'I', Items.iron_ingot, 'R', Blocks.redstone_block, 'M', new ItemStack(Items.dye, 1, 4) });
 	}
