@@ -12,10 +12,12 @@ import universalcoins.UniversalCoins;
 public class TileVendorBlock extends TileVendor {
 
 	String signText[] = { "", "", "", "" };
+	private String[] metaTypes = { "stone", "cobblestone", "stonebrick", "wood", "crafting_table", "gravel", "jukebox",
+			"sandstone", "gold", "iron", "brick", "mossy_cobblestone", "obsidian", "diamond", "emerald", "lapis", };
 
 	@Override
 	public String getInventoryName() {
-		return StatCollector.translateToLocal("tile.blockVendor.name");
+		return StatCollector.translateToLocal("tile.blockVendor." + metaTypes[getBlockMetadata()] + ".name");
 	}
 
 	public void updateSigns() {

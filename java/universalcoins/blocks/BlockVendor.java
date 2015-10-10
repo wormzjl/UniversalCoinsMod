@@ -168,7 +168,7 @@ public class BlockVendor extends BlockContainer {
 
 	@Override
 	public String getLocalizedName() {
-		return StatCollector.translateToLocal(this.getUnlocalizedName() + ".name");
+		return null;
 	}
 
 	@Override

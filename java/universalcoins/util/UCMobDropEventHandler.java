@@ -34,7 +34,7 @@ public class UCMobDropEventHandler {
 			float health = ((EntityLivingBase) event.entity).getMaxHealth();
 			if (health == 0)
 				health = 10;
-			int dropped = (int) (randomDropValue * Math.pow((health / 20), 4) * (event.lootingLevel + 1));
+			int dropped = (int) (randomDropValue * health / 20 * (event.lootingLevel + 1));
 
 			// drop coins
 			if ((event.entity instanceof EntityMob || event.entity instanceof EntityDragon

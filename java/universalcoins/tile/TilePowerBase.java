@@ -1,6 +1,7 @@
 package universalcoins.tile;
 
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -137,13 +138,13 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate);
 					if (playerCredited) {
 						krfSold += 10;
-						UniversalPower.getInstance().receiveEnergy(10);
+						UniversalPower.getInstance().receiveEnergy(10, false);
 					}
 				}
 				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
 					coinSum += UniversalCoins.rfWholesaleRate;
 					krfSold += 10;
-					UniversalPower.getInstance().receiveEnergy(10);
+					UniversalPower.getInstance().receiveEnergy(10, false);
 				}
 			}
 		}

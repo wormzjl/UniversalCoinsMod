@@ -105,7 +105,7 @@ public class BlockPowerReceiver extends BlockContainer {
 	}
 
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
-		ItemStack stack = new ItemStack(UniversalCoins.proxy.blockPowerBase);
+		ItemStack stack = new ItemStack(UniversalCoins.proxy.blockPowerReceiver);
 		TileEntity tentity = world.getTileEntity(x, y, z);
 		if (tentity instanceof TilePowerReceiver) {
 			TilePowerReceiver te = (TilePowerReceiver) tentity;

@@ -1,5 +1,6 @@
 package universalcoins.util;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -24,19 +25,17 @@ public class UniversalPower {
 		return 0;
 	}
 
-	public long extractEnergy(int maxSend) {
+	public long extractEnergy(int maxSend, boolean simulate) {
 		long powerLevel = getWorldLong("power");
-		if (powerLevel > maxSend) {
+		maxSend = (int) Math.min(maxSend, powerLevel);
+		if (!simulate) {
 			powerLevel -= maxSend;
 			setWorldLong("power", powerLevel);
-			return maxSend;
-		} else {
-			setWorldLong("power", 0);
-			return powerLevel;
 		}
+		return maxSend;
 	}
 
-	public long receiveEnergy(int maxReceive) {
+	public long receiveEnergy(int maxReceive, boolean simulate) {
 		long powerLevel = getWorldLong("power");
 		if (Long.MAX_VALUE - maxReceive >= powerLevel) {
 			powerLevel += maxReceive;
@@ -44,7 +43,9 @@ public class UniversalPower {
 			maxReceive = (int) (Long.MAX_VALUE - powerLevel);
 			powerLevel += maxReceive;
 		}
-		setWorldLong("power", powerLevel);
+		if (!simulate) {
+			setWorldLong("power", powerLevel);
+		}
 		return maxReceive;
 	}
 
