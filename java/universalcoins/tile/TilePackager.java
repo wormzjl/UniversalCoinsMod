@@ -43,6 +43,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
+			if (coinSum < packageCost[packageSize] && !cardAvailable) return;
 			if (inventory[itemOutputSlot] == null) {
 
 				NBTTagList itemList = new NBTTagList();
