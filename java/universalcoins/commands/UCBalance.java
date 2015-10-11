@@ -40,7 +40,8 @@ public class UCBalance extends CommandBase {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
 			String uuid = ((EntityPlayerMP) sender).getPersistentID().toString();
 			String playerAcct = UniversalAccounts.getInstance().getPlayerAccount(uuid);
-			String customAcct = UniversalAccounts.getInstance().getCustomAccount(uuid);
+			String customAcctID = UniversalAccounts.getInstance().getCustomAccount(uuid);
+			String customAcct = UniversalAccounts.getInstance().getPlayerAccount(customAcctID);
 			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
 			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(customAcct);
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");

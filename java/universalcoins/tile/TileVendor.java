@@ -265,7 +265,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 		if (infiniteMode) {
 			if (inventory[itemOutputSlot] == null) {
-				inventory[itemOutputSlot] = inventory[itemTradeSlot].copy();
+				inventory[itemOutputSlot] = new ItemStack(inventory[itemTradeSlot].getItem());
+				inventory[itemOutputSlot].setItemDamage(inventory[itemTradeSlot].getItemDamage());
 				inventory[itemOutputSlot].stackSize = totalSale;
 				if (useCard && inventory[itemUserCardSlot] != null) {
 					debitUserAccount(itemPrice * amount);
@@ -282,18 +283,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					userCoinSum -= itemPrice * amount;
 				}
 			}
-			if (infiniteMode) {
-				coinSum = 0;
-			} else {
-				if (inventory[itemCardSlot] != null
-						&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
-						&& getOwnerAccountBalance() != -1
-						&& getOwnerAccountBalance() + (itemPrice * amount) < Integer.MAX_VALUE) {
-					creditOwnerAccount(itemPrice * amount);
-				} else {
-					coinSum += itemPrice * amount;
-				}
-			}
+			coinSum = 0;
 		} else {
 			// find matching item in inventory
 			// we need to match the item, damage, and tags to make sure the
@@ -305,29 +295,26 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					// copy itemstack if null. We'll set the amount to 0 to
 					// start.
 					if (inventory[itemOutputSlot] == null) {
-						inventory[itemOutputSlot] = inventory[i].copy();
+						inventory[itemOutputSlot] = new ItemStack(inventory[itemTradeSlot].getItem());
+						inventory[itemOutputSlot].setItemDamage(inventory[itemTradeSlot].getItemDamage());
 						inventory[itemOutputSlot].stackSize = 0;
 					}
 					int thisSale = Math.min(inventory[i].stackSize, totalSale);
 					inventory[itemOutputSlot].stackSize += thisSale;
 					inventory[i].stackSize -= thisSale;
 					totalSale -= thisSale;
-					if (useCard && inventory[itemCardSlot] == null) {
+					if (useCard && inventory[itemUserCardSlot] != null) {
 						debitUserAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
 					} else {
 						userCoinSum -= itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
 					}
-					if (infiniteMode) {
-						coinSum = 0;
+					if (inventory[itemCardSlot] != null
+							&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
+							&& getOwnerAccountBalance() != -1
+							&& getOwnerAccountBalance() + (itemPrice * amount) < Integer.MAX_VALUE) {
+						creditOwnerAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
 					} else {
-						if (inventory[itemCardSlot] != null
-								&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
-								&& getOwnerAccountBalance() != -1
-								&& getOwnerAccountBalance() + (itemPrice * amount) < Integer.MAX_VALUE) {
-							creditOwnerAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
-						} else {
-							coinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
-						}
+						coinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
 					}
 				}
 				// cleanup empty stacks
@@ -375,15 +362,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				amount = (inventory[itemTradeSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
 						/ inventory[itemOutputSlot].stackSize;
 			} else {
-				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice; // buy
-																						// as
-																						// many
-																						// as
-																						// i
-																						// can
-																						// with
-																						// available
-																						// coins.
+				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice;
+				// buy as many as possible with available coins.
 			}
 		} else {
 			buyButtonActive = false;
@@ -495,10 +475,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				return;
 			}
 		}
-		if (!ooStockWarning) {
-			this.ooStockWarning = true; // if we reach this point, we are OOS.
-			updateSigns();
-		}
+		this.ooStockWarning = true; // if we reach this point, we are OOS.
+		updateSigns();
 	}
 
 	public boolean hasInventorySpace() {
