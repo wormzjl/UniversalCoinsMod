@@ -462,6 +462,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	public void onModeButtonPressed() {
 		sellMode ^= true;
+		updateSigns();
 	}
 
 	public void checkSellingInventory() {
@@ -503,15 +504,11 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 
 	public void updateCoinsForPurchase() {
 		if (coinSum >= itemPrice || (inventory[itemCardSlot] != null && getOwnerAccountBalance() >= itemPrice)) {
-			if (ooCoinsWarning) {
-				this.ooCoinsWarning = false;
-				updateSigns();
-			}
+			this.ooCoinsWarning = false;
+			updateSigns();
 		} else {
-			if (!ooCoinsWarning) {
-				this.ooCoinsWarning = true;
-				updateSigns();
-			}
+			this.ooCoinsWarning = true;
+			updateSigns();
 		}
 	}
 
