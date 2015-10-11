@@ -2,9 +2,9 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.33",
+			"modVersion":"1.7.2-1.6.36",
 			"changeLog": [
-				"Fixed client crash when opening endersafe in multiplayer."
+				"Please read changes on release page."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
@@ -12,9 +12,9 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.33",
+			"modVersion":"1.7.10-1.6.36",
 			"changeLog": [
-				"Fixed client crash when opening endersafe in multiplayer."
+				"Please read changes on release page."
 			],
 			"updateURL":"https://github.com/notabadminer/UniversalCoinsMod/releases",
 			"isDirectLink":"false",
