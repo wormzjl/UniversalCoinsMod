@@ -305,6 +305,16 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 	}
 
 	protected void buyPower() {
+		if (!UniversalCoins.powerBaseRecipeEnabled) {
+			//if we have no base, we use infinite power
+			if (rfLevel == 0 && debitAccount(UniversalCoins.rfRetailRate)) {
+				rfLevel += 10000;
+			} else if (rfLevel == 0 && coinSum - UniversalCoins.rfRetailRate >= 0) {
+					coinSum -= UniversalCoins.rfRetailRate;
+					rfLevel += 10000;
+			}
+			return;
+		}
 		if (rfLevel == 0 && UniversalPower.getInstance().extractEnergy(10, true) > 0
 				&& debitAccount(UniversalCoins.rfRetailRate)) {
 			UniversalPower.getInstance().extractEnergy(10, false);
