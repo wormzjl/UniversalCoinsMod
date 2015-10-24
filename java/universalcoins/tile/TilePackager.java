@@ -1,7 +1,10 @@
 package universalcoins.tile;
 
+import java.util.Random;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -12,18 +15,24 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
+import universalcoins.net.UCPackagerServerMessage;
+import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UniversalAccounts;
 
 public class TilePackager extends TileEntity implements IInventory, ISidedInventory {
 
-	private ItemStack[] inventory = new ItemStack[11];
+	private ItemStack[] inventory = new ItemStack[12];
 	public static final int[] itemPackageSlot = { 0, 1, 2, 3, 4, 5, 6, 7 };
 	public static final int itemCardSlot = 8;
 	public static final int itemCoinSlot = 9;
 	public static final int itemOutputSlot = 10;
+	public static final int itemPackageInputSlot = 11;
 	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
 	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
 			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
@@ -43,7 +52,8 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	public void onButtonPressed(int buttonId) {
 		if (buttonId == 0) {
-			if (coinSum < packageCost[packageSize] && !cardAvailable) return;
+			if (coinSum < packageCost[packageSize] && !cardAvailable)
+				return;
 			if (inventory[itemOutputSlot] == null) {
 
 				NBTTagList itemList = new NBTTagList();
@@ -145,7 +155,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void checkCard() {
-		if (inventory[itemCardSlot] != null && !worldObj.isRemote) {
+		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].hasTagCompound() && !worldObj.isRemote) {
 			String account = inventory[itemCardSlot].getTagCompound().getString("Account");
 			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
 			if (accountBalance >= packageCost[packageSize]) {
@@ -164,6 +174,10 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	public void sendPacket(int button, boolean shiftPressed) {
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
+	}
+
+	public void sendServerUpdateMessage(String packageTarget) {
+		UniversalCoins.snw.sendToServer(new UCPackagerServerMessage(xCoord, yCoord, zCoord, packageTarget));
 	}
 
 	@Override
@@ -386,6 +400,26 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	public void sendPackage(String packageTarget) {
+		if (worldObj.isRemote)
+			return;
+		EntityPlayer player = worldObj.getPlayerEntityByName(packageTarget);
+		if (player != null) {
+			if (!player.inventory.addItemStackToInventory(inventory[itemPackageInputSlot])) {
+				Random rand = new Random();
+				float rx = rand.nextFloat() * 0.8F + 0.1F;
+				float ry = rand.nextFloat() * 0.8F + 0.1F;
+				float rz = rand.nextFloat() * 0.8F + 0.1F;
+				EntityItem entityItem = new EntityItem(worldObj, player.getPlayerCoordinates().posX + rx,
+						player.getPlayerCoordinates().posY + ry, player.getPlayerCoordinates().posZ + rz,
+						inventory[itemPackageInputSlot]);
+				worldObj.spawnEntityInWorld(entityItem);
+			}
+			player.addChatMessage(new ChatComponentText("§c" + playerName + StatCollector.translateToLocal("packager.message.sent")));
+			inventory[itemPackageInputSlot] = null;
 		}
 	}
 

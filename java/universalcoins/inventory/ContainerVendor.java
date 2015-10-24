@@ -12,7 +12,7 @@ import universalcoins.tile.TileVendor;
 
 public class ContainerVendor extends Container {
 	private TileVendor tileEntity;
-	private boolean lastOoStock, lastOoCoins, lastInvFull, lastSellMode, lastInUse;
+	private boolean lastOoStock, lastOoCoins, lastInvFull, lastSellMode, lastInUse, lastCoinButtonActive, lastSStackButtonActive, lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive;
 	private int lastCoinSum, lastUserCoinSum, lastItemPrice, lastTextColor;
 
 	public ContainerVendor(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
@@ -106,12 +106,20 @@ public class ContainerVendor extends Container {
 		for (int i = 0; i < this.crafters.size(); ++i) {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
-			if (this.lastOoStock != this.tileEntity.ooStockWarning || this.lastOoCoins != this.tileEntity.ooCoinsWarning
+			if (this.lastOoStock != this.tileEntity.ooStockWarning 
+					|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
 					|| this.lastInvFull != this.tileEntity.inventoryFullWarning
 					|| this.lastCoinSum != this.tileEntity.coinSum
 					|| this.lastUserCoinSum != this.tileEntity.userCoinSum
-					|| this.lastItemPrice != this.tileEntity.itemPrice || this.lastSellMode != this.tileEntity.sellMode
-					|| this.lastTextColor != this.tileEntity.textColor || this.lastInUse != this.tileEntity.inUse) {
+					|| this.lastItemPrice != this.tileEntity.itemPrice 
+					|| this.lastSellMode != this.tileEntity.sellMode
+					|| this.lastTextColor != this.tileEntity.textColor
+					|| this.lastCoinButtonActive != this.tileEntity.coinButtonActive
+					|| this.lastSStackButtonActive != this.tileEntity.isSStackButtonActive
+					|| this.lastLStackButtonActive != this.tileEntity.isLStackButtonActive
+					|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive
+					|| this.lastLBagButtonActive != this.tileEntity.isLBagButtonActive
+					|| this.lastInUse != this.tileEntity.inUse) {
 				// update
 				tileEntity.updateTE();
 
@@ -123,6 +131,11 @@ public class ContainerVendor extends Container {
 				this.lastItemPrice = this.tileEntity.itemPrice;
 				this.lastSellMode = this.tileEntity.sellMode;
 				this.lastTextColor = this.tileEntity.textColor;
+				this.lastCoinButtonActive = this.tileEntity.coinButtonActive;
+				this.lastSStackButtonActive = this.tileEntity.isSStackButtonActive;
+				this.lastLStackButtonActive = this.tileEntity.isLStackButtonActive;
+				this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
+				this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
 				this.lastInUse = this.tileEntity.inUse;
 			}
 		}

@@ -64,6 +64,7 @@ public class BlockVendor extends BlockContainer {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 				tileVendor.playerName = player.getDisplayName();
 				tileVendor.inUse = true;
+				tileVendor.updateCoinsForPurchase();
 				return true;
 			}
 		}

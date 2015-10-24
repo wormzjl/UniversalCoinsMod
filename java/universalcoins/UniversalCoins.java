@@ -37,6 +37,7 @@ import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
+import universalcoins.net.UCPackagerServerMessage;
 import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCSignServerMessage;
 import universalcoins.net.UCTextureMessage;
@@ -265,6 +266,7 @@ public class UniversalCoins {
 		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
 		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
 		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
+		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 11, Side.SERVER);
 
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",

@@ -19,9 +19,9 @@ public class ContainerPowerReceiver extends Container {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 37));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 37));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 37));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 46));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 46));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 46));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -35,12 +35,12 @@ public class ContainerPowerReceiver extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 70 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 79 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 128));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 137));
 		}
 	}
 

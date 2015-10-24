@@ -65,6 +65,7 @@ general.button.buy=Buy
 general.button.sell=Sell
 general.button.edit=Edit
 general.button.save=Save
+general.button.send=Send
 general.button.spin=Spin
 general.button.coin=Coin
 general.label.balance=Balance: 
@@ -213,6 +214,9 @@ bandit.label.five=Match Five
 packager.button.small=Small
 packager.button.medium=Medium
 packager.button.large=Large
+packager.button.mode.buy=Mode: Buy
+packager.button.mode.send=Mode: Send
+packager.message.sent= sent you a package
 
 #####
 # ATM GUI

@@ -31,6 +31,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public int coinSum = 0;
 	public int rfLevel = 0;
+	public long wrfLevel = 0;
 	public String blockOwner = "nobody";
 	public ForgeDirection orientation = null;
 
@@ -114,7 +115,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 
 	@Override
 	public String getInventoryName() {
-		return null;
+		return UniversalCoins.proxy.blockPowerReceiver.getLocalizedName();
 	}
 
 	@Override
@@ -230,6 +231,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setInteger("coinSum", coinSum);
 		tagCompound.setInteger("rfLevel", rfLevel);
+		tagCompound.setLong("wrfLevel", wrfLevel);
 		tagCompound.setString("blockOwner", blockOwner);
 		if (orientation != null) {
 			tagCompound.setInteger("orientation", orientation.ordinal());
@@ -257,6 +259,11 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			rfLevel = tagCompound.getInteger("rfLevel");
 		} catch (Throwable ex2) {
 			rfLevel = 0;
+		}
+		try {
+			wrfLevel = tagCompound.getLong("wrfLevel");
+		} catch (Throwable ex2) {
+			wrfLevel = 0;
 		}
 		try {
 			blockOwner = tagCompound.getString("blockOwner");
@@ -313,6 +320,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 					coinSum -= UniversalCoins.rfRetailRate;
 					rfLevel += 10000;
 			}
+			wrfLevel = UniversalPower.getInstance().getRFLevel();
 			return;
 		}
 		if (rfLevel == 0 && UniversalPower.getInstance().extractEnergy(10, true) > 0
@@ -325,6 +333,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 				UniversalPower.getInstance().extractEnergy(10, false);
 				rfLevel += 10000;
 		}
+		wrfLevel = UniversalPower.getInstance().getRFLevel();
 	}
 
 	protected void sendPower() {

@@ -90,7 +90,7 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 
 	@Override
 	public String getInventoryName() {
-		return null;
+		return UniversalCoins.proxy.blockPowerBase.getLocalizedName();
 	}
 
 	@Override

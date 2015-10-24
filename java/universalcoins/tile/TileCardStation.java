@@ -109,6 +109,9 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 				}
 			}
 			if (slot == itemCardSlot && !worldObj.isRemote) {
+				if (!inventory[itemCardSlot].hasTagCompound()) {
+					return;//TODO
+				}
 				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0
 						&& inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(playerName)) {
 					addPlayerAccount(playerUID);

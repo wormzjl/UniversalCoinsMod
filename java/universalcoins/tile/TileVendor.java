@@ -58,9 +58,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public int itemPrice = 0;
 	public boolean infiniteMode = false;
 	public boolean sellMode = true;
-	public boolean ooStockWarning = true;
-	public boolean ooCoinsWarning = true;
-	public boolean inventoryFullWarning = true;
+	public boolean ooStockWarning = false;
+	public boolean ooCoinsWarning = false;
+	public boolean inventoryFullWarning = false;
 	public boolean buyButtonActive = false;
 	public boolean sellButtonActive = false;
 	public boolean coinButtonActive = false;
@@ -571,6 +571,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 					if (slot == itemCoinInputSlot) {
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
 						if (inventory[itemCardSlot] != null
+								&& inventory[itemCardSlot].hasTagCompound()
 								&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
 								&& getOwnerAccountBalance() != -1
 								&& getOwnerAccountBalance() + (depositAmount * itemValue) < Integer.MAX_VALUE) {
@@ -583,6 +584,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 						depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - userCoinSum) / itemValue);
 						if (inventory[itemUserCardSlot] != null
 								&& inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
+								&& inventory[itemUserCardSlot].hasTagCompound()
 								&& getUserAccountBalance() != -1
 								&& getUserAccountBalance() + (depositAmount * itemValue) < Integer.MAX_VALUE) {
 							creditUserAccount(depositAmount * itemValue);
@@ -746,17 +748,17 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		try {
 			ooStockWarning = tagCompound.getBoolean("OutOfStock");
 		} catch (Throwable ex2) {
-			ooStockWarning = true;
+			ooStockWarning = false;
 		}
 		try {
 			ooCoinsWarning = tagCompound.getBoolean("OutOfCoins");
 		} catch (Throwable ex2) {
-			ooCoinsWarning = true;
+			ooCoinsWarning = false;
 		}
 		try {
 			inventoryFullWarning = tagCompound.getBoolean("InventoryFull");
 		} catch (Throwable ex2) {
-			inventoryFullWarning = true;
+			inventoryFullWarning = false;
 		}
 		try {
 			buyButtonActive = tagCompound.getBoolean("BuyButtonActive");
@@ -990,28 +992,28 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private int getOwnerAccountBalance() {
 		if (worldObj.isRemote)
 			return 0;
-		if (inventory[itemCardSlot] == null)
+		if (inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
 			return 0;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
 	private void creditOwnerAccount(int i) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote || !inventory[itemCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
 	private void debitOwnerAccount(int i) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote || !inventory[itemCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 
 	private void debitUserAccount(int i) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote || !inventory[itemUserCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
@@ -1020,14 +1022,14 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	private int getUserAccountBalance() {
 		if (worldObj.isRemote)
 			return 0;
-		if (inventory[itemUserCardSlot] == null)
+		if (inventory[itemUserCardSlot] == null || !inventory[itemUserCardSlot].hasTagCompound())
 			return 0;
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
 	private void creditUserAccount(int i) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote || !inventory[itemUserCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().creditAccount(accountNumber, i);

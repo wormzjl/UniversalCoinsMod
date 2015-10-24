@@ -510,6 +510,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					int itemValue = multiplier[coinType];
 					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
 					if (inventory[itemCardSlot] != null
+							&& inventory[itemCardSlot].hasTagCompound()
 							&& inventory[itemCardSlot].getItem() == UniversalCoins.proxy.itemEnderCard
 							&& getAccountBalance() + (itemPrice * depositAmount) < Integer.MAX_VALUE) {
 						creditAccount(depositAmount * itemValue);
