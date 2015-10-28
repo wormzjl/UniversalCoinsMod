@@ -49,7 +49,7 @@ public class BlockSignal extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7,
 			float par8, float par9) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		if (player.isSneaking()) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te != null && te instanceof TileSignal) {
 				TileSignal tentity = (TileSignal) te;
