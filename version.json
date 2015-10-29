@@ -2,7 +2,7 @@
 	"versionList": [
 		{
 			"mcVersion":"Minecraft 1.7.2",
-			"modVersion":"1.7.2-1.6.36",
+			"modVersion":"1.7.2-1.6.37",
 			"changeLog": [
 				"Please read changes on release page."
 			],
@@ -12,7 +12,7 @@
 		},
 		{
 			"mcVersion":"Minecraft 1.7.10",
-			"modVersion":"1.7.10-1.6.36",
+			"modVersion":"1.7.10-1.6.37",
 			"changeLog": [
 				"Please read changes on release page."
 			],
