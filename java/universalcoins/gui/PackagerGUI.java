@@ -2,8 +2,6 @@ package universalcoins.gui;
 
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.command.CommandBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
@@ -147,6 +143,7 @@ public class PackagerGUI extends GuiContainer {
 		}
 		if (sendMode) {
 			this.drawTexturedModalRect(x + 3, y + 20, 0, 190, 169, 40);
+			if (tEntity.packageTarget != "") packageReceiverField.setText(tEntity.packageTarget);
 			fontRendererObj.drawString(packageReceiverField.getText(), x + 30, y + 30, 4210752);
 		}
 	}
@@ -275,8 +272,9 @@ public class PackagerGUI extends GuiContainer {
 			updateSlots(2);
 		}
 		if (button.id == idBuyButton && sendMode) {
-			button.id = 10; //set to 10 so nothing happens in tileEntity
-			tEntity.sendServerUpdateMessage(packageReceiverField.getText());
+			//we send a modified packet so the tileentity function handles 
+			tEntity.sendPacket(button.id, true);
+			return; //we exit here so 
 		}
 
 		tEntity.sendPacket(button.id, isShiftKeyDown());
@@ -289,28 +287,22 @@ public class PackagerGUI extends GuiContainer {
 				packageReceiverField.setText("");
 			}
 			packageReceiverField.textboxKeyTyped(c, i);
+			if (c == KeyEvent.VK_TAB) {
+				tEntity.sendServerUpdateMessage(packageReceiverField.getText(), true);
+			} else {
+				tEntity.sendServerUpdateMessage(packageReceiverField.getText(), false);
+			}
 		} else {
 			super.keyTyped(c, i);
 		}
 		if (c == KeyEvent.VK_ESCAPE) {
 			super.keyTyped(c, i);
 		}
-		if (c == KeyEvent.VK_TAB) {
-			List<String> players = new ArrayList<String>();
-			for (EntityPlayer p : (List<EntityPlayer>) tEntity.getWorldObj().playerEntities) {
-				players.add(p.getDisplayName());
-			}
-			String test[] = new String[1];
-			test[0] = packageReceiverField.getText();
-			List match = CommandBase.getListOfStringsFromIterableMatchingLastWord(test, players);
-			if (match.size() > 0)
-				packageReceiverField.setText(match.get(0).toString());
-		}
 	}
 
 	private boolean canSend() {
 		if (tEntity.getStackInSlot(tEntity.itemPackageInputSlot) != null
-				&& tEntity.getWorldObj().getPlayerEntityByName(packageReceiverField.getText()) != null) {
+				&& tEntity.packageTarget != "") {
 			return true;
 		}
 		return false;

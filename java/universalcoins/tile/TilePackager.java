@@ -1,10 +1,12 @@
 package universalcoins.tile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import net.minecraft.command.CommandBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -17,12 +19,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCPackagerServerMessage;
-import universalcoins.net.UCVendorServerMessage;
 import universalcoins.util.UniversalAccounts;
 
 public class TilePackager extends TileEntity implements IInventory, ISidedInventory {
@@ -41,6 +41,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	public boolean cardAvailable = false;
 	public String customName = "";
 	public String playerName = "";
+	public String packageTarget = "";
 	public boolean inUse = false;
 	public int packageSize = 0;
 	public int[] packageCost = { UniversalCoins.smallPackagePrice, UniversalCoins.medPackagePrice,
@@ -50,8 +51,12 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		super();
 	}
 
-	public void onButtonPressed(int buttonId) {
+	public void onButtonPressed(int buttonId, boolean shiftPressed) {
 		if (buttonId == 0) {
+			if (shiftPressed) {
+				sendPackage(packageTarget);
+				return;
+			}
 			if (coinSum < packageCost[packageSize] && !cardAvailable)
 				return;
 			if (inventory[itemOutputSlot] == null) {
@@ -165,6 +170,27 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		}
 		cardAvailable = false;
 	}
+	
+	public void playerLookup(String player, boolean tabPressed) {
+		if (tabPressed) {
+			List<String> players = new ArrayList<String>();
+			for (EntityPlayer p : (List<EntityPlayer>)worldObj.playerEntities) {
+				players.add(p.getDisplayName());
+			}
+			String test[] = new String[1];
+			test[0] = player;
+			List match = CommandBase.getListOfStringsFromIterableMatchingLastWord(test, players);
+			if (match.size() > 0) {
+				packageTarget = match.get(0).toString();
+			}
+		} else {
+			if (worldObj.getPlayerEntityByName(player) != null) {
+				packageTarget = player;
+			} else {
+				packageTarget = "";
+			}
+		}
+	}
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
@@ -176,8 +202,8 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		UniversalCoins.snw.sendToServer(new UCButtonMessage(xCoord, yCoord, zCoord, button, shiftPressed));
 	}
 
-	public void sendServerUpdateMessage(String packageTarget) {
-		UniversalCoins.snw.sendToServer(new UCPackagerServerMessage(xCoord, yCoord, zCoord, packageTarget));
+	public void sendServerUpdateMessage(String packageTarget, boolean tabPressed) {
+		UniversalCoins.snw.sendToServer(new UCPackagerServerMessage(xCoord, yCoord, zCoord, packageTarget, tabPressed));
 	}
 
 	@Override
@@ -213,6 +239,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		tagCompound.setInteger("coinSum", coinSum);
 		tagCompound.setBoolean("cardAvailable", cardAvailable);
 		tagCompound.setString("customName", customName);
+		tagCompound.setString("packageTarget", packageTarget);
 		tagCompound.setBoolean("inUse", inUse);
 		tagCompound.setInteger("packageSize", packageSize);
 		tagCompound.setInteger("smallPrice", packageCost[0]);
@@ -246,6 +273,11 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 			customName = tagCompound.getString("customName");
 		} catch (Throwable ex2) {
 			customName = "";
+		}
+		try {
+			packageTarget = tagCompound.getString("packageTarget");
+		} catch (Throwable ex2) {
+			packageTarget = "";
 		}
 		try {
 			packageSize = tagCompound.getInteger("packageSize");
@@ -408,7 +440,9 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 			return;
 		EntityPlayer player = worldObj.getPlayerEntityByName(packageTarget);
 		if (player != null) {
-			if (!player.inventory.addItemStackToInventory(inventory[itemPackageInputSlot])) {
+			if (player.inventory.getFirstEmptyStack() != -1) {
+				player.inventory.addItemStackToInventory(inventory[itemPackageInputSlot]);
+			} else {
 				Random rand = new Random();
 				float rx = rand.nextFloat() * 0.8F + 0.1F;
 				float ry = rand.nextFloat() * 0.8F + 0.1F;

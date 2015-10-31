@@ -64,6 +64,7 @@ public class BlockPackager extends BlockContainer {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 				tilePackager.playerName = player.getDisplayName();
 				tilePackager.inUse = true;
+				tilePackager.packageTarget = "";
 				return true;
 			}
 		}
@@ -112,7 +113,7 @@ public class BlockPackager extends BlockContainer {
 			TileEntity tileEntity = world.getTileEntity(xCoord, yCoord, zCoord);
 			if (tileEntity != null && tileEntity instanceof TilePackager) {
 				TilePackager tilePackager = (TilePackager) world.getTileEntity(xCoord, yCoord, zCoord);
-				tilePackager.onButtonPressed(0);
+				tilePackager.onButtonPressed(0, false);
 			}
 		}
 	}

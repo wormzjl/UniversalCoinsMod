@@ -18,6 +18,7 @@ public class ContainerPackager extends Container {
 	private boolean lastCardAvailable;
 	private String lastCustomName;
 	private boolean lastInUse = false;
+	private String lastPackageTarget = "";
 
 	public ContainerPackager(InventoryPlayer inventoryPlayer, TilePackager tileEntity) {
 		tEntity = tileEntity;
@@ -113,7 +114,8 @@ public class ContainerPackager extends Container {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
 			if (this.lastCoinSum != tEntity.coinSum || this.lastPackageSize != tEntity.packageSize
-					|| this.lastCardAvailable != tEntity.cardAvailable || this.lastInUse != tEntity.inUse) {
+					|| this.lastCardAvailable != tEntity.cardAvailable || this.lastInUse != tEntity.inUse
+					|| this.lastPackageTarget != tEntity.packageTarget) {
 				tEntity.updateTE();
 			}
 
@@ -121,6 +123,7 @@ public class ContainerPackager extends Container {
 			this.lastPackageSize = tEntity.packageSize;
 			this.lastCardAvailable = tEntity.cardAvailable;
 			this.lastInUse = tEntity.inUse;
+			this.lastPackageTarget = tEntity.packageTarget;
 		}
 	}
 
