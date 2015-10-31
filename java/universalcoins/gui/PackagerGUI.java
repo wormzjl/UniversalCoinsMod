@@ -143,7 +143,7 @@ public class PackagerGUI extends GuiContainer {
 		}
 		if (sendMode) {
 			this.drawTexturedModalRect(x + 3, y + 20, 0, 190, 169, 40);
-			if (tEntity.packageTarget != "") packageReceiverField.setText(tEntity.packageTarget);
+			if (!tEntity.packageTarget.contentEquals("")) packageReceiverField.setText(tEntity.packageTarget);
 			fontRendererObj.drawString(packageReceiverField.getText(), x + 30, y + 30, 4210752);
 		}
 	}
@@ -302,7 +302,7 @@ public class PackagerGUI extends GuiContainer {
 
 	private boolean canSend() {
 		if (tEntity.getStackInSlot(tEntity.itemPackageInputSlot) != null
-				&& tEntity.packageTarget != "") {
+				&& !tEntity.packageTarget.contentEquals("")) {
 			return true;
 		}
 		return false;

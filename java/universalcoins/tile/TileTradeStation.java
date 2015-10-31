@@ -186,7 +186,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			return;
 		}
 		itemPrice = UCItemPricer.getInstance().getItemPrice(inventory[itemInputSlot]);
-		if (itemPrice == -1) {
+		if (itemPrice == -1 || itemPrice == 0) {
 			sellButtonActive = false;
 			return;
 		}
