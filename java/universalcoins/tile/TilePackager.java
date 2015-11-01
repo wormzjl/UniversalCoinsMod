@@ -280,6 +280,11 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 			packageTarget = "";
 		}
 		try {
+			inUse = tagCompound.getBoolean("inUse");
+		} catch (Throwable ex2) {
+			inUse = false;
+		}
+		try {
 			packageSize = tagCompound.getInteger("packageSize");
 		} catch (Throwable ex2) {
 			packageSize = 0;

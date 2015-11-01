@@ -1,7 +1,7 @@
 package universalcoins.tile;
 
 import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Optional;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
