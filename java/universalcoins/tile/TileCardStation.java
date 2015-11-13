@@ -110,7 +110,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			}
 			if (slot == itemCardSlot && !worldObj.isRemote) {
 				if (!inventory[itemCardSlot].hasTagCompound()) {
-					return;//TODO
+					return;
 				}
 				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0
 						&& inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(playerName)) {
@@ -365,7 +365,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		}
 	}
 
-	private void fillCoinSlot() {
+	public void fillCoinSlot() {
 		if (inventory[itemCoinSlot] == null && coinWithdrawalAmount > 0) {
 			// use logarithm to find largest cointype for coins being withdrawn
 			int logVal = Math.min((int) (Math.log(coinWithdrawalAmount) / Math.log(9)), 4);
