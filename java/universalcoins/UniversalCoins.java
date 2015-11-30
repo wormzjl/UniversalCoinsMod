@@ -59,7 +59,7 @@ import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
-import universalcoins.util.FEWallet;
+import universalcoins.util.FEEconomy;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerLoginEventHandler;
@@ -378,7 +378,7 @@ public class UniversalCoins {
 		if (Loader.isModLoaded("ForgeEssentials")) {
 			FMLLog.info("ForgeEssentials loaded. Registering economy");
 			try {
-				APIRegistry.economy = FEWallet.class.newInstance();
+				APIRegistry.economy = FEEconomy.class.newInstance();
 			} catch (InstantiationException e) {
 				FMLLog.warning("FE Economy InstantiationException");
 			} catch (IllegalAccessException e) {
