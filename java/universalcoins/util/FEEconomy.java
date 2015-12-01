@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import com.forgeessentials.api.UserIdent;
 import com.forgeessentials.api.economy.Economy;
 import com.forgeessentials.api.economy.Wallet;
-import com.forgeessentials.data.v2.DataManager;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.StatCollector;
@@ -19,20 +18,12 @@ public class FEEconomy implements Economy {
 
 	@Override
 	public Wallet getWallet(UserIdent ident) {
-		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(ident.getUuid().toString());
-		FEWallet wallet = DataManager.getInstance().load(FEWallet.class, accountNumber);
-		if (wallet == null)
-            wallet = new FEWallet(accountNumber);
-		return wallet;
+		return new FEWallet(UniversalAccounts.getInstance().getOrCreatePlayerAccount(ident.getUuid().toString()));
 	}
 
 	@Override
 	public Wallet getWallet(EntityPlayerMP player) {
-		String accountNumber = UniversalAccounts.getInstance().getOrCreatePlayerAccount(player.getUniqueID().toString());
-		FEWallet wallet = DataManager.getInstance().load(FEWallet.class, accountNumber);
-		if (wallet == null)
-            wallet = new FEWallet(accountNumber);
-		return wallet;
+		return new FEWallet(UniversalAccounts.getInstance().getOrCreatePlayerAccount(player.getUniqueID().toString()));
 	}
 
 	@Override

@@ -1,14 +1,7 @@
 package universalcoins.util;
 
-import java.text.DecimalFormat;
-
 import com.forgeessentials.api.APIRegistry;
-import com.forgeessentials.api.UserIdent;
-import com.forgeessentials.api.economy.Economy;
 import com.forgeessentials.api.economy.Wallet;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.StatCollector;
 
 public class FEWallet implements Wallet {
 	private String accountNumber;
@@ -16,24 +9,26 @@ public class FEWallet implements Wallet {
 	public FEWallet(String accountNumber) {
         this.accountNumber = accountNumber;
     }
-	
-	public FEWallet() {
-		
+
+	@Override
+	public void add(long amount) {
+		if ( amount > (long)Integer.MAX_VALUE ) {
+			amount = Integer.MAX_VALUE;
+		}
+		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) amount);
 	}
 
 	@Override
-	public void add(long arg0) {
-		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) arg0);
+	public void add(double amount) {
+		if ( amount > (long)Integer.MAX_VALUE ) {
+			amount = Integer.MAX_VALUE;
+		}
+		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) amount);
 	}
 
 	@Override
-	public void add(double arg0) {
-		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) arg0);
-	}
-
-	@Override
-	public boolean covers(long arg0) {
-		if (UniversalAccounts.getInstance().getAccountBalance(accountNumber) > arg0) {
+	public boolean covers(long amount) {
+		if (UniversalAccounts.getInstance().getAccountBalance(accountNumber) > amount) {
 			return true;
 		}
 		return false;
@@ -45,13 +40,20 @@ public class FEWallet implements Wallet {
 	}
 
 	@Override
-	public void set(long arg0) {
-		//TODO implement?
+	public void set(long balance) {
+		if ( balance > (long)Integer.MAX_VALUE ) {
+			UniversalAccounts.getInstance().setAccountBalance(accountNumber, Integer.MAX_VALUE);
+		} else {
+			UniversalAccounts.getInstance().setAccountBalance(accountNumber, (int)balance);
+		}
 	}
 
 	@Override
-	public boolean withdraw(long arg0) {
-		return UniversalAccounts.getInstance().debitAccount(accountNumber, (int) arg0);
+	public boolean withdraw(long amount) {
+		if ( amount > (long)Integer.MAX_VALUE ) {
+			return false;
+		}
+		return UniversalAccounts.getInstance().debitAccount(accountNumber, (int) amount);
 	}
 	
 	@Override

@@ -22,6 +22,12 @@ public class UniversalAccounts {
 		} else
 			return -1;
 	}
+	
+	public void setAccountBalance(String accountNumber, int balance) {
+		if (hasKey(accountNumber)) {
+			setWorldData(accountNumber, balance);
+		}
+	}
 
 	public boolean debitAccount(String accountNumber, int amount) {
 		if (hasKey(accountNumber)) {
