@@ -370,11 +370,17 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			// use logarithm to find largest cointype for coins being withdrawn
 			int logVal = Math.min((int) (Math.log(coinWithdrawalAmount) / Math.log(9)), 4);
 			int stackSize = Math.min((int) (coinWithdrawalAmount / Math.pow(9, logVal)), 64);
-			inventory[itemCoinSlot] = (new ItemStack(coins[logVal], stackSize));
-			coinWithdrawalAmount -= (stackSize * Math.pow(9, logVal));
 			if (!worldObj.isRemote) {
-				debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)));
-				accountBalance = getAccountBalance(accountNumber);
+				if (debitAccount(accountNumber, (int) (stackSize * Math.pow(9, logVal)))) {
+					inventory[itemCoinSlot] = (new ItemStack(coins[logVal], stackSize));
+					coinWithdrawalAmount -= (stackSize * Math.pow(9, logVal));
+					accountBalance = getAccountBalance(accountNumber);
+					updateTE();
+				} else {
+					coinWithdrawalAmount = 0;
+					withdrawCoins = false;
+					return;
+				}
 			}
 		}
 		if (coinWithdrawalAmount <= 0) {
@@ -415,8 +421,8 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		UniversalAccounts.getInstance().transferPlayerAccount(playerUID2);
 	}
 
-	private void debitAccount(String accountNumber2, int i) {
-		UniversalAccounts.getInstance().debitAccount(accountNumber2, i);
+	private boolean debitAccount(String accountNumber2, int i) {
+		return UniversalAccounts.getInstance().debitAccount(accountNumber2, i);
 	}
 
 	@Override
