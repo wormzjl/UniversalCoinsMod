@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileTradeStation;
+import universalcoins.tile.TileVendorBlock;
 
 public class BlockTradeStation extends BlockContainer {
 
@@ -62,12 +64,24 @@ public class BlockTradeStation extends BlockContainer {
 				if (!world.isRemote) {
 					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
 				}
+				return false;
+			}
+			if (((TileTradeStation) tileEntity).publicAccess) {
+				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				((TileTradeStation) tileEntity).playerName = player.getDisplayName();
+				((TileTradeStation) tileEntity).inUse = true;
 				return true;
 			} else {
-				tileTrade.playerName = player.getDisplayName();
-				tileTrade.inUse = true;
-				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
-				return true;
+				if (((TileTradeStation) tileEntity).blockOwner.matches(player.getDisplayName())) {
+					player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+					((TileTradeStation) tileEntity).playerName = player.getDisplayName();
+					((TileTradeStation) tileEntity).inUse = true;
+					return true;
+				}
+				if (!world.isRemote) {
+					player.addChatMessage(
+							new ChatComponentText(StatCollector.translateToLocal("chat.warning.private")));
+				}
 			}
 		}
 		return false;
@@ -126,23 +140,33 @@ public class BlockTradeStation extends BlockContainer {
 				tentity.coinMode = tagCompound.getInteger("CoinMode");
 				tentity.itemPrice = tagCompound.getInteger("ItemPrice");
 				tentity.customName = tagCompound.getString("CustomName");
+				tentity.blockOwner = ((EntityPlayerMP) player).getDisplayName();
 			}
 			world.markBlockForUpdate(x, y, z);
 		} else if (stack.hasDisplayName()) {
 			((TileTradeStation) world.getTileEntity(x, y, z)).setInventoryName(stack.getDisplayName());
+		} else {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof TileTradeStation) {
+				TileTradeStation tentity = (TileTradeStation) te;
+				tentity.blockOwner = player.getCommandSenderName();
+			}
 		}
 	}
 
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (!world.isRemote) {
-			if (!player.capabilities.isCreativeMode) {
-				ItemStack stack = getItemStackWithData(world, x, y, z);
-				EntityItem entityItem = new EntityItem(world, x, y, z, stack);
-				world.spawnEntityInWorld(entityItem);
-			}
+		String ownerName = ((TileTradeStation) world.getTileEntity(x, y, z)).blockOwner;
+		if (player.capabilities.isCreativeMode) {
 			super.removedByPlayer(world, player, x, y, z);
+			return true;
+		}
+		if (player.getDisplayName().matches(ownerName) && !world.isRemote) {
+			ItemStack stack = getItemStackWithData(world, x, y, z);
+			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+			world.spawnEntityInWorld(entityItem);
+			super.removedByPlayer(world, player, x, y, z);
+			return true;
 		}
 		return false;
 	}

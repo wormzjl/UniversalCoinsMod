@@ -7,14 +7,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
-import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.util.UniversalAccounts;
 
 public class TileCardStation extends TileEntity implements IInventory, ISidedInventory {
@@ -27,6 +28,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String playerName = "";
 	public String playerUID = "";
+	public String blockOwner = "none";
 	public boolean inUse = false;
 	public boolean depositCoins = false;
 	public boolean withdrawCoins = false;
@@ -150,9 +152,16 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 
 	@Override
 	public Packet getDescriptionPacket() {
-		return UniversalCoins.snw.getPacketFrom(new UCTileCardStationMessage(this));
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
 	}
 
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.func_148857_g());
+	}
+	
 	public void sendServerUpdatePacket(int withdrawalAmount) {
 		UniversalCoins.snw
 				.sendToServer(new UCCardStationServerWithdrawalMessage(xCoord, yCoord, zCoord, withdrawalAmount));
@@ -198,6 +207,11 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		} catch (Throwable ex2) {
 			coinWithdrawalAmount = 0;
 		}
+		try {
+			blockOwner = tagCompound.getString("blockOwner");
+		} catch (Throwable ex2) {
+			blockOwner = "none";
+		}
 	}
 
 	@Override
@@ -218,6 +232,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		tagCompound.setBoolean("DepositCoins", depositCoins);
 		tagCompound.setBoolean("WithdrawCoins", withdrawCoins);
 		tagCompound.setInteger("CoinWithdrawalAmount", coinWithdrawalAmount);
+		tagCompound.setString("blockOwner", blockOwner);
 	}
 
 	@Override

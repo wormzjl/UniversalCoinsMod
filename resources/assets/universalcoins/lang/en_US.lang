@@ -70,6 +70,8 @@ general.button.spin=Spin
 general.button.coin=Coin
 general.label.balance=Balance: 
 general.label.price=Price: 
+general.label.public=Public
+general.label.private=Private
 
 #####
 # Commands
@@ -134,6 +136,7 @@ command.send.result.receiver=coins received from
 # Chat Warnings
 #####
 chat.warning.inuse=Block in use. Try again later.
+chat.warning.private=Block is private. Owner access only.
 
 #####
 # Universal Card Messages

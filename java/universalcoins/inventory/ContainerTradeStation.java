@@ -15,7 +15,7 @@ public class ContainerTradeStation extends Container {
 	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
 	private boolean lastBuyButtonActive, lastSellButtonActive, lastCoinButtonActive, lastSStackButtonActive,
-			lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive;
+			lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive, lastPublicAccess;
 
 	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
@@ -115,22 +115,24 @@ public class ContainerTradeStation extends Container {
 					|| this.lastCoinButtonActive != this.tileEntity.coinButtonActive
 					|| this.lastSStackButtonActive != this.tileEntity.isSStackButtonActive
 					|| this.lastLStackButtonActive != this.tileEntity.isLStackButtonActive
-					|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive) {
+					|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive
+					|| this.lastPublicAccess != this.tileEntity.publicAccess) {
 				tileEntity.updateTE();
-			}
 
-			this.lastAutoMode = this.tileEntity.autoMode;
-			this.lastCoinMode = this.tileEntity.coinMode;
-			this.lastCoinSum = this.tileEntity.coinSum;
-			this.lastItemPrice = this.tileEntity.itemPrice;
-			this.lastName = this.tileEntity.customName;
-			this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
-			this.lastSellButtonActive = this.tileEntity.sellButtonActive;
-			this.lastCoinButtonActive = this.tileEntity.coinButtonActive;
-			this.lastSStackButtonActive = this.tileEntity.isSStackButtonActive;
-			this.lastLStackButtonActive = this.tileEntity.isSStackButtonActive;
-			this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
-			this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
+				this.lastAutoMode = this.tileEntity.autoMode;
+				this.lastCoinMode = this.tileEntity.coinMode;
+				this.lastCoinSum = this.tileEntity.coinSum;
+				this.lastItemPrice = this.tileEntity.itemPrice;
+				this.lastName = this.tileEntity.customName;
+				this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
+				this.lastSellButtonActive = this.tileEntity.sellButtonActive;
+				this.lastCoinButtonActive = this.tileEntity.coinButtonActive;
+				this.lastSStackButtonActive = this.tileEntity.isSStackButtonActive;
+				this.lastLStackButtonActive = this.tileEntity.isSStackButtonActive;
+				this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
+				this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
+				this.lastPublicAccess = this.tileEntity.publicAccess;
+			}
 		}
 	}
 

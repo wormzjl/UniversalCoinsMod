@@ -56,28 +56,7 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
 		if (tileEntity instanceof TileTradeStation) {
-			if (message.buttonId == TradeStationGUI.idBuyButton) {
-				if (message.shiftPressed) {
-					((TileTradeStation) tileEntity).onBuyMaxPressed();
-				} else {
-					((TileTradeStation) tileEntity).onBuyPressed();
-				}
-			} else if (message.buttonId == TradeStationGUI.idSellButton) {
-				if (message.shiftPressed) {
-					((TileTradeStation) tileEntity).onSellMaxPressed();
-				} else {
-					((TileTradeStation) tileEntity).onSellPressed();
-				}
-			} else if (message.buttonId == TradeStationGUI.idAutoModeButton) {
-				((TileTradeStation) tileEntity).onAutoModeButtonPressed();
-			} else if (message.buttonId == TradeStationGUI.idCoinModeButton) {
-				((TileTradeStation) tileEntity).onCoinModeButtonPressed();
-			} else if (message.buttonId <= TradeStationGUI.idLBagButton) {
-				((TileTradeStation) tileEntity).onRetrieveButtonsPressed(message.buttonId, message.shiftPressed);
-			}
-
-			NBTTagCompound data = new NBTTagCompound();
-			tileEntity.writeToNBT(data);
+			((TileTradeStation) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);
 		}
 		if (tileEntity instanceof TileVendor) {
 			((TileVendor) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);

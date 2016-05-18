@@ -140,13 +140,14 @@ public class BlockVendor extends BlockContainer {
 		String ownerName = ((TileVendorBlock) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.capabilities.isCreativeMode) {
 			super.removedByPlayer(world, player, x, y, z);
-			return false;
+			return true;
 		}
-		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
+		if (player.getDisplayName().matches(ownerName) && !world.isRemote) {
 			ItemStack stack = getItemStackWithData(world, x, y, z);
 			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
 			world.spawnEntityInWorld(entityItem);
 			super.removedByPlayer(world, player, x, y, z);
+			return true;
 		}
 		return false;
 	}

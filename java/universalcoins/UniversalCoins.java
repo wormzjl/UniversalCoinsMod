@@ -43,9 +43,7 @@ import universalcoins.net.UCPackagerServerMessage;
 import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCSignServerMessage;
 import universalcoins.net.UCTextureMessage;
-import universalcoins.net.UCTileCardStationMessage;
 import universalcoins.net.UCTileSignMessage;
-import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
 import universalcoins.tile.TileBandit;
@@ -258,18 +256,16 @@ public class UniversalCoins {
 		snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-		snw.registerMessage(UCTileTradeStationMessage.class, UCTileTradeStationMessage.class, 2, Side.CLIENT);
-		snw.registerMessage(UCTileCardStationMessage.class, UCTileCardStationMessage.class, 3, Side.CLIENT);
-		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 4,
+		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 2,
 				Side.SERVER);
-		snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 5,
+		snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 3,
 				Side.SERVER);
-		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 6, Side.CLIENT);
-		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 7, Side.SERVER);
-		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 8, Side.CLIENT);
-		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 9, Side.SERVER);
-		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 10, Side.SERVER);
-		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 11, Side.SERVER);
+		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 4, Side.CLIENT);
+		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 5, Side.SERVER);
+		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 6, Side.CLIENT);
+		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 7, Side.SERVER);
+		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 8, Side.SERVER);
+		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 9, Side.SERVER);
 
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",

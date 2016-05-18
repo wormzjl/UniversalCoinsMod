@@ -11,11 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TilePowerBase;
 import universalcoins.tile.TilePowerReceiver;
 
 public class BlockPowerReceiver extends BlockContainer {
@@ -34,11 +35,17 @@ public class BlockPowerReceiver extends BlockContainer {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null && te instanceof TilePowerReceiver) {
 			TilePowerReceiver tentity = (TilePowerReceiver) te;
-			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+			if (tentity.publicAccess || player.getCommandSenderName().matches(tentity.blockOwner)) {
+				tentity.playerName = player.getDisplayName();
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				return true;
+			}
+			if (!world.isRemote) {
+				player.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("chat.warning.private")));
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -94,7 +101,7 @@ public class BlockPowerReceiver extends BlockContainer {
 		}
 		return false;
 	}
-	
+
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		String ownerName = ((TilePowerReceiver) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.getDisplayName().equals(ownerName)) {
@@ -120,6 +127,7 @@ public class BlockPowerReceiver extends BlockContainer {
 					itemList.appendTag(tag);
 				}
 			}
+			tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("coinSum", te.coinSum);
 			tagCompound.setInteger("rfLevel", te.rfLevel);
 			stack.setTagCompound(tagCompound);

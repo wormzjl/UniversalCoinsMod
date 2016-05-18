@@ -15,6 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import universalcoins.UniversalCoins;
+import universalcoins.gui.PowerReceiverGUI;
+import universalcoins.gui.TradeStationGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UniversalAccounts;
 import universalcoins.util.UniversalPower;
@@ -33,6 +35,8 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 	public int rfLevel = 0;
 	public long wrfLevel = 0;
 	public String blockOwner = "nobody";
+	public String playerName = "";
+	public boolean publicAccess = true;
 	public ForgeDirection orientation = null;
 
 	@Override
@@ -236,6 +240,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		if (orientation != null) {
 			tagCompound.setInteger("orientation", orientation.ordinal());
 		}
+		tagCompound.setBoolean("publicAccess", publicAccess);
 	}
 
 	@Override
@@ -275,12 +280,19 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		} catch (Throwable ex2) {
 			orientation = null;
 		}
+		try {
+			publicAccess = tagCompound.getBoolean("publicAccess");
+		} catch (Throwable ex2) {
+			publicAccess = true;
+		}
 	}
 
 	public void onButtonPressed(int buttonId) {
-		if (buttonId == 0) {
+		if (buttonId == PowerReceiverGUI.idCoinButton) {
 			fillOutputSlot();
-		}
+		} else if (buttonId == PowerReceiverGUI.idAccessModeButton && blockOwner.matches(playerName)) {
+			publicAccess ^= true;
+		}	
 	}
 
 	public void fillOutputSlot() {

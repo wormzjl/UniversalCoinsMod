@@ -13,14 +13,15 @@ import universalcoins.tile.TilePowerBase;
 public class ContainerPowerBase extends Container {
 	private String lastOwner;
 	private int lastCoinSum, lastrfLevel;
+	private boolean lastPublicAccess;
 	private TilePowerBase tEntity;
 
 	public ContainerPowerBase(InventoryPlayer inventoryPlayer, TilePowerBase tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 22, 37));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 37));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 22, 42));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 42));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -34,12 +35,12 @@ public class ContainerPowerBase extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 70 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 75 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 128));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 133));
 		}
 	}
 
@@ -99,13 +100,15 @@ public class ContainerPowerBase extends Container {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
 			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum
-					|| this.lastrfLevel != tEntity.rfLevel) {
+					|| this.lastrfLevel != tEntity.rfLevel
+					|| this.lastPublicAccess != this.tEntity.publicAccess) {
 				tEntity.updateTE();
 			}
 
 			this.lastOwner = tEntity.blockOwner;
 			this.lastCoinSum = tEntity.coinSum;
 			this.lastrfLevel = tEntity.rfLevel;
+			this.lastPublicAccess = this.tEntity.publicAccess;
 		}
 	}
 

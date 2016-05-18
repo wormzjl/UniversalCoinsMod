@@ -7,13 +7,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.gui.TradeStationGUI;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCTileTradeStationMessage;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UniversalAccounts;
 
@@ -38,6 +39,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public boolean isSBagButtonActive = false;
 	public boolean isLBagButtonActive = false;
 	public boolean autoModeButtonActive = UniversalCoins.autoModeEnabled;
+	public boolean publicAccess = true;
 	private static final int[] slots_top = new int[] { 0, 1, 2, 3 };
 	private static final int[] slots_bottom = new int[] { 0, 1, 2, 3 };
 	private static final int[] slots_sides = new int[] { 0, 1, 2, 3 };
@@ -46,6 +48,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public int coinMode = 0;
 	public String customName;
 	public boolean inUse = false;
+	public String blockOwner = "none";
 	public String playerName = "";
 
 	public TileTradeStation() {
@@ -132,6 +135,30 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					|| (inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.itemLargeCoinBag
 							&& inventory[itemOutputSlot].stackSize != 64);
 		}
+	}
+	
+	public void onButtonPressed(int buttonId, boolean shiftPressed) {
+		if (buttonId == TradeStationGUI.idBuyButton) {
+			if (shiftPressed) {
+				onBuyMaxPressed();
+			} else {
+				onBuyPressed();
+			}
+		} else if (buttonId == TradeStationGUI.idSellButton) {
+			if (shiftPressed) {
+				onSellMaxPressed();
+			} else {
+				onSellPressed();
+			}
+		} else if (buttonId == TradeStationGUI.idAutoModeButton) {
+			onAutoModeButtonPressed();
+		} else if (buttonId == TradeStationGUI.idCoinModeButton) {
+			onCoinModeButtonPressed();
+		} else if (buttonId <= TradeStationGUI.idLBagButton) {
+			onRetrieveButtonsPressed(buttonId, shiftPressed);
+		} else if (buttonId == TradeStationGUI.idAccessModeButton && blockOwner.matches(playerName)) {
+			publicAccess ^= true;
+		}		
 	}
 
 	public void onSellPressed() {
@@ -245,15 +272,9 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		}
 		if (inventory[itemOutputSlot] == null) { // empty stack
 			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= (useCard ? getAccountBalance() : coinSum)) {
-				amount = inventory[itemInputSlot].getMaxStackSize(); // buy one
-																		// stack
+				amount = inventory[itemInputSlot].getMaxStackSize();
 			} else {
-				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; // buy
-																				// as
-																				// many
-																				// as
-																				// i
-																				// can.
+				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; 
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot].getItemDamage()
@@ -264,12 +285,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				amount = inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize;
 				// buy as much as i can fit in a stack
 			} else {
-				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; // buy
-																				// as
-																				// many
-																				// as
-																				// i
-																				// can.
+				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice;
 			}
 		} else {
 			buyButtonActive = false;
@@ -397,6 +413,16 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} catch (Throwable ex2) {
 			inUse = false;
 		}
+		try {
+			blockOwner = tagCompound.getString("blockOwner");
+		} catch (Throwable ex2) {
+			blockOwner = "none";
+		}
+		try {
+			publicAccess = tagCompound.getBoolean("publicAccess");
+		} catch (Throwable ex2) {
+			publicAccess = true;
+		}
 	}
 
 	@Override
@@ -420,6 +446,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		tagCompound.setInteger("ItemPrice", itemPrice);
 		tagCompound.setString("CustomName", getInventoryName());
 		tagCompound.setBoolean("InUse", inUse);
+		tagCompound.setString("blockOwner", blockOwner);
+		tagCompound.setBoolean("publicAccess", publicAccess);
 	}
 
 	public void updateTE() {
@@ -428,7 +456,14 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 
 	@Override
 	public Packet getDescriptionPacket() {
-		return UniversalCoins.snw.getPacketFrom(new UCTileTradeStationMessage(this));
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		readFromNBT(pkt.func_148857_g());
 	}
 
 	public void sendPacket(int button, boolean shiftPressed) {

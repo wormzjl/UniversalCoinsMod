@@ -13,8 +13,9 @@ import universalcoins.tile.TilePowerBase;
 
 public class PowerBaseGUI extends GuiContainer {
 	private TilePowerBase tEntity;
-	private GuiButton coinButton;
+	private GuiButton coinButton, accessModeButton;
 	public static final int idCoinButton = 0;
+	public static final int idAccessModeButton = 1;
 	DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 
 	public PowerBaseGUI(InventoryPlayer inventoryPlayer, TilePowerBase tileEntity) {
@@ -22,16 +23,19 @@ public class PowerBaseGUI extends GuiContainer {
 		tEntity = tileEntity;
 
 		xSize = 176;
-		ySize = 152;
+		ySize = 157;
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
-		coinButton = new GuiSlimButton(idCoinButton, 123 + (width - xSize) / 2, 55 + (height - ySize) / 2, 46, 12,
+		coinButton = new GuiSlimButton(idCoinButton, 123 + (width - xSize) / 2, 60 + (height - ySize) / 2, 46, 12,
 				StatCollector.translateToLocal("general.button.coin"));
+		accessModeButton = new GuiSlimButton(idAccessModeButton, 122 + (width - xSize) / 2, 4 + (height - ySize) / 2,
+				50, 12, StatCollector.translateToLocal("general.label.public"));
 		buttonList.clear();
 		buttonList.add(coinButton);
+		buttonList.add(accessModeButton);
 	}
 
 	@Override
@@ -41,23 +45,29 @@ public class PowerBaseGUI extends GuiContainer {
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		
+		if (tEntity.publicAccess) {
+			accessModeButton.displayString = StatCollector.translateToLocal("general.label.public");
+		} else {
+			accessModeButton.displayString = StatCollector.translateToLocal("general.label.private");
+		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		fontRendererObj.drawString(tEntity.getInventoryName(), 6, 5, 4210752);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 58, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 63, 4210752);
 
 		// display rf sold
 		String formattedkrf = formatter.format(tEntity.krfSold);
 		int rfLength = fontRendererObj.getStringWidth(formattedkrf + " kRF");
-		fontRendererObj.drawString(formattedkrf + " kRF", 131 - rfLength, 21, 4210752);
+		fontRendererObj.drawString(formattedkrf + " kRF", 131 - rfLength, 26, 4210752);
 
 		// display coin balance
 		String formattedBalance = formatter.format(tEntity.coinSum);
 		int balLength = fontRendererObj.getStringWidth(formattedBalance);
-		fontRendererObj.drawString(formattedBalance, 131 - balLength, 43, 4210752);
+		fontRendererObj.drawString(formattedBalance, 131 - balLength, 48, 4210752);
 	}
 
 	protected void actionPerformed(GuiButton button) {

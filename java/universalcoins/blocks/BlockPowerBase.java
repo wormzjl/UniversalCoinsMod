@@ -10,11 +10,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TilePowerBase;
+import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
 
@@ -34,11 +37,17 @@ public class BlockPowerBase extends BlockContainer {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null && te instanceof TilePowerBase) {
 			TilePowerBase tentity = (TilePowerBase) te;
-			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+			if (tentity.publicAccess || player.getCommandSenderName().matches(tentity.blockOwner)) {
+				tentity.playerName = player.getDisplayName();
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
+				return true;
+			}
+			if (!world.isRemote) {
+				player.addChatMessage(
+						new ChatComponentText(StatCollector.translateToLocal("chat.warning.private")));
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -119,6 +128,7 @@ public class BlockPowerBase extends BlockContainer {
 					itemList.appendTag(tag);
 				}
 			}
+			tagCompound.setTag("Inventory", itemList);
 			tagCompound.setInteger("coinSum", te.coinSum);
 			stack.setTagCompound(tagCompound);
 			return stack;

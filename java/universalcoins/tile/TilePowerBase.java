@@ -1,7 +1,6 @@
 package universalcoins.tile;
 
 import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.Optional;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -15,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import universalcoins.UniversalCoins;
+import universalcoins.gui.PowerBaseGUI;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.util.UniversalAccounts;
 import universalcoins.util.UniversalPower;
@@ -31,7 +31,9 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 	public int coinSum = 0;
 	public int rfLevel = 0;
 	public int krfSold = 0;
+	public boolean publicAccess = true;
 	public String blockOwner = "nobody";
+	public String playerName = "";
 
 	@Override
 	public int getSizeInventory() {
@@ -223,6 +225,7 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 		tagCompound.setInteger("rfLevel", rfLevel);
 		tagCompound.setInteger("krfSold", krfSold);
 		tagCompound.setString("blockOwner", blockOwner);
+		tagCompound.setBoolean("publicAccess", publicAccess);
 	}
 
 	@Override
@@ -257,11 +260,18 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 		} catch (Throwable ex2) {
 			blockOwner = "nobody";
 		}
+		try {
+			publicAccess = tagCompound.getBoolean("publicAccess");
+		} catch (Throwable ex2) {
+			publicAccess = true;
+		}
 	}
 
 	public void onButtonPressed(int buttonId) {
-		if (buttonId == 0) {
+		if (buttonId == PowerBaseGUI.idCoinButton) {
 			fillOutputSlot();
+		} else if (buttonId == PowerBaseGUI.idAccessModeButton && blockOwner.matches(playerName)) {
+			publicAccess ^= true;
 		}
 	}
 

@@ -17,6 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileTradeStation;
 
 public class BlockCardStation extends BlockContainer {
 
@@ -26,11 +27,7 @@ public class BlockCardStation extends BlockContainer {
 		super(new Material(MapColor.stoneColor));
 		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
-		setBlockTextureName("universalcoins:blockTradeStation1"); // fixes
-																	// missing
-																	// texture
-																	// on block
-																	// break
+		setBlockTextureName("universalcoins:blockTradeStation1");
 		setResistance(30.0F);
 	}
 
@@ -81,6 +78,25 @@ public class BlockCardStation extends BlockContainer {
 			return;
 		int rotation = MathHelper.floor_double((double) ((player.rotationYaw * 4.0f) / 360F) + 2.5D) & 3;
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileCardStation) {
+			TileCardStation tentity = (TileCardStation) te;
+			tentity.blockOwner = player.getCommandSenderName();
+		}
+	}
+	
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+		String ownerName = ((TileCardStation) world.getTileEntity(x, y, z)).blockOwner;
+		if (player.capabilities.isCreativeMode) {
+			super.removedByPlayer(world, player, x, y, z);
+			return true;
+		}
+		if (player.getDisplayName().matches(ownerName) && !world.isRemote) {
+			super.removedByPlayer(world, player, x, y, z);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -13,15 +13,16 @@ import universalcoins.tile.TilePowerReceiver;
 public class ContainerPowerReceiver extends Container {
 	private String lastOwner;
 	private int lastCoinSum, lastrfLevel;
+	private boolean lastPublicAccess;
 	private TilePowerReceiver tEntity;
 
 	public ContainerPowerReceiver(InventoryPlayer inventoryPlayer, TilePowerReceiver tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 46));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 46));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 46));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 51));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 51));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 51));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -35,12 +36,12 @@ public class ContainerPowerReceiver extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 79 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 137));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
 		}
 	}
 
@@ -100,13 +101,15 @@ public class ContainerPowerReceiver extends Container {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);
 
 			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum
-					|| this.lastrfLevel != tEntity.rfLevel) {
+					|| this.lastrfLevel != tEntity.rfLevel
+					|| this.lastPublicAccess != this.tEntity.publicAccess) {
 				tEntity.updateTE();
 			}
 
 			this.lastOwner = tEntity.blockOwner;
 			this.lastCoinSum = tEntity.coinSum;
 			this.lastrfLevel = tEntity.rfLevel;
+			this.lastPublicAccess = this.tEntity.publicAccess;
 		}
 	}
 

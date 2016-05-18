@@ -22,11 +22,6 @@ public class FEEconomy implements Economy {
 	}
 
 	@Override
-	public Wallet getWallet(EntityPlayerMP player) {
-		return new FEWallet(UniversalAccounts.getInstance().getOrCreatePlayerAccount(player.getUniqueID().toString()));
-	}
-
-	@Override
 	public String toString(long arg0) {
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 		return formatter.format(arg0) + " " + StatCollector.translateToLocal("item.itemCoin.name");
