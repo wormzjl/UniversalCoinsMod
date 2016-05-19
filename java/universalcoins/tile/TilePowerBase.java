@@ -132,21 +132,24 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		if (!simulate) {
+			int rfChunks = 0;
 			rfLevel += maxReceive;
 			if (rfLevel >= 10000) {
-				rfLevel -= 10000;
+				// calculate how many 10k chunks we can sell
+				rfChunks = (int) Math.floor(rfLevel / 10000);
+				rfLevel -= rfChunks * 10000;
 				boolean playerCredited = false;
 				if (inventory[itemCardSlot] != null) {
-					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate);
+					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate * rfChunks);
 					if (playerCredited) {
-						krfSold += 10;
-						UniversalPower.getInstance().receiveEnergy(10, false);
+						krfSold += 10 * rfChunks;
+						UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
 					}
 				}
-				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate < Integer.MAX_VALUE) {
-					coinSum += UniversalCoins.rfWholesaleRate;
-					krfSold += 10;
-					UniversalPower.getInstance().receiveEnergy(10, false);
+				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate * rfChunks <= Integer.MAX_VALUE) {
+					coinSum += UniversalCoins.rfWholesaleRate * rfChunks;
+					krfSold += 10 * rfChunks;
+					UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
 				}
 			}
 		}

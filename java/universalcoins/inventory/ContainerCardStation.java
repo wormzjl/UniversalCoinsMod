@@ -28,8 +28,8 @@ public class ContainerCardStation extends Container {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 172, 60));
 		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 172, 40));
+		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 172, 60));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);

@@ -442,7 +442,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				if (inventory[itemUserCardSlot] != null
 						&& inventory[itemUserCardSlot].getItem() instanceof ItemEnderCard
 						&& getUserAccountBalance() != -1 && getUserAccountBalance()
-								+ (itemPrice * thisSale / inventory[itemTradeSlot].stackSize) < Integer.MAX_VALUE) {
+								+ (itemPrice * thisSale / inventory[itemTradeSlot].stackSize) < Long.MAX_VALUE) {
 					creditUserAccount(itemPrice * thisSale / inventory[itemTradeSlot].stackSize);
 				} else {
 					userCoinSum += itemPrice * thisSale / inventory[itemTradeSlot].stackSize;
@@ -602,7 +602,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				updateCoinsForPurchase();
 			}
 			if (slot == itemUserCardSlot && inventory[itemUserCardSlot].getItem() instanceof ItemEnderCard
-					&& getUserAccountBalance() != -1 && getUserAccountBalance() + userCoinSum < Integer.MAX_VALUE) {
+					&& getUserAccountBalance() != -1 && getUserAccountBalance() + userCoinSum < Long.MAX_VALUE) {
 				creditUserAccount(userCoinSum);
 				userCoinSum = 0;
 			}

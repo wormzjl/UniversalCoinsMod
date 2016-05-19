@@ -57,7 +57,7 @@ public class UniversalAccounts {
 				accountNumber = String.valueOf(generateAccountNumber());
 				if (getWorldString(accountNumber) == "") {
 					setWorldData(playerUID, accountNumber);
-					setWorldData(accountNumber, Long.MAX_VALUE); //TODO revert to zero
+					setWorldData(accountNumber, 0);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ public class UniversalAccounts {
 				accountNumber = String.valueOf(generateAccountNumber());
 			} while (hasKey(accountNumber));
 			setWorldData(playerUID, accountNumber);
-			setWorldData(accountNumber, Long.MAX_VALUE); //TODO revert to zero
+			setWorldData(accountNumber, 0);
 			return true;
 		}
 		return false;

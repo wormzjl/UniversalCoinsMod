@@ -44,6 +44,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		withdrawCoins = false;
 		depositCoins = false;
 		accountNumber = "none";
+		accountBalance = 0;
 		updateTE();
 	}
 
@@ -92,7 +93,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
 		if (stack != null) {
-			if (slot == itemCoinSlot && depositCoins && !accountNumber.contentEquals("none")) {
+			if (slot == itemCoinSlot && depositCoins && !accountNumber.matches("none")) {
 				int coinType = getCoinType(stack.getItem());
 				if (coinType != -1) {
 					int itemValue = multiplier[coinType];
@@ -110,14 +111,6 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			if (slot == itemCardSlot && !worldObj.isRemote) {
 				if (!inventory[itemCardSlot].hasTagCompound()) {
 					return;
-				}
-				if (inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum") != 0
-						&& inventory[itemCardSlot].stackTagCompound.getString("Owner").contentEquals(playerName)) {
-					addPlayerAccount(playerUID);
-					accountNumber = getPlayerAccount(playerUID);
-					creditAccount(accountNumber, inventory[itemCardSlot].stackTagCompound.getInteger("CoinSum"));
-					inventory[itemCardSlot].stackTagCompound.removeTag("CoinSum");
-					inventory[itemCardSlot].stackTagCompound.setString("Account", accountNumber);
 				}
 				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 				cardOwner = inventory[itemCardSlot].stackTagCompound.getString("Owner");
@@ -208,6 +201,21 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		} catch (Throwable ex2) {
 			blockOwner = "none";
 		}
+		try {
+			cardOwner = tagCompound.getString("cardOwner");
+		} catch (Throwable ex2) {
+			cardOwner = "none";
+		}
+		try {
+			accountNumber = tagCompound.getString("accountNumber");
+		} catch (Throwable ex2) {
+			accountNumber = "";
+		}
+		try {
+			playerUID = tagCompound.getString("playerUID");
+		} catch (Throwable ex2) {
+			playerUID = "";
+		}
 	}
 
 	@Override
@@ -228,8 +236,11 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 		tagCompound.setBoolean("DepositCoins", depositCoins);
 		tagCompound.setBoolean("WithdrawCoins", withdrawCoins);
 		tagCompound.setInteger("CoinWithdrawalAmount", coinWithdrawalAmount);
-		tagCompound.setLong("accountBalance", accountBalance);		
+		tagCompound.setLong("accountBalance", accountBalance);
 		tagCompound.setString("blockOwner", blockOwner);
+		tagCompound.setString("cardOwner", cardOwner);
+		tagCompound.setString("accountNumber", accountNumber);
+		tagCompound.setString("playerUID", playerUID);
 	}
 
 	@Override
@@ -294,7 +305,6 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 				inventory[itemCardSlot].stackTagCompound.setString("Name", playerName);
 				inventory[itemCardSlot].stackTagCompound.setString("Owner", playerUID);
 				inventory[itemCardSlot].stackTagCompound.setString("Account", getPlayerAccount(playerUID));
-				accountBalance = getAccountBalance(accountNumber);
 			}
 		}
 		if (functionId == 3) {
@@ -303,7 +313,7 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			depositCoins = true;
 			withdrawCoins = false;
 			// set account number if not already set and we have a card present
-			if (accountNumber.contentEquals("none") && inventory[itemCardSlot] != null) {
+			if (accountNumber.matches("none") && inventory[itemCardSlot] != null) {
 				accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 			}
 		} else {
@@ -317,15 +327,15 @@ public class TileCardStation extends TileEntity implements IInventory, ISidedInv
 			withdrawCoins = false;
 		if (functionId == 5) {
 			String storedAccount = getPlayerAccount(playerUID);
-			if (storedAccount != "") {
+			if (!storedAccount.matches("")) {
 				accountNumber = storedAccount;
 				cardOwner = playerUID; // needed for new card auth
 				accountBalance = getAccountBalance(accountNumber);
-			} else
-				accountNumber = "none";
+			}
 		}
 		if (functionId == 6) {
 			inventory[itemCardSlot] = null;
+			inUseCleanup();
 		}
 	}
 
