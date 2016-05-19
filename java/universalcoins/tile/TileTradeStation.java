@@ -59,11 +59,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 	public void updateEntity() {
 		super.updateEntity();
 		if (!worldObj.isRemote) {
-			activateBuySellButtons();
-			activateRetrieveButtons();
+			activateBuySellButtons();	
 			runAutoMode();
 			runCoinMode();
 		}
+		activateRetrieveButtons();
 	}
 
 	public void inUseCleanup() {
@@ -274,7 +274,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			if (inventory[itemInputSlot].getMaxStackSize() * itemPrice <= (useCard ? getAccountBalance() : coinSum)) {
 				amount = inventory[itemInputSlot].getMaxStackSize();
 			} else {
-				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice; 
+				amount = (int) ((useCard ? getAccountBalance() : coinSum) / itemPrice); 
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemInputSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemInputSlot].getItemDamage()
@@ -285,7 +285,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 				amount = inventory[itemOutputSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize;
 				// buy as much as i can fit in a stack
 			} else {
-				amount = (useCard ? getAccountBalance() : coinSum) / itemPrice;
+				amount = (int) ((useCard ? getAccountBalance() : coinSum) / itemPrice);
 			}
 		} else {
 			buyButtonActive = false;
@@ -384,7 +384,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 			}
 		}
 		try {
-			coinSum = tagCompound.getInteger("CoinsLeft");
+			coinSum = tagCompound.getInteger("CoinSum");
 		} catch (Throwable ex2) {
 			coinSum = 0;
 		}
@@ -423,6 +423,16 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		} catch (Throwable ex2) {
 			publicAccess = true;
 		}
+		try {
+			buyButtonActive = tagCompound.getBoolean("buyButtonActive");
+		} catch (Throwable ex2) {
+			buyButtonActive = false;
+		}
+		try {
+			sellButtonActive = tagCompound.getBoolean("sellButtonActive");
+		} catch (Throwable ex2) {
+			sellButtonActive = false;
+		}
 	}
 
 	@Override
@@ -440,7 +450,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		}
 		tagCompound.removeTag("CoinsLeft");
 		tagCompound.setTag("Inventory", itemList);
-		tagCompound.setInteger("CoinsLeft", coinSum);
+		tagCompound.setInteger("CoinSum", coinSum);
 		tagCompound.setInteger("AutoMode", autoMode);
 		tagCompound.setInteger("CoinMode", coinMode);
 		tagCompound.setInteger("ItemPrice", itemPrice);
@@ -448,6 +458,8 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		tagCompound.setBoolean("InUse", inUse);
 		tagCompound.setString("blockOwner", blockOwner);
 		tagCompound.setBoolean("publicAccess", publicAccess);
+		tagCompound.setBoolean("buyButtonActive", buyButtonActive);
+		tagCompound.setBoolean("sellButtonActive", sellButtonActive);
 	}
 
 	public void updateTE() {
@@ -626,7 +638,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		}
 	}
 
-	private int getAccountBalance() {
+	private long getAccountBalance() {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound()) {
 			return 0;
 		}
@@ -637,7 +649,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
-	private boolean creditAccount(int i) {
+	private boolean creditAccount(long i) {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null
 				|| inventory[itemCardSlot].getItem() != UniversalCoins.proxy.itemEnderCard
 				|| !inventory[itemCardSlot].hasTagCompound())
@@ -649,7 +661,7 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
-	private boolean debitAccount(int i) {
+	private boolean debitAccount(long i) {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
 			return false;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");

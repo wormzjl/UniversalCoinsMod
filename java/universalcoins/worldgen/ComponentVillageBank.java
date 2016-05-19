@@ -53,11 +53,28 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		fillWithAir(world, sbb, 0, 0, 0, 4, 4, 5);
 		// start with block
 		fillWithBlocks(world, sbb, 0, 0, 0, 4, 3, 5, Blocks.planks, Blocks.planks, false);
+		// floor
+		fillWithBlocks(world, sbb, 0, 0, 0, 4, 0, 5, Blocks.cobblestone, Blocks.cobblestone, false);
 		// windows
 		fillWithBlocks(world, sbb, 0, 2, 2, 4, 2, 3, Blocks.glass, Blocks.glass, false);
-		// roof
-		fillWithBlocks(world, sbb, 0, 4, 1, 4, 4, 5, Blocks.stone_slab, Blocks.stone_slab, false);
-		fillWithBlocks(world, sbb, 1, 4, 2, 3, 4, 4, Blocks.double_stone_slab, Blocks.double_stone_slab, false);
+		// top
+		fillWithBlocks(world, sbb, 1, 4, 2, 3, 4, 4, Blocks.planks, Blocks.planks, false);
+		// top front
+		fillWithMetadataBlocks(world, sbb, 1, 4, 1, 3, 4, 1, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 3), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 3), false);
+		// top back
+		fillWithMetadataBlocks(world, sbb, 1, 4, 5, 3, 4, 5, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 2), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 2), false);
+		// top right
+		fillWithMetadataBlocks(world, sbb, 4, 4, 1, 4, 4, 5, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 1), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 1), false);
+		// top left
+		fillWithMetadataBlocks(world, sbb, 0, 4, 1, 0, 4, 5, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 0), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 0), false);
 		// clear inside
 		fillWithAir(world, sbb, 1, 1, 2, 3, 3, 3);
 		// clear front
@@ -66,7 +83,6 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		fillWithAir(world, sbb, 2, 1, 1, 2, 2, 1);
 		// atm - meta, LR, TB, FB
 		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.blockCardStation, meta, 2, 2, 4, boundingBox);
-		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.blockBase, 0, 2, 1, 4, boundingBox);
 		// door
 		placeDoorAtCurrentPosition(world, boundingBox, random, 2, 1, 1,
 				this.getMetadataWithOffset(Blocks.wooden_door, 3));
@@ -80,8 +96,8 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		// add stairs if needed
 		if (this.getBlockAtCurrentPosition(world, 2, 0, -1, sbb).getMaterial() == Material.air
 				&& this.getBlockAtCurrentPosition(world, 2, -1, -1, sbb).getMaterial() != Material.air) {
-			this.placeBlockAtCurrentPosition(world, Blocks.oak_stairs, this.getMetadataWithOffset(Blocks.oak_stairs, 3),
-					2, 0, -1, sbb);
+			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
+					this.getMetadataWithOffset(Blocks.stone_stairs, 3), 2, 0, -1, sbb);
 		}
 
 		// build foundation

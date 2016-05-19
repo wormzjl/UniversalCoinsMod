@@ -5,14 +5,14 @@ import com.forgeessentials.api.economy.Wallet;
 
 public class FEWallet implements Wallet {
 	private String accountNumber;
-	
+
 	public FEWallet(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+		this.accountNumber = accountNumber;
+	}
 
 	@Override
 	public void add(long amount) {
-		if ( amount > (long)Integer.MAX_VALUE ) {
+		if (amount > (long) Integer.MAX_VALUE) {
 			amount = Integer.MAX_VALUE;
 		}
 		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) amount);
@@ -20,7 +20,7 @@ public class FEWallet implements Wallet {
 
 	@Override
 	public void add(double amount) {
-		if ( amount > (long)Integer.MAX_VALUE ) {
+		if (amount > (long) Integer.MAX_VALUE) {
 			amount = Integer.MAX_VALUE;
 		}
 		UniversalAccounts.getInstance().creditAccount(accountNumber, (int) amount);
@@ -41,23 +41,19 @@ public class FEWallet implements Wallet {
 
 	@Override
 	public void set(long balance) {
-		if ( balance > (long)Integer.MAX_VALUE ) {
-			UniversalAccounts.getInstance().setAccountBalance(accountNumber, Integer.MAX_VALUE);
-		} else {
-			UniversalAccounts.getInstance().setAccountBalance(accountNumber, (int)balance);
-		}
+		UniversalAccounts.getInstance().setAccountBalance(accountNumber, balance);
 	}
 
 	@Override
 	public boolean withdraw(long amount) {
-		if ( amount > (long)Integer.MAX_VALUE ) {
+		if (amount > (long) Integer.MAX_VALUE) {
 			return false;
 		}
 		return UniversalAccounts.getInstance().debitAccount(accountNumber, (int) amount);
 	}
-	
+
 	@Override
-    public String toString() {
-        return APIRegistry.economy.toString(UniversalAccounts.getInstance().getAccountBalance(accountNumber));
-    }
+	public String toString() {
+		return APIRegistry.economy.toString(UniversalAccounts.getInstance().getAccountBalance(accountNumber));
+	}
 }

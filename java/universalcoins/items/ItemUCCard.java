@@ -47,9 +47,9 @@ public class ItemUCCard extends Item {
 		if (itemstack.stackTagCompound == null) {
 			createNBT(itemstack, world, player);
 		}
-		int accountCoins = UniversalAccounts.getInstance()
+		long accountCoins = UniversalAccounts.getInstance()
 				.getAccountBalance(itemstack.stackTagCompound.getString("Account"));
-		DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+		DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
 		player.addChatMessage(new ChatComponentText(
 				StatCollector.translateToLocal("item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
 		return true;

@@ -40,11 +40,8 @@ public class UCBalance extends CommandBase {
 			int playerCoins = getPlayerCoins((EntityPlayerMP) sender);
 			String uuid = ((EntityPlayerMP) sender).getPersistentID().toString();
 			String playerAcct = UniversalAccounts.getInstance().getPlayerAccount(uuid);
-			String customAcctID = UniversalAccounts.getInstance().getCustomAccount(uuid);
-			String customAcct = UniversalAccounts.getInstance().getPlayerAccount(customAcctID);
-			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
-			int custAccountBalance = UniversalAccounts.getInstance().getAccountBalance(customAcct);
-			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
+			long accountBalance = UniversalAccounts.getInstance().getAccountBalance(playerAcct);
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
 			sender.addChatMessage(
 					new ChatComponentText(StatCollector.translateToLocal("command.balance.result.inventory")
 							+ formatter.format(playerCoins)));
@@ -52,11 +49,6 @@ public class UCBalance extends CommandBase {
 				sender.addChatMessage(
 						new ChatComponentText(StatCollector.translateToLocal("command.balance.result.account")
 								+ formatter.format(accountBalance)));
-			}
-			if (custAccountBalance != -1) {
-				sender.addChatMessage(
-						new ChatComponentText(StatCollector.translateToLocal("command.balance.result.customaccount")
-								+ formatter.format(custAccountBalance)));
 			}
 			// achievement stuff
 			if (playerCoins > 1000 || accountBalance > 1000) {

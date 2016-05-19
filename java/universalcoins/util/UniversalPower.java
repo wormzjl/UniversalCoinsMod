@@ -54,20 +54,20 @@ public class UniversalPower {
 	}
 
 	private boolean hasKey(String tag) {
-		UCWorldData wData = UCWorldData.sync(getWorld());
+		UCWorldData wData = UCWorldData.getInstance();
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.hasKey(tag);
 	}
 
 	private void setWorldLong(String tag, long data) {
-		UCWorldData wData = UCWorldData.sync(getWorld());
+		UCWorldData wData = UCWorldData.getInstance();
 		NBTTagCompound wdTag = wData.getData();
 		wdTag.setLong(tag, data);
 		wData.markDirty();
 	}
 
 	private long getWorldLong(String tag) {
-		UCWorldData wData = UCWorldData.sync(getWorld());
+		UCWorldData wData = UCWorldData.getInstance();
 		NBTTagCompound wdTag = wData.getData();
 		return wdTag.getLong(tag);
 	}

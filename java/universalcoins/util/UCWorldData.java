@@ -1,6 +1,7 @@
 package universalcoins.util;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
@@ -10,7 +11,8 @@ public class UCWorldData extends WorldSavedData {
 
 	final static String key = UniversalCoins.MODID;
 
-	public static UCWorldData sync(World world) {
+	public static UCWorldData getInstance() {
+		World world = MinecraftServer.getServer().worldServers[0];
 		MapStorage storage = world.mapStorage;
 		UCWorldData result = (UCWorldData) storage.loadData(UCWorldData.class, key);
 		if (result == null) {
@@ -19,7 +21,7 @@ public class UCWorldData extends WorldSavedData {
 		}
 		return result;
 	}
-
+	
 	private NBTTagCompound data = new NBTTagCompound();
 
 	public UCWorldData(String tagName) {

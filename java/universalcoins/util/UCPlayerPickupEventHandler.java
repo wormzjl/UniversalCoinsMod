@@ -37,7 +37,7 @@ public class UCPlayerPickupEventHandler {
 						return; // card has not been initialized. Nothing we can
 								// do here
 					accountNumber = inventory[i].stackTagCompound.getString("Account");
-					int accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
+					long accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 					if (accountBalance == -1)
 						return; // get out of here if the card is invalid
 					if (event.item.getEntityItem().stackSize == 0)
@@ -46,17 +46,12 @@ public class UCPlayerPickupEventHandler {
 					if (coinType == -1)
 						return; // something went wrong
 					int coinValue = multiplier[coinType];
-					int depositAmount = Math.min(event.item.getEntityItem().stackSize,
-							(Integer.MAX_VALUE - accountBalance) / coinValue);
-					if (depositAmount > 0) {
-						UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * coinValue);
+					if (UniversalAccounts.getInstance().creditAccount(accountNumber,
+							event.item.getEntityItem().stackSize * coinValue)) {
 						player.addChatMessage(new ChatComponentText(
 								StatCollector.translateToLocal("item.itemEnderCard.message.deposit") + " "
-										+ formatter.format(depositAmount * coinValue) + " "
+										+ formatter.format(event.item.getEntityItem().stackSize * coinValue) + " "
 										+ StatCollector.translateToLocal("item.itemCoin.name")));
-						event.item.getEntityItem().stackSize -= depositAmount;
-					}
-					if (event.item.getEntityItem().stackSize == 0) {
 						event.setCanceled(true);
 					}
 					break; // no need to continue. We are done here

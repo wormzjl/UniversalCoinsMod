@@ -12,15 +12,15 @@ import universalcoins.tile.TileSafe;
 
 public class ContainerSafe extends Container {
 	private String lastOwner;
-	private int lastAccountBalance;
+	private long lastAccountBalance;
 	private TileSafe tEntity;
 
 	public ContainerSafe(InventoryPlayer inventoryPlayer, TileSafe tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemInputSlot, 22, 30));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 138, 30));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemInputSlot, 27, 37));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 134, 37));
 
 		// now that the slots are updated, fill the slots
 		tEntity.fillOutputSlot();
@@ -99,6 +99,7 @@ public class ContainerSafe extends Container {
 	 */
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+		tEntity.updateAccountBalance();
 
 		for (int i = 0; i < this.crafters.size(); ++i) {
 			ICrafting icrafting = (ICrafting) this.crafters.get(i);

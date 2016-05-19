@@ -23,7 +23,6 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
@@ -37,7 +36,6 @@ import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
 import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCCardStationServerCustomNameMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCPackagerServerMessage;
 import universalcoins.net.UCRecipeMessage;
@@ -65,6 +63,7 @@ import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import universalcoins.worldgen.VillageGenBank;
 import universalcoins.worldgen.VillageGenShop;
+import universalcoins.worldgen.VillageGenTrade;
 
 /**
  * UniversalCoins, Sell all your extra blocks and buy more!!! Create a trading
@@ -100,6 +99,7 @@ public class UniversalCoins {
 	public static Boolean coinsInMineshaft;
 	public static Integer bankGenWeight;
 	public static Integer shopGenWeight;
+	public static Integer tradeGenWeight;
 	public static Integer shopMinPrice;
 	public static Integer shopMaxPrice;
 	public static Integer mineshaftCoinChance;
@@ -235,6 +235,9 @@ public class UniversalCoins {
 		Property shopGenProperty = config.get("world generation", "Village shop weight", 6);
 		shopGenProperty.comment = "Probably of adding shop to villages. min 0, max 20, default 6.";
 		shopGenWeight = Math.max(0, Math.min(shopGenProperty.getInt(6), 20));
+		Property tradeGenProperty = config.get("world generation", "Village trade station weight", 6);
+		tradeGenProperty.comment = "Probability of adding trade station to villages. min 0, max 20, default 6.";
+		tradeGenWeight = Math.max(0, Math.min(tradeGenProperty.getInt(6), 20));
 
 		Property shopMinPriceProperty = config.get("world generation", "Minimum shop price", 80);
 		shopMinPriceProperty.comment = "Set the minimum price of items for sale in shops as a percent (min 1,max 100,default 80)";
@@ -258,14 +261,12 @@ public class UniversalCoins {
 		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 2,
 				Side.SERVER);
-		snw.registerMessage(UCCardStationServerCustomNameMessage.class, UCCardStationServerCustomNameMessage.class, 3,
-				Side.SERVER);
-		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 4, Side.CLIENT);
-		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 5, Side.SERVER);
-		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 6, Side.CLIENT);
-		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 7, Side.SERVER);
-		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 8, Side.SERVER);
-		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 9, Side.SERVER);
+		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 3, Side.CLIENT);
+		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 4, Side.SERVER);
+		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 5, Side.CLIENT);
+		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 6, Side.SERVER);
+		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 7, Side.SERVER);
+		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 8, Side.SERVER);
 
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",
@@ -341,14 +342,13 @@ public class UniversalCoins {
 		UCRecipeHelper.addPlankTextureRecipes();
 
 		// worldgen
-		if (bankGenWeight > 0) {
-			VillageGenBank villageHandler = new VillageGenBank();
-			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler);
-		}
-		if (shopGenWeight > 0) {
-			VillageGenShop villageHandler2 = new VillageGenShop();
-			VillagerRegistry.instance().registerVillageCreationHandler(villageHandler2);
-		}
+		if (bankGenWeight > 0)
+			VillagerRegistry.instance().registerVillageCreationHandler(new VillageGenBank());
+		if (shopGenWeight > 0)
+			VillagerRegistry.instance().registerVillageCreationHandler(new VillageGenShop());
+		if (tradeGenWeight > 0)
+			VillagerRegistry.instance().registerVillageCreationHandler(new VillageGenTrade());
+
 		proxy.registerAchievements();
 
 		if (Loader.isModLoaded("craftguide")) {
@@ -361,15 +361,6 @@ public class UniversalCoins {
 				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
 			}
 		}
-
-		// notify enchiridion2 to search mods assets folder for book xml
-		FMLInterModComms.sendMessage("Enchiridion2", "registerBookMod", this.MODID);
-
-		// this links an itemstack with book xml found in assets/MODID/books dir
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("book", "Universal_Coins");
-		FMLInterModComms.sendMessage("Enchiridion2", "registerBookItem",
-				new ItemStack(proxy.itemUCGuide, 1).writeToNBT(tag));
 
 		if (Loader.isModLoaded("ForgeEssentials")) {
 			FMLLog.info("ForgeEssentials loaded. Registering economy");

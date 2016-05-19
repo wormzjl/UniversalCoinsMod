@@ -349,7 +349,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				amount = inventory[itemTradeSlot].getMaxStackSize() / inventory[itemTradeSlot].stackSize;
 			} else {
 				// buy as many as i have coins for.
-				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice;
+				amount = (int) ((useCard ? getUserAccountBalance() : userCoinSum) / itemPrice);
 			}
 		} else if (inventory[itemOutputSlot].getItem() == inventory[itemTradeSlot].getItem()
 				&& inventory[itemOutputSlot].getItemDamage() == inventory[itemTradeSlot].getItemDamage()
@@ -362,7 +362,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				amount = (inventory[itemTradeSlot].getMaxStackSize() - inventory[itemOutputSlot].stackSize)
 						/ inventory[itemOutputSlot].stackSize;
 			} else {
-				amount = (useCard ? getUserAccountBalance() : userCoinSum) / itemPrice;
+				amount = (int) ((useCard ? getUserAccountBalance() : userCoinSum) / itemPrice);
 				// buy as many as possible with available coins.
 			}
 		} else {
@@ -409,7 +409,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		// adjust the amount to the lesser of max the available coins will buy
 		// or the amount requested
 		if (useCard) {
-			amount = Math.min(getOwnerAccountBalance() / (itemPrice * inventory[itemTradeSlot].stackSize), amount);
+			amount = (int) Math.min(getOwnerAccountBalance() / (itemPrice * inventory[itemTradeSlot].stackSize), amount);
 		} else {
 			amount = Math.min(coinSum / (itemPrice * inventory[itemTradeSlot].stackSize), amount);
 		}
@@ -989,7 +989,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 	}
 
-	private int getOwnerAccountBalance() {
+	private long getOwnerAccountBalance() {
 		if (worldObj.isRemote)
 			return 0;
 		if (inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
@@ -998,28 +998,28 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
-	private void creditOwnerAccount(int i) {
+	private void creditOwnerAccount(long i) {
 		if (worldObj.isRemote || !inventory[itemCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().creditAccount(accountNumber, i);
 	}
 
-	private void debitOwnerAccount(int i) {
+	private void debitOwnerAccount(long i) {
 		if (worldObj.isRemote || !inventory[itemCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 
-	private void debitUserAccount(int i) {
+	private void debitUserAccount(long i) {
 		if (worldObj.isRemote || !inventory[itemUserCardSlot].hasTagCompound())
 			return;
 		String accountNumber = inventory[itemUserCardSlot].stackTagCompound.getString("Account");
 		UniversalAccounts.getInstance().debitAccount(accountNumber, i);
 	}
 
-	private int getUserAccountBalance() {
+	private long getUserAccountBalance() {
 		if (worldObj.isRemote)
 			return 0;
 		if (inventory[itemUserCardSlot] == null || !inventory[itemUserCardSlot].hasTagCompound())

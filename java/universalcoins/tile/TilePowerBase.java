@@ -164,7 +164,7 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 		return Integer.MAX_VALUE;
 	}
 
-	private int getAccountBalance() {
+	private long getAccountBalance() {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound()) {
 			return 0;
 		}
@@ -175,7 +175,7 @@ public class TilePowerBase extends TileEntity implements IInventory, IEnergyRece
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
-	private boolean creditAccount(int i) {
+	private boolean creditAccount(long i) {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null
 				|| inventory[itemCardSlot].getItem() != UniversalCoins.proxy.itemEnderCard
 				|| !inventory[itemCardSlot].hasTagCompound())

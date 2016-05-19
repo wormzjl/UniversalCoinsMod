@@ -21,17 +21,15 @@ public class ContainerCardStation extends Container {
 	private int lastCoinWithdrawalAmount;
 	private String lastCardOwner;
 	private String lastAccountNumber;
-	private int lastAccountBalance;
-	private String lastGroupAccountName;
-	private String lastGroupAccountNumber;
+	private long lastAccountBalance;
 	private TileCardStation tEntity;
 
 	public ContainerCardStation(InventoryPlayer inventoryPlayer, TileCardStation tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 152, 60));
-		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 152, 40));
+		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 172, 60));
+		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 172, 40));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -45,12 +43,12 @@ public class ContainerCardStation extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 119 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 18 + j * 18, 119 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 177));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 18 + i * 18, 177));
 		}
 	}
 
@@ -115,9 +113,7 @@ public class ContainerCardStation extends Container {
 					|| this.lastWithdrawCoins != tEntity.withdrawCoins || this.lastAccountError != tEntity.accountError
 					|| this.lastCoinWithdrawalAmount != tEntity.coinWithdrawalAmount
 					|| this.lastCardOwner != tEntity.cardOwner || this.lastAccountNumber != tEntity.accountNumber
-					|| this.lastAccountBalance != tEntity.accountBalance
-					|| this.lastGroupAccountName != tEntity.customAccountName
-					|| this.lastGroupAccountNumber != tEntity.customAccountNumber) {
+					|| this.lastAccountBalance != tEntity.accountBalance) {
 				tEntity.updateTE();
 			}
 
@@ -131,8 +127,6 @@ public class ContainerCardStation extends Container {
 			this.lastCardOwner = tEntity.cardOwner;
 			this.lastAccountNumber = tEntity.accountNumber;
 			this.lastAccountBalance = tEntity.accountBalance;
-			this.lastGroupAccountName = tEntity.customAccountName;
-			this.lastGroupAccountNumber = tEntity.customAccountNumber;
 		}
 	}
 

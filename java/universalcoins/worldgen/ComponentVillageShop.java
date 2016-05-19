@@ -52,27 +52,41 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		// Clear area
 		fillWithAir(world, sbb, 0, 0, 0, 5, 6, 7);
 		// start with block
-		fillWithBlocks(world, sbb, 0, 0, 0, 5, 0, 7, Blocks.double_stone_slab, Blocks.double_stone_slab, false);
+		fillWithBlocks(world, sbb, 0, 0, 0, 5, 0, 7, Blocks.cobblestone, Blocks.cobblestone, false);
 		// main wall
 		fillWithBlocks(world, sbb, 0, 1, 0, 5, 1, 7, Blocks.planks, Blocks.planks, false);
-		// front
-		fillWithBlocks(world, sbb, 0, 2, 0, 5, 3, 0, Blocks.fence, Blocks.fence, false);
-		// back
-		fillWithBlocks(world, sbb, 0, 2, 7, 5, 3, 7, Blocks.fence, Blocks.fence, false);
+		// fence front
+		fillWithBlocks(world, sbb, 0, 2, 0, 5, 4, 0, Blocks.fence, Blocks.fence, false);
+		fillWithAir(world, sbb, 1, 2, 0, 4, 3, 0);
+		// fence back
+		fillWithBlocks(world, sbb, 0, 2, 7, 5, 4, 7, Blocks.fence, Blocks.fence, false);
+		fillWithAir(world, sbb, 1, 2, 7, 4, 3, 7);
+		// fence left
+		fillWithBlocks(world, sbb, 0, 3, 0, 0, 4, 7, Blocks.fence, Blocks.fence, false);
+		fillWithAir(world, sbb, 0, 3, 1, 0, 3, 6);
+		// fence right
+		fillWithBlocks(world, sbb, 5, 3, 0, 5, 4, 7, Blocks.fence, Blocks.fence, false);
+		fillWithAir(world, sbb, 5, 3, 1, 5, 3, 6);
+		// clear doorway and path
+		fillWithAir(world, sbb, 2, 1, 0, 3, 1, 7);
 		// top
-		fillWithBlocks(world, sbb, 0, 4, 0, 5, 4, 7, Blocks.planks, Blocks.planks, false);
-		fillWithBlocks(world, sbb, 1, 5, 1, 4, 5, 6, Blocks.planks, Blocks.planks, false);
-		// clear main
-		fillWithAir(world, sbb, 1, 1, 1, 4, 4, 6);
-		// clear door
-		fillWithAir(world, sbb, 2, 1, 0, 3, 2, 0);
-		// clear back
-		fillWithAir(world, sbb, 1, 2, 7, 4, 2, 7);
-		// torches
-		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 1, 4, 1, boundingBox);
-		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 4, 4, 1, boundingBox);
-		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 1, 4, 6, boundingBox);
-		placeBlockAtCurrentPosition(world, Blocks.torch, 0, 4, 4, 6, boundingBox);
+		fillWithBlocks(world, sbb, 1, 5, 1, 4, 5, 6, Blocks.glass, Blocks.glass, false);
+		// top front
+		fillWithMetadataBlocks(world, sbb, 1, 5, 0, 4, 5, 0, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 3), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 3), false);
+		// top back
+		fillWithMetadataBlocks(world, sbb, 1, 5, 7, 4, 5, 7, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 2), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 2), false);
+		// top right
+		fillWithMetadataBlocks(world, sbb, 5, 5, 0, 5, 5, 7, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 1), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 1), false);
+		// top left
+		fillWithMetadataBlocks(world, sbb, 0, 5, 0, 0, 5, 7, Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 0), Blocks.oak_stairs,
+				this.getMetadataWithOffset(Blocks.oak_stairs, 0), false);
 		// signs
 		fillWithMetadataBlocks(world, sbb, 1, 1, 1, 1, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(5),
 				UniversalCoins.proxy.wall_ucsign, getSignMeta(5), false);
@@ -119,6 +133,10 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 					this.getMetadataWithOffset(Blocks.stone_stairs, 3), 2, 0, -1, sbb);
 			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
 					this.getMetadataWithOffset(Blocks.stone_stairs, 3), 3, 0, -1, sbb);
+			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
+					this.getMetadataWithOffset(Blocks.stone_stairs, 2), 2, 0, 8, sbb);
+			this.placeBlockAtCurrentPosition(world, Blocks.stone_stairs,
+					this.getMetadataWithOffset(Blocks.stone_stairs, 2), 3, 0, 8, sbb);
 		}
 
 		// build foundation

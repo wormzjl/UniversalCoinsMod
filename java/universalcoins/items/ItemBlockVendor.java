@@ -21,6 +21,8 @@ public class ItemBlockVendor extends ItemBlockWithMetadata {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return this.getUnlocalizedName() + "." + metaTypes[stack.getItemDamage()];
+		if (stack.getItemDamage() < 16)
+			return this.getUnlocalizedName() + "." + metaTypes[stack.getItemDamage()];
+		return this.getUnlocalizedName() + "." + metaTypes[0];
 	}
 }

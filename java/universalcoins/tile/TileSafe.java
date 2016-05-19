@@ -26,7 +26,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "nobody";
 	public String accountNumber = "0";
-	public int accountBalance = 0;
+	public long accountBalance = 0;
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
@@ -75,7 +75,9 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 				}
 			}
 		}
-		coinsTaken(stack);
+		if (slot == itemOutputSlot) {
+			coinsTaken(stack);
+		}
 		return stack;
 	}
 
@@ -83,10 +85,8 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		int coinType = getCoinType(stack.getItem());
 		if (coinType != -1) {
 			int itemValue = multiplier[coinType];
-			int debitAmount = 0;
-			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
 			if (!worldObj.isRemote) {
-				UniversalAccounts.getInstance().debitAccount(accountNumber, debitAmount * itemValue);
+				UniversalAccounts.getInstance().debitAccount(accountNumber, stack.stackSize * itemValue);
 				updateAccountBalance();
 			}
 			fillOutputSlot();
@@ -105,17 +105,13 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			int coinType = getCoinType(stack.getItem());
 			if (coinType != -1) {
 				int itemValue = multiplier[coinType];
-				int depositAmount = 0;
-				depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - accountBalance) / itemValue);
 				if (!worldObj.isRemote) {
-					UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * itemValue);
-					updateAccountBalance();
+					if (UniversalAccounts.getInstance().creditAccount(accountNumber, stack.stackSize * itemValue)) {
+						updateAccountBalance();
+						inventory[slot] = null;
+						fillOutputSlot();
+					}
 				}
-				inventory[slot].stackSize -= depositAmount;
-				if (inventory[slot].stackSize == 0) {
-					inventory[slot] = null;
-				}
-				fillOutputSlot();
 			}
 		}
 	}
@@ -194,7 +190,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setString("Owner", blockOwner);
 		tagCompound.setString("AccountNumber", accountNumber);
-		tagCompound.setInteger("Balance", accountBalance);
+		tagCompound.setLong("accountBalance", accountBalance);
 	}
 
 	@Override
@@ -220,7 +216,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 			accountNumber = "0";
 		}
 		try {
-			accountBalance = tagCompound.getInteger("Balance");
+			accountBalance = tagCompound.getLong("accountBalance");
 		} catch (Throwable ex2) {
 			accountBalance = 0;
 		}

@@ -140,7 +140,7 @@ public class TileBandit extends TileEntity implements IInventory {
 		cardAvailable = false;
 		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].hasTagCompound() && !worldObj.isRemote) {
 			String account = inventory[itemCardSlot].getTagCompound().getString("accountNumber");
-			int accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
+			long accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
 			if (accountBalance > spinFee) {
 				cardAvailable = true;
 			}

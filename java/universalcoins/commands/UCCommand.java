@@ -75,9 +75,6 @@ public class UCCommand extends CommandBase {
 						price = UCItemPricer.getInstance().getItemPrice(stack);
 						stackName = getPlayerItem(sender).getUnlocalizedName();
 					}
-				} else {
-					price = UCItemPricer.getInstance().getItemPrice(astring[1]);
-					stackName = astring[1];
 				}
 				if (price == -1) {
 					sender.addChatMessage(new ChatComponentText(
@@ -107,8 +104,6 @@ public class UCCommand extends CommandBase {
 					if (stack != null) {
 						result = UCItemPricer.getInstance().setItemPrice(stack, price);
 					}
-				} else {
-					result = UCItemPricer.getInstance().setItemPrice(astring[1], price);
 				}
 				if (result == true) {
 					sender.addChatMessage(new ChatComponentText(
@@ -197,7 +192,6 @@ public class UCCommand extends CommandBase {
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		// TODO fix this
 		if (args.length == 1) {
 			List<String> options = new ArrayList<String>();
 			options.add(StatCollector.translateToLocal("command.uccommand.option.help.name"));
