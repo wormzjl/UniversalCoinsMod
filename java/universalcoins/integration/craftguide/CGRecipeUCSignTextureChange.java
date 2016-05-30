@@ -28,9 +28,9 @@ public class CGRecipeUCSignTextureChange extends CraftGuideAPIObject implements 
 
 		generator
 				.addRecipe(template,
-						new Object[] { new ItemStack(UniversalCoins.proxy.itemUCSign), new ItemStack(Blocks.planks),
+						new Object[] { new ItemStack(UniversalCoins.proxy.uc_sign), new ItemStack(Blocks.planks),
 								null, null, null, null, null, null, null,
-								new ItemStack(UniversalCoins.proxy.itemUCSign) });
+								new ItemStack(UniversalCoins.proxy.uc_sign) });
 	}
 
 }

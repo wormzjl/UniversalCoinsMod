@@ -1,5 +1,6 @@
 package universalcoins.inventory;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,7 +64,7 @@ public class ContainerSafe extends Container {
 					tEntity.coinsTaken(stack);
 				}
 			}
-			// places it into the tileEntity is possible since its in the player
+			// places it into the tileEntity if possible since its in the player
 			// inventory
 			else {
 				boolean foundSlot = false;

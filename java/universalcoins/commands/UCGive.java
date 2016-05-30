@@ -2,22 +2,24 @@ package universalcoins.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import com.ibm.icu.text.DecimalFormat;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import universalcoins.UniversalCoins;
 
 public class UCGive extends CommandBase {
-	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 
 	@Override
 	public String getCommandName() {
@@ -55,43 +57,69 @@ public class UCGive extends CommandBase {
 						new ChatComponentText("§c" + StatCollector.translateToLocal("command.send.error.badentry")));
 				return;
 			}
-			int change = givePlayerCoins(recipient, coinsToSend);
-			sender.addChatMessage(new ChatComponentText("Gave " + astring[0] + " " + (coinsToSend - change) + " "
-					+ StatCollector.translateToLocal("item.itemCoin.name")));
-			recipient.addChatMessage(new ChatComponentText(sender.getCommandSenderName() + " "
-					+ StatCollector.translateToLocal("command.givecoins.result") + " " + (coinsToSend - change) + " "
-					+ StatCollector.translateToLocal("item.itemCoin.name")));
+			givePlayerCoins(recipient, coinsToSend);
+			DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
+			sender.addChatMessage(new ChatComponentText(
+					"Gave " + astring[0] + " " + formatter.format(coinsToSend) + " " + StatCollector.translateToLocal(
+							coinsToSend > 1 ? "general.currency.multiple" : "general.currency.single")));
+			recipient.addChatMessage(new ChatComponentText(
+					sender.getCommandSenderName() + " " + StatCollector.translateToLocal("command.givecoins.result")
+							+ " " + (coinsToSend) + " " + StatCollector.translateToLocal(
+									coinsToSend > 1 ? "general.currency.multiple" : "general.currency.single")));
 		} else
 			sender.addChatMessage(
 					new ChatComponentText("§c" + StatCollector.translateToLocal("command.givecoins.error.noname")));
 	}
 
-	private int givePlayerCoins(EntityPlayer recipient, int coinsLeft) {
+	private void givePlayerCoins(EntityPlayer recipient, int coinsLeft) {
+		ItemStack stack = null;
 		while (coinsLeft > 0) {
-			// use logarithm to find largest cointype for coins being sent
-			int logVal = Math.min((int) (Math.log(coinsLeft) / Math.log(9)), 4);
-			int stackSize = Math.min((int) (coinsLeft / Math.pow(9, logVal)), 64);
+			if (coinsLeft > UniversalCoins.coinValues[4]) {
+				stack = new ItemStack(UniversalCoins.proxy.obsidian_coin, 1);
+				stack.stackSize = (int) Math.floor(coinsLeft / UniversalCoins.coinValues[4]);
+				coinsLeft -= stack.stackSize * UniversalCoins.coinValues[4];
+			} else if (coinsLeft > UniversalCoins.coinValues[3]) {
+				stack = new ItemStack(UniversalCoins.proxy.diamond_coin, 1);
+				stack.stackSize = (int) Math.floor(coinsLeft / UniversalCoins.coinValues[3]);
+				coinsLeft -= stack.stackSize * UniversalCoins.coinValues[3];
+			} else if (coinsLeft > UniversalCoins.coinValues[2]) {
+				stack = new ItemStack(UniversalCoins.proxy.emerald_coin, 1);
+				stack.stackSize = (int) Math.floor(coinsLeft / UniversalCoins.coinValues[2]);
+				coinsLeft -= stack.stackSize * UniversalCoins.coinValues[2];
+			} else if (coinsLeft > UniversalCoins.coinValues[1]) {
+				stack = new ItemStack(UniversalCoins.proxy.gold_coin, 1);
+				stack.stackSize = (int) Math.floor(coinsLeft / UniversalCoins.coinValues[1]);
+				coinsLeft -= stack.stackSize * UniversalCoins.coinValues[1];
+			} else if (coinsLeft >= UniversalCoins.coinValues[0]) {
+				stack = new ItemStack(UniversalCoins.proxy.iron_coin, 1);
+				stack.stackSize = (int) Math.floor(coinsLeft / UniversalCoins.coinValues[0]);
+				coinsLeft -= stack.stackSize * UniversalCoins.coinValues[0];
+			}
+
 			// add a stack to the recipients inventory
 			if (recipient.inventory.getFirstEmptyStack() != -1) {
-				recipient.inventory.addItemStackToInventory(new ItemStack(coins[logVal], stackSize));
-				coinsLeft -= (stackSize * Math.pow(9, logVal));
+				recipient.inventory.addItemStackToInventory(stack);
 			} else {
 				for (int i = 0; i < recipient.inventory.getSizeInventory(); i++) {
-					ItemStack stack = recipient.inventory.getStackInSlot(i);
-					for (int j = 0; j < coins.length; j++) {
-						if (stack != null && stack.getItem() == coins[j]) {
-							int amountToAdd = (int) Math.min(coinsLeft / Math.pow(9, j),
-									stack.getMaxStackSize() - stack.stackSize);
-							stack.stackSize += amountToAdd;
-							recipient.inventory.setInventorySlotContents(i, stack);
-							coinsLeft -= (amountToAdd * Math.pow(9, j));
-						}
+					ItemStack istack = recipient.inventory.getStackInSlot(i);
+					if (istack != null && istack.getItem() == stack.getItem()) {
+						int amountToAdd = (int) Math.min(stack.stackSize, istack.getMaxStackSize() - istack.stackSize);
+						istack.stackSize += amountToAdd;
+						stack.stackSize -= amountToAdd;
 					}
 				}
-				return coinsLeft; // return change
+				// at this point, we're going to throw extra to the world since
+				// the player inventory must be full.
+				World world = ((EntityPlayerMP) recipient).worldObj;
+				Random rand = new Random();
+				float rx = rand.nextFloat() * 0.8F + 0.1F;
+				float ry = rand.nextFloat() * 0.8F + 0.1F;
+				float rz = rand.nextFloat() * 0.8F + 0.1F;
+				EntityItem entityItem = new EntityItem(world, ((EntityPlayerMP) recipient).posX + rx,
+						((EntityPlayerMP) recipient).posY + ry, ((EntityPlayerMP) recipient).posZ + rz, stack);
+				world.spawnEntityInWorld(entityItem);
 			}
 		}
-		return 0;
 	}
 
 	@Override

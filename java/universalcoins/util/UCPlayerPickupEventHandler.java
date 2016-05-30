@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -21,37 +20,54 @@ public class UCPlayerPickupEventHandler {
 
 	@SubscribeEvent
 	public void onItemPickup(EntityItemPickupEvent event) {
-		if (event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemCoin
-				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemSmallCoinStack
-				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinStack
-				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemSmallCoinBag
-				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.itemLargeCoinBag) {
+		if (event.item.getEntityItem().getItem() == UniversalCoins.proxy.iron_coin
+				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.gold_coin
+				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.emerald_coin
+				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.diamond_coin
+				|| event.item.getEntityItem().getItem() == UniversalCoins.proxy.obsidian_coin) {
 			event.entityPlayer.addStat(Achievements.achCoin, 1);
 			world = event.entityPlayer.worldObj;
 			EntityPlayer player = event.entityPlayer;
 			ItemStack[] inventory = player.inventory.mainInventory;
 			DecimalFormat formatter = new DecimalFormat("#,###,###,###");
 			for (int i = 0; i < inventory.length; i++) {
-				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.itemEnderCard) {
+				if (inventory[i] != null && inventory[i].getItem() == UniversalCoins.proxy.ender_card) {
 					if (!inventory[i].hasTagCompound())
 						return; // card has not been initialized. Nothing we can
 								// do here
-					accountNumber = inventory[i].stackTagCompound.getString("Account");
-					long accountBalance = UniversalAccounts.getInstance().getAccountBalance(accountNumber);
+					accountNumber = inventory[i].getTagCompound().getString("Account");
+					long accountBalance = getAccountBalance(accountNumber);
 					if (accountBalance == -1)
 						return; // get out of here if the card is invalid
 					if (event.item.getEntityItem().stackSize == 0)
 						return; // no need to notify on zero size stack
-					int coinType = getCoinType(event.item.getEntityItem().getItem());
-					if (coinType == -1)
-						return; // something went wrong
-					int coinValue = multiplier[coinType];
-					if (UniversalAccounts.getInstance().creditAccount(accountNumber,
-							event.item.getEntityItem().stackSize * coinValue)) {
-						player.addChatMessage(new ChatComponentText(
-								StatCollector.translateToLocal("item.itemEnderCard.message.deposit") + " "
-										+ formatter.format(event.item.getEntityItem().stackSize * coinValue) + " "
-										+ StatCollector.translateToLocal("item.itemCoin.name")));
+					int coinsFound = 0;
+					switch (event.item.getEntityItem().getUnlocalizedName()) {
+					case "item.iron_coin":
+						coinsFound += event.item.getEntityItem().stackSize * UniversalCoins.coinValues[0];
+						break;
+					case "item.gold_coin":
+						coinsFound += event.item.getEntityItem().stackSize * UniversalCoins.coinValues[1];
+						break;
+					case "item.emerald_coin":
+						coinsFound += event.item.getEntityItem().stackSize * UniversalCoins.coinValues[2];
+						break;
+					case "item.diamond_coin":
+						coinsFound += event.item.getEntityItem().stackSize * UniversalCoins.coinValues[3];
+						break;
+					case "item.obsidian_coin":
+						coinsFound += event.item.getEntityItem().stackSize * UniversalCoins.coinValues[4];
+						break;
+					}
+					long depositAmount = Math.min(Long.MAX_VALUE - accountBalance, coinsFound);
+					if (depositAmount > 0) {
+						creditAccount(accountNumber, depositAmount);
+						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.card.deposit")
+								+ " " + formatter.format(depositAmount) + " " + StatCollector.translateToLocal(
+										depositAmount > 1 ? "general.currency.multiple" : "general.currency.single")));
+						event.item.getEntityItem().stackSize -= depositAmount;
+					}
+					if (event.item.getEntityItem().stackSize == 0) {
 						event.setCanceled(true);
 					}
 					break; // no need to continue. We are done here
@@ -60,15 +76,11 @@ public class UCPlayerPickupEventHandler {
 		}
 	}
 
-	private int getCoinType(Item item) {
-		final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin, UniversalCoins.proxy.itemSmallCoinStack,
-				UniversalCoins.proxy.itemLargeCoinStack, UniversalCoins.proxy.itemSmallCoinBag,
-				UniversalCoins.proxy.itemLargeCoinBag };
-		for (int i = 0; i < 5; i++) {
-			if (item == coins[i]) {
-				return i;
-			}
-		}
-		return -1;
+	private long getAccountBalance(String accountNumber) {
+		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
+	}
+
+	private void creditAccount(String accountNumber, long amount) {
+		UniversalAccounts.getInstance().creditAccount(accountNumber, amount);
 	}
 }

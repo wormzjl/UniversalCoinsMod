@@ -28,9 +28,9 @@ public class CGRecipeVendingFrameTextureChange extends CraftGuideAPIObject imple
 
 		generator
 				.addRecipe(template,
-						new Object[] { new ItemStack(UniversalCoins.proxy.blockVendorFrame),
+						new Object[] { new ItemStack(UniversalCoins.proxy.vendor_frame),
 								new ItemStack(Blocks.planks), null, null, null, null, null, null, null,
-								new ItemStack(UniversalCoins.proxy.blockVendorFrame) });
+								new ItemStack(UniversalCoins.proxy.vendor_frame) });
 	}
 
 }

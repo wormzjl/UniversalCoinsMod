@@ -15,7 +15,7 @@ public class TileVendorFrame extends TileVendor {
 
 	@Override
 	public String getInventoryName() {
-		return StatCollector.translateToLocal("tile.blockVendorFrame.name");
+		return UniversalCoins.proxy.vendor_frame.getLocalizedName();
 	}
 
 	public void updateSigns() {
@@ -55,7 +55,7 @@ public class TileVendorFrame extends TileVendor {
 				}
 			} else
 				signText[2] = "";
-			if (inventory[itemTradeSlot].getItem() == UniversalCoins.proxy.itemPackage) {
+			if (inventory[itemTradeSlot].getItem() == UniversalCoins.proxy.uc_package) {
 				if (inventory[itemTradeSlot].stackTagCompound != null) {
 					signText[2] = "&" + Integer.toHexString(textColor);
 					NBTTagList tagList = inventory[itemTradeSlot].stackTagCompound.getTagList("Inventory",

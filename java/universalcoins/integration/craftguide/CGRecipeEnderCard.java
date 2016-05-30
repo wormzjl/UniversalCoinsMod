@@ -33,8 +33,8 @@ public class CGRecipeEnderCard extends CraftGuideAPIObject implements RecipeProv
 
 		generator.addRecipe(template,
 				new Object[] { null, new ItemStack(Items.ender_pearl), null, new ItemStack(Items.ender_pearl),
-						new ItemStack(UniversalCoins.proxy.itemUCCard), new ItemStack(Items.ender_pearl), null,
-						new ItemStack(Items.ender_pearl), null, new ItemStack(UniversalCoins.proxy.itemEnderCard) });
+						new ItemStack(UniversalCoins.proxy.uc_card), new ItemStack(Items.ender_pearl), null,
+						new ItemStack(Items.ender_pearl), null, new ItemStack(UniversalCoins.proxy.ender_card) });
 	}
 
 }

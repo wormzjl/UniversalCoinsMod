@@ -11,7 +11,7 @@ public class UCTab extends CreativeTabs {
 
 	@Override
 	public Item getTabIconItem() {
-		return Item.getItemFromBlock(UniversalCoins.proxy.blockTradeStation);
+		return Item.getItemFromBlock(UniversalCoins.proxy.trade_station);
 	}
 
 }

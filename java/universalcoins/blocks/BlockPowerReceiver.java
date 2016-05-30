@@ -26,7 +26,7 @@ public class BlockPowerReceiver extends BlockContainer {
 		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		setResistance(30.0F);
-		setBlockTextureName("universalcoins:blockPowerReceiver");
+		setBlockTextureName("universalcoins:power_receiver");
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class BlockPowerReceiver extends BlockContainer {
 	}
 
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
-		ItemStack stack = new ItemStack(UniversalCoins.proxy.blockPowerReceiver);
+		ItemStack stack = new ItemStack(UniversalCoins.proxy.power_receiver);
 		TileEntity tentity = world.getTileEntity(x, y, z);
 		if (tentity instanceof TilePowerReceiver) {
 			TilePowerReceiver te = (TilePowerReceiver) tentity;
@@ -128,7 +128,7 @@ public class BlockPowerReceiver extends BlockContainer {
 				}
 			}
 			tagCompound.setTag("Inventory", itemList);
-			tagCompound.setInteger("coinSum", te.coinSum);
+			tagCompound.setLong("coinSum", te.coinSum);
 			tagCompound.setInteger("rfLevel", te.rfLevel);
 			stack.setTagCompound(tagCompound);
 			return stack;

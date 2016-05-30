@@ -13,8 +13,9 @@ import universalcoins.tile.TileVendor;
 public class ContainerVendorSell extends Container {
 	private TileVendor tileEntity;
 	private int lastUserCoinSum, lastItemPrice;
-	private boolean lastOoStock, lastOoCoins, lastInvFull, lastBuyButtonActive, lastUCoinButtonActive,
-			lastUSStackButtonActive, lastULStackButtonActive, lastUSBagButtonActive, lastULBagButtonActive, lastInUse;
+	private boolean lastOoStock, lastOoCoins, lastInvFull, lastInUse, lastUserIronCoinButtonActive,
+			lastUserGoldCoinButtonActive, lastUserEmeraldCoinButtonActive, lastUserDiamondCoinButtonActive,
+			lastUserObsidianCoinButtonActive;
 
 	public ContainerVendorSell(InventoryPlayer inventoryPlayer, TileVendor tEntity) {
 		tileEntity = tEntity;
@@ -106,13 +107,12 @@ public class ContainerVendorSell extends Container {
 					|| this.lastOoStock != this.tileEntity.ooStockWarning
 					|| this.lastOoCoins != this.tileEntity.ooCoinsWarning
 					|| this.lastInvFull != this.tileEntity.inventoryFullWarning
-					|| this.lastBuyButtonActive != this.tileEntity.buyButtonActive
-					|| this.lastUCoinButtonActive != this.tileEntity.uCoinButtonActive
-					|| this.lastUSStackButtonActive != this.tileEntity.uSStackButtonActive
-					|| this.lastULStackButtonActive != this.tileEntity.uLStackButtonActive
-					|| this.lastUSBagButtonActive != this.tileEntity.uSBagButtonActive
-					|| this.lastULBagButtonActive != this.tileEntity.uLBagButtonActive
-					|| this.lastInUse != this.tileEntity.inUse) {
+					|| this.lastInUse != this.tileEntity.inUse
+					|| this.lastUserIronCoinButtonActive != this.tileEntity.uIronCoinBtnActive
+					|| this.lastUserGoldCoinButtonActive != this.tileEntity.uGoldCoinBtnActive
+					|| this.lastUserEmeraldCoinButtonActive != this.tileEntity.uEmeraldCoinBtnActive
+					|| this.lastUserDiamondCoinButtonActive != this.tileEntity.uDiamondCoinBtnActive
+					|| this.lastUserObsidianCoinButtonActive != this.tileEntity.uObsidianCoinBtnActive) {
 				// update
 				tileEntity.updateTE();
 
@@ -121,13 +121,12 @@ public class ContainerVendorSell extends Container {
 				this.lastOoStock = this.tileEntity.ooStockWarning;
 				this.lastOoCoins = this.tileEntity.ooCoinsWarning;
 				this.lastInvFull = this.tileEntity.inventoryFullWarning;
-				this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
-				this.lastUCoinButtonActive = this.tileEntity.uCoinButtonActive;
-				this.lastUSStackButtonActive = this.tileEntity.uSStackButtonActive;
-				this.lastULStackButtonActive = this.tileEntity.uLStackButtonActive;
-				this.lastUSBagButtonActive = this.tileEntity.uSBagButtonActive;
-				this.lastULBagButtonActive = this.tileEntity.uLBagButtonActive;
 				this.lastInUse = this.tileEntity.inUse;
+				this.lastUserIronCoinButtonActive = this.tileEntity.uIronCoinBtnActive;
+				this.lastUserGoldCoinButtonActive = this.tileEntity.uGoldCoinBtnActive;
+				this.lastUserEmeraldCoinButtonActive = this.tileEntity.uEmeraldCoinBtnActive;
+				this.lastUserDiamondCoinButtonActive = this.tileEntity.uDiamondCoinBtnActive;
+				this.lastUserObsidianCoinButtonActive = this.tileEntity.uObsidianCoinBtnActive;
 			}
 		}
 	}

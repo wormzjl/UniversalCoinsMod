@@ -15,7 +15,7 @@ import universalcoins.render.TileEntitySignalRenderer;
 import universalcoins.render.TileEntityUCSignRenderer;
 import universalcoins.render.TileEntityVendorRenderer;
 import universalcoins.render.VendorFrameRenderer;
-import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileATM;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
@@ -29,13 +29,13 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(new BlockVendorRenderer(RenderingRegistry.getNextAvailableRenderId()));
 
 		TileEntitySpecialRenderer render = new TileEntityCardStationRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCardStation.class, render);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockCardStation),
-				new ItemCardStationRenderer(render, new TileCardStation()));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileATM.class, render);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.atm),
+				new ItemCardStationRenderer(render, new TileATM()));
 
 		TileEntitySpecialRenderer render2 = new VendorFrameRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileVendorFrame.class, render2);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockVendorFrame),
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.vendor_frame),
 				new ItemVendorFrameRenderer(render2, new TileVendorFrame()));
 
 		TileEntitySpecialRenderer render3 = new TileEntityUCSignRenderer();
@@ -43,7 +43,7 @@ public class ClientProxy extends CommonProxy {
 
 		TileEntitySpecialRenderer render4 = new TileEntitySignalRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSignal.class, render4);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.blockSignal),
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.signal_block),
 				new ItemSignalRenderer(render4, new TileSignal()));
 	}
 }

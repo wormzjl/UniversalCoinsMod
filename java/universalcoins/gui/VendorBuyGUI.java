@@ -55,18 +55,18 @@ public class VendorBuyGUI extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor-buy.png");
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor_buy.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
 		sellButton.enabled = tileEntity.sellButtonActive;
-		retrCoinButton.enabled = tileEntity.uCoinButtonActive;
-		retrSStackButton.enabled = tileEntity.uSStackButtonActive;
-		retrLStackButton.enabled = tileEntity.uLStackButtonActive;
-		retrSBagButton.enabled = tileEntity.uSBagButtonActive;
-		retrLBagButton.enabled = tileEntity.uLBagButtonActive;
+		retrCoinButton.enabled = tileEntity.uIronCoinBtnActive;
+		retrSStackButton.enabled = tileEntity.uGoldCoinBtnActive;
+		retrLStackButton.enabled = tileEntity.uEmeraldCoinBtnActive;
+		retrSBagButton.enabled = tileEntity.uDiamondCoinBtnActive;
+		retrLBagButton.enabled = tileEntity.uObsidianCoinBtnActive;
 	}
 
 	@Override

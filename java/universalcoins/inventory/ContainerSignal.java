@@ -12,9 +12,8 @@ import universalcoins.tile.TileSignal;
 
 public class ContainerSignal extends Container {
 	private TileSignal tEntity;
-	private int lastDuration;
-	private int lastFee;
-	private int lastCoinSum;
+	private int lastDuration, lastFee;
+	private long lastCoinSum;
 	private boolean lastCanProvidePower;
 
 	public ContainerSignal(InventoryPlayer inventoryPlayer, TileSignal tileEntity) {
@@ -58,7 +57,7 @@ public class ContainerSignal extends Container {
 				if (!this.mergeItemStack(stackInSlot, 3, 39, true)) {
 					return null;
 				} else {
-					tEntity.coinsTaken(stack);
+					//tEntity.coinsTaken(stack); //TODO fix this
 				}
 			}
 			// places it into the tileEntity is possible since its in the player

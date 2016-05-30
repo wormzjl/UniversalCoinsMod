@@ -32,8 +32,8 @@ public class BlockSafe extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = par1IconRegister.registerIcon("universalcoins:blockSafe");
-		blockIconFace = par1IconRegister.registerIcon("universalcoins:blockSafeFace");
+		blockIcon = par1IconRegister.registerIcon("universalcoins:safe");
+		blockIconFace = par1IconRegister.registerIcon("universalcoins:safe_face");
 	}
 
 	@Override
@@ -51,6 +51,10 @@ public class BlockSafe extends BlockContainer {
 			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 				if (!world.isRemote) {
 					tentity.updateAccountBalance();
+					if (tentity.accountBalance == -1) {
+						tentity.setSafeAccount((EntityPlayer) player);
+						tentity.updateAccountBalance();
+					}
 				}
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			}

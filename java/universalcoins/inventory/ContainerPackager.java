@@ -13,7 +13,7 @@ import universalcoins.tile.TilePackager;
 public class ContainerPackager extends Container {
 
 	private TilePackager tEntity;
-	private int lastCoinSum;
+	private long lastCoinSum;
 	private int lastPackageSize;
 	private boolean lastCardAvailable;
 	private String lastCustomName;

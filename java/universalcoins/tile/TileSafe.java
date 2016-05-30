@@ -3,7 +3,6 @@ package universalcoins.tile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,10 +19,6 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	private ItemStack[] inventory = new ItemStack[2];
 	public static final int itemInputSlot = 0;
 	public static final int itemOutputSlot = 1;
-	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "nobody";
 	public String accountNumber = "0";
 	public long accountBalance = 0;
@@ -33,14 +28,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		return new int[] { 0 };
 	}
 
-	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int var3) {
-		if (slot == 0) {
-			int coinType = getCoinType(stack.getItem());
-			if (coinType != -1) {
-				return true;
-			}
-		}
 		return false;
 	}
 
@@ -74,23 +62,40 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 					setInventorySlotContents(slot, null);
 				}
 			}
-		}
-		if (slot == itemOutputSlot) {
-			coinsTaken(stack);
+			if (slot == itemOutputSlot) {
+				coinsTaken(stack);
+			}
 		}
 		return stack;
 	}
 
 	public void coinsTaken(ItemStack stack) {
-		int coinType = getCoinType(stack.getItem());
-		if (coinType != -1) {
-			int itemValue = multiplier[coinType];
-			if (!worldObj.isRemote) {
-				UniversalAccounts.getInstance().debitAccount(accountNumber, stack.stackSize * itemValue);
-				updateAccountBalance();
-			}
-			fillOutputSlot();
+		int coinValue = 0;
+		switch (stack.getUnlocalizedName()) {
+		case "item.iron_coin":
+			coinValue = UniversalCoins.coinValues[0];
+			break;
+		case "item.gold_coin":
+			coinValue = UniversalCoins.coinValues[1];
+			break;
+		case "item.emerald_coin":
+			coinValue = UniversalCoins.coinValues[2];
+			break;
+		case "item.diamond_coin":
+			coinValue = UniversalCoins.coinValues[3];
+			break;
+		case "item.obsidian_coin":
+			coinValue = UniversalCoins.coinValues[4];
+			break;
 		}
+		int debitAmount = 0;
+		long accountCapacity = (Long.MAX_VALUE - accountBalance);
+		debitAmount = (int) Math.min(stack.stackSize, accountCapacity / coinValue);
+		if (!worldObj.isRemote) {
+			UniversalAccounts.getInstance().debitAccount(accountNumber, debitAmount * coinValue);
+			updateAccountBalance();
+		}
+		fillOutputSlot();
 	}
 
 	@Override
@@ -101,16 +106,37 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
+		int coinValue = 0;
 		if (stack != null) {
-			int coinType = getCoinType(stack.getItem());
-			if (coinType != -1) {
-				int itemValue = multiplier[coinType];
-				if (!worldObj.isRemote) {
-					if (UniversalAccounts.getInstance().creditAccount(accountNumber, stack.stackSize * itemValue)) {
-						updateAccountBalance();
+			if (slot == itemInputSlot) {
+				switch (stack.getUnlocalizedName()) {
+				case "item.iron_coin":
+					coinValue = UniversalCoins.coinValues[0];
+					break;
+				case "item.gold_coin":
+					coinValue = UniversalCoins.coinValues[1];
+					break;
+				case "item.emerald_coin":
+					coinValue = UniversalCoins.coinValues[2];
+					break;
+				case "item.diamond_coin":
+					coinValue = UniversalCoins.coinValues[3];
+					break;
+				case "item.obsidian_coin":
+					coinValue = UniversalCoins.coinValues[4];
+					break;
+				}
+				if (coinValue > 0) {
+					long depositAmount = Math.min(Long.MAX_VALUE - accountBalance / coinValue, stack.stackSize);
+					if (!worldObj.isRemote)
+						UniversalAccounts.getInstance().creditAccount(accountNumber, depositAmount * coinValue);
+					inventory[slot].stackSize -= depositAmount;
+					if (inventory[slot].stackSize == 0) {
 						inventory[slot] = null;
-						fillOutputSlot();
 					}
+					fillOutputSlot();
+					if (!worldObj.isRemote)
+						updateAccountBalance();
 				}
 			}
 		}
@@ -121,18 +147,27 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 	}
 
 	public void fillOutputSlot() {
-		if (accountBalance > 0) {
-			// use logarithm to find largest cointype for the balance
-			int logVal = Math.min((int) (Math.log(accountBalance) / Math.log(9)), 4);
-			int stackSize = Math.min((int) (accountBalance / Math.pow(9, logVal)), 64);
-			// add a stack to the slot
-			inventory[itemOutputSlot] = new ItemStack(coins[logVal], stackSize);
+		if (accountBalance > UniversalCoins.coinValues[4]) {
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.obsidian_coin);
+			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[4], 64);
+		} else if (accountBalance > UniversalCoins.coinValues[3]) {
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.diamond_coin);
+			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[3], 64);
+		} else if (accountBalance > UniversalCoins.coinValues[2]) {
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.emerald_coin);
+			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[2], 64);
+		} else if (accountBalance > UniversalCoins.coinValues[1]) {
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
+			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[1], 64);
+		} else if (accountBalance > UniversalCoins.coinValues[0]) {
+			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
+			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[0], 64);
 		}
 	}
 
 	@Override
 	public String getInventoryName() {
-		return StatCollector.translateToLocal("tile.blockSafe.name");
+		return UniversalCoins.proxy.safe.getLocalizedName();
 	}
 
 	@Override
@@ -157,15 +192,6 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 
 	@Override
 	public void closeInventory() {
-	}
-
-	private int getCoinType(Item item) {
-		for (int i = 0; i < 5; i++) {
-			if (item == coins[i]) {
-				return i;
-			}
-		}
-		return -1;
 	}
 
 	@Override

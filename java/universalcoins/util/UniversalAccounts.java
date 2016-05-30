@@ -24,6 +24,7 @@ public class UniversalAccounts {
 	public boolean debitAccount(String accountNumber, long amount) {
 		if (hasKey(accountNumber)) {
 			long balance = getWorldLong(accountNumber);
+
 			if (amount <= balance) {
 				balance -= amount;
 				setWorldData(accountNumber, balance);

@@ -12,7 +12,9 @@ import universalcoins.tile.TilePowerReceiver;
 
 public class ContainerPowerReceiver extends Container {
 	private String lastOwner;
-	private int lastCoinSum, lastrfLevel;
+	private long lastCoinSum;
+	private int lastrfLevel;
+	private long lastwrfLevel;
 	private boolean lastPublicAccess;
 	private TilePowerReceiver tEntity;
 
@@ -102,6 +104,7 @@ public class ContainerPowerReceiver extends Container {
 
 			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum
 					|| this.lastrfLevel != tEntity.rfLevel
+					|| this.lastwrfLevel != tEntity.wrfLevel
 					|| this.lastPublicAccess != this.tEntity.publicAccess) {
 				tEntity.updateTE();
 			}
@@ -109,6 +112,7 @@ public class ContainerPowerReceiver extends Container {
 			this.lastOwner = tEntity.blockOwner;
 			this.lastCoinSum = tEntity.coinSum;
 			this.lastrfLevel = tEntity.rfLevel;
+			this.lastwrfLevel = tEntity.wrfLevel;
 			this.lastPublicAccess = this.tEntity.publicAccess;
 		}
 	}

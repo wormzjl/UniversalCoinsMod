@@ -19,10 +19,6 @@ public class TileSignal extends TileEntity implements IInventory {
 
 	private ItemStack[] inventory = new ItemStack[1];
 	public static final int itemOutputSlot = 0;
-	public static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	public static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 	public String blockOwner = "";
 	public int coinSum = 0;
 	public int fee = 1;
@@ -105,8 +101,8 @@ public class TileSignal extends TileEntity implements IInventory {
 
 	public void activateSignal() {
 		canProvidePower = true;
-		counter += duration * 20;
-		coinSum += fee;
+		counter = Math.min(counter + duration * 20, Integer.MAX_VALUE);
+		coinSum = Math.min(coinSum + fee, Integer.MAX_VALUE);
 		updateNeighbors();
 	}
 
@@ -120,17 +116,8 @@ public class TileSignal extends TileEntity implements IInventory {
 				&& entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
 	}
 
-	private int getCoinType(Item item) {
-		for (int i = 0; i < 5; i++) {
-			if (item == coins[i]) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
 	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockSignal.getLocalizedName();
+		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.signal_block.getLocalizedName();
 	}
 
 	public void setInventoryName(String name) {
@@ -264,32 +251,35 @@ public class TileSignal extends TileEntity implements IInventory {
 				}
 			}
 		}
-		coinsTaken(stack);
 		return stack;
 	}
 
-	public void coinsTaken(ItemStack stack) {
-		int coinType = getCoinType(stack.getItem());
-		if (coinType != -1) {
-			int itemValue = multiplier[coinType];
-			int debitAmount = 0;
-			debitAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-			if (!worldObj.isRemote) {
-				coinSum -= debitAmount * itemValue;
-				// debitAccount(debitAmount * itemValue);
-				// updateAccountBalance();
+	public void fillOutputSlot() {
+		if (inventory[itemOutputSlot] == null && coinSum > 0) {
+			if (coinSum > UniversalCoins.coinValues[4]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.obsidian_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[4], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[4];
+			} else if (coinSum > UniversalCoins.coinValues[3]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.diamond_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[3], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[3];
+			} else if (coinSum > UniversalCoins.coinValues[2]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.emerald_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[2], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[2];
+			} else if (coinSum > UniversalCoins.coinValues[1]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[1], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[1];
+			} else if (coinSum > UniversalCoins.coinValues[0]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[0], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[0];
 			}
 		}
-	}
-
-	public void fillOutputSlot() {
-		inventory[itemOutputSlot] = null;
-		if (coinSum > 0) {
-			// use logarithm to find largest cointype for the balance
-			int logVal = Math.min((int) (Math.log(coinSum) / Math.log(9)), 4);
-			int stackSize = Math.min((int) (coinSum / Math.pow(9, logVal)), 64);
-			// add a stack to the slot
-			inventory[itemOutputSlot] = new ItemStack(coins[logVal], stackSize);
+		if (coinSum <= 0) {
+			coinSum = 0;
 		}
 	}
 

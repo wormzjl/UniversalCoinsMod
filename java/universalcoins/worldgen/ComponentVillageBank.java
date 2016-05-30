@@ -82,7 +82,7 @@ public class ComponentVillageBank extends StructureVillagePieces.Village {
 		// door opening
 		fillWithAir(world, sbb, 2, 1, 1, 2, 2, 1);
 		// atm - meta, LR, TB, FB
-		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.blockCardStation, meta, 2, 2, 4, boundingBox);
+		placeBlockAtCurrentPosition(world, UniversalCoins.proxy.atm, meta, 2, 2, 4, boundingBox);
 		// door
 		placeDoorAtCurrentPosition(world, boundingBox, random, 2, 1, 1,
 				this.getMetadataWithOffset(Blocks.wooden_door, 3));

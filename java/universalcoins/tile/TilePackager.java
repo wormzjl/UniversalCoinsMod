@@ -33,11 +33,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	public static final int itemCoinSlot = 9;
 	public static final int itemOutputSlot = 10;
 	public static final int itemPackageInputSlot = 11;
-	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
-	public int coinSum = 0;
+	public long coinSum = 0;
 	public boolean cardAvailable = false;
 	public String customName = "";
 	public String playerName = "";
@@ -65,7 +61,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 				NBTTagCompound tagCompound = new NBTTagCompound();
 				for (int i = 0; i < itemPackageSlot.length; i++) {
 					ItemStack invStack = inventory[i];
-					if (invStack != null && invStack.getItem() != UniversalCoins.proxy.itemPackage) {
+					if (invStack != null && invStack.getItem() != UniversalCoins.proxy.uc_package) {
 						NBTTagCompound tag = new NBTTagCompound();
 						tag.setByte("Slot", (byte) i);
 						invStack.writeToNBT(tag);
@@ -74,7 +70,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 					}
 				}
 				if (itemList.tagCount() > 0) {
-					inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.itemPackage);
+					inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.uc_package);
 					tagCompound.setTag("Inventory", itemList);
 					inventory[itemOutputSlot].setTagCompound(tagCompound);
 					if (cardAvailable) {
@@ -134,7 +130,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.blockPackager.getLocalizedName();
+		return this.hasCustomInventoryName() ? this.customName : UniversalCoins.proxy.packager.getLocalizedName();
 	}
 
 	public void setInventoryName(String name) {
@@ -150,15 +146,6 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		return this.customName != null && this.customName.length() > 0;
 	}
 
-	private int getCoinType(Item item) {
-		for (int i = 0; i < 5; i++) {
-			if (item == coins[i]) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
 	public void checkCard() {
 		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].hasTagCompound() && !worldObj.isRemote) {
 			String account = inventory[itemCardSlot].getTagCompound().getString("Account");
@@ -170,11 +157,11 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		}
 		cardAvailable = false;
 	}
-	
+
 	public void playerLookup(String player, boolean tabPressed) {
 		if (tabPressed) {
 			List<String> players = new ArrayList<String>();
-			for (EntityPlayer p : (List<EntityPlayer>)worldObj.playerEntities) {
+			for (EntityPlayer p : (List<EntityPlayer>) worldObj.playerEntities) {
 				players.add(p.getDisplayName());
 			}
 			String test[] = new String[1];
@@ -236,7 +223,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 			}
 		}
 		tagCompound.setTag("Inventory", itemList);
-		tagCompound.setInteger("coinSum", coinSum);
+		tagCompound.setLong("coinSum", coinSum);
 		tagCompound.setBoolean("cardAvailable", cardAvailable);
 		tagCompound.setString("customName", customName);
 		tagCompound.setString("packageTarget", packageTarget);
@@ -339,19 +326,31 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void fillOutputSlot() {
-		inventory[itemOutputSlot] = null;
-		if (coinSum > 0) {
-			// use logarithm to find largest cointype for the balance
-			int logVal = Math.min((int) (Math.log(coinSum) / Math.log(9)), 4);
-			int stackSize = Math.min((int) (coinSum / Math.pow(9, logVal)), 64);
-			// add a stack to the slot
-			inventory[itemOutputSlot] = new ItemStack(coins[logVal], stackSize);
-			int itemValue = multiplier[logVal];
-			int debitAmount = 0;
-			debitAmount = Math.min(stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-			if (!worldObj.isRemote) {
-				coinSum -= debitAmount * itemValue;
+		if (inventory[itemOutputSlot] == null && coinSum > 0) {
+			if (coinSum > UniversalCoins.coinValues[4]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.obsidian_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[4], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[4];
+			} else if (coinSum > UniversalCoins.coinValues[3]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.diamond_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[3], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[3];
+			} else if (coinSum > UniversalCoins.coinValues[2]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.emerald_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[2], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[2];
+			} else if (coinSum > UniversalCoins.coinValues[1]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[1], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[1];
+			} else if (coinSum > UniversalCoins.coinValues[0]) {
+				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
+				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[0], 64);
+				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[0];
 			}
+		}
+		if (coinSum <= 0) {
+			coinSum = 0;
 		}
 	}
 
@@ -363,20 +362,34 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
+		int coinValue = 0;
 		if (stack != null) {
 			if (slot == itemCoinSlot) {
-				int coinType = getCoinType(stack.getItem());
-				if (coinType != -1) {
-					int itemValue = multiplier[coinType];
-					int depositAmount = Math.min(stack.stackSize, (Integer.MAX_VALUE - coinSum) / itemValue);
-					coinSum += depositAmount * itemValue;
-					inventory[slot].stackSize -= depositAmount;
-					if (inventory[slot].stackSize == 0) {
-						inventory[slot] = null;
-					}
+				switch (stack.getUnlocalizedName()) {
+				case "item.iron_coin":
+					coinValue = UniversalCoins.coinValues[0];
+					break;
+				case "item.gold_coin":
+					coinValue = UniversalCoins.coinValues[1];
+					break;
+				case "item.emerald_coin":
+					coinValue = UniversalCoins.coinValues[2];
+					break;
+				case "item.diamond_coin":
+					coinValue = UniversalCoins.coinValues[3];
+					break;
+				case "item.obsidian_coin":
+					coinValue = UniversalCoins.coinValues[4];
+					break;
+				}
+				long depositAmount = Math.min(stack.stackSize, (Long.MAX_VALUE - coinSum) / coinValue);
+				inventory[slot].stackSize -= depositAmount;
+				coinSum += depositAmount * coinValue;
+				if (inventory[slot].stackSize == 0) {
+					inventory[slot] = null;
 				}
 			}
-			if (slot == itemCardSlot) {
+			if (slot == itemCardSlot && !worldObj.isRemote) {
 				checkCard();
 			}
 		}
@@ -416,11 +429,11 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
 		// first check if items inserted are coins. put them in the coin input
 		// slot if they are.
-		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.itemCoin)
-				|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinStack)
-				|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinStack)
-				|| var2.getItem() == (UniversalCoins.proxy.itemSmallCoinBag)
-				|| var2.getItem() == (UniversalCoins.proxy.itemLargeCoinBag))) {
+		if (var1 == itemCoinSlot && (var2.getItem() == (UniversalCoins.proxy.iron_coin)
+				|| var2.getItem() == (UniversalCoins.proxy.gold_coin)
+				|| var2.getItem() == (UniversalCoins.proxy.emerald_coin)
+				|| var2.getItem() == (UniversalCoins.proxy.diamond_coin)
+				|| var2.getItem() == (UniversalCoins.proxy.obsidian_coin))) {
 			return true;
 			// put everything else in the item input slot
 		} else if (var1 < itemPackageSlot.length) {
@@ -457,7 +470,8 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 						inventory[itemPackageInputSlot]);
 				worldObj.spawnEntityInWorld(entityItem);
 			}
-			player.addChatMessage(new ChatComponentText("§c" + playerName + StatCollector.translateToLocal("packager.message.sent")));
+			player.addChatMessage(
+					new ChatComponentText("§c" + playerName + StatCollector.translateToLocal("packager.message.sent")));
 			inventory[itemPackageInputSlot] = null;
 		}
 	}

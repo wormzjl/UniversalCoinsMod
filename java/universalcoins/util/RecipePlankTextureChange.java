@@ -28,9 +28,9 @@ public class RecipePlankTextureChange implements IRecipe {
 				continue;
 			}
 			if (inventorycrafting.getStackInSlot(j) != null && !hasItem && (inventorycrafting.getStackInSlot(j)
-					.getItem() == UniversalCoins.proxy.itemUCSign
+					.getItem() == UniversalCoins.proxy.uc_sign
 					|| Block.getBlockFromItem(
-							inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.blockVendorFrame)) {
+							inventorycrafting.getStackInSlot(j).getItem()) == UniversalCoins.proxy.vendor_frame)) {
 				hasItem = true;
 				newStack = inventorycrafting.getStackInSlot(j).copy();
 				continue;

@@ -14,10 +14,6 @@ import universalcoins.UniversalCoins;
 import universalcoins.util.UniversalAccounts;
 
 public class UCBalance extends CommandBase {
-	private static final int[] multiplier = new int[] { 1, 9, 81, 729, 6561 };
-	private static final Item[] coins = new Item[] { UniversalCoins.proxy.itemCoin,
-			UniversalCoins.proxy.itemSmallCoinStack, UniversalCoins.proxy.itemLargeCoinStack,
-			UniversalCoins.proxy.itemSmallCoinBag, UniversalCoins.proxy.itemLargeCoinBag };
 
 	@Override
 	public String getCommandName() {
@@ -70,9 +66,23 @@ public class UCBalance extends CommandBase {
 		int coinsFound = 0;
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
-			for (int j = 0; j < coins.length; j++) {
-				if (stack != null && stack.getItem() == coins[j]) {
-					coinsFound += stack.stackSize * multiplier[j];
+			if (stack != null) {
+				switch (stack.getUnlocalizedName()) {
+				case "item.iron_coin":
+					coinsFound += stack.stackSize * UniversalCoins.coinValues[0];
+					break;
+				case "item.gold_coin":
+					coinsFound += stack.stackSize * UniversalCoins.coinValues[1];
+					break;
+				case "item.emerald_coin":
+					coinsFound += stack.stackSize * UniversalCoins.coinValues[2];
+					break;
+				case "item.diamond_coin":
+					coinsFound += stack.stackSize * UniversalCoins.coinValues[3];
+					break;
+				case "item.obsidian_coin":
+					coinsFound += stack.stackSize * UniversalCoins.coinValues[4];
+					break;
 				}
 			}
 		}

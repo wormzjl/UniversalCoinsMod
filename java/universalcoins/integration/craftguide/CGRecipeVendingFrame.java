@@ -35,7 +35,7 @@ public class CGRecipeVendingFrame extends CraftGuideAPIObject implements RecipeP
 				new Object[] { new ItemStack(Items.stick), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick),
 						new ItemStack(Items.redstone), new ItemStack(Blocks.planks), new ItemStack(Items.redstone),
 						new ItemStack(Items.stick), new ItemStack(Items.stick), new ItemStack(Items.stick),
-						new ItemStack(UniversalCoins.proxy.blockVendorFrame) });
+						new ItemStack(UniversalCoins.proxy.vendor_frame) });
 	}
 
 }

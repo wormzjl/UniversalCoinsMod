@@ -196,8 +196,8 @@ public class BlockVendor extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister register) {
-		iconTop = register.registerIcon("universalcoins:vendor-top");
-		iconSide = register.registerIcon("universalcoins:vendor-side");
+		iconTop = register.registerIcon("universalcoins:vendor_top");
+		iconSide = register.registerIcon("universalcoins:vendor_side");
 	}
 
 	@Override

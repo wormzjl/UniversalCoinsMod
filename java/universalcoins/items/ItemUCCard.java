@@ -21,6 +21,7 @@ public class ItemUCCard extends Item {
 	public ItemUCCard() {
 		super();
 		this.maxStackSize = 1;
+		setCreativeTab(UniversalCoins.tabUniversalCoins);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -35,7 +36,7 @@ public class ItemUCCard extends Item {
 			list.add(stack.stackTagCompound.getString("Name"));
 			list.add(stack.stackTagCompound.getString("Account"));
 		} else {
-			list.add(StatCollector.translateToLocal("item.itemUCCard.warning"));
+			list.add(StatCollector.translateToLocal("item.card.warning"));
 		}
 	}
 
@@ -51,7 +52,7 @@ public class ItemUCCard extends Item {
 				.getAccountBalance(itemstack.stackTagCompound.getString("Account"));
 		DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###");
 		player.addChatMessage(new ChatComponentText(
-				StatCollector.translateToLocal("item.itemUCCard.balance") + " " + formatter.format(accountCoins)));
+				StatCollector.translateToLocal("item.card.balance") + " " + formatter.format(accountCoins)));
 		return true;
 	}
 
@@ -60,7 +61,7 @@ public class ItemUCCard extends Item {
 		createNBT(stack, world, entityPlayer);
 	}
 
-	private void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
+	protected void createNBT(ItemStack stack, World world, EntityPlayer entityPlayer) {
 		String accountNumber = UniversalAccounts.getInstance()
 				.getOrCreatePlayerAccount(entityPlayer.getPersistentID().toString());
 		stack.stackTagCompound = new NBTTagCompound();

@@ -1,8 +1,5 @@
 package universalcoins;
 
-import com.forgeessentials.api.APIRegistry;
-
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -34,31 +31,26 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
-import universalcoins.net.UCBanditServerMessage;
 import universalcoins.net.UCButtonMessage;
 import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCPackagerServerMessage;
-import universalcoins.net.UCRecipeMessage;
 import universalcoins.net.UCSignServerMessage;
 import universalcoins.net.UCTextureMessage;
 import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
-import universalcoins.tile.TileBandit;
-import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileATM;
 import universalcoins.tile.TilePackager;
-import universalcoins.tile.TilePowerBase;
 import universalcoins.tile.TilePowerReceiver;
+import universalcoins.tile.TilePowerTransmitter;
 import universalcoins.tile.TileSafe;
 import universalcoins.tile.TileSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
-import universalcoins.util.FEEconomy;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
-import universalcoins.util.UCPlayerLoginEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
 import universalcoins.util.UCRecipeHelper;
 import universalcoins.worldgen.VillageGenBank;
@@ -82,13 +74,13 @@ public class UniversalCoins {
 	@Instance(MODID)
 	public static UniversalCoins instance;
 
+	public static int[] coinValues;
 	public static Boolean autoModeEnabled;
 	public static Boolean tradeStationRecipesEnabled;
 	public static Boolean vendorRecipesEnabled;
 	public static Boolean vendorFrameRecipesEnabled;
 	public static Boolean atmRecipeEnabled;
 	public static Boolean enderCardRecipeEnabled;
-	public static Boolean banditRecipeEnabled;
 	public static Boolean signalRecipeEnabled;
 	public static Boolean linkCardRecipeEnabled;
 	public static Boolean tradeStationBuyEnabled;
@@ -109,8 +101,6 @@ public class UniversalCoins {
 	public static Integer mobDropChance;
 	public static Integer enderDragonMultiplier;
 	public static Double itemSellRatio;
-	public static Integer fourMatchPayout;
-	public static Integer fiveMatchPayout;
 	public static Integer smallPackagePrice;
 	public static Integer medPackagePrice;
 	public static Integer largePackagePrice;
@@ -129,6 +119,12 @@ public class UniversalCoins {
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 
+		// coin values
+		Property coinProperty = config.get("coins", "Coin Values", new int[] { 1, 10, 100, 1000, 10000 },
+				"Set coin values. First value is not configureable and will be set to 1");
+		coinValues = coinProperty.getIntList();
+		coinValues[0] = 1; // Override any user set values.
+
 		// recipes
 		Property recipes = config.get("Recipes", "Trade Station Recipes", true);
 		recipes.comment = "Set to false to disable crafting recipes for selling catalog and trade station.";
@@ -145,9 +141,6 @@ public class UniversalCoins {
 		Property enderCardRecipe = config.get("Recipes", "Ender Card Recipe", true);
 		enderCardRecipe.comment = "Set to false to disable crafting recipes for Ender Card and Safe.";
 		enderCardRecipeEnabled = enderCardRecipe.getBoolean(true);
-		Property banditRecipe = config.get("Recipes", "Slot Machine Recipe", true);
-		banditRecipe.comment = "Set to false to disable crafting recipes for Slot Machine.";
-		banditRecipeEnabled = banditRecipe.getBoolean(true);
 		Property signalRecipe = config.get("Recipes", "Redstone Signal Generator Recipe", true);
 		signalRecipe.comment = "Set to false to disable crafting recipes for Redstone Signal Generator.";
 		signalRecipeEnabled = signalRecipe.getBoolean(true);
@@ -183,14 +176,6 @@ public class UniversalCoins {
 		Property dungeonCoinRate = config.get("Loot", "Dungeon CoinBag Spawnrate", 20);
 		dungeonCoinRate.comment = "Rate of coinbag spawning in dungeon chests. Higher value equals more common. Default is 20.";
 		dungeonCoinChance = Math.max(1, Math.min(dungeonCoinRate.getInt(20), 100));
-
-		// slot machine
-		Property fourMatch = config.get("Slot Machine", "Four of a kind payout", 100);
-		fourMatch.comment = "Set payout of slot machine when four of a kind is spun. Default: 100";
-		fourMatchPayout = Math.max(0, fourMatch.getInt(100));
-		Property fiveMatch = config.get("Slot Machine", "Five of a kind payout", 10000);
-		fiveMatch.comment = "Set payout of slot machine when five of a kind is spun. Default: 10000";
-		fiveMatchPayout = Math.max(0, fiveMatch.getInt(10000));
 
 		// trade station
 		Property autoMode = config.get("Trade Station", "Auto mode enabled", true);
@@ -253,7 +238,6 @@ public class UniversalCoins {
 		}
 
 		MinecraftForge.EVENT_BUS.register(new UCPlayerPickupEventHandler());
-		FMLCommonHandler.instance().bus().register(new UCPlayerLoginEventHandler());
 
 		// network packet handling
 		snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
@@ -261,12 +245,10 @@ public class UniversalCoins {
 		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
 		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 2,
 				Side.SERVER);
-		snw.registerMessage(UCRecipeMessage.class, UCRecipeMessage.class, 3, Side.CLIENT);
-		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 4, Side.SERVER);
-		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 5, Side.CLIENT);
-		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 6, Side.SERVER);
-		snw.registerMessage(UCBanditServerMessage.class, UCBanditServerMessage.class, 7, Side.SERVER);
-		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 8, Side.SERVER);
+		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 3, Side.SERVER);
+		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 4, Side.CLIENT);
+		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 5, Side.SERVER);
+		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 6, Side.SERVER);
 
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",
@@ -281,29 +263,25 @@ public class UniversalCoins {
 
 		if (coinsInMineshaft) {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(
-					new WeightedRandomChestContent(new ItemStack(proxy.itemSmallCoinBag), 2, 64, mineshaftCoinChance));
+					new WeightedRandomChestContent(new ItemStack(proxy.diamond_coin), 2, 64, mineshaftCoinChance));
 		}
 		if (coinsInDungeon) {
 			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(
-					new WeightedRandomChestContent(new ItemStack(proxy.itemSmallCoinBag), 2, 64, dungeonCoinChance));
+					new WeightedRandomChestContent(new ItemStack(proxy.diamond_coin), 2, 64, dungeonCoinChance));
 		}
 
 		GameRegistry.registerTileEntity(TileTradeStation.class, "TileTradeStation");
 		GameRegistry.registerTileEntity(TileVendorBlock.class, "TileVendorBlock");
 		GameRegistry.registerTileEntity(TileVendorFrame.class, "TileVendorFrame");
-		GameRegistry.registerTileEntity(TileCardStation.class, "TileCardStation");
+		GameRegistry.registerTileEntity(TileATM.class, "TileCardStation");
 		GameRegistry.registerTileEntity(TileSafe.class, "TileSafe");
 		GameRegistry.registerTileEntity(TileUCSign.class, "TileUCSign");
-		GameRegistry.registerTileEntity(TileBandit.class, "TileBandit");
 		GameRegistry.registerTileEntity(TileSignal.class, "TileSignal");
 		GameRegistry.registerTileEntity(TilePackager.class, "TilePackager");
-		GameRegistry.registerTileEntity(TilePowerBase.class, "TilePowerBase");
+		GameRegistry.registerTileEntity(TilePowerTransmitter.class, "TilePowerBase");
 		GameRegistry.registerTileEntity(TilePowerReceiver.class, "TilePowerReceiver");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
-		// load all recipes, in multiplayer client will receive packet to
-		// disable to match server
-		UCRecipeHelper.addCoinRecipes();
 		if (tradeStationRecipesEnabled) {
 			UCRecipeHelper.addTradeStationRecipe();
 		}
@@ -320,9 +298,6 @@ public class UniversalCoins {
 			UCRecipeHelper.addEnderCardRecipes();
 			UCRecipeHelper.addBlockSafeRecipe();
 		}
-		if (banditRecipeEnabled) {
-			UCRecipeHelper.addBanditRecipes();
-		}
 		if (signalRecipeEnabled) {
 			UCRecipeHelper.addSignalRecipes();
 		}
@@ -333,7 +308,7 @@ public class UniversalCoins {
 			UCRecipeHelper.addPackagerRecipes();
 		}
 		if (powerBaseRecipeEnabled) {
-			UCRecipeHelper.addPowerBaseRecipe();
+			UCRecipeHelper.addPowerTransmitterRecipe();
 		}
 		if (powerReceiverRecipeEnabled) {
 			UCRecipeHelper.addPowerReceiverRecipe();
@@ -362,16 +337,16 @@ public class UniversalCoins {
 			}
 		}
 
-		if (Loader.isModLoaded("ForgeEssentials")) {
-			FMLLog.info("ForgeEssentials loaded. Registering economy");
-			try {
-				APIRegistry.economy = FEEconomy.class.newInstance();
-			} catch (InstantiationException e) {
-				FMLLog.warning("FE Economy InstantiationException");
-			} catch (IllegalAccessException e) {
-				FMLLog.warning("FE Economy IllegalAccessException");
-			}
-		}
+		// if (Loader.isModLoaded("ForgeEssentials")) {
+		// FMLLog.info("ForgeEssentials loaded. Registering economy");
+		// try {
+		// APIRegistry.economy = FEEconomy.class.newInstance();
+		// } catch (InstantiationException e) {
+		// FMLLog.warning("FE Economy InstantiationException");
+		// } catch (IllegalAccessException e) {
+		// FMLLog.warning("FE Economy IllegalAccessException");
+		// }
+		// }
 	}
 
 	@EventHandler

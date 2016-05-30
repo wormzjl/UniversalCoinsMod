@@ -90,11 +90,11 @@ public class VendorGUI extends GuiContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		retrCoinButton.enabled = tileEntity.coinButtonActive;
-		retrSStackButton.enabled = tileEntity.isSStackButtonActive;
-		retrLStackButton.enabled = tileEntity.isLStackButtonActive;
-		retrSBagButton.enabled = tileEntity.isSBagButtonActive;
-		retrLBagButton.enabled = tileEntity.isLBagButtonActive;
+		retrCoinButton.enabled = tileEntity.ironCoinBtnActive;
+		retrSStackButton.enabled = tileEntity.goldCoinBtnActive;
+		retrLStackButton.enabled = tileEntity.emeraldCoinBtnActive;
+		retrSBagButton.enabled = tileEntity.diamondCoinBtnActive;
+		retrLBagButton.enabled = tileEntity.obsidianCoinBtnActive;
 
 		modeButton.displayString = (tileEntity.sellMode ? StatCollector.translateToLocal("general.button.sell")
 				: StatCollector.translateToLocal("general.button.buy"));

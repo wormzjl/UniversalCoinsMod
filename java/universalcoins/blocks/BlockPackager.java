@@ -35,8 +35,8 @@ public class BlockPackager extends BlockContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = par1IconRegister.registerIcon("universalcoins:blockPackager");
-		blockIconFace = par1IconRegister.registerIcon("universalcoins:blockPackagerFace");
+		blockIcon = par1IconRegister.registerIcon("universalcoins:packager");
+		blockIconFace = par1IconRegister.registerIcon("universalcoins:packager_face");
 	}
 
 	@Override

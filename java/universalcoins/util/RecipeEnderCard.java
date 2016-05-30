@@ -11,7 +11,7 @@ import universalcoins.UniversalCoins;
 public class RecipeEnderCard implements IRecipe {
 
 	private ItemStack newStack;
-	private Item[] recipeItems = { null, Items.ender_pearl, null, Items.ender_pearl, UniversalCoins.proxy.itemUCCard,
+	private Item[] recipeItems = { null, Items.ender_pearl, null, Items.ender_pearl, UniversalCoins.proxy.uc_card,
 			Items.ender_pearl, null, Items.ender_pearl, null };
 
 	@Override
@@ -25,7 +25,7 @@ public class RecipeEnderCard implements IRecipe {
 				return false;
 			}
 		}
-		this.newStack = new ItemStack(UniversalCoins.proxy.itemEnderCard);
+		this.newStack = new ItemStack(UniversalCoins.proxy.ender_card);
 		this.newStack.setTagCompound(var1.getStackInSlot(4).getTagCompound());
 		return true;
 	}

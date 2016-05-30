@@ -76,7 +76,7 @@ public class BlockUCSign extends BlockSign {
 	}
 
 	public ItemStack getItemStackWithData(World world, int x, int y, int z) {
-		ItemStack stack = new ItemStack(UniversalCoins.proxy.itemUCSign);
+		ItemStack stack = new ItemStack(UniversalCoins.proxy.uc_sign);
 		TileEntity tentity = world.getTileEntity(x, y, z);
 		if (tentity instanceof TileUCSign) {
 			TileUCSign te = (TileUCSign) tentity;
@@ -97,6 +97,6 @@ public class BlockUCSign extends BlockSign {
 
 	@Override
 	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-		return UniversalCoins.proxy.itemUCSign;
+		return UniversalCoins.proxy.uc_sign;
 	}
 }

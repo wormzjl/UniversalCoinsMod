@@ -33,7 +33,7 @@ public class RecipeVendingFrame implements IRecipe {
 				}
 			}
 		}
-		newStack = new ItemStack(UniversalCoins.proxy.blockVendorFrame);
+		newStack = new ItemStack(UniversalCoins.proxy.vendor_frame);
 		ItemStack textureStack = var1.getStackInSlot(4);
 		NBTTagList itemList = new NBTTagList();
 		NBTTagCompound tag = new NBTTagCompound();

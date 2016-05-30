@@ -93,9 +93,9 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		fillWithMetadataBlocks(world, sbb, 4, 1, 1, 4, 1, 6, UniversalCoins.proxy.wall_ucsign, getSignMeta(4),
 				UniversalCoins.proxy.wall_ucsign, getSignMeta(4), false);
 		// vending blocks
-		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor,
+		fillWithBlocks(world, sbb, 0, 2, 1, 0, 2, 6, UniversalCoins.proxy.vendor, UniversalCoins.proxy.vendor,
 				false);
-		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.blockVendor, UniversalCoins.proxy.blockVendor,
+		fillWithBlocks(world, sbb, 5, 2, 1, 5, 2, 6, UniversalCoins.proxy.vendor, UniversalCoins.proxy.vendor,
 				false);
 
 		// list of items
@@ -160,7 +160,7 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		int j1 = this.getYWithOffset(par5);
 		int k1 = this.getZWithOffset(par4, par6);
 
-		if (world.getBlock(i1, j1, k1) == UniversalCoins.proxy.blockVendor) {
+		if (world.getBlock(i1, j1, k1) == UniversalCoins.proxy.vendor) {
 			TileEntity tentity = world.getTileEntity(i1, j1, k1);
 			if (tentity instanceof TileVendor) {
 				TileVendor tileentity = (TileVendor) tentity;

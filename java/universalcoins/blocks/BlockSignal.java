@@ -2,8 +2,6 @@ package universalcoins.blocks;
 
 import java.util.Random;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -28,7 +26,7 @@ public class BlockSignal extends BlockContainer {
 		setHardness(3.0F);
 		setCreativeTab(UniversalCoins.tabUniversalCoins);
 		setResistance(30.0F);
-		setBlockTextureName("universalcoins:blockSignal");
+		setBlockTextureName("universalcoins:signalblock");
 	}
 
 	@Override
@@ -64,12 +62,32 @@ public class BlockSignal extends BlockContainer {
 			int coinsFound = 0;
 			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 				ItemStack stack = player.inventory.getStackInSlot(i);
-				for (int j = 0; j < tentity.coins.length; j++) {
-					if (stack != null && stack.getItem() == tentity.coins[j]) {
-						coinsFound += stack.stackSize * tentity.multiplier[j];
-						player.inventory.setInventorySlotContents(i, null);
-					}
+				if (stack == null)
+					continue;
+				switch (stack.getUnlocalizedName()) {
+				case "item.iron_coin":
+					coinsFound = UniversalCoins.coinValues[0] * stack.stackSize;
+					player.inventory.setInventorySlotContents(i, null);
+					break;
+				case "item.gold_coin":
+					coinsFound = UniversalCoins.coinValues[1] * stack.stackSize;
+					player.inventory.setInventorySlotContents(i, null);
+					break;
+				case "item.emerald_coin":
+					coinsFound = UniversalCoins.coinValues[2] * stack.stackSize;
+					player.inventory.setInventorySlotContents(i, null);
+					break;
+				case "item.diamond_coin":
+					coinsFound = UniversalCoins.coinValues[3] * stack.stackSize;
+					player.inventory.setInventorySlotContents(i, null);
+					break;
+				case "item.obsidian_coin":
+					coinsFound = UniversalCoins.coinValues[4] * stack.stackSize;
+					player.inventory.setInventorySlotContents(i, null);
+					break;
 				}
+				if (coinsFound > tentity.fee)
+					break;
 			}
 			if (world.isRemote)
 				return false;
@@ -84,19 +102,53 @@ public class BlockSignal extends BlockContainer {
 				coinsFound -= tentity.fee;
 				tentity.activateSignal();
 			}
-			if (coinsFound > 0) {
-				Random rand = new Random();
-				while (coinsFound > 0) {
+			// return excess coins
+			ItemStack stack = null;
+			while (coinsFound > 0) {
+				if (coinsFound > UniversalCoins.coinValues[4]) {
+					stack = new ItemStack(UniversalCoins.proxy.obsidian_coin, 1);
+					stack.stackSize = (int) Math.floor(coinsFound / UniversalCoins.coinValues[4]);
+					coinsFound -= stack.stackSize * UniversalCoins.coinValues[4];
+				} else if (coinsFound > UniversalCoins.coinValues[3]) {
+					stack = new ItemStack(UniversalCoins.proxy.diamond_coin, 1);
+					stack.stackSize = (int) Math.floor(coinsFound / UniversalCoins.coinValues[3]);
+					coinsFound -= stack.stackSize * UniversalCoins.coinValues[3];
+				} else if (coinsFound > UniversalCoins.coinValues[2]) {
+					stack = new ItemStack(UniversalCoins.proxy.emerald_coin, 1);
+					stack.stackSize = (int) Math.floor(coinsFound / UniversalCoins.coinValues[2]);
+					coinsFound -= stack.stackSize * UniversalCoins.coinValues[2];
+				} else if (coinsFound > UniversalCoins.coinValues[1]) {
+					stack = new ItemStack(UniversalCoins.proxy.gold_coin, 1);
+					stack.stackSize = (int) Math.floor(coinsFound / UniversalCoins.coinValues[1]);
+					coinsFound -= stack.stackSize * UniversalCoins.coinValues[1];
+				} else if (coinsFound >= UniversalCoins.coinValues[0]) {
+					stack = new ItemStack(UniversalCoins.proxy.iron_coin, 1);
+					stack.stackSize = (int) Math.floor(coinsFound / UniversalCoins.coinValues[0]);
+					coinsFound -= stack.stackSize * UniversalCoins.coinValues[0];
+				}
+
+				// add a stack to the recipients inventory
+				if (player.inventory.getFirstEmptyStack() != -1) {
+					player.inventory.addItemStackToInventory(stack);
+				} else {
+					for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+						ItemStack istack = player.inventory.getStackInSlot(i);
+						if (istack != null && istack.getItem() == stack.getItem()) {
+							int amountToAdd = (int) Math.min(stack.stackSize,
+									istack.getMaxStackSize() - istack.stackSize);
+							istack.stackSize += amountToAdd;
+							stack.stackSize -= amountToAdd;
+						}
+					}
+					// at this point, we're going to throw extra to the world
+					// since the player inventory must be full.
+					Random rand = new Random();
 					float rx = rand.nextFloat() * 0.8F + 0.1F;
 					float ry = rand.nextFloat() * 0.8F + 0.1F;
 					float rz = rand.nextFloat() * 0.8F + 0.1F;
-					int logVal = Math.min((int) (Math.log(coinsFound) / Math.log(9)), 4);
-					int stackSize = Math.min((int) (coinsFound / Math.pow(9, logVal)), 64);
-					EntityItem entityItem = new EntityItem(world, player.getPlayerCoordinates().posX + rx,
-							player.getPlayerCoordinates().posY + ry, player.getPlayerCoordinates().posZ + rz,
-							new ItemStack(tentity.coins[logVal], stackSize));
+					EntityItem entityItem = new EntityItem(world, player.posX + rx, player.posY + ry, player.posZ + rz,
+							stack);
 					world.spawnEntityInWorld(entityItem);
-					coinsFound -= Math.pow(9, logVal) * stackSize;
 				}
 			}
 		}

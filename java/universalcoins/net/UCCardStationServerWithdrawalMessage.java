@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalcoins.tile.TileCardStation;
+import universalcoins.tile.TileATM;
 
 public class UCCardStationServerWithdrawalMessage
 		implements IMessage, IMessageHandler<UCCardStationServerWithdrawalMessage, IMessage> {
@@ -43,8 +43,8 @@ public class UCCardStationServerWithdrawalMessage
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
-		if (tileEntity instanceof TileCardStation) {
-			((TileCardStation) tileEntity).coinWithdrawalAmount = message.withdrawalAmount;
+		if (tileEntity instanceof TileATM) {
+			((TileATM) tileEntity).coinWithdrawalAmount = message.withdrawalAmount;
 		}
 		return null;
 	}

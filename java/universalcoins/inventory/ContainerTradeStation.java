@@ -12,10 +12,10 @@ import universalcoins.tile.TileTradeStation;
 
 public class ContainerTradeStation extends Container {
 	private TileTradeStation tileEntity;
-	private int lastCoinSum, lastItemPrice, lastAutoMode, lastCoinMode;
+	private long lastCoinSum;
+	private int lastItemPrice, lastAutoMode, lastCoinMode;
 	private String lastName;
-	private boolean lastBuyButtonActive, lastSellButtonActive, lastCoinButtonActive, lastSStackButtonActive,
-			lastLStackButtonActive, lastSBagButtonActive, lastLBagButtonActive, lastPublicAccess;
+	private boolean lastBuyButtonActive, lastSellButtonActive, lastPublicAccess;
 
 	public ContainerTradeStation(InventoryPlayer inventoryPlayer, TileTradeStation tEntity) {
 		tileEntity = tEntity;
@@ -112,10 +112,6 @@ public class ContainerTradeStation extends Container {
 					|| this.lastName != this.tileEntity.customName
 					|| this.lastBuyButtonActive != this.tileEntity.buyButtonActive
 					|| this.lastSellButtonActive != this.tileEntity.sellButtonActive
-					|| this.lastCoinButtonActive != this.tileEntity.coinButtonActive
-					|| this.lastSStackButtonActive != this.tileEntity.isSStackButtonActive
-					|| this.lastLStackButtonActive != this.tileEntity.isLStackButtonActive
-					|| this.lastSBagButtonActive != this.tileEntity.isSBagButtonActive
 					|| this.lastPublicAccess != this.tileEntity.publicAccess) {
 				tileEntity.updateTE();
 
@@ -126,11 +122,6 @@ public class ContainerTradeStation extends Container {
 				this.lastName = this.tileEntity.customName;
 				this.lastBuyButtonActive = this.tileEntity.buyButtonActive;
 				this.lastSellButtonActive = this.tileEntity.sellButtonActive;
-				this.lastCoinButtonActive = this.tileEntity.coinButtonActive;
-				this.lastSStackButtonActive = this.tileEntity.isSStackButtonActive;
-				this.lastLStackButtonActive = this.tileEntity.isSStackButtonActive;
-				this.lastSBagButtonActive = this.tileEntity.isSBagButtonActive;
-				this.lastLBagButtonActive = this.tileEntity.isLBagButtonActive;
 				this.lastPublicAccess = this.tileEntity.publicAccess;
 			}
 		}

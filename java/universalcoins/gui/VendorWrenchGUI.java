@@ -53,7 +53,7 @@ public class VendorWrenchGUI extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor-wrench.png");
+		final ResourceLocation texture = new ResourceLocation("universalcoins", "textures/gui/vendor_wrench.png");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;

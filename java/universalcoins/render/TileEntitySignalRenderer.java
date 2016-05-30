@@ -19,7 +19,7 @@ public class TileEntitySignalRenderer extends TileEntitySpecialRenderer {
 
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
 
-		ResourceLocation textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/blockSignal.png"));
+		ResourceLocation textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/signalblock.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 		TileSignal te = (TileSignal) tileentity;
 
@@ -64,7 +64,7 @@ public class TileEntitySignalRenderer extends TileEntitySpecialRenderer {
 
 		tessellator.draw();
 
-		textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/blockSignal_top.png"));
+		textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/signalblock_top.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 
 		tessellator.startDrawingQuads();
@@ -85,7 +85,7 @@ public class TileEntitySignalRenderer extends TileEntitySpecialRenderer {
 
 		tessellator.draw();
 
-		textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/blockSignal_face.png"));
+		textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/signalblock_face.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
 
 		tessellator.startDrawingQuads();

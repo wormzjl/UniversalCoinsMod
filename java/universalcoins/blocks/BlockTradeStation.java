@@ -25,7 +25,7 @@ import universalcoins.tile.TileVendorBlock;
 
 public class BlockTradeStation extends BlockContainer {
 
-	private IIcon[] icons;
+	IIcon blockIcon, blockIconFace;
 
 	public BlockTradeStation() {
 		super(new Material(MapColor.stoneColor));
@@ -35,19 +35,16 @@ public class BlockTradeStation extends BlockContainer {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister register) {
-		icons = new IIcon[2];
-
-		for (int i = 0; i < icons.length; i++) {
-			icons[i] = register.registerIcon(UniversalCoins.MODID + ":" + this.getUnlocalizedName().substring(5) + i);
-		}
+	public void registerBlockIcons(IIconRegister registerer) {
+		blockIcon = registerer.registerIcon("universalcoins:tradestation");
+		blockIconFace = registerer.registerIcon("universalcoins:tradestation_face");
 	}
 
 	public IIcon getIcon(int par1, int par2) {
 		if (par1 == 0 || par1 == 1) {
-			return icons[1];
+			return blockIcon;
 		}
-		return icons[0];
+		return blockIconFace;
 	}
 
 	@Override
@@ -104,7 +101,7 @@ public class BlockTradeStation extends BlockContainer {
 				}
 			}
 			tagCompound.setTag("Inventory", itemList);
-			tagCompound.setInteger("CoinsLeft", te.coinSum);
+			tagCompound.setLong("CoinsLeft", te.coinSum);
 			tagCompound.setInteger("AutoMode", te.autoMode);
 			tagCompound.setInteger("CoinMode", te.coinMode);
 			tagCompound.setInteger("ItemPrice", te.itemPrice);

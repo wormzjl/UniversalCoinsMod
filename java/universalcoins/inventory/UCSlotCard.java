@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import universalcoins.UniversalCoins;
+import universalcoins.items.ItemUCCard;
 
 public class UCSlotCard extends Slot {
 	public UCSlotCard(IInventory parInventory, int parSlotIndex, int parX, int parY) {
@@ -17,7 +17,7 @@ public class UCSlotCard extends Slot {
 			return true;
 		}
 		Item itemInStack = par1ItemStack.getItem();
-		return (itemInStack == UniversalCoins.proxy.itemUCCard || itemInStack == UniversalCoins.proxy.itemEnderCard);
+		return (itemInStack instanceof ItemUCCard);
 	}
 
 	public ItemStack decrStackSize(int par1) {
