@@ -98,6 +98,9 @@ public class BlockSafe extends BlockContainer {
 			return false;
 		}
 		if (player.getDisplayName().equals(ownerName) && !world.isRemote) {
+			ItemStack stack = new ItemStack(world.getBlock(x, y, z), 1);
+			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
+			world.spawnEntityInWorld(entityItem);
 			super.removedByPlayer(world, player, x, y, z);
 		}
 		return false;

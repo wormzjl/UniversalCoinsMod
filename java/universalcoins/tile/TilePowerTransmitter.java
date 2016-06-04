@@ -128,13 +128,13 @@ public class TilePowerTransmitter extends TileEntity implements IInventory, IEne
 				if (inventory[itemCardSlot] != null) {
 					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate * rfChunks);
 					if (playerCredited) {
-						krfSold += 10 * rfChunks;
+						krfSold += Math.min(10 * rfChunks, Integer.MAX_VALUE - krfSold);
 						UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
 					}
 				}
 				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate * rfChunks <= Integer.MAX_VALUE) {
 					coinSum += UniversalCoins.rfWholesaleRate * rfChunks;
-					krfSold += 10 * rfChunks;
+					krfSold += Math.min(10 * rfChunks, Integer.MAX_VALUE - krfSold);
 					UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
 				}
 			}

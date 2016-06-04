@@ -19,6 +19,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.oredict.OreDictionary;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
@@ -129,12 +130,14 @@ public class BlockVendorFrame extends BlockContainer {
 			if (playerTest == null || !tileVendor.isUseableByPlayer(playerTest)) {
 				tileVendor.inUse = false;
 			}
-			;
 			if (tileVendor.inUse && !player.getDisplayName().contentEquals(tileVendor.playerName)) {
 				if (!world.isRemote) {
 					player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("chat.warning.inuse")));
 				}
 				return true;
+			}
+			if (tileVendor.blockOwner.matches(player.getDisplayName()) && isWoodPlank(player.getHeldItem())) {
+				tileVendor.blockIcon = getPlankTexture(player.getHeldItem());
 			} else {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 				tileVendor.playerName = player.getDisplayName();
@@ -143,6 +146,34 @@ public class BlockVendorFrame extends BlockContainer {
 			}
 		}
 		return false;
+	}
+
+	private boolean isWoodPlank(ItemStack stack) {
+		for (ItemStack oreStack : OreDictionary.getOres("plankWood")) {
+			if (OreDictionary.itemMatches(oreStack, stack, false)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String getPlankTexture(ItemStack stack) {
+		String blockIcon = stack.getIconIndex().getIconName();
+		// the iconIndex function does not work with BOP so we have to do a bit
+		// of a hack here
+		if (blockIcon.startsWith("biomesoplenty")) {
+			String[] iconInfo = blockIcon.split(":");
+			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
+			String woodType = blockName[2].replace("Plank", "");
+			// hellbark does not follow the same naming convention
+			if (woodType.contains("hell"))
+				woodType = "hell_bark";
+			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+			// bamboo needs a hack too
+			if (blockIcon.contains("bamboo"))
+				blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+		}
+		return blockIcon;
 	}
 
 	@Override
@@ -155,12 +186,6 @@ public class BlockVendorFrame extends BlockContainer {
 			if (te instanceof TileVendorFrame) {
 				TileVendorFrame tentity = (TileVendorFrame) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
-				if (tagCompound.getString("BlockIcon") == "") {
-					NBTTagList textureList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
-					byte slot = tagCompound.getByte("Texture");
-					ItemStack textureStack = ItemStack.loadItemStackFromNBT(tagCompound);
-					tentity.sendTextureUpdateMessage(textureStack);
-				}
 				NBTTagList tagList = tagCompound.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
 				if (tagList.tagCount() > 0) {
 					for (int i = 0; i < tagList.tagCount(); i++) {
@@ -180,8 +205,6 @@ public class BlockVendorFrame extends BlockContainer {
 			}
 			world.markBlockForUpdate(x, y, z);
 		} else {
-			// Vending Frame pulled from NEI or creative. Cheaters :P
-			((TileVendorFrame) world.getTileEntity(x, y, z)).blockIcon = "planks_birch";
 			((TileVendorFrame) world.getTileEntity(x, y, z)).blockOwner = entity.getCommandSenderName();
 		}
 

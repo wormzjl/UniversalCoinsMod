@@ -58,6 +58,8 @@ public class ItemUCCard extends Item {
 
 	@Override
 	public void onCreated(ItemStack stack, World world, EntityPlayer entityPlayer) {
+		if (world.isRemote)
+			return;
 		createNBT(stack, world, entityPlayer);
 	}
 

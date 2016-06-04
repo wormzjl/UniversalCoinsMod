@@ -61,10 +61,9 @@ public class PowerReceiverGUI extends GuiContainer {
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 6, 72, 4210752);
 		
 		//display world rf level
-		fontRendererObj.drawString("World", 24, 23, 4210752);
 		String formattedwrf = formatter.format(tEntity.wrfLevel);
 		int wrfLength = fontRendererObj.getStringWidth(formattedwrf + " kRF");
-		fontRendererObj.drawString(formattedwrf + " kRF", 142 - wrfLength, 23, 4210752);
+		fontRendererObj.drawString(formattedwrf + " kRF", 162 - wrfLength, 23, 4210752);
 
 		// display rf level
 		fontRendererObj.drawString("Local", 24, 41, 4210752);

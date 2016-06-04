@@ -62,7 +62,8 @@ public class PowerTransmitterGUI extends GuiContainer {
 		// display rf sold
 		String formattedkrf = formatter.format(tEntity.krfSold);
 		int rfLength = fontRendererObj.getStringWidth(formattedkrf + " kRF");
-		fontRendererObj.drawString(formattedkrf + " kRF", 131 - rfLength, 26, 4210752);
+		String overage = (tEntity.krfSold == Integer.MAX_VALUE ? "+": "");
+		fontRendererObj.drawString(formattedkrf + overage +" kRF", 131 - rfLength, 26, 4210752);
 
 		// display coin balance
 		String formattedBalance = formatter.format(tEntity.coinSum);

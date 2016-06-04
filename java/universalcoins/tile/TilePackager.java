@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -160,13 +161,9 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 
 	public void playerLookup(String player, boolean tabPressed) {
 		if (tabPressed) {
-			List<String> players = new ArrayList<String>();
-			for (EntityPlayer p : (List<EntityPlayer>) worldObj.playerEntities) {
-				players.add(p.getDisplayName());
-			}
 			String test[] = new String[1];
 			test[0] = player;
-			List match = CommandBase.getListOfStringsFromIterableMatchingLastWord(test, players);
+			List match = CommandBase.getListOfStringsMatchingLastWord(test, MinecraftServer.getServer().getAllUsernames());
 			if (match.size() > 0) {
 				packageTarget = match.get(0).toString();
 			}

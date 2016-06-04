@@ -142,12 +142,7 @@ public class ComponentVillageShop extends StructureVillagePieces.Village {
 		// build foundation
 		for (int k = 0; k < 8; ++k) { // length
 			for (int l = 0; l < 6; ++l) {// width
-				this.clearCurrentPositionBlocksUpwards(world, l, 6, k, sbb);// set
-																			// 6
-																			// to
-																			// sbb
-																			// height
-																			// +1
+				this.clearCurrentPositionBlocksUpwards(world, l, 6, k, sbb);
 				this.func_151554_b(world, Blocks.cobblestone, 0, l, -1, k, sbb);
 			}
 		}

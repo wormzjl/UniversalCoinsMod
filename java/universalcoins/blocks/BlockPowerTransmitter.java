@@ -65,8 +65,8 @@ public class BlockPowerTransmitter extends BlockContainer {
 			return;
 		if (stack.hasTagCompound()) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if (te instanceof TileVendorBlock) {
-				TileVendorBlock tentity = (TileVendorBlock) te;
+			if (te instanceof TilePowerTransmitter) {
+				TilePowerTransmitter tentity = (TilePowerTransmitter) te;
 				NBTTagCompound tagCompound = stack.getTagCompound();
 				if (tagCompound == null) {
 					return;

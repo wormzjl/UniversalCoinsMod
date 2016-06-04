@@ -27,8 +27,7 @@ public class TileEntityUCSignRenderer extends TileEntitySpecialRenderer {
 		float f3;
 
 		if (tileEntity.blockIcon != null && tileEntity.blockIcon != "") {
-			String[] tempIconName = tileEntity.blockIcon.split(":", 3); // split
-																		// string
+			String[] tempIconName = tileEntity.blockIcon.split(":", 3);
 			if (tempIconName.length == 1) {
 				// if minecraft, set resourcelocation using last part
 				blockTexture = (new ResourceLocation("textures/blocks/" + tempIconName[0] + ".png"));

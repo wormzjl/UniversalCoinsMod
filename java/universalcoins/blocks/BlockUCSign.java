@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import universalcoins.UniversalCoins;
 import universalcoins.tile.TileUCSign;
 
@@ -42,12 +43,42 @@ public class BlockUCSign extends BlockSign {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileUCSign) {
 			TileUCSign tentity = (TileUCSign) tileEntity;
-			if (player.getCommandSenderName().matches(tentity.blockOwner)) {
+			if (tentity.blockOwner.matches(player.getDisplayName()) && isWoodPlank(player.getHeldItem())) {
+				tentity.blockIcon = getPlankTexture(player.getHeldItem());
+			} else if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 				player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 			}
 			return true;
 		}
 		return false;
+	}
+
+	private boolean isWoodPlank(ItemStack stack) {
+		for (ItemStack oreStack : OreDictionary.getOres("plankWood")) {
+			if (OreDictionary.itemMatches(oreStack, stack, false)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String getPlankTexture(ItemStack stack) {
+		String blockIcon = stack.getIconIndex().getIconName();
+		// the iconIndex function does not work with BOP so we have to do a bit
+		// of a hack here
+		if (blockIcon.startsWith("biomesoplenty")) {
+			String[] iconInfo = blockIcon.split(":");
+			String[] blockName = stack.getUnlocalizedName().split("\\.", 3);
+			String woodType = blockName[2].replace("Plank", "");
+			// hellbark does not follow the same naming convention
+			if (woodType.contains("hell"))
+				woodType = "hell_bark";
+			blockIcon = iconInfo[0] + ":" + "plank_" + woodType;
+			// bamboo needs a hack too
+			if (blockIcon.contains("bamboo"))
+				blockIcon = blockIcon.replace("plank_bambooThatching", "bamboothatching");
+		}
+		return blockIcon;
 	}
 
 	@Override

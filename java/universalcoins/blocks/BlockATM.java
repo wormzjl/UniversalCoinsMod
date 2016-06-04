@@ -82,6 +82,9 @@ public class BlockATM extends BlockContainer {
 		if (te instanceof TileATM) {
 			TileATM tentity = (TileATM) te;
 			tentity.blockOwner = player.getCommandSenderName();
+			if (!stack.getDisplayName().matches(StatCollector.translateToLocal("tile.atm.name"))) {
+				tentity.customName = stack.getDisplayName();
+			}
 		}
 	}
 	

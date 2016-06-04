@@ -60,44 +60,35 @@ public class UCCommand extends CommandBase {
 			UCItemPricer.getInstance().loadConfigs();
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.get.name"))) {
 			// get item price
-			if (astring.length > 1) {
-				int price = -1;
-				String stackName = "";
-				if (astring[1].matches(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"))) {
-					ItemStack stack = getPlayerItem(sender);
-					if (stack != null) {
-						price = UCItemPricer.getInstance().getItemPrice(stack);
-						stackName = getPlayerItem(sender).getDisplayName();
-					}
-				}
-				if (price == -1) {
-					sender.addChatMessage(new ChatComponentText(
-							"§c" + StatCollector.translateToLocal("command.uccommand.warning.pricenotset") + " "
-									+ stackName));
-				} else
-					sender.addChatMessage(new ChatComponentText(
-							"§a" + StatCollector.translateToLocal("command.uccommand.warning.pricefound") + " "
-									+ stackName + ": " + price));
+			int price = -1;
+			String stackName = "";
+			ItemStack stack = getPlayerItem(sender);
+			if (stack != null) {
+				price = UCItemPricer.getInstance().getItemPrice(stack);
+				stackName = getPlayerItem(sender).getDisplayName();
+			}
+			if (price == -1) {
+				sender.addChatMessage(new ChatComponentText("§c"
+						+ StatCollector.translateToLocal("command.uccommand.warning.pricenotset") + " " + stackName));
 			} else
 				sender.addChatMessage(new ChatComponentText(
-						"§c" + StatCollector.translateToLocal("command.uccommand.warning.noitem")));
+						"§a" + StatCollector.translateToLocal("command.uccommand.warning.pricefound") + " " + stackName
+								+ ": " + price));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.set.name"))) {
 			// set item price
-			if (astring.length > 2) {
+			if (astring.length > 1) {
 				boolean result = false;
 				int price = -1;
 				try {
-					price = Integer.parseInt(astring[2]);
+					price = Integer.parseInt(astring[1]);
 				} catch (NumberFormatException e) {
 					sender.addChatMessage(new ChatComponentText(
 							"§c" + StatCollector.translateToLocal("command.uccommand.option.set.price.invalid")));
 					return;
 				}
-				if (astring[1].matches(StatCollector.translateToLocal("command.uccommand.option.set.itemheld"))) {
-					ItemStack stack = getPlayerItem(sender);
-					if (stack != null) {
-						result = UCItemPricer.getInstance().setItemPrice(stack, price);
-					}
+				ItemStack stack = getPlayerItem(sender);
+				if (stack != null) {
+					result = UCItemPricer.getInstance().setItemPrice(stack, price);
 				}
 				if (result == true) {
 					sender.addChatMessage(new ChatComponentText(

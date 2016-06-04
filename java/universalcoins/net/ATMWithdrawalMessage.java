@@ -8,14 +8,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalcoins.tile.TileATM;
 
-public class UCCardStationServerWithdrawalMessage
-		implements IMessage, IMessageHandler<UCCardStationServerWithdrawalMessage, IMessage> {
+public class ATMWithdrawalMessage implements IMessage, IMessageHandler<ATMWithdrawalMessage, IMessage> {
 	private int x, y, z, withdrawalAmount;
 
-	public UCCardStationServerWithdrawalMessage() {
+	public ATMWithdrawalMessage() {
 	}
 
-	public UCCardStationServerWithdrawalMessage(int x, int y, int z, int withdrawalAmount) {
+	public ATMWithdrawalMessage(int x, int y, int z, int withdrawalAmount) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -39,12 +38,12 @@ public class UCCardStationServerWithdrawalMessage
 	}
 
 	@Override
-	public IMessage onMessage(UCCardStationServerWithdrawalMessage message, MessageContext ctx) {
+	public IMessage onMessage(ATMWithdrawalMessage message, MessageContext ctx) {
 		World world = ctx.getServerHandler().playerEntity.worldObj;
 
 		TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
 		if (tileEntity instanceof TileATM) {
-			((TileATM) tileEntity).coinWithdrawalAmount = message.withdrawalAmount;
+			((TileATM) tileEntity).startCoinWithdrawal(message.withdrawalAmount);
 		}
 		return null;
 	}

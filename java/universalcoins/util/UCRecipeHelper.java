@@ -31,9 +31,8 @@ public class UCRecipeHelper {
 	}
 
 	public static void addVendingFrameRecipes() {
-		GameRegistry.addRecipe(new RecipeVendingFrame());
-		RecipeSorter.register("universalcoins:vendingframe", RecipeVendingFrame.class, RecipeSorter.Category.SHAPED,
-				"after:minecraft:shaped");
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.vendor_frame),
+				new Object[] { "SSS", "SPS", "SSS", 'P', Blocks.planks, 'S', Items.stick });
 	}
 
 	public static void addSignRecipes() {
@@ -54,9 +53,8 @@ public class UCRecipeHelper {
 	}
 
 	public static void addEnderCardRecipes() {
-		GameRegistry.addRecipe(new RecipeEnderCard());
-		RecipeSorter.register("universalcoins:endercard", RecipeEnderCard.class, RecipeSorter.Category.SHAPED,
-				"after:minecraft:shaped");
+		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.ender_card),
+				new Object[] { " E ", "ECE", " E ", 'C', UniversalCoins.proxy.uc_card, 'E', Items.ender_pearl });
 	}
 
 	public static void addSignalRecipes() {
@@ -72,12 +70,6 @@ public class UCRecipeHelper {
 	public static void addPackagerRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.packager), new Object[] { "IPI", "SRS", "IRI",
 				'I', Items.iron_ingot, 'R', Items.redstone, 'S', Items.string, 'P', Items.paper });
-	}
-
-	public static void addPlankTextureRecipes() {
-		GameRegistry.addRecipe(new RecipePlankTextureChange());
-		RecipeSorter.register("universalcoins:plankchange", RecipePlankTextureChange.class,
-				RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 	}
 
 	public static void addPowerTransmitterRecipe() {

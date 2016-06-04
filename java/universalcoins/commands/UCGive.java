@@ -124,13 +124,7 @@ public class UCGive extends CommandBase {
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		if (args.length == 1) {
-			List<String> players = new ArrayList<String>();
-			for (EntityPlayer p : (List<EntityPlayer>) sender.getEntityWorld().playerEntities) {
-				players.add(p.getCommandSenderName());
-			}
-			return getListOfStringsFromIterableMatchingLastWord(args, players);
-		}
-		return null;
+		return args.length != 1 && args.length != 2 ? null
+				: getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
 	}
 }

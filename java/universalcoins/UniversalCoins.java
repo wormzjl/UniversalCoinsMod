@@ -1,5 +1,7 @@
 package universalcoins;
 
+import com.forgeessentials.api.APIRegistry;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -31,11 +33,10 @@ import universalcoins.commands.UCCommand;
 import universalcoins.commands.UCGive;
 import universalcoins.commands.UCRebalance;
 import universalcoins.commands.UCSend;
+import universalcoins.net.ATMWithdrawalMessage;
 import universalcoins.net.UCButtonMessage;
-import universalcoins.net.UCCardStationServerWithdrawalMessage;
 import universalcoins.net.UCPackagerServerMessage;
 import universalcoins.net.UCSignServerMessage;
-import universalcoins.net.UCTextureMessage;
 import universalcoins.net.UCTileSignMessage;
 import universalcoins.net.UCVendorServerMessage;
 import universalcoins.proxy.CommonProxy;
@@ -49,6 +50,7 @@ import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
+import universalcoins.util.FEEconomy;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
@@ -243,12 +245,10 @@ public class UniversalCoins {
 		snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		snw.registerMessage(UCButtonMessage.class, UCButtonMessage.class, 0, Side.SERVER);
 		snw.registerMessage(UCVendorServerMessage.class, UCVendorServerMessage.class, 1, Side.SERVER);
-		snw.registerMessage(UCCardStationServerWithdrawalMessage.class, UCCardStationServerWithdrawalMessage.class, 2,
-				Side.SERVER);
-		snw.registerMessage(UCTextureMessage.class, UCTextureMessage.class, 3, Side.SERVER);
-		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 4, Side.CLIENT);
-		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 5, Side.SERVER);
-		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 6, Side.SERVER);
+		snw.registerMessage(ATMWithdrawalMessage.class, ATMWithdrawalMessage.class, 2, Side.SERVER);
+		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 3, Side.CLIENT);
+		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 4, Side.SERVER);
+		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 5, Side.SERVER);
 
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",
@@ -314,7 +314,6 @@ public class UniversalCoins {
 			UCRecipeHelper.addPowerReceiverRecipe();
 		}
 		UCRecipeHelper.addSignRecipes();
-		UCRecipeHelper.addPlankTextureRecipes();
 
 		// worldgen
 		if (bankGenWeight > 0)
@@ -326,27 +325,16 @@ public class UniversalCoins {
 
 		proxy.registerAchievements();
 
-		if (Loader.isModLoaded("craftguide")) {
+		if (Loader.isModLoaded("ForgeEssentials")) {
+			FMLLog.info("ForgeEssentials loaded. Registering economy");
 			try {
-				Class.forName("universalcoins.integration.craftguide.CGRecipeEnderCard").newInstance();
-				Class.forName("universalcoins.integration.craftguide.CGRecipeVendingFrame").newInstance();
-				Class.forName("universalcoins.integration.craftguide.CGRecipeVendingFrameTextureChange").newInstance();
-				Class.forName("universalcoins.integration.craftguide.CGRecipeUCSignTextureChange").newInstance();
-			} catch (ReflectiveOperationException e) {
-				FMLLog.warning("UniversalCoins: failed to load craftguide integration recipes");
+				APIRegistry.economy = FEEconomy.class.newInstance();
+			} catch (InstantiationException e) {
+				FMLLog.warning("FE Economy InstantiationException");
+			} catch (IllegalAccessException e) {
+				FMLLog.warning("FE Economy IllegalAccessException");
 			}
 		}
-
-		// if (Loader.isModLoaded("ForgeEssentials")) {
-		// FMLLog.info("ForgeEssentials loaded. Registering economy");
-		// try {
-		// APIRegistry.economy = FEEconomy.class.newInstance();
-		// } catch (InstantiationException e) {
-		// FMLLog.warning("FE Economy InstantiationException");
-		// } catch (IllegalAccessException e) {
-		// FMLLog.warning("FE Economy IllegalAccessException");
-		// }
-		// }
 	}
 
 	@EventHandler

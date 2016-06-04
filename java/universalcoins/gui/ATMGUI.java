@@ -464,7 +464,7 @@ public class ATMGUI extends GuiContainer {
 		String[] endString = { ".one", ".two", ".three", ".four", ".five", ".six", ".seven", ".eight" };
 		String menuString;
 		for (int x = 0; x < 8; x++) {
-			menuString = StatCollector.translateToLocal("cardstation." + menuStateName[state] + endString[x]);
+			menuString = StatCollector.translateToLocal("atm." + menuStateName[state] + endString[x]);
 			if (menuString.startsWith("C:")) { // center text
 				menuString = menuString.substring(2);// strip centering flag
 				int stringLength = fontRendererObj.getStringWidth(menuString);
