@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -29,11 +31,11 @@ import universalcoins.util.UniversalAccounts;
 public class TilePackager extends TileEntity implements IInventory, ISidedInventory {
 
 	private ItemStack[] inventory = new ItemStack[12];
-	public static final int[] itemPackageSlot = { 0, 1, 2, 3, 4, 5, 6, 7 };
-	public static final int itemCardSlot = 8;
-	public static final int itemCoinSlot = 9;
-	public static final int itemOutputSlot = 10;
-	public static final int itemPackageInputSlot = 11;
+	public static final int itemCardSlot = 0;
+	public static final int itemCoinSlot = 1;
+	public static final int itemPackageInputSlot = 2;
+	public static final int itemOutputSlot = 3;
+	public static final int[] itemPackageSlot = { 4, 5, 6, 7, 8, 9, 10, 11 };
 	public long coinSum = 0;
 	public boolean cardAvailable = false;
 	public String customName = "";
@@ -48,19 +50,20 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		super();
 	}
 
-	public void onButtonPressed(int buttonId, boolean shiftPressed) {
+	public void onButtonPressed(int buttonId, boolean doSend) {
 		if (buttonId == 0) {
-			if (shiftPressed) {
+			if (doSend) {
 				sendPackage(packageTarget);
 				return;
 			}
+			checkCard();
 			if (coinSum < packageCost[packageSize] && !cardAvailable)
 				return;
 			if (inventory[itemOutputSlot] == null) {
 
 				NBTTagList itemList = new NBTTagList();
 				NBTTagCompound tagCompound = new NBTTagCompound();
-				for (int i = 0; i < itemPackageSlot.length; i++) {
+				for (int i = 4; i < itemPackageSlot.length + 4; i++) {
 					ItemStack invStack = inventory[i];
 					if (invStack != null && invStack.getItem() != UniversalCoins.proxy.uc_package) {
 						NBTTagCompound tag = new NBTTagCompound();
@@ -90,36 +93,50 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		}
 		if (buttonId == 2) {
 			packageSize = 0;
-			for (int i = 0; i < 4; i++) {
-				if (inventory[i] != null) {
-					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
-						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
-					} else {
-						// spawn in world
-						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
-						worldObj.spawnEntityInWorld(entityItem);
-					}
-					inventory[i] = null;
-				}
+			for (int i = 11; i > 7; i--) {
+				ejectItem(i);
 			}
 		}
 		if (buttonId == 3) {
 			packageSize = 1;
-			for (int i = 0; i < 2; i++) {
-				if (inventory[i] != null) {
-					if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
-						worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[i]);
-					} else {
-						// spawn in world
-						EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]);
-						worldObj.spawnEntityInWorld(entityItem);
-					}
-					inventory[i] = null;
-				}
+			for (int i = 11; i > 9; i--) {
+				ejectItem(i);
 			}
 		}
 		if (buttonId == 4) {
 			packageSize = 2;
+		}
+		if (buttonId == 5) {
+			if (doSend) {
+				// eject package if switching from send to buy
+				ejectItem(itemPackageInputSlot);
+			} else {
+				// eject package inventory slots
+				for (int i = 11; i > 3; i--) {
+					ejectItem(i);
+				} 
+				if (inventory[itemOutputSlot] != null
+						&& inventory[itemOutputSlot].getItem() == UniversalCoins.proxy.uc_package) {
+					// move package if in output slot
+					if (inventory[itemPackageInputSlot] != null)
+						ejectItem(itemPackageInputSlot);
+					inventory[itemPackageInputSlot] = inventory[itemOutputSlot];
+					inventory[itemOutputSlot] = null;
+				}
+			}
+		}
+	}
+
+	private void ejectItem(int slot) {
+		if (inventory[slot] != null) {
+			if (worldObj.getPlayerEntityByName(playerName).inventory.getFirstEmptyStack() != -1) {
+				worldObj.getPlayerEntityByName(playerName).inventory.addItemStackToInventory(inventory[slot]);
+			} else {
+				// spawn in world
+				EntityItem entityItem = new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[slot]);
+				worldObj.spawnEntityInWorld(entityItem);
+			}
+			inventory[slot] = null;
 		}
 	}
 
@@ -148,7 +165,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	}
 
 	public void checkCard() {
-		if (inventory[itemCardSlot] != null && inventory[itemCardSlot].hasTagCompound() && !worldObj.isRemote) {
+		if (!worldObj.isRemote && inventory[itemCardSlot] != null && inventory[itemCardSlot].hasTagCompound()) {
 			String account = inventory[itemCardSlot].getTagCompound().getString("Account");
 			long accountBalance = UniversalAccounts.getInstance().getAccountBalance(account);
 			if (accountBalance >= packageCost[packageSize]) {
@@ -163,12 +180,14 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 		if (tabPressed) {
 			String test[] = new String[1];
 			test[0] = player;
-			List match = CommandBase.getListOfStringsMatchingLastWord(test, MinecraftServer.getServer().getAllUsernames());
+			List match = CommandBase.getListOfStringsMatchingLastWord(test,
+					MinecraftServer.getServer().getAllUsernames());
 			if (match.size() > 0) {
 				packageTarget = match.get(0).toString();
 			}
 		} else {
-			if (worldObj.getPlayerEntityByName(player) != null) {
+			EntityPlayerMP targetPlayer = MinecraftServer.getServer().getConfigurationManager().func_152612_a(player);
+			if (targetPlayer != null) {
 				packageTarget = player;
 			} else {
 				packageTarget = "";
@@ -453,7 +472,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 	public void sendPackage(String packageTarget) {
 		if (worldObj.isRemote)
 			return;
-		EntityPlayer player = worldObj.getPlayerEntityByName(packageTarget);
+		EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(packageTarget);
 		if (player != null) {
 			if (player.inventory.getFirstEmptyStack() != -1) {
 				player.inventory.addItemStackToInventory(inventory[itemPackageInputSlot]);
@@ -465,10 +484,10 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 				EntityItem entityItem = new EntityItem(worldObj, player.getPlayerCoordinates().posX + rx,
 						player.getPlayerCoordinates().posY + ry, player.getPlayerCoordinates().posZ + rz,
 						inventory[itemPackageInputSlot]);
-				worldObj.spawnEntityInWorld(entityItem);
+				player.worldObj.spawnEntityInWorld(entityItem);
 			}
 			player.addChatMessage(
-					new ChatComponentText("§c" + playerName + StatCollector.translateToLocal("packager.message.sent")));
+					new ChatComponentText("§2" + playerName + StatCollector.translateToLocal("packager.message.sent")));
 			inventory[itemPackageInputSlot] = null;
 		}
 	}

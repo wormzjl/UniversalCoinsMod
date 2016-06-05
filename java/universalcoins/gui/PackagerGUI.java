@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import universalcoins.UniversalCoins;
 import universalcoins.inventory.ContainerPackager;
 import universalcoins.tile.TilePackager;
 
@@ -26,7 +27,7 @@ public class PackagerGUI extends GuiContainer {
 	public static final int idMedButton = 3;
 	public static final int idLargeButton = 4;
 	public static final int idModeButton = 5;
-	private int[] defaultSlotCoord = { 8, 26, 44, 62 };
+	private int[] defaultSlotCoord = { 62, 44, 26, 8 };
 	private int hideCoord = Integer.MAX_VALUE;
 	private boolean buttonHover = false;
 	private boolean sendMode = false;
@@ -118,7 +119,7 @@ public class PackagerGUI extends GuiContainer {
 			buyButton.enabled = canSend();
 		} else {
 			buyButton.displayString = StatCollector.translateToLocal("general.button.buy");
-			buyButton.enabled = tEntity.coinSum >= tEntity.packageCost[tEntity.packageSize] || tEntity.cardAvailable;		
+			buyButton.enabled = tEntity.coinSum >= tEntity.packageCost[tEntity.packageSize] || tEntity.cardAvailable;
 		}
 		coinButton.enabled = tEntity.coinSum > 0;
 
@@ -143,88 +144,87 @@ public class PackagerGUI extends GuiContainer {
 		}
 		if (sendMode) {
 			this.drawTexturedModalRect(x + 3, y + 20, 0, 190, 169, 40);
-			if (!tEntity.packageTarget.contentEquals("")) packageReceiverField.setText(tEntity.packageTarget);
+			if (!tEntity.packageTarget.contentEquals(""))
+				packageReceiverField.setText(tEntity.packageTarget);
 			fontRendererObj.drawString(packageReceiverField.getText(), x + 30, y + 30, 4210752);
+			coinButton.enabled = false;
 		}
 	}
 
 	private void updateSlots(int mode) {
 		if (mode == 0) {
-			// hide slot 0-3
-			Slot slot0 = super.inventorySlots.getSlot(0);
-			slot0.xDisplayPosition = hideCoord;
-			Slot slot1 = super.inventorySlots.getSlot(1);
-			slot1.xDisplayPosition = hideCoord;
+			// package input slot
 			Slot slot2 = super.inventorySlots.getSlot(2);
 			slot2.xDisplayPosition = hideCoord;
-			Slot slot3 = super.inventorySlots.getSlot(3);
-			slot3.xDisplayPosition = hideCoord;
+			// package inventory slots
 			Slot slot4 = super.inventorySlots.getSlot(4);
-			slot4.xDisplayPosition = defaultSlotCoord[2];
+			slot4.xDisplayPosition = defaultSlotCoord[0];
 			Slot slot5 = super.inventorySlots.getSlot(5);
-			slot5.xDisplayPosition = defaultSlotCoord[2];
+			slot5.xDisplayPosition = defaultSlotCoord[0];
 			Slot slot6 = super.inventorySlots.getSlot(6);
-			slot6.xDisplayPosition = defaultSlotCoord[3];
+			slot6.xDisplayPosition = defaultSlotCoord[1];
 			Slot slot7 = super.inventorySlots.getSlot(7);
-			slot7.xDisplayPosition = defaultSlotCoord[3];
-			// package input slot
+			slot7.xDisplayPosition = defaultSlotCoord[1];
+			// hide slot 8-11
+			Slot slot8 = super.inventorySlots.getSlot(8);
+			slot8.xDisplayPosition = hideCoord;
+			Slot slot9 = super.inventorySlots.getSlot(9);
+			slot9.xDisplayPosition = hideCoord;
+			Slot slot10 = super.inventorySlots.getSlot(10);
+			slot10.xDisplayPosition = hideCoord;
 			Slot slot11 = super.inventorySlots.getSlot(11);
 			slot11.xDisplayPosition = hideCoord;
 		}
 		if (mode == 1) {
-			// hide slot 0-1 , show 2-3
-			Slot slot0 = super.inventorySlots.getSlot(0);
-			slot0.xDisplayPosition = hideCoord;
-			Slot slot1 = super.inventorySlots.getSlot(1);
-			slot1.xDisplayPosition = hideCoord;
-			Slot slot2 = super.inventorySlots.getSlot(2);
-			slot2.xDisplayPosition = defaultSlotCoord[1];
-			Slot slot3 = super.inventorySlots.getSlot(3);
-			slot3.xDisplayPosition = defaultSlotCoord[1];
-			Slot slot4 = super.inventorySlots.getSlot(4);
-			slot4.xDisplayPosition = defaultSlotCoord[2];
-			Slot slot5 = super.inventorySlots.getSlot(5);
-			slot5.xDisplayPosition = defaultSlotCoord[2];
-			Slot slot6 = super.inventorySlots.getSlot(6);
-			slot6.xDisplayPosition = defaultSlotCoord[3];
-			Slot slot7 = super.inventorySlots.getSlot(7);
-			slot7.xDisplayPosition = defaultSlotCoord[3];
 			// package input slot
+			Slot slot2 = super.inventorySlots.getSlot(2);
+			slot2.xDisplayPosition = hideCoord;
+			// package inventory slots
+			Slot slot4 = super.inventorySlots.getSlot(4);
+			slot4.xDisplayPosition = defaultSlotCoord[0];
+			Slot slot5 = super.inventorySlots.getSlot(5);
+			slot5.xDisplayPosition = defaultSlotCoord[0];
+			Slot slot6 = super.inventorySlots.getSlot(6);
+			slot6.xDisplayPosition = defaultSlotCoord[1];
+			Slot slot7 = super.inventorySlots.getSlot(7);
+			slot7.xDisplayPosition = defaultSlotCoord[1];
+			Slot slot8 = super.inventorySlots.getSlot(8);
+			slot8.xDisplayPosition = defaultSlotCoord[2];
+			Slot slot9 = super.inventorySlots.getSlot(9);
+			slot9.xDisplayPosition = defaultSlotCoord[2];
+			// hide slot 10-11
+			Slot slot10 = super.inventorySlots.getSlot(10);
+			slot10.xDisplayPosition = hideCoord;
 			Slot slot11 = super.inventorySlots.getSlot(11);
 			slot11.xDisplayPosition = hideCoord;
 		}
 		if (mode == 2) {
-			// show slot 0-3
-			Slot slot0 = super.inventorySlots.getSlot(0);
-			slot0.xDisplayPosition = defaultSlotCoord[0];
-			Slot slot1 = super.inventorySlots.getSlot(1);
-			slot1.xDisplayPosition = defaultSlotCoord[0];
-			Slot slot2 = super.inventorySlots.getSlot(2);
-			slot2.xDisplayPosition = defaultSlotCoord[1];
-			Slot slot3 = super.inventorySlots.getSlot(3);
-			slot3.xDisplayPosition = defaultSlotCoord[1];
-			Slot slot4 = super.inventorySlots.getSlot(4);
-			slot4.xDisplayPosition = defaultSlotCoord[2];
-			Slot slot5 = super.inventorySlots.getSlot(5);
-			slot5.xDisplayPosition = defaultSlotCoord[2];
-			Slot slot6 = super.inventorySlots.getSlot(6);
-			slot6.xDisplayPosition = defaultSlotCoord[3];
-			Slot slot7 = super.inventorySlots.getSlot(7);
-			slot7.xDisplayPosition = defaultSlotCoord[3];
 			// package input slot
-			Slot slot11 = super.inventorySlots.getSlot(11);
-			slot11.xDisplayPosition = hideCoord;
-		}
-		if (mode == 3) {
-			// hide all slots
-			Slot slot0 = super.inventorySlots.getSlot(0);
-			slot0.xDisplayPosition = hideCoord;
-			Slot slot1 = super.inventorySlots.getSlot(1);
-			slot1.xDisplayPosition = hideCoord;
 			Slot slot2 = super.inventorySlots.getSlot(2);
 			slot2.xDisplayPosition = hideCoord;
-			Slot slot3 = super.inventorySlots.getSlot(3);
-			slot3.xDisplayPosition = hideCoord;
+			// package inventory slots
+			Slot slot4 = super.inventorySlots.getSlot(4);
+			slot4.xDisplayPosition = defaultSlotCoord[0];
+			Slot slot5 = super.inventorySlots.getSlot(5);
+			slot5.xDisplayPosition = defaultSlotCoord[0];
+			Slot slot6 = super.inventorySlots.getSlot(6);
+			slot6.xDisplayPosition = defaultSlotCoord[1];
+			Slot slot7 = super.inventorySlots.getSlot(7);
+			slot7.xDisplayPosition = defaultSlotCoord[1];
+			Slot slot8 = super.inventorySlots.getSlot(8);
+			slot8.xDisplayPosition = defaultSlotCoord[2];
+			Slot slot9 = super.inventorySlots.getSlot(9);
+			slot9.xDisplayPosition = defaultSlotCoord[2];
+			Slot slot10 = super.inventorySlots.getSlot(10);
+			slot10.xDisplayPosition = defaultSlotCoord[3];
+			Slot slot11 = super.inventorySlots.getSlot(11);
+			slot11.xDisplayPosition = defaultSlotCoord[3];
+		}
+		if (mode == 3) {
+			// package input slot
+			Slot slot2 = super.inventorySlots.getSlot(2);
+			slot2.xDisplayPosition = 8;
+			// package inventory slots
 			Slot slot4 = super.inventorySlots.getSlot(4);
 			slot4.xDisplayPosition = hideCoord;
 			Slot slot5 = super.inventorySlots.getSlot(5);
@@ -233,9 +233,14 @@ public class PackagerGUI extends GuiContainer {
 			slot6.xDisplayPosition = hideCoord;
 			Slot slot7 = super.inventorySlots.getSlot(7);
 			slot7.xDisplayPosition = hideCoord;
-			// package input slot
+			Slot slot8 = super.inventorySlots.getSlot(8);
+			slot8.xDisplayPosition = hideCoord;
+			Slot slot9 = super.inventorySlots.getSlot(9);
+			slot9.xDisplayPosition = hideCoord;
+			Slot slot10 = super.inventorySlots.getSlot(10);
+			slot10.xDisplayPosition = hideCoord;
 			Slot slot11 = super.inventorySlots.getSlot(11);
-			slot11.xDisplayPosition = 8;
+			slot11.xDisplayPosition = hideCoord;
 		}
 	}
 
@@ -272,12 +277,18 @@ public class PackagerGUI extends GuiContainer {
 			updateSlots(2);
 		}
 		if (button.id == idBuyButton && sendMode) {
-			//we send a modified packet so the tileentity function handles 
+			// we send a modified packet so the tileentity function handles
 			tEntity.sendPacket(button.id, true);
-			return; //we exit here so 
+			return; // message sent, exit
+		}
+		if (button.id == idModeButton) {
+			if (!sendMode) {
+				tEntity.sendPacket(button.id, true);
+				return; // message sent, exit
+			}
 		}
 
-		tEntity.sendPacket(button.id, isShiftKeyDown());
+		tEntity.sendPacket(button.id, false);
 	}
 
 	@Override
@@ -301,8 +312,7 @@ public class PackagerGUI extends GuiContainer {
 	}
 
 	private boolean canSend() {
-		if (tEntity.getStackInSlot(tEntity.itemPackageInputSlot) != null
-				&& !tEntity.packageTarget.contentEquals("")) {
+		if (tEntity.getStackInSlot(tEntity.itemPackageInputSlot) != null && !tEntity.packageTarget.contentEquals("")) {
 			return true;
 		}
 		return false;

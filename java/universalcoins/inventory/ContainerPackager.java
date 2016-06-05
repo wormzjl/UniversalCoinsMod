@@ -22,7 +22,11 @@ public class ContainerPackager extends Container {
 
 	public ContainerPackager(InventoryPlayer inventoryPlayer, TilePackager tileEntity) {
 		tEntity = tileEntity;
-
+		
+		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 8, 73));
+		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 26, 73));
+		addSlotToContainer(new UCSlotPackage(tEntity, tEntity.itemPackageInputSlot, Integer.MAX_VALUE, 26));		
+		addSlotToContainer(new UCSlotOutput(tEntity, tEntity.itemOutputSlot, 152, 73));
 		// add package slots
 		// we draw top to bottom instead of the typical left to right
 		// this makes the slot hiding easier
@@ -31,11 +35,6 @@ public class ContainerPackager extends Container {
 				addSlotToContainer(new Slot(tEntity, tEntity.itemPackageSlot[i * 2 + j], 8 + i * 18, 22 + j * 18));
 			}
 		}
-
-		addSlotToContainer(new UCSlotCard(tEntity, tEntity.itemCardSlot, 8, 73));
-		addSlotToContainer(new UCSlotCoinInput(tEntity, tEntity.itemCoinSlot, 26, 73));
-		addSlotToContainer(new UCSlotOutput(tEntity, tEntity.itemOutputSlot, 152, 73));
-		addSlotToContainer(new UCSlotPackage(tEntity, tEntity.itemPackageInputSlot, Integer.MAX_VALUE, 26));		
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -67,17 +66,16 @@ public class ContainerPackager extends Container {
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
 
-			// merges the item into player inventory since its in the tileEntity
-			if (slot < 11) {
-				if (!this.mergeItemStack(stackInSlot, 11, 47, true)) {
+			// move from tileentity to player
+			if (slot < 12) {
+				if (!this.mergeItemStack(stackInSlot, 12, 48, true)) {
 					return null;
 				}
 			}
-			// places it into the tileEntity is possible since its in the player
-			// inventory
+			// move from player to tileentity
 			else {
 				boolean foundSlot = false;
-				for (int i = 4 - tEntity.packageSize * 2; i < 11; i++) {
+				for (int i = 0; i < 8 + tEntity.packageSize * 2; i++) {
 					if (((Slot) inventorySlots.get(i)).isItemValid(stackInSlot)
 							&& this.mergeItemStack(stackInSlot, i, i + 1, false)) {
 						foundSlot = true;

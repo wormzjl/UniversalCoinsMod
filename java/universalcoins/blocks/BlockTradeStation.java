@@ -107,9 +107,8 @@ public class BlockTradeStation extends BlockContainer {
 			tagCompound.setInteger("ItemPrice", te.itemPrice);
 			tagCompound.setString("CustomName", te.getInventoryName());
 			stack.setTagCompound(tagCompound);
-			return stack;
-		} else
-			return stack;
+		}
+		return stack;
 	}
 
 	@Override
@@ -156,14 +155,13 @@ public class BlockTradeStation extends BlockContainer {
 		String ownerName = ((TileTradeStation) world.getTileEntity(x, y, z)).blockOwner;
 		if (player.capabilities.isCreativeMode) {
 			super.removedByPlayer(world, player, x, y, z);
-			return true;
+			return false;
 		}
 		if (player.getDisplayName().matches(ownerName) && !world.isRemote) {
 			ItemStack stack = getItemStackWithData(world, x, y, z);
 			EntityItem entityItem = new EntityItem(world, x, y, z, stack);
 			world.spawnEntityInWorld(entityItem);
 			super.removedByPlayer(world, player, x, y, z);
-			return true;
 		}
 		return false;
 	}
