@@ -30,7 +30,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -128,9 +127,8 @@ public class UCItemPricer {
 					String test = "";
 					try {
 						test = testStack.getDisplayName();
-					}
-					catch (Exception e){
-						//fail silently
+					} catch (Exception e) {
+						// fail silently
 					}
 					if (itemDamage == 0 || test != null && !test.matches("") && !baseStack.getDisplayName().equals(test)
 							&& !previousStack.getDisplayName().equals(testStack.getDisplayName())) {
@@ -353,12 +351,27 @@ public class UCItemPricer {
 				if (keyName.startsWith("tile.") || keyName.startsWith("item.")) {
 					keyName = keyName.substring(5);
 				}
-				// split string into item name and meta
-				String itemName = keyName.substring(0, keyName.length() - 2);
-				int itemMeta = Integer.valueOf(keyName.substring(keyName.length() - 1));
-				Item item = (Item) Item.itemRegistry.getObject(new ResourceLocation(itemName));
-				if (item != null) {
-					stack = new ItemStack(item, 1, itemMeta);
+				// oredictionary entries do not include metadata value
+				// we need to check for this
+				if (!Character.isDigit(keyName.charAt(keyName.length() - 1))) {
+					ArrayList test = OreDictionary.getOres(keyName);
+					int itemValue = -1;
+					for (int j = 0; j < test.size(); j++) {
+						ItemStack oreDictionaryStack = (ItemStack) test.get(j);
+						int subItemValue = UCItemPricer.getInstance().getItemPrice(oreDictionaryStack);
+						if (subItemValue > 0) {
+							itemValue = subItemValue;
+							return oreDictionaryStack;
+						}
+					}
+				} else {
+					// split string into item name and meta
+					String itemName = keyName.substring(0, keyName.length() - 2);
+					int itemMeta = Integer.valueOf(keyName.substring(keyName.length() - 1));
+					Item item = (Item) Item.itemRegistry.getObject(itemName);
+					if (item != null) {
+						stack = new ItemStack(item, 1, itemMeta);
+					}
 				}
 			}
 		}

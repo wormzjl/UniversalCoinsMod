@@ -68,10 +68,8 @@ public class TilePowerTransmitter extends TileEntity implements IInventory, IEne
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		inventory[slot] = stack;
 		if (stack != null) {
-			if (slot == itemCardSlot && inventory[itemCardSlot].getItem() == UniversalCoins.proxy.ender_card) {
-				if (creditAccount(coinSum)) {
-					coinSum = 0;
-				}
+			if (creditAccount(coinSum)) {
+				coinSum = 0;
 			}
 		}
 	}
@@ -125,21 +123,16 @@ public class TilePowerTransmitter extends TileEntity implements IInventory, IEne
 				rfChunks = (int) Math.floor(rfLevel / 10000);
 				rfLevel -= rfChunks * 10000;
 				boolean playerCredited = false;
-				if (inventory[itemCardSlot] != null) {
-					playerCredited = creditAccount(UniversalCoins.rfWholesaleRate * rfChunks);
-					if (playerCredited) {
-						krfSold += Math.min(10 * rfChunks, Integer.MAX_VALUE - krfSold);
-						UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
-					}
-				}
-				if (!playerCredited && coinSum + UniversalCoins.rfWholesaleRate * rfChunks <= Integer.MAX_VALUE) {
+				if (creditAccount(UniversalCoins.rfWholesaleRate * rfChunks)) {
+					krfSold += Math.min(10 * rfChunks, Integer.MAX_VALUE - krfSold);
+					UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
+				} else if (coinSum + UniversalCoins.rfWholesaleRate * rfChunks <= Integer.MAX_VALUE) {
 					coinSum += UniversalCoins.rfWholesaleRate * rfChunks;
 					krfSold += Math.min(10 * rfChunks, Integer.MAX_VALUE - krfSold);
 					UniversalPower.getInstance().receiveEnergy(10 * rfChunks, false);
 				}
 			}
 		}
-
 		return maxReceive;
 	}
 

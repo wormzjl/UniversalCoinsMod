@@ -12,9 +12,8 @@ import universalcoins.tile.TilePowerReceiver;
 
 public class ContainerPowerReceiver extends Container {
 	private String lastOwner;
-	private long lastCoinSum;
-	private int lastrfLevel;
-	private long lastwrfLevel;
+	private long lastCoinSum, lastwrfLevel;
+	private int lastrfLevel, lastrfOutput;
 	private boolean lastPublicAccess;
 	private TilePowerReceiver tEntity;
 
@@ -22,9 +21,9 @@ public class ContainerPowerReceiver extends Container {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen
-		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 51));
-		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 51));
-		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 51));
+		addSlotToContainer(new UCSlotCard(tileEntity, tEntity.itemCardSlot, 14, 70));
+		addSlotToContainer(new UCSlotCoinInput(tileEntity, tEntity.itemCoinSlot, 32, 70));
+		addSlotToContainer(new UCSlotOutput(tileEntity, tEntity.itemOutputSlot, 148, 70));
 
 		// commonly used vanilla code that adds the player's inventory
 		bindPlayerInventory(inventoryPlayer);
@@ -38,12 +37,12 @@ public class ContainerPowerReceiver extends Container {
 	void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 103 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 161));
 		}
 	}
 
@@ -104,6 +103,7 @@ public class ContainerPowerReceiver extends Container {
 
 			if (this.lastOwner != tEntity.blockOwner || this.lastCoinSum != tEntity.coinSum
 					|| this.lastrfLevel != tEntity.rfLevel
+					|| this.lastrfOutput != tEntity.rfOutput
 					|| this.lastwrfLevel != tEntity.wrfLevel
 					|| this.lastPublicAccess != this.tEntity.publicAccess) {
 				tEntity.updateTE();
@@ -112,6 +112,7 @@ public class ContainerPowerReceiver extends Container {
 			this.lastOwner = tEntity.blockOwner;
 			this.lastCoinSum = tEntity.coinSum;
 			this.lastrfLevel = tEntity.rfLevel;
+			this.lastrfOutput = tEntity.rfOutput;
 			this.lastwrfLevel = tEntity.wrfLevel;
 			this.lastPublicAccess = this.tEntity.publicAccess;
 		}

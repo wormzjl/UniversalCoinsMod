@@ -29,6 +29,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 	public static final int itemOutputSlot = 2;
 	public long coinSum = 0;
 	public int rfLevel = 0;
+	public int rfOutput = 0;
 	public long wrfLevel = 0;
 	public String blockOwner = "nobody";
 	public String playerName = "";
@@ -171,18 +172,6 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		return UniversalAccounts.getInstance().getAccountBalance(accountNumber);
 	}
 
-	private boolean creditAccount(long i) {
-		if (worldObj.isRemote || inventory[itemCardSlot] == null
-				|| inventory[itemCardSlot].getItem() != UniversalCoins.proxy.ender_card
-				|| !inventory[itemCardSlot].hasTagCompound())
-			return false;
-		String accountNumber = inventory[itemCardSlot].stackTagCompound.getString("Account");
-		if (accountNumber == "") {
-			return false;
-		}
-		return UniversalAccounts.getInstance().creditAccount(accountNumber, i);
-	}
-
 	private boolean debitAccount(int i) {
 		if (worldObj.isRemote || inventory[itemCardSlot] == null || !inventory[itemCardSlot].hasTagCompound())
 			return false;
@@ -229,6 +218,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		tagCompound.setTag("Inventory", itemList);
 		tagCompound.setLong("coinSum", coinSum);
 		tagCompound.setInteger("rfLevel", rfLevel);
+		tagCompound.setInteger("rfOutput", rfOutput);
 		tagCompound.setLong("wrfLevel", wrfLevel);
 		tagCompound.setString("blockOwner", blockOwner);
 		if (orientation != null) {
@@ -258,6 +248,11 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 			rfLevel = tagCompound.getInteger("rfLevel");
 		} catch (Throwable ex2) {
 			rfLevel = 0;
+		}
+		try {
+			rfOutput = tagCompound.getInteger("rfOutput");
+		} catch (Throwable ex2) {
+			rfOutput = 0;
 		}
 		try {
 			wrfLevel = tagCompound.getLong("wrfLevel");
@@ -326,7 +321,7 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 				coinSum -= UniversalCoins.rfRetailRate;
 			}
 		}
-		return Math.min(rfLevel, 1000);
+		return Math.min(rfLevel, maxExtract);
 	}
 
 	protected void buyPower() {
@@ -358,12 +353,13 @@ public class TilePowerReceiver extends TileEntity implements IInventory, IEnergy
 		if (orientation == null) {
 			return;
 		}
+		rfOutput = 0;
 		TileEntity tile = worldObj.getTileEntity(xCoord + orientation.offsetX, yCoord + orientation.offsetY,
 				zCoord + orientation.offsetZ);
 		if (tile != null && tile instanceof IEnergyReceiver) {
 			IEnergyReceiver handler = (IEnergyReceiver) tile;
-			int maxRF = handler.receiveEnergy(orientation.getOpposite(), Math.min(1000, rfLevel), true);
-			rfLevel -= handler.receiveEnergy(orientation.getOpposite(), maxRF, false);
+			rfOutput = handler.receiveEnergy(orientation.getOpposite(), rfLevel, true);
+			rfLevel -= handler.receiveEnergy(orientation.getOpposite(), rfOutput, false);
 
 		} else {
 			orientation = null;

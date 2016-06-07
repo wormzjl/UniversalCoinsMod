@@ -73,6 +73,8 @@ public class ItemEnderCard extends ItemUCCard {
 				case "item.obsidian_coin":
 					coinValue = UniversalCoins.coinValues[4];
 					break;
+				default:
+					coinValue = 0;
 				}
 				if (accountBalance == -1)
 					// get out of here if the card is invalid
@@ -94,8 +96,8 @@ public class ItemEnderCard extends ItemUCCard {
 			}
 		}
 		if (coinsDeposited > 0) {
-			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.card.message.deposit") + " "
-					+ formatter.format(coinsDeposited) + " " + StatCollector.translateToLocal(
+			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.card.deposit")
+					+ " " + formatter.format(coinsDeposited) + " " + StatCollector.translateToLocal(
 							coinsDeposited > 1 ? "general.currency.multiple" : "general.currency.single")));
 		}
 		player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("item.card.balance") + " "

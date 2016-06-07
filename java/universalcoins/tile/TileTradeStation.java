@@ -616,6 +616,11 @@ public class TileTradeStation extends TileEntity implements IInventory, ISidedIn
 					inventory[slot] = null;
 				}
 			}
+			if(slot == itemCardSlot) {
+				if (creditAccount(coinSum)) {
+					coinSum = 0;
+				}
+			}
 		}
 	}
 

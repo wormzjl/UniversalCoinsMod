@@ -32,7 +32,7 @@ public class UCRecipeHelper {
 
 	public static void addVendingFrameRecipes() {
 		GameRegistry.addShapedRecipe(new ItemStack(UniversalCoins.proxy.vendor_frame),
-				new Object[] { "SSS", "SPS", "SSS", 'P', Blocks.planks, 'S', Items.stick });
+				new Object[] { " S ", "SPS", " S ", 'P', Blocks.planks, 'S', Items.stick });
 	}
 
 	public static void addSignRecipes() {

@@ -82,7 +82,7 @@ public class ATMGUI extends GuiContainer {
 			this.drawTexturedModalRect(x + 171, y + 19, 196, 0, 18, 18);
 			this.drawTexturedModalRect(x + 34, y + 43, 0, 201, Math.min(barProgress, 128), 5);
 			if (barProgress > 129) {
-				String authString = StatCollector.translateToLocal("cardstation.auth.access");
+				String authString = StatCollector.translateToLocal("atm.auth.access");
 				if (authString.startsWith("C:"))
 					authString = authString.substring(2);
 				int stringLength = fontRendererObj.getStringWidth(authString);
@@ -91,7 +91,7 @@ public class ATMGUI extends GuiContainer {
 			}
 			if (barProgress > 130) {
 				if (!tEntity.accountNumber.matches("none")) {
-					String authString = StatCollector.translateToLocal("cardstation.auth.success");
+					String authString = StatCollector.translateToLocal("atm.auth.success");
 					if (authString.startsWith("C:"))
 						authString = authString.substring(2);
 					int stringLength = fontRendererObj.getStringWidth(authString);
@@ -102,7 +102,7 @@ public class ATMGUI extends GuiContainer {
 						barProgress = 0;
 					}
 				} else {
-					String authString = StatCollector.translateToLocal("cardstation.auth.fail");
+					String authString = StatCollector.translateToLocal("atm.auth.fail");
 					if (authString.startsWith("C:"))
 						authString = authString.substring(2);
 					int stringLength = fontRendererObj.getStringWidth(authString);
