@@ -339,16 +339,7 @@ public class UniversalCoins {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		// auto pricing the items takes a while so we start a thread
-		// and let it work in the background.
-		Runnable r = new Runnable() {
-			public void run() {
-				UCItemPricer.getInstance().loadConfigs();
-			}
-		};
-
-		Thread t = new Thread(r);
-		t.start();
+		UCItemPricer.getInstance().loadConfigs();
 	}
 
 	@EventHandler

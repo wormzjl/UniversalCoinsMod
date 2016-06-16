@@ -170,7 +170,7 @@ public class UCItemPricer {
 				ArrayList test = OreDictionary.getOres(ore);
 				int itemValue = -1;
 				for (int j = 0; j < test.size(); j++) {
-					int subItemValue = UCItemPricer.getInstance().getItemPrice((ItemStack) test.get(j));
+					int subItemValue = getItemPrice((ItemStack) test.get(j));
 					if (subItemValue > 0) {
 						itemValue = subItemValue;
 					}
@@ -219,6 +219,19 @@ public class UCItemPricer {
 	}
 
 	private void writePriceLists() {
+		// writing pricelists takes a while so we start a thread and let it work
+		// in the background.
+		Runnable r = new Runnable() {
+			public void run() {
+				priceListWriter();
+			}
+		};
+
+		Thread t = new Thread(r);
+		t.start();
+	}
+
+	private void priceListWriter() {
 		// write config set from item hashmap
 		Set set = ucPriceMap.entrySet();
 		Iterator i = set.iterator();
@@ -230,14 +243,14 @@ public class UCItemPricer {
 			try {
 				Files.createDirectories(pathToFile.getParent());
 			} catch (IOException e) {
-				FMLLog.warning("Universal Coins: Failed to create config file folders");
+				FMLLog.warning("Universal Coins: Failed to create pricelist folder");
 			}
 			File modconfigfile = new File(configDir + modname);
 			if (!modconfigfile.exists()) {
 				try {
 					modconfigfile.createNewFile();
 				} catch (IOException e) {
-					FMLLog.warning("Universal Coins: Failed to create config file");
+					FMLLog.warning("Universal Coins: Failed to create pricelist file: " + modconfigfile);
 				}
 			}
 			try {
@@ -245,9 +258,8 @@ public class UCItemPricer {
 				out.println(me.getKey() + "=" + me.getValue());
 				out.close();
 			} catch (IOException e) {
-				FMLLog.warning("Universal Coins: Failed to append to config file");
+				FMLLog.warning("Universal Coins: Failed to append to pricelist file: " + modconfigfile);
 			}
-
 		}
 	}
 
@@ -309,7 +321,9 @@ public class UCItemPricer {
 		// update mod itemlist
 		buildPricelistHashMap();
 		// update prices
+		updateOreDictionaryPrices();
 		autoPriceCraftedItems();
+		autoPriceSmeltedItems();
 		// write new configs
 		writePriceLists();
 	}
@@ -358,7 +372,7 @@ public class UCItemPricer {
 					int itemValue = -1;
 					for (int j = 0; j < test.size(); j++) {
 						ItemStack oreDictionaryStack = (ItemStack) test.get(j);
-						int subItemValue = UCItemPricer.getInstance().getItemPrice(oreDictionaryStack);
+						int subItemValue = getItemPrice(oreDictionaryStack);
 						if (subItemValue > 0) {
 							itemValue = subItemValue;
 							return oreDictionaryStack;
@@ -380,8 +394,10 @@ public class UCItemPricer {
 
 	private void autoPriceCraftedItems() {
 		List<IRecipe> allrecipes = new ArrayList<IRecipe>(CraftingManager.getInstance().getRecipeList());
-		boolean priceUpdate = false;
+		boolean priceUpdate = true;
 
+		// we rerun multiple times if needed since recipe components might be
+		// priced in previous runs
 		while (priceUpdate == true) {
 			priceUpdate = false;
 			for (IRecipe irecipe : allrecipes) {
@@ -391,16 +407,17 @@ public class UCItemPricer {
 				if (output == null) {
 					continue;
 				}
-				if (UCItemPricer.getInstance().getItemPrice(output) != -1) {
+				if (getItemPrice(output) != -1) {
 					continue;
 				}
 				List recipeItems = getRecipeInputs(irecipe);
 				for (int i = 0; i < recipeItems.size(); i++) {
 					ItemStack stack = (ItemStack) recipeItems.get(i);
-					if (UCItemPricer.getInstance().getItemPrice(stack) != -1) {
-						itemCost += UCItemPricer.getInstance().getItemPrice(stack);
+					if (getItemPrice(stack) != -1) {
+						itemCost += getItemPrice(stack);
 					} else {
 						validRecipe = false;
+						break;
 					}
 				}
 				if (validRecipe && itemCost > 0) {
@@ -409,7 +426,7 @@ public class UCItemPricer {
 						itemCost = itemCost / output.stackSize;
 					}
 					try {
-						UCItemPricer.getInstance().setItemPrice(output, itemCost);
+						setItemPrice(output, itemCost);
 					} catch (Exception e) {
 						FMLLog.warning("Universal Coins Autopricer: Failed to set item price.");
 					}

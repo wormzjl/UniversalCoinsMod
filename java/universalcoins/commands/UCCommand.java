@@ -54,8 +54,6 @@ public class UCCommand extends CommandBase {
 					new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.save.help")));
 			sender.addChatMessage(
 					new ChatComponentText(StatCollector.translateToLocal("command.uccommand.option.update.help")));
-			sender.addChatMessage(
-					new ChatComponentText(StatCollector.translateToLocal("command.uccommand.usage.hint")));
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.reload.name"))) {
 			UCItemPricer.getInstance().loadConfigs();
 		} else if (astring[0].matches(StatCollector.translateToLocal("command.uccommand.option.get.name"))) {
