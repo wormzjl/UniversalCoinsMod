@@ -124,14 +124,26 @@ public class UCItemPricer {
 				ItemStack previousStack = new ItemStack(testItem, 1, 0);
 				for (int itemDamage = 0; itemDamage < 16; itemDamage++) {
 					testStack = new ItemStack(testItem, 1, itemDamage);
-					String test = "";
+					String testName = "";
+					String baseName = "";
+					String previousName = "";
 					try {
-						test = testStack.getDisplayName();
+						testName = testStack.getDisplayName();
 					} catch (Exception e) {
 						// fail silently
 					}
-					if (itemDamage == 0 || test != null && !test.matches("") && !baseStack.getDisplayName().equals(test)
-							&& !previousStack.getDisplayName().equals(testStack.getDisplayName())) {
+					try {
+						baseName = baseStack.getDisplayName();
+					} catch (Exception e) {
+						// fail silently
+					}
+					try {
+						previousName = previousStack.getDisplayName();
+					} catch (Exception e) {
+						// fail silently
+					}
+					if (itemDamage == 0 || testName != null && !testName.matches("") && !baseName.equals(testName)
+							&& !previousName.equals(testName)) {
 						previousStack = testStack;
 						itemsDiscovered.add(testStack.getUnlocalizedName() + "." + itemDamage);
 						continue;
