@@ -16,7 +16,7 @@ import universalcoins.render.TileEntityUCSignRenderer;
 import universalcoins.render.TileEntityVendorRenderer;
 import universalcoins.render.VendorFrameRenderer;
 import universalcoins.tile.TileATM;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
 import universalcoins.tile.TileVendorFrame;
@@ -42,8 +42,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileUCSign.class, render3);
 
 		TileEntitySpecialRenderer render4 = new TileEntitySignalRenderer();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSignal.class, render4);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileUCSignal.class, render4);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(UniversalCoins.proxy.signal_block),
-				new ItemSignalRenderer(render4, new TileSignal()));
+				new ItemSignalRenderer(render4, new TileUCSignal()));
 	}
 }

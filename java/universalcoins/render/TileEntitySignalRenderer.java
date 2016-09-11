@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 
 public class TileEntitySignalRenderer extends TileEntitySpecialRenderer {
 
@@ -21,7 +21,7 @@ public class TileEntitySignalRenderer extends TileEntitySpecialRenderer {
 
 		ResourceLocation textures = (new ResourceLocation(UniversalCoins.MODID, "textures/blocks/signalblock.png"));
 		Minecraft.getMinecraft().renderEngine.bindTexture(textures);
-		TileSignal te = (TileSignal) tileentity;
+		TileUCSignal te = (TileUCSignal) tileentity;
 
 		// adjust block rotation based on block meta
 		int meta = tileentity.blockMetadata;

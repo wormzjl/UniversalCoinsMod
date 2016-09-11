@@ -11,11 +11,11 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import universalcoins.inventory.ContainerSignal;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 
 public class SignalGUI extends GuiContainer {
 
-	private TileSignal tEntity;
+	private TileUCSignal tEntity;
 	private GuiButton coinButton, durationMinusButton, durationPlusButton, coinMinusButton, coinPlusButton;
 	public static final int idCoinButton = 0;
 	public static final int idDurMinusButton = 1;
@@ -23,7 +23,7 @@ public class SignalGUI extends GuiContainer {
 	public static final int idCoinMinusButton = 3;
 	public static final int idCoinPlusButton = 4;
 
-	public SignalGUI(InventoryPlayer inventoryPlayer, TileSignal tileEntity) {
+	public SignalGUI(InventoryPlayer inventoryPlayer, TileUCSignal tileEntity) {
 		super(new ContainerSignal(inventoryPlayer, tileEntity));
 		tEntity = tileEntity;
 

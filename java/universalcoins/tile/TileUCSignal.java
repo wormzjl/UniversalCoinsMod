@@ -15,7 +15,7 @@ import net.minecraftforge.common.util.Constants;
 import universalcoins.UniversalCoins;
 import universalcoins.net.UCButtonMessage;
 
-public class TileSignal extends TileEntity implements IInventory {
+public class TileUCSignal extends TileEntity implements IInventory {
 
 	private ItemStack[] inventory = new ItemStack[1];
 	public static final int itemOutputSlot = 0;

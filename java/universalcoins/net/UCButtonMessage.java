@@ -10,7 +10,7 @@ import universalcoins.tile.TileATM;
 import universalcoins.tile.TilePackager;
 import universalcoins.tile.TilePowerReceiver;
 import universalcoins.tile.TilePowerTransmitter;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileVendor;
 
@@ -61,8 +61,8 @@ public class UCButtonMessage implements IMessage, IMessageHandler<UCButtonMessag
 		if (tileEntity instanceof TileATM) {
 			((TileATM) tileEntity).onButtonPressed(message.buttonId);
 		}
-		if (tileEntity instanceof TileSignal) {
-			((TileSignal) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);
+		if (tileEntity instanceof TileUCSignal) {
+			((TileUCSignal) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);
 		}
 		if (tileEntity instanceof TilePackager) {
 			((TilePackager) tileEntity).onButtonPressed(message.buttonId, message.shiftPressed);

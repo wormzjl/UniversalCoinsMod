@@ -8,15 +8,15 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 
 public class ContainerSignal extends Container {
-	private TileSignal tEntity;
+	private TileUCSignal tEntity;
 	private int lastDuration, lastFee;
 	private long lastCoinSum;
 	private boolean lastCanProvidePower;
 
-	public ContainerSignal(InventoryPlayer inventoryPlayer, TileSignal tileEntity) {
+	public ContainerSignal(InventoryPlayer inventoryPlayer, TileUCSignal tileEntity) {
 		tEntity = tileEntity;
 		// the Slot constructor takes the IInventory and the slot number in that
 		// it binds to and the x-y coordinates it resides on-screen

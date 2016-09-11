@@ -17,7 +17,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalcoins.UniversalCoins;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 
 public class BlockSignal extends BlockContainer {
 
@@ -49,8 +49,8 @@ public class BlockSignal extends BlockContainer {
 			float par8, float par9) {
 		if (player.isSneaking()) {
 			TileEntity te = world.getTileEntity(x, y, z);
-			if (te != null && te instanceof TileSignal) {
-				TileSignal tentity = (TileSignal) te;
+			if (te != null && te instanceof TileUCSignal) {
+				TileUCSignal tentity = (TileUCSignal) te;
 				if (player.getCommandSenderName().matches(tentity.blockOwner)) {
 					player.openGui(UniversalCoins.instance, 0, world, x, y, z);
 				}
@@ -58,7 +58,7 @@ public class BlockSignal extends BlockContainer {
 		} else {
 			// take coins and activate on click
 			ItemStack[] inventory = player.inventory.mainInventory;
-			TileSignal tentity = (TileSignal) world.getTileEntity(x, y, z);
+			TileUCSignal tentity = (TileUCSignal) world.getTileEntity(x, y, z);
 			int coinsFound = 0;
 			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 				ItemStack stack = player.inventory.getStackInSlot(i);
@@ -172,17 +172,17 @@ public class BlockSignal extends BlockContainer {
 		world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te != null) {
-			((TileSignal) world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
+			((TileUCSignal) world.getTileEntity(x, y, z)).blockOwner = player.getCommandSenderName();
 		}
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileSignal();
+		return new TileUCSignal();
 	}
 
 	public int isProvidingWeakPower(IBlockAccess block, int x, int y, int z, int side) {
-		TileSignal tentity = (TileSignal) block.getTileEntity(x, y, z);
+		TileUCSignal tentity = (TileUCSignal) block.getTileEntity(x, y, z);
 		if (tentity.canProvidePower) {
 			return 15;
 		} else {

@@ -32,7 +32,7 @@ import universalcoins.tile.TilePackager;
 import universalcoins.tile.TilePowerReceiver;
 import universalcoins.tile.TilePowerTransmitter;
 import universalcoins.tile.TileSafe;
-import universalcoins.tile.TileSignal;
+import universalcoins.tile.TileUCSignal;
 import universalcoins.tile.TileTradeStation;
 import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileVendor;
@@ -63,8 +63,8 @@ class GuiHandler implements IGuiHandler {
 		if (tileEntity instanceof TileSafe) {
 			return new ContainerSafe(player.inventory, (TileSafe) tileEntity);
 		}
-		if (tileEntity instanceof TileSignal) {
-			return new ContainerSignal(player.inventory, (TileSignal) tileEntity);
+		if (tileEntity instanceof TileUCSignal) {
+			return new ContainerSignal(player.inventory, (TileUCSignal) tileEntity);
 		}
 		if (tileEntity instanceof TilePackager) {
 			return new ContainerPackager(player.inventory, (TilePackager) tileEntity);
@@ -102,8 +102,8 @@ class GuiHandler implements IGuiHandler {
 		if (tileEntity instanceof TileSafe) {
 			return new SafeGUI(player.inventory, (TileSafe) tileEntity);
 		}
-		if (tileEntity instanceof TileSignal) {
-			return new SignalGUI(player.inventory, (TileSignal) tileEntity);
+		if (tileEntity instanceof TileUCSignal) {
+			return new SignalGUI(player.inventory, (TileUCSignal) tileEntity);
 		}
 		if (tileEntity instanceof TileUCSign) {
 			return new UCSignEditGUI((TileUCSign) tileEntity);
