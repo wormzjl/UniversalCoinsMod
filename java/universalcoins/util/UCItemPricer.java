@@ -129,18 +129,10 @@ public class UCItemPricer {
 					String previousName = "";
 					try {
 						testName = testStack.getDisplayName();
-					} catch (Exception e) {
-						// fail silently
-					}
-					try {
 						baseName = baseStack.getDisplayName();
-					} catch (Exception e) {
-						// fail silently
-					}
-					try {
 						previousName = previousStack.getDisplayName();
 					} catch (Exception e) {
-						// fail silently
+						break;
 					}
 					if (itemDamage == 0 || testName != null && !testName.matches("") && !baseName.equals(testName)
 							&& !previousName.equals(testName)) {
@@ -531,12 +523,20 @@ public class UCItemPricer {
 		for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
 			ItemStack input = recipe.getKey();
 			ItemStack output = recipe.getValue();
-			if (ucPriceMap.get(input.getUnlocalizedName() + "." + input.getItemDamage()) != null
-					&& ucPriceMap.get(output.getUnlocalizedName() + "." + input.getItemDamage()) != null) {
-				int inputValue = ucPriceMap.get(input.getUnlocalizedName() + "." + input.getItemDamage());
-				int outputValue = ucPriceMap.get(output.getUnlocalizedName() + "." + input.getItemDamage());
+			String inputName = "";
+			String outputName = "";
+			try {
+				inputName = input.getUnlocalizedName();
+				outputName = output.getUnlocalizedName();
+			} catch (Exception e) {
+				continue;
+			}
+			if (ucPriceMap.get(inputName + "." + input.getItemDamage()) != null
+					&& ucPriceMap.get(outputName + "." + input.getItemDamage()) != null) {
+				int inputValue = ucPriceMap.get(inputName + "." + input.getItemDamage());
+				int outputValue = ucPriceMap.get(outputName + "." + input.getItemDamage());
 				if (inputValue != -1 && outputValue == -1) {
-					ucPriceMap.put(output.getUnlocalizedName() + "." + input.getItemDamage(), inputValue + 2);
+					ucPriceMap.put(outputName + "." + input.getItemDamage(), inputValue + 2);
 				}
 			}
 		}
