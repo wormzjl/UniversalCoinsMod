@@ -375,7 +375,7 @@ public class TileATM extends TileEntity implements IInventory, ISidedInventory {
 				inventory[itemCoinSlot].stackSize = (int) Math.min(coinWithdrawalAmount / UniversalCoins.coinValues[1],
 						64);
 				coinWithdrawalAmount -= inventory[itemCoinSlot].stackSize * UniversalCoins.coinValues[1];
-			} else if (coinWithdrawalAmount > UniversalCoins.coinValues[0]) {
+			} else if (coinWithdrawalAmount >= UniversalCoins.coinValues[0]) {
 				inventory[itemCoinSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
 				inventory[itemCoinSlot].stackSize = (int) Math.min(coinWithdrawalAmount / UniversalCoins.coinValues[0],
 						64);

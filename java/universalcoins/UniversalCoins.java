@@ -1,6 +1,5 @@
 package universalcoins;
 
-import com.forgeessentials.api.APIRegistry;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -50,7 +49,6 @@ import universalcoins.tile.TileUCSign;
 import universalcoins.tile.TileUCSignal;
 import universalcoins.tile.TileVendorBlock;
 import universalcoins.tile.TileVendorFrame;
-import universalcoins.util.FEEconomy;
 import universalcoins.util.UCItemPricer;
 import universalcoins.util.UCMobDropEventHandler;
 import universalcoins.util.UCPlayerPickupEventHandler;
@@ -249,10 +247,11 @@ public class UniversalCoins {
 		snw.registerMessage(UCTileSignMessage.class, UCTileSignMessage.class, 3, Side.CLIENT);
 		snw.registerMessage(UCSignServerMessage.class, UCSignServerMessage.class, 4, Side.SERVER);
 		snw.registerMessage(UCPackagerServerMessage.class, UCPackagerServerMessage.class, 5, Side.SERVER);
-
+    /*
 		// update check using versionchecker
 		FMLInterModComms.sendRuntimeMessage(MODID, "VersionChecker", "addVersionCheck",
 				"https://raw.githubusercontent.com/notabadminer/UniversalCoinsMod/master/version.json");
+    */
 	}
 
 	@EventHandler
@@ -325,16 +324,6 @@ public class UniversalCoins {
 
 		proxy.registerAchievements();
 
-		if (Loader.isModLoaded("ForgeEssentials")) {
-			FMLLog.info("ForgeEssentials loaded. Registering economy");
-			try {
-				APIRegistry.economy = FEEconomy.class.newInstance();
-			} catch (InstantiationException e) {
-				FMLLog.warning("FE Economy InstantiationException");
-			} catch (IllegalAccessException e) {
-				FMLLog.warning("FE Economy IllegalAccessException");
-			}
-		}
 	}
 
 	@EventHandler

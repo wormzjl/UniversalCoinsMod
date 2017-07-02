@@ -272,7 +272,7 @@ public class TileUCSignal extends TileEntity implements IInventory {
 				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
 				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[1], 64);
 				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[1];
-			} else if (coinSum > UniversalCoins.coinValues[0]) {
+			} else if (coinSum >= UniversalCoins.coinValues[0]) {
 				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
 				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[0], 64);
 				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[0];

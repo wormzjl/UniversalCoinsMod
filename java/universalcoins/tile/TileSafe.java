@@ -159,7 +159,7 @@ public class TileSafe extends TileEntity implements IInventory, ISidedInventory 
 		} else if (accountBalance > UniversalCoins.coinValues[1]) {
 			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
 			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[1], 64);
-		} else if (accountBalance > UniversalCoins.coinValues[0]) {
+		} else if (accountBalance >= UniversalCoins.coinValues[0]) {
 			inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
 			inventory[itemOutputSlot].stackSize = (int) Math.min(accountBalance / UniversalCoins.coinValues[0], 64);
 		}

@@ -359,7 +359,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.gold_coin);
 				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[1], 64);
 				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[1];
-			} else if (coinSum > UniversalCoins.coinValues[0]) {
+			} else if (coinSum >= UniversalCoins.coinValues[0]) {
 				inventory[itemOutputSlot] = new ItemStack(UniversalCoins.proxy.iron_coin);
 				inventory[itemOutputSlot].stackSize = (int) Math.min(coinSum / UniversalCoins.coinValues[0], 64);
 				coinSum -= inventory[itemOutputSlot].stackSize * UniversalCoins.coinValues[0];
@@ -487,7 +487,7 @@ public class TilePackager extends TileEntity implements IInventory, ISidedInvent
 				player.worldObj.spawnEntityInWorld(entityItem);
 			}
 			player.addChatMessage(
-					new ChatComponentText("ง2" + playerName + StatCollector.translateToLocal("packager.message.sent")));
+					new ChatComponentText("ยง2" + playerName + StatCollector.translateToLocal("packager.message.sent")));
 			inventory[itemPackageInputSlot] = null;
 		}
 	}

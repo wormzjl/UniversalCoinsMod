@@ -51,6 +51,8 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 	public int coinSum = 0;
 	public int userCoinSum = 0;
 	public int itemPrice = 0;
+	public boolean BuyingThings = false;
+	public boolean SellingThings = false;
 	public boolean infiniteMode = false;
 	public boolean sellMode = true;
 	public boolean ooStockWarning = false;
@@ -251,24 +253,37 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		return coinField;
 	}
 
-	public void onBuyPressed() {
-		onBuyPressed(1);
+	public synchronized void onBuyPressed(boolean shiftpressed) {
+		if(BuyingThings == false){
+			BuyingThings = true;
+			if(shiftpressed){
+				onBuyMaxPressed();
+			}				
+			else{
+				onBuyPressed(1);
+			}
+		}	
 	}
 
 	public void onBuyPressed(int amount) {
 		boolean useCard = false;
 		// use the card if we have it
-		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice * amount) {
+		if(itemPrice == 0){
+		return;
+		}
+		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() >= itemPrice * amount) {
 			useCard = true;
 		}
 		if (!useCard && (inventory[itemTradeSlot] == null || userCoinSum < itemPrice * amount)) {
 			buyButtonActive = false;
+			BuyingThings = false;
 			return;
 		}
 		int totalSale = inventory[itemTradeSlot].stackSize * amount;
 		if (inventory[itemOutputSlot] != null
 				&& inventory[itemOutputSlot].stackSize + totalSale > inventory[itemTradeSlot].getMaxStackSize()) {
 			buyButtonActive = false;
+			BuyingThings = false;
 			return;
 		}
 		if (infiniteMode) {
@@ -335,21 +350,27 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		}
 		checkSellingInventory(); // we sold things. Make sure we still have some
 									// left
+		BuyingThings = false;
 	}
 
 	public void onBuyMaxPressed() {
 		boolean useCard = false;
 		int amount = 0;
+		if(itemPrice == 0){
+		return;
+		}
 		if (inventory[itemTradeSlot] == null) {
 			buyButtonActive = false;
+			BuyingThings = false;
 			return;
 		}
 		// use the card if we have it
-		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() > itemPrice) {
+		if (inventory[itemUserCardSlot] != null && getUserAccountBalance() >= itemPrice) {
 			useCard = true;
 		}
 		if (userCoinSum < itemPrice && !useCard) { // can't buy even one
 			buyButtonActive = false;
+			BuyingThings = false;
 			return;
 		}
 		if (inventory[itemOutputSlot] == null) { // empty stack
@@ -380,39 +401,49 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		onBuyPressed(amount);
 	}
 
-	public void onSellPressed() {
-		onSellPressed(1);
+	public synchronized void onSellPressed(boolean shiftpressed) {
+		if(SellingThings == false){
+			SellingThings = true;
+			if(shiftpressed){
+				onSellPressed(inventory[itemSellSlot].stackSize);
+			}				
+			else{
+				onSellPressed(1);
+			}
+		}	
 	}
 
-	public void onSellMaxPressed() {
-		onSellPressed(inventory[itemSellSlot].stackSize);
-	}
 
 	public void onSellPressed(int amount) {
 		boolean useCard = false;
 		// if infinite mode, we can handle it here and skip the complicated
 		// stuff
+		if(itemPrice == 0){
+		return;
+		}
 		if (infiniteMode) {
 			if (inventory[itemUserCardSlot] != null
 					&& inventory[itemUserCardSlot].getItem() == UniversalCoins.proxy.ender_card
 					&& getUserAccountBalance() != -1 && getUserAccountBalance()
 							+ (itemPrice * amount / inventory[itemTradeSlot].stackSize) < Integer.MAX_VALUE) {
 				creditUserAccount(itemPrice * amount / inventory[itemTradeSlot].stackSize);
-			} else {
+			} else if(inventory[itemSellSlot] != null && inventory[itemSellSlot].stackSize >= amount){
+				inventory[itemSellSlot].stackSize -= amount;
 				userCoinSum += itemPrice * amount / inventory[itemTradeSlot].stackSize;
 			}
-			inventory[itemSellSlot].stackSize -= amount;
-			if (inventory[itemSellSlot].stackSize == 0) {
+			if (inventory[itemSellSlot] == null || inventory[itemSellSlot].stackSize == 0) {
 				inventory[itemSellSlot] = null;
 			}
+			SellingThings = false;
 			return;
 		}
 		// use the card if we have it
-		if (inventory[itemCardSlot] != null && getOwnerAccountBalance() > itemPrice) {
+		if (inventory[itemCardSlot] != null && getOwnerAccountBalance() >= itemPrice) {
 			useCard = true;
 		}
 		if (inventory[itemSellSlot] == null || coinSum < itemPrice && !useCard) {
 			sellButtonActive = false;
+			SellingThings = false;
 			return;
 		}
 		// adjust the amount to the lesser of max the available coins will buy
@@ -428,7 +459,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		// we need to match the item, damage, and tags to make sure the
 		// stacks are equal
 		for (int i = itemStorageSlot1; i <= itemStorageSlot9; i++) {
-			if (inventory[itemSellSlot] != null) {
+			if (inventory[itemSellSlot] != null && inventory[itemSellSlot].stackSize >= amount) {
 				// copy itemstack if null. We'll set the amount to 0 to start.
 				int thisSale = 0;
 				if (inventory[i] != null && inventory[i].getItem() == inventory[itemTradeSlot].getItem()
@@ -465,6 +496,7 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 				if (amount == 0) {
 					updateCoinsForPurchase(); // we bought stuff. Make sure we
 												// have coins left.
+					SellingThings = false;
 					return; // we are done here. exit the loop.
 				}
 			}
@@ -960,17 +992,9 @@ public class TileVendor extends TileEntity implements IInventory, ISidedInventor
 		} else if (buttonId <= VendorGUI.idLBagButton) {
 			onRetrieveButtonsPressed(buttonId, shiftPressed);
 		} else if (buttonId == VendorBuyGUI.idSellButton) {
-			if (shiftPressed) {
-				onSellMaxPressed();
-			} else {
-				onSellPressed();
-			}
+				onSellPressed(shiftPressed);
 		} else if (buttonId == VendorSellGUI.idBuyButton) {
-			if (shiftPressed) {
-				onBuyMaxPressed();
-			} else {
-				onBuyPressed();
-			}
+				onBuyPressed(shiftPressed);
 		} else if (buttonId <= VendorSellGUI.idObsidianCoinButton) {
 			onRetrieveButtonsPressed(buttonId, shiftPressed);
 		}
